@@ -1226,7 +1226,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 
 </script>
 <script>window.GAME_ONLY = true;</script>
-<script>window.VCF_BUILD = {"v": "v0.28-dc7083d", "date": "2026-10-01"};</script>
+<script>window.VCF_BUILD = {"v": "v0.31-f0c7f24", "date": "2026-10-01"};</script>
 <script>
 // ---------------------------------------------------------------- data
 // Floor plan measured from the organisers' V18 plan (px), converted to inches.
@@ -11573,7 +11573,9 @@ var G = (function () {
     6: ["Wikipedia: Osborne 1", "https://en.wikipedia.org/wiki/Osborne_1"],
     17: ["Computer History Museum: Apple-1", "https://www.computerhistory.org/revolution/personal-computers/17/312/1132"],
     18: ["Wikipedia: Nolan Bushnell", "https://en.wikipedia.org/wiki/Nolan_Bushnell"],
-    21: ["Wikipedia: Grace Hopper", "https://en.wikipedia.org/wiki/Grace_Hopper"]
+    21: ["Wikipedia: Grace Hopper", "https://en.wikipedia.org/wiki/Grace_Hopper"],
+    30: ["YouTube: CelGenStudios", "https://www.youtube.com/@CelGenStudios"],
+    31: ["IRIX Network forums: the CelGenStudios profile", "https://forums.irixnet.org/user-274.html"]
   };
   // the roster (CAMEOS-PLAN.md 1.1 / 1.3 / 5.1). style: the people model's style object (hall-3d.src.html, the
   // people section's header); the portrait is drawn from the same object. H / b: height and build from the person's
@@ -11632,11 +11634,22 @@ var G = (function () {
       booths: ["18", "30", "10", "20"], machine: null, lan: true,
       flavour: "A Nolan Bushnell lookalike, watching the arcade cabinet with a professional eye.",
       facts: [["Co-founded Atari in 1972 with Ted Dabney.", 18], ["Atari's Pong (1972) was built by Allan Alcorn.", 18], ["The Atari VCS (2600) came out in September 1977.", 18]],
-      quiz: { q: "In which year was Atari founded?", a: "1972", wrong: ["1969", "1977", "1982"], fact: "Atari was founded in 1972 by Nolan Bushnell and Ted Dabney." } }
+      quiz: { q: "In which year was Atari founded?", a: "1972", wrong: ["1969", "1977", "1982"], fact: "Atari was founded in 1972 by Nolan Bushnell and Ted Dabney." } },
+    // a guest, not a lookalike (owner, 2026-10-01): the channel by its own name, an anonymous figure in a channel
+    // hoodie with a camera; blond hair and beard, a big build (owner); facts from the channel's public profiles only
+    { id: "celgen", name: "CelGen Studios", years: "", bg: 0xe4def0, icon: "camera", guest: true,
+      style: { H: 72, b: 1.35, skin: 0xeec3a4, hair: "short", hairC: 0xd9b46a, beard: "full", beardC: 0xc9a25c, glasses: 0, topKind: "hoodie", top: 0x4b3a8a, print: "logo", printC: 0xd8d0ee,
+        pants: 0x26262b, shoe: 0x2a2a2a, hat: 0, bag: 0, arms: "side", prop: { size: [5, 4, 3], at: "handR", c: 0x1c1c1f } },
+      booths: ["24", "28", "3", "12", "29"], machine: null, lan: false,   // (no SGI booth this year: the industrial, Amiga, Canadian and networking tables, and ours)
+      flavour: "Camera in hand, filming every workstation in the hall and hoping one of them is purple.",
+      facts: [["A YouTube channel about vintage computers, best known for Silicon Graphics workstations.", 30],
+        ["Based in Kamloops, British Columbia.", 31], ["The SGI collection runs from the Crimson and Onyx to the Indy and O2.", 31]],
+      quiz: { q: "Which company made the Indy, the O2 and the Octane workstations?", a: "Silicon Graphics (SGI)", wrong: ["Sun Microsystems", "Digital (DEC)", "NeXT"],
+        fact: "The Indy (1993), O2 (1996) and Octane (1997) were Silicon Graphics workstations running IRIX." } }
   ];
   var BY = {}, BK = Object.keys(booths);
   ROSTER.forEach(function (c) {
-    BY[c.id] = c; c.tag = "a " + c.name + " lookalike"; c.The = "The " + c.name + " lookalike";
+    BY[c.id] = c; c.tag = c.guest ? c.name : "a " + c.name + " lookalike"; c.The = c.guest ? c.name : "The " + c.name + " lookalike";   // a guest is themselves
     c.dress = {}; for (var k in c.style) c.dress[k] = c.style[k];
     c.dress.badge = true; c.dress.badgeC = GOLD;     // their VCF badge is gold (CAMEOS-PLAN 2.4)
     c.quiz.k = "cameo:" + c.id;
@@ -11751,7 +11764,7 @@ var G = (function () {
     s.out.push(c); dress(c, true);
     s.came[e.id] = G.fmt(); note(e.id, { seen: G.fmt() });
     if (G.state.who === "nick" && G.radio && G.radio.cards.vip && G.radio.call("vip", { data: { id: e.id } })) {}   // (the radio's own toast and chime)
-    else { say("PA: someone who looks a lot like " + cam.name + " just came in the main entrance.", "good"); if (G.sound && G.sound.play && !G.skipping) G.sound.play("chime"); }
+    else { say(cam.guest ? "PA: " + cam.name + " just came in the main entrance. Say hi!" : "PA: someone who looks a lot like " + cam.name + " just came in the main entrance.", "good"); if (G.sound && G.sound.play && !G.skipping) G.sound.play("chime"); }
     G.emit("cameo", e.id, "arrive");
     return true;
   }
@@ -11910,8 +11923,8 @@ var G = (function () {
     cardId = id;
     var src = [], seen = {};
     cam.facts.forEach(function (f) { if (!seen[f[1]]) { seen[f[1]] = 1; src.push('<a href="' + SRC[f[1]][1] + '" target="_blank" rel="noopener">' + esc(SRC[f[1]][0]) + "</a>"); } });
-    var html = '<div class="kick">Cameo · lookalike' + (isLive ? "" : " · your badge collection") + "</div>" +
-      '<div class="cm-wrap"><div class="cm-body"><p class="cm-who">Someone who looks a lot like</p><h2>' + esc(cam.name) + "</h2>" +
+    var html = '<div class="kick">Cameo · ' + (cam.guest ? "guest" : "lookalike") + (isLive ? "" : " · your badge collection") + "</div>" +
+      '<div class="cm-wrap"><div class="cm-body"><p class="cm-who">' + (cam.guest ? "Today's guest" : "Someone who looks a lot like") + '</p><h2>' + esc(cam.name) + "</h2>" +
       (cam.years ? '<p class="cm-yrs">' + cam.years + "</p>" : "") +
       '<p class="cm-flav">' + esc(cam.flavour) + "</p><h3>Did you know?</h3>" +
       '<ul class="cm-facts">' + cam.facts.map(function (f) { return "<li>" + esc(f[0]) + "</li>"; }).join("") + "</ul>" +
@@ -11927,7 +11940,7 @@ var G = (function () {
       btn.push(["Bye", function () { cardId = null; }, true]);
     } else btn.push(["Back", function () { cardId = null; if (back) back(); }, true]);
     var box = G.hud.card(html, btn, "cameo"); box.classList.add("wide");
-    var b = G.ui.badge({ name: cam.name, ribbon: RIB, portrait: img(cam) });
+    var b = G.ui.badge({ name: cam.name, ribbon: cam.guest ? "GUEST · INVITÉ" : RIB, portrait: img(cam) });
     b.setAttribute("aria-hidden", "true");
     box.querySelector(".cm-wrap").insertBefore(b, box.querySelector(".cm-body"));
     return box;
@@ -12072,6 +12085,8 @@ var G = (function () {
       else if (ic === "floppy") { fillS(g, "#1f1f22", function (g) { rr(g, 184, 184, 28, 28, 2); }, 2); g.fillStyle = "#f4f2ec"; g.fillRect(189, 187, 18, 9); g.fillStyle = "#9a9a9a"; g.fillRect(193, 202, 10, 10); g.fillStyle = "#fffdf6"; g.beginPath(); g.arc(198, 199, 3, 0, Math.PI * 2); g.fill(); }
       else if (ic === "wire") { g.lineWidth = 4; g.strokeStyle = "#d9a92b"; g.beginPath(); g.moveTo(181, 214); g.quadraticCurveTo(196, 196, 215, 182); g.stroke(); g.lineWidth = 1.5; g.strokeStyle = INK; g.stroke(); }
       else if (ic === "joystick") { fillS(g, "#1f1f22", function (g) { rr(g, 184, 203, 28, 12, 3); }, 2); g.lineWidth = 4; g.strokeStyle = INK; g.beginPath(); g.moveTo(198, 204); g.lineTo(198, 188); g.stroke(); fillS(g, "#c8423f", ell(198, 186, 5, 5), 2); fillS(g, "#c8423f", ell(207, 206, 2.5, 2.5), 0); }
+      else if (ic === "camera") { fillS(g, "#1c1c1f", function (g) { rr(g, 180, 188, 28, 20, 3); }, 2); fillS(g, "#1c1c1f", poly([208, 192, 217, 186, 217, 210, 208, 204]), 2);
+        fillS(g, "#4b3a8a", ell(194, 198, 6, 6), 1.5); fillS(g, "#c8423f", ell(185, 192, 1.8, 1.8), 0); }
       else if (ic === "apple2") { fillS(g, "#d8cfb4", poly([180, 212, 216, 212, 216, 194, 198, 186, 180, 194]), 2); g.fillStyle = "#6a6252"; for (var kx = 0; kx < 4; kx++) g.fillRect(185 + kx * 7, 202, 4, 3); }
     }
     g.restore();
@@ -12090,9 +12105,9 @@ var G = (function () {
   function collection(back) {
     var a = album(), s = on() ? S() : null, n = 0;
     ROSTER.forEach(function (cam) { if ((a[cam.id] || {}).met) n++; });
-    var html = '<div class="kick">VCF Tycoon · lookalikes · kept across games</div><div class="head"><h2>Badges</h2><b class="ui-num">' + n + "/" + ROSTER.length + "</b></div>" +
+    var html = '<div class="kick">VCF Tycoon · lookalikes and guests · kept across games</div><div class="head"><h2>Badges</h2><b class="ui-num">' + n + "/" + ROSTER.length + "</b></div>" +
       '<span class="ui-meter" style="--p:' + (Math.round(100 * n / ROSTER.length) / 100) + '"><b></b></span><div class="cm-coll"></div>' +
-      '<p class="ui-note">Fans dressed as famous computer people turn up on show days. Read their badge (E) to collect it.</p>';
+      '<p class="ui-note">Fans dressed as famous computer people, and a guest or two, turn up on show days. Read their badge (E) to collect it.</p>';
     var PV = !!(window.VCF_BUILD && VCF_BUILD.preview), keys = [["Back", function () { if (back) back(); }, true]];   // a preview build (VCF_PREVIEW=1): every card opens, and they can be called in
     if (PV) { html += '<p class="ui-note"><b>Preview build:</b> every badge opens. ' + (on() ? "“Call them in” brings the lookalikes into the hall now." : "Start a game to call them into the hall.") + "</p>";
       if (on()) keys.unshift(["Call them in", function () { var n = 0, room = 2 - G.cameos.out().length;   // two at a time (the sparkle and label pool); press again once they leave
@@ -12225,9 +12240,9 @@ var G = (function () {
       var l = BY[id].booths, b = l[0]; for (var i = 1; i < l.length; i++) if (G.buzz(l[i]) < G.buzz(b)) b = l[i];
       return b;
     };
-    G.radio.card({ id: "vip", who: "nick", cat: "H", pri: 2, ttl: 15, work: 5, del: "people", title: "VIP lookalike at the entrance", at: "reg",
+    G.radio.card({ id: "vip", who: "nick", cat: "H", pri: 2, ttl: 15, work: 5, del: "people", title: "VIP badge at the entrance", at: "reg",
       init: function (inc) { var id = inc.data.id; if (!BY[id]) return false; inc.data.k = quiet(id); },
-      text: function (inc) { return "Someone who looks a lot like " + BY[inc.data.id].name + " just came in, and heads are turning. A guide to a quieter booth they'd like (" +
+      text: function (inc) { return (BY[inc.data.id].guest ? "" : "Someone who looks a lot like ") + BY[inc.data.id].name + " just came in, and heads are turning. A guide to a quieter booth they'd like (" +
         bname(inc.data.k) + ") would spread the crowd; left alone they draw a following."; },
       joke: "The badge says LOOKALIKE, in both official languages. Several people still ask for an autograph.",
       choices: function (inc) { return [
@@ -12240,13 +12255,13 @@ var G = (function () {
 
   // ---- achievements (achieve.js): one per lookalike met, and a few more
   var AD = { jobs: ["🖱", "The turtleneck"], woz: ["🔧", "Beard and an Apple II"], gates: ["💾", "Big glasses, 1980s"], osborne: ["🧳", "A luggable in hand"],
-    hopper: ["⚓", "A nanosecond, handed over"], bushnell: ["🕹", "Insert coin"] };
+    hopper: ["⚓", "A nanosecond, handed over"], bushnell: ["🕹", "Insert coin"], celgen: ["📹", "On camera"] };
   ROSTER.forEach(function (cam) { G.achieve.def("cm-" + cam.id, { group: "Cameos", icon: AD[cam.id][0], pts: 0, title: AD[cam.id][1], text: "You read the badge of " + cam.tag + "." }); });
   G.achieve.def("cm-home", { group: "Cameos", icon: "🏠", title: "On home turf", text: "Met a lookalike at the booth they head for first." });
   G.achieve.def("cm-garage", { group: "Cameos", icon: "🏚", secret: true, title: "Garage band", text: "Met the Steve Jobs and Steve Wozniak lookalikes in the same weekend." });
   G.achieve.def("cm-time", { group: "Cameos", who: "29", icon: "⏱", title: "Just in time", text: "Fixed the machine a lookalike came to see before they gave up." });
   G.achieve.def("cm-pong", { group: "Cameos", who: "10", icon: "🏓", secret: true, title: "From Pong to the LAN", text: "The Nolan Bushnell lookalike sat in for a match at your LAN." });
-  G.achieve.def("cm-all", { group: "Cameos", icon: "⭐", pts: 0, title: "Met everyone", text: "Read the badge of all six lookalikes, over any number of weekends." });
+  G.achieve.def("cm-all", { group: "Cameos", icon: "⭐", pts: 0, title: "Met everyone", text: "Read every badge in the collection, over any number of weekends." });
   G.achieve.def("cm-full", { group: "Cameos", icon: "📇", pts: 0, secret: true, title: "The full badge collection", text: "Every lookalike met, photographed, and their question answered right." });
 
   G.cameos = { roster: ROSTER, by: BY, out: function () { var s = S(); return s ? s.out : []; }, hello: hello, card: card, collection: collection, album: album,
