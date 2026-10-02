@@ -1228,7 +1228,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 
 </script>
 <script>window.GAME_ONLY = true;</script>
-<script>window.VCF_BUILD = {"v": "v0.39-247a4bc", "date": "2026-10-02"};</script>
+<script>window.VCF_BUILD = {"v": "v0.40-d6b029d", "date": "2026-10-02"};</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
 // The walk-through's own words in French or English (ported from the organisers' page): ?lang=fr|en
@@ -1310,6 +1310,7 @@ if (window.SITE_BUILD) {
   I18N.en.known29 = I18N.en.known29.replace(/^Our booth:/, "Land of the Portables:");
   I18N.fr.known29 = I18N.fr.known29.replace(/^Notre kiosque/, "Land of the Portables");
 }
+I18N.en.fold = "Fold / unfold"; I18N.fr.fold = "Replier / déplier";
 I18N.en.prelim = "Preliminary layout: booths may still move before the show.";
 I18N.fr.prelim = "Plan préliminaire" + NB + ": des kiosques peuvent encore bouger d'ici l'événement.";
 // booth cards: a one-line guess from each booth's name (ours, not the exhibitors')
@@ -2870,7 +2871,7 @@ document.getElementById("m-third").addEventListener("click", function () { setMo
 document.getElementById("t-skirts").addEventListener("click", function () { skirts.visible = !skirts.visible; this.classList.toggle("on", skirts.visible); });
 if (window.SITE_BUILD) {                                // the site build: skirts shown, no "our two booths" shortcut (like the organisers' page)
   document.getElementById("t-skirts").classList.add("on");
-  var gs = document.querySelector('[data-go="start"]'); if (gs) gs.remove();
+  ["start", "ours"].forEach(function (k) { var b = document.querySelector('[data-go="' + k + '"]'); if (b) b.remove(); });   // (private there too)
 }
 document.getElementById("t-labels").addEventListener("click", function () { labels.visible = !labels.visible; this.classList.toggle("on", labels.visible); });
 document.querySelectorAll("[data-go]").forEach(function (b) { b.addEventListener("click", function () { go(b.dataset.go); }); });
@@ -3595,14 +3596,16 @@ joyEl.addEventListener("pointermove", function (e) { if (e.pointerId === joy.id)
 var menu = document.getElementById("menu"), menuT = document.getElementById("menu-t");
 var narrow = window.matchMedia("(max-width: 560px)");
 function setMenu(open) { menu.classList.toggle("open", open); if (!narrow.matches) return; menuT.setAttribute("aria-expanded", open ? "true" : "false"); menuT.textContent = T(open ? "close" : "menu"); }   // phones fold with .open (closed by default); wide screens with .min (open by default, remembered)
+function minLabel(on) { return window.SITE_BUILD ? (on ? "▸" : "▾") : T(on ? "show" : "hide"); }   // the site build: the organisers' small fold arrow
 function setMin(on, auto) { menu.classList.toggle("min", on); if (!auto) try { localStorage.setItem("hall-menu-min", on ? "1" : "0"); } catch (e) {}
-  if (!narrow.matches) { menuT.textContent = T(on ? "show" : "hide"); menuT.setAttribute("aria-expanded", on ? "false" : "true"); } }
+  if (!narrow.matches) { menuT.textContent = minLabel(on); menuT.setAttribute("aria-expanded", on ? "false" : "true");
+    if (window.SITE_BUILD) menuT.title = T("fold"); } }
 menuT.addEventListener("click", function () { if (narrow.matches) setMenu(!menu.classList.contains("open")); else setMin(!menu.classList.contains("min")); this.blur(); });
 if (!narrow.matches) { var wasMin = null; try { wasMin = localStorage.getItem("hall-menu-min"); } catch (e) {}
   // the site build sits in the organisers' page, often in a small frame: folded there unless the visitor chose otherwise
   setMin(!wasMin && window.SITE_BUILD ? innerWidth < 600 || innerHeight < 520 : wasMin === "1", true); }
-LANG_HOOKS.push(function () { if (narrow.matches) setMenu(menu.classList.contains("open")); else menuT.textContent = T(menu.classList.contains("min") ? "show" : "hide"); });
-narrow.addListener(function () { if (narrow.matches) { menu.classList.remove("min"); setMenu(menu.classList.contains("open")); } else { menu.classList.remove("min"); menuT.textContent = T("hide"); } });
+LANG_HOOKS.push(function () { if (narrow.matches) setMenu(menu.classList.contains("open")); else menuT.textContent = minLabel(menu.classList.contains("min")); });
+narrow.addListener(function () { if (narrow.matches) { menu.classList.remove("min"); setMenu(menu.classList.contains("open")); } else { menu.classList.remove("min"); menuT.textContent = minLabel(false); } });
 menu.querySelectorAll("[data-go], #tour").forEach(function (b) { b.addEventListener("click", function () { setMenu(false); }); });
 
 // ---------------------------------------------------------------- the tour
