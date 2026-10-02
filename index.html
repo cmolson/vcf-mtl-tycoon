@@ -82,7 +82,7 @@ button.tour.on { background: var(--accent); color: #fff; }
   border-radius: 3px; padding: 3px 5px; white-space: nowrap; opacity: .9; }
 .touch #m-mouse { display: none; }
 /* the info card: a machine, a booth or a stop on the tour */
-#info { position: fixed; right: 12px; top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 5; width: min(370px, calc(100vw - 24px));
+#info { position: fixed; right: 12px; top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 5; width: min(370px, calc(100vw - 54px));   /* content width: + 28 px padding + borders = 12 px margins on a phone */
   max-height: calc(100vh - 230px); overflow-y: auto; overscroll-behavior: contain;
   background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 8px;
   padding: 12px 14px 14px; display: grid; gap: 8px; box-shadow: 0 6px 24px rgba(0,0,0,.12); }
@@ -1228,7 +1228,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 
 </script>
 <script>window.GAME_ONLY = true;</script>
-<script>window.VCF_BUILD = {"v": "v0.50-32a136c", "date": "2026-10-02"};</script>
+<script>window.VCF_BUILD = {"v": "v0.60-22b9f35", "date": "2026-10-02"};</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
 // The walk-through's own words in French or English (ported from the organisers' page): ?lang=fr|en
@@ -1264,8 +1264,11 @@ var I18N = {
     tourWhere: "Tour · {i} of {n}: {t}", tourSub: "Any key, a tap or Stop tour ends it",
     doomNear: "LAN party PC: DOOM: the VCF hall map", doomNearSub: "Click its screen or press P to play",
     doomOn: "Playing DOOM: the VCF hall map", doomKeys: "Arrows move · Ctrl fire · Space open · Esc menu · ` to leave",
-    booth: "Booth", cat_vendor: "vendor", cat_creator: "creator", guess: "guess",
-    guessT: "Our guess from the booth name, not the exhibitor's description", vintage: "Something vintage: walk over and see.",
+    booth: "Booth", cat_vendor: "vendor", cat_creator: "creator", guess: "our guess",
+    guessT: "Our guess from the booth name only, not the exhibitor's description", vintage: "Something vintage: walk over and see.",
+    src: "public sources", srcT: "From public pages and videos by or about the exhibitor, not a description sent to us",
+    likely: "likely", likelyT: "Public sources about the exhibitor point this way; what will be on the table is our expectation",
+    expected: "Expected: ", tbc: "Details to come.",
     aimClick: "click for info", aimTap: "tap for info", aimKey: "E / Enter: info",
     place_start: "Booths 10 and 29", place_entrance: "Public entrance", place_corner: "Speakers' corner",
     known29: "Our booth: 1981-1991 luggables and laptops that sign a live guest book over phone lines, three phones that call the museum, and a network rack behind. Click a machine for its card.",
@@ -1294,7 +1297,10 @@ var I18N = {
     doomNear: "PC du LAN party" + NB + ": DOOM sur la carte de la salle", doomNearSub: "Cliquez sur l'écran ou appuyez sur P pour jouer",
     doomOn: "DOOM en cours" + NB + ": la carte de la salle", doomKeys: "Flèches" + NB + ": bouger · Ctrl" + NB + ": tirer · Espace" + NB + ": ouvrir · Échap" + NB + ": menu · `" + NB + ": quitter",
     booth: "Kiosque", cat_vendor: "marchand", cat_creator: "créateur", guess: "hypothèse",
-    guessT: "Notre hypothèse d'après le nom du kiosque, pas la description de l'exposant", vintage: "Du matériel d'époque" + NB + ": allez voir sur place.",
+    guessT: "Notre hypothèse d'après le seul nom du kiosque, pas la description de l'exposant", vintage: "Du matériel d'époque" + NB + ": allez voir sur place.",
+    src: "sources publiques", srcT: "D'après des pages et des vidéos publiques de l'exposant ou à son sujet, pas une description reçue de sa part",
+    likely: "probable", likelyT: "Des sources publiques sur l'exposant vont dans ce sens" + NB + "; ce qui sera sur la table reste une prévision",
+    expected: "À prévoir" + NB + ": ", tbc: "Détails à venir.",
     aimClick: "cliquez pour la fiche", aimTap: "touchez pour la fiche", aimKey: "E / Entrée" + NB + ": fiche",
     place_start: "Kiosques 10 et 29", place_entrance: "Entrée publique", place_corner: "Coin des conférenciers",
     known29: "Notre kiosque" + NB + ": des transportables et des portables de 1981 à 1991 qui signent un livre d'or en direct par ligne téléphonique, trois téléphones qui appellent le musée, et une baie réseau derrière. Cliquez sur une machine pour sa fiche.",
@@ -1313,25 +1319,38 @@ if (window.SITE_BUILD) {
 I18N.en.fold = "Fold / unfold"; I18N.fr.fold = "Replier / déplier";
 I18N.en.prelim = "Preliminary layout: booths may still move before the show.";
 I18N.fr.prelim = "Plan préliminaire" + NB + ": des kiosques peuvent encore bouger d'ici l'événement.";
-// booth cards: a one-line guess from each booth's name (ours, not the exhibitors')
+// booth cards (FR): what each booth shows, from layout/BOOTHS-RESEARCH.md; SURE (with GUESS, below) says how sure
 var GUESS_FR = {
-  1: "Les interfaces graphiques d'Apple, du Lisa au Mac OS classique.", 2: "Des machines d'époque sur Gopher et les débuts d'Internet.",
-  3: "Des ordinateurs conçus ou fabriqués au Canada.", 4: "Le NABU PC et son réseau par câble, remis en ligne.",
-  5: "Des cartes artisanales et des améliorations pour machines rétro.", 6: "Des productions de la démoscène sur Commodore 64 PAL.",
-  7: "Des machines et des consoles qui ont fait un flop, et pourquoi.", 8: "Une collection de jeux rétro à essayer.",
-  9: "De la musique faite avec des synthés et des ordinateurs d'époque.", 11: "Sinclair, Timex, Amstrad, Acorn/BBC et Enterprise" + NB + ": l'informatique familiale britannique.",
-  12: "Modems, BBS et réseaux par ligne commutée.", 13: "Une nouvelle console 8 bits artisanale, jouable.",
-  14: "Des téléphones mobiles et des gadgets de poche d'époque.", 15: "Les PC d'IBM, depuis le 5150.",
-  16: "Un projet de jeu rétro, jouable.", 17: "Des PowerBook et autres Macintosh classiques.",
-  18: "Des ordinateurs et des consoles Atari 8 bits, jouables.", 19: "Gemstone Warrior, un jeu canadien des années 1980.",
-  20: "Les consoles portables, depuis les Game & Watch.", 21: "Les machines RCA 1802 de Joseph Weisbecker" + NB + ": COSMAC ELF, VIP et Studio.",
-  22: "Des clones brésiliens du Spectrum, de l'Apple II et du PC d'IBM.", 23: "Le TI-99/4A et ses périphériques.",
-  24: "Des ordinateurs industriels à côté de machines familiales.", 25: "Des machines de la famille Spectrum en ligne grâce à RetroNET.",
-  26: "De la musique et des graphismes 1 bit.", 27: "Le Commodore 64, à essayer.", 28: "Des Amiga toujours au travail, avec du matériel et des logiciels neufs.",
-  30: "Une borne d'arcade et les ordinateurs derrière les jeux d'arcade.", 31: "Les premiers jeux d'aventure, en texte et en graphisme, jouables.",
-  32: "La Sega Saturn et ses jeux.", 33: "Des PC rétro et des curiosités, à la LGR.", 34: "Des jeux PC en boîte.",
-  35: "Du matériel et des pièces rétro.", 36: "Des jeux Apple II.", 37: "Des petites machines Apple, Commodore et Tandy, et du plus gros matériel DEC, HP et Sun.",
-  38: "Des logiciels et du matériel rétro canadiens.", 39: "Les projets d'un créateur rétro.", 40: "Un Tandy Color Computer portable."
+  1: "les interfaces graphiques d'Apple, du Lisa au Mac OS classique.", 2: "des machines d'époque qui naviguent sur Gopher, l'Internet en menus texte d'avant le Web.",
+  3: "des ordinateurs conçus ou fabriqués au Canada.",
+  4: "Le NABU PC, l'ordinateur canadien de 1983 branché sur le câble, remis en ligne par le RetroNET de NABU.CA, jeux maison et NADOOM compris.",
+  5: "Retronic Design" + NB + ": des adaptateurs USB pour manettes Atari, C64, Amiga, Apple II et Vectrex, et des ajouts Amiga pour disquettes, vidéo et MIDI.",
+  6: "des démos de la scène C64 sur machines PAL, et Transmission64, le demoparty C64 en ligne (prochaine édition le 28 novembre 2026).",
+  7: "l'Apple Newton, l'ordinateur de poche des années 1990 qu'on dit raté, et la communauté qui l'aime encore.",
+  8: "des Commodore 64/128, Atari, Apple et Amiga remis à neuf qui mélangent techno d'hier et d'aujourd'hui" + NB + "; au premier VCF Montréal, un BBS de 30 ans avait repris vie.",
+  11: "Sinclair/Timex, Amstrad, Acorn/BBC et Enterprise, les ordinateurs familiaux britanniques des années 1980.",
+  12: "modems, Internet par ligne commutée et premiers réseaux.",
+  13: "Le GameTank, une toute nouvelle console 8 bits libre, avec deux 6502, de vraies cartouches et une sortie composite, à essayer.",
+  14: "Mizuki Mobile, un réseau maison qui remet en ligne les téléphones à clapet japonais (keitai) i-mode, avec son portail et son magasin d'applis.",
+  15: "des machines IBM.", 16: "l'astronomie et l'astrophotographie, avec GalaxieMan, un astronome amateur.",
+  17: "des Macintosh classiques" + NB + "; le nom évoque les PowerBook.", 18: "des consoles et des ordinateurs Atari.",
+  19: "Gemstone Warrior (1984), un jeu d'action-aventure du studio canadien Paradigm Creators pour l'Apple II, publié par SSI.",
+  20: "les consoles de jeu portables au fil des ans.",
+  21: "les machines RCA 1802 de Joseph Weisbecker, du COSMAC ELF et du VIP jusqu'à la console Studio II.",
+  22: "des clones brésiliens du Spectrum, du CoCo, du TRS-80 et d'autres, nés quand le Brésil fermait son marché aux ordinateurs importés.",
+  23: "le TI-99/4A et ses extensions, avec les logiciels et le matériel TI d'OPA.", 24: "des ordinateurs industriels côte à côte avec des ordinateurs familiaux.",
+  26: "des expériences sur les Mac compacts noir et blanc (jeux, code C et musique MIDI), et du matériel neuf comme le Foenix F256K2.",
+  27: "le Commodore 64.", 28: "Grind, un nouveau jeu de tir à la Doom qui roule sur un Amiga 500 de 1987 d'origine, par Pixelglass.",
+  30: "des jeux d'arcade et des ordinateurs.",
+  31: "les jeux d'aventure d'hier à aujourd'hui, de Mystery House et Colossal Cave jusqu'à leurs nouvelles versions 3D et VR.",
+  32: "la Sega Saturn et ses jeux.", 33: "Une rencontre avec LGR, la chaîne YouTube sur la techno rétro et l'histoire de l'informatique.",
+  34: "PC Games Vault" + NB + ": des jeux PC de collection des années 1980 aux années 2000, en grosses boîtes, en CD-ROM ou scellés, et des protecteurs de boîtes.",
+  35: "Retronoix" + NB + ": réparations, remplacement de condensateurs, améliorations et pièces pour Commodore 64, Atari 8 bits et Amiga.",
+  36: "des jeux Apple II et Secrets of the Apple II Gaming World, un nouveau livre sur les jeux Apple II rares.",
+  37: "Des petites machines Apple, Commodore et Tandy à vendre, et du plus gros matériel" + NB + ": DEC (PDP-11), HP, Data General, Sun, SGI et Xerox.",
+  38: "des jeux, logiciels et matériel rétro à vendre.",
+  39: "Factor of Matt" + NB + ": les cartouches de diagnostic DesTest pour C64 et VIC-20 malades, et de nouveaux logiciels C128 et C64.",
+  40: "PortaCoCo" + NB + ": des ensembles sans fil, alimentés par batterie, qui rendent le Tandy CoCo 3 et le MC-10 portatifs, sans modifier le boîtier."
 };
 function T(k, vars) {
   var s = I18N[LANG][k]; if (s === undefined) s = I18N.en[k];
@@ -1524,71 +1543,561 @@ D.power.forEach(function (p) { var cx = X(p[0] + 8), cz = Z(p[1] + 8);
   box(14, 40, 10, M(0xc8423f), cx, 0, cz); box(2, WALL - 40, 2, M(0x555a56), cx, 40, cz); solid(cx - 7, cz - 5, cx + 7, cz + 5); });
 
 // ---------------------------------------------------------------- props
-// Faces: each prop group is built facing +z (the visitor) and rotated to its booth's aisle.
-var beige = M(0xd8d0bc), cream = M(0xe4ddca), black = M(0x26292b), grey = M(0x8d9294), darkScr = M(0x101814);
+// Faces: each prop group is built facing +z (the visitor) and rotated to its booth's aisle; local +x is the
+// visitor's right. The speakers' corner keeps the two simple PROPS; the booths' wares are below.
+var beige = M(0xd8d0bc);
 function screen(g, w, h, x, y, z, col) { var s = new THREE.Mesh(new THREE.PlaneGeometry(w, h), glow(col || 0x2b6f4a)); s.position.set(x, y + h / 2, z); g.add(s); }
-function kb(g, w, x, z, mat) { box(w, 1.5, 6.5, mat || beige, x, 0, z, g); }
 var PROPS = {
-  crt: function (g, x, col, body) { box(14, 13, 14, body || beige, x, 0, -4, g); screen(g, 10, 8, x, 2.5, 3.05, col); },
-  pc: function (g, x) { box(16, 5, 15, beige, x, 0, -3, g); box(13, 12, 13, beige, x, 5, -3, g); screen(g, 10, 7.5, x, 7.5, 3.6, 0x2a5f8f); kb(g, 18, x, 9); },
-  tower: function (g, x) { box(7, 15, 15, black, x - 12, 0, -4, g); box(19, 1, 6, black, x, 0, -4, g); box(2, 6, 2, black, x, 1, -5, g); box(20, 12.5, 1.5, black, x, 6, -5, g); screen(g, 18.5, 11, x, 6.8, -4.2, 0x3d6fb8); kb(g, 17, x, 7, black); box(6, 1.5, 4, M(0x3a3a3a), x + 12, 0, 8, g); },
-  mac: function (g, x) { box(10, 13.5, 11, cream, x, 0, -3, g); screen(g, 7, 5.5, x, 6.5, 2.55, 0xdfe6ea); kb(g, 13, x, 7, cream); },
-  apple2: function (g, x) { box(15, 4.5, 18, beige, x, 0, -2, g); box(12, 11, 12, beige, x, 4.5, -5, g); screen(g, 9, 7, x, 6.5, 1.05, 0x3fb35f); box(7, 4, 9, beige, x + 12, 0, -5, g); },
-  c64: function (g, x) { box(16, 3, 8, M(0x8c7a64), x, 0, 6, g); box(14, 13, 14, M(0x9a8f80), x, 0, -6, g); screen(g, 10, 8, x, 2.5, 1.05, 0x5d63c9); box(8, 3, 10, M(0xcfc4ad), x + 13, 0, -4, g); },
-  amiga: function (g, x) { box(18, 4, 13, cream, x, 0, -1, g); box(14, 13, 14, cream, x, 4, -4, g); screen(g, 10, 8, x, 6.5, 3.05, 0x3a63c9); kb(g, 18, x, 9, cream); },
-  atari: function (g, x) { box(14, 3, 9, M(0x5a4636), x, 0, 6, g); PROPS.crt(g, x, 0x3f6fd0, M(0x3a3a3a)); },
-  zx: function (g, x) { box(9, 1.3, 6, black, x, 0, 7, g); box(18, 14, 13, M(0x6b5b4b), x, 0, -6, g); screen(g, 13, 10, x, 2, 0.55, 0xd8d0b0); },
-  ti99: function (g, x) { box(15, 3, 10, M(0xb8b8b8), x, 0, 6, g); PROPS.crt(g, x, 0x2f8fd0, M(0x5c5c5c)); },
-  tv: function (g, x, col) { box(20, 16, 15, M(0x3b2c22), x, 0, -5, g); screen(g, 15, 11, x, 2.5, 2.55, col || 0x2f7fd0); },
-  console: function (g, x) { box(10, 3, 9, M(0x4a4a50), x, 0, 7, g); PROPS.tv(g, x, 0xd04a7a); },
-  handheld: function (g, x) { box(22, 0.3, 14, M(0x7a2b3b), x, 0, 0, g); for (var i = 0; i < 5; i++) box(3, 1, 5, [M(0x8fa08a), M(0x2c3e8f), M(0xd8c56a), M(0x333333)][i % 4], x - 8 + i * 4, 0.3, -2 + (i % 2) * 5, g); },
-  boards: function (g, x) { for (var i = 0; i < 3; i++) box(8, 0.4, 6, M(0x1f6b3a), x - 9 + i * 9, 0, -2 + (i % 2) * 6, g); box(9, 7, 6, M(0x3a3a3a), x, 0, -9, g); },
   laptop: function (g, x) { box(12, 1.5, 10, M(0x4a4a4a), x, 0, 2, g); var l = new THREE.Group(); l.position.set(x, 1.5, -3); l.rotation.x = -0.25; box(12, 9, 0.6, M(0x4a4a4a), 0, 0, 0, l); screen(l, 10, 7, 0, 1, 0.35, 0x6f8fd0); g.add(l); },
-  synth: function (g, x) { box(36, 4, 12, black, x, 0, 0, g); box(32, 0.3, 5, M(0xf2f2f2), x, 4, 3, g); box(9, 14, 8, black, x - 24, 0, -8, g); },
-  boxes: function (g, x) { for (var i = 0; i < 6; i++) box(7, 9.5, 1.8, [M(0xb83b3b), M(0x2f5fa8), M(0xe0b43a), M(0x3a8f5a)][i % 4], x - 13 + i * 5, 0, -2, g); },
-  modem: function (g, x) { box(6, 1.6, 9, M(0x2b2b2b), x, 0, 3, g); },
-  rackbox: function (g, x) { box(17, 7, 12, M(0x6f7478), x, 0, -3, g); box(15, 0.8, 0.3, M(0x2fbf5f), x, 3, 3.05, g); },
-  terminal: function (g, x) { box(18, 14, 14, cream, x, 0, -4, g); screen(g, 12, 8.5, x, 3, 3.05, 0xffb347); kb(g, 18, x, 8, cream); },
-  ibmpc: function (g, x) { box(20, 5.5, 16, M(0xcfcab8), x, 0, -3, g); box(15, 12, 13, M(0xcfcab8), x, 5.5, -3, g); screen(g, 11, 8, x, 7.5, 3.6, 0x3fb35f); kb(g, 19, x, 9, M(0xcfcab8)); },
-  nabu: function (g, x) { box(17, 4, 12, M(0xe0d9c5), x, 0, -1, g); PROPS.crt(g, x + 0, 0x4f7fd0); },
-  flag: function (g, x) { box(0.3, 14, 0.3, M(0x777777), x, 0, 0, g); var f = new THREE.Mesh(new THREE.PlaneGeometry(9, 4.5), new THREE.MeshBasicMaterial({ map: flagTex(), side: THREE.DoubleSide })); f.position.set(x + 4.6, 11.5, 0); g.add(f); }
-};
-var _flag;
-function flagTex() {
-  if (_flag) return _flag;
-  var c = document.createElement("canvas"); c.width = 64; c.height = 32; var x = c.getContext("2d");
-  x.fillStyle = "#fff"; x.fillRect(0, 0, 64, 32); x.fillStyle = "#d52b1e"; x.fillRect(0, 0, 16, 32); x.fillRect(48, 0, 16, 32);
-  x.beginPath(); x.moveTo(32, 6); x.lineTo(37, 18); x.lineTo(27, 18); x.fill(); x.fillRect(31, 18, 2, 7);
-  return (_flag = new THREE.CanvasTexture(c));
-}
-// what each booth shows, inferred from its name (two props per table, front of table)
-var SHOW = {
-  1: ["mac", "mac", "mac", "mac"], 2: ["pc", "terminal", "mac", "modem", "pc", "crt"], 3: ["pc", "flag", "crt"], 4: ["nabu", "boxes"],
-  5: ["boards", "crt"], 6: ["c64", "c64", "crt"], 7: ["console", "pc"], 8: ["console", "tv", "pc"],
-  9: ["synth", "synth"], 11: ["zx", "zx", "zx", "zx", "zx", "tv"], 12: ["modem", "pc", "terminal", "modem"], 13: ["console", "boards"],
-  14: ["handheld"], 15: ["ibmpc", "ibmpc"], 16: ["console"], 17: ["mac", "mac", "mac"], 18: ["atari", "atari", "console"],
-  19: ["pc", "flag"], 20: ["handheld", "handheld"], 21: ["boards", "console", "boards", "crt", "boards"], 22: ["zx", "pc", "pc"],
-  23: ["ti99"], 24: ["rackbox", "pc", "rackbox"], 25: ["zx", "modem"], 26: ["pc"], 27: ["c64"], 28: ["amiga", "amiga", "crt"],
-  30: ["pc"], 31: ["apple2", "terminal", "pc"], 32: ["console"], 33: ["pc", "crt"], 34: ["pc", "boxes", "boxes"], 35: ["pc"],
-  36: ["apple2", "apple2"], 37: ["apple2", "c64", "mac", "c64", "apple2"], 38: ["boxes", "flag", "boxes"], 39: ["pc", "crt"], 40: ["laptop", "laptop", "crt"]
+  boxes: function (g, x) { for (var i = 0; i < 6; i++) box(7, 9.5, 1.8, [M(0xb83b3b), M(0x2f5fa8), M(0xe0b43a), M(0x3a8f5a)][i % 4], x - 13 + i * 5, 0, -2, g); }
 };
 function propGroup(cx, cz, face) {                   // face: aisle side of the table, "W" or "E"
   var g = new THREE.Group(); g.position.set(cx, TH, cz);
   g.rotation.y = face === "W" ? -Math.PI / 2 : Math.PI / 2; scene.add(g); return g;
 }
+
+// ---------------------------------------------------------------- booth wares
+// What each booth shows or sells, from layout/BOOTHS-RESEARCH.md (booths 10 and 29 are built in detail
+// below). Machines named by public sources are modelled as those machines; booths we know nothing about
+// get plain props that fit their name. Box art, posters and screens are generic colour blocks with plain
+// printed titles: no copied artwork or logos. Everything is made of three materials: PV (vertex colours,
+// lit), PA (one label atlas, lit: box art, signs, keys, boards) and PG (the same atlas glowing: screens),
+// so after the final merge all the booths together cost three draw calls.
+(function () {
+var PV = new THREE.MeshLambertMaterial({ vertexColors: true });
+var ATL = document.createElement("canvas"); ATL.width = ATL.height = 2048;
+var ACX = ATL.getContext("2d"), ATEX = new THREE.CanvasTexture(ATL); ATEX.anisotropy = 4;
+var PA = new THREE.MeshLambertMaterial({ map: ATEX }), PG = new THREE.MeshBasicMaterial({ map: ATEX });
+var atl = { y: 0, rows: [], geo: {} }, AP = 3, AS = 2048;
+function cell(key, w, h, draw) {                     // a w x h px drawing in the atlas -> a 1 x 1 plane mapped on it (cached)
+  if (atl.geo[key]) return atl.geo[key];
+  var W = w + 2 * AP, H = h + 2 * AP, r = null, i;   // shelf packing: a row of similar height with room, or a new row
+  for (i = 0; i < atl.rows.length && !r; i++) if (atl.rows[i].h >= H && atl.rows[i].h <= H * 1.25 && atl.rows[i].x + W <= AS) r = atl.rows[i];
+  if (!r) {
+    if (atl.y + H > AS) { if (window.console) console.warn("atlas full: " + key); return (atl.geo[key] = atl.geo.blank || cell("blank", 8, 8, function (c) { c.fillStyle = "#888"; c.fillRect(0, 0, 8, 8); })); }
+    r = { y: atl.y, h: H, x: 0 }; atl.rows.push(r); atl.y += H;
+  }
+  var x = r.x + AP, y = r.y + AP; r.x += W;
+  ACX.save(); ACX.translate(x, y); ACX.beginPath(); ACX.rect(0, 0, w, h); ACX.clip(); draw(ACX, w, h); ACX.restore();
+  ACX.drawImage(ATL, x, y, w, 1, x, y - AP, w, AP); ACX.drawImage(ATL, x, y + h - 1, w, 1, x, y + h, w, AP);   // bleed the edges (mipmaps)
+  ACX.drawImage(ATL, x, y - AP, 1, h + 2 * AP, x - AP, y - AP, AP, h + 2 * AP); ACX.drawImage(ATL, x + w - 1, y - AP, 1, h + 2 * AP, x + w, y - AP, AP, h + 2 * AP);
+  var g = new THREE.PlaneGeometry(1, 1), uv = g.attributes.uv;
+  for (i = 0; i < uv.count; i++) uv.setXY(i, (x + uv.getX(i) * w) / AS, 1 - (y + (1 - uv.getY(i)) * h) / AS);
+  return (atl.geo[key] = g);
+}
+var SANS = "Arial, Helvetica, sans-serif", MONO = "'Courier New', Courier, monospace";
+function tx(c, s, x, y, px, col, al, font, maxW) {   // one line of text, shrunk to maxW
+  c.font = "bold " + px + "px " + (font || SANS); c.fillStyle = col; c.textAlign = al || "center"; c.textBaseline = "middle";
+  if (maxW) { var m = c.measureText(s).width; if (m > maxW) { px = Math.max(6, Math.floor(px * maxW / m)); c.font = "bold " + px + "px " + (font || SANS); } }
+  c.fillText(s, x, y);
+}
+function wrap(c, s, maxW) {
+  var out = [], line = "";
+  s.split(" ").forEach(function (w) { var t = line ? line + " " + w : w; if (line && c.measureText(t).width > maxW) { out.push(line); line = w; } else line = t; });
+  if (line) out.push(line); return out;
+}
+function hash(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = (h * 33 + s.charCodeAt(i)) >>> 0; return h; }
+function css(c) { return "#" + ("00000" + c.toString(16)).slice(-6); }
+// solid pieces: unit box / 8-sided cylinder with a colour attribute, one cached geometry per colour
+var VG = {}, CG = {}, CYL8 = new THREE.CylinderGeometry(1, 1, 1, 8);
+function colGeo(base, cache, hex) {
+  if (cache[hex]) return cache[hex];
+  var g = base.clone(), n = g.attributes.position.count, a = new Float32Array(n * 3), cl = new THREE.Color(hex);
+  for (var i = 0; i < n; i++) { a[i * 3] = cl.r; a[i * 3 + 1] = cl.g; a[i * 3 + 2] = cl.b; }
+  g.setAttribute("color", new THREE.BufferAttribute(a, 3)); return (cache[hex] = g);
+}
+function vb(g, w, h, d, c, x, y, z) { return part(colGeo(BOX, VG, c), PV, w, h, d, x, y + h / 2, z, g); }         // y = bottom
+function vc(g, r, h, c, x, y, z, rx, rz) { var m = part(colGeo(CYL8, CG, c), PV, r, h, r, x, y, z, g); m.rotation.set(rx || 0, 0, rz || 0); return m; }   // y = centre
+function pl(g, geo, w, h, x, y, z, rx, lit) { var m = new THREE.Mesh(geo, lit === false ? PG : PA); m.scale.set(w, h, 1); m.position.set(x, y, z); if (rx) m.rotation.x = rx; g.add(m); return m; }   // y = centre, faces +z
+function sub(g, x, y, z, rx, ry) { var s = new THREE.Group(); s.position.set(x, y, z); s.rotation.set(rx || 0, ry || 0, 0); g.add(s); return s; }
+var UP = -Math.PI / 2;                               // pl(..., UP): lying flat, facing up
+
+// ---- screens: what's on them (generic: shapes and plain text)
+function term(lines, bg, fg, px) {
+  return function (c, w, h) { c.fillStyle = bg; c.fillRect(0, 0, w, h); lines.forEach(function (l, i) { tx(c, l, 6, 9 + i * (px || 10) * 1.2, px || 10, fg, "left", MONO, w - 10); }); };
+}
+function desk(bg, menu, win) {                       // a GUI desktop: menu bar, a window, icons
+  return function (c, w, h) {
+    c.fillStyle = bg; c.fillRect(0, 0, w, h); c.fillStyle = menu; c.fillRect(0, 0, w, 9); c.fillStyle = "#000"; c.fillRect(0, 9, w, 1);
+    c.fillStyle = "#fff"; c.fillRect(14, 20, 74, 54); c.strokeStyle = "#000"; c.lineWidth = 1.5; c.strokeRect(14, 20, 74, 54);
+    c.fillStyle = win; c.fillRect(14, 20, 74, 9);
+    for (var i = 0; i < 4; i++) { c.fillStyle = "#000"; c.fillRect(22 + (i % 2) * 34, 36 + (i >> 1) * 18, 10, 8); }
+    for (i = 0; i < 3; i++) { c.fillStyle = "#fff"; c.fillRect(104, 18 + i * 22, 14, 11); c.strokeRect(104, 18 + i * 22, 14, 11); }
+  };
+}
+var SCR = {
+  mac: [128, 96, desk("#d8d8d8", "#fff", "#888")], lisa: [128, 96, desk("#bfbfbf", "#fff", "#777")],
+  gsos: [128, 96, desk("#5f7fb8", "#fff", "#e8c35a")], pbk: [128, 96, desk("#7f8fa8", "#eee", "#999")],
+  gopher: [128, 96, term(["Gopher menu", "", "1. About this server/", "2. Fun and games/", "3. Libraries/", "4. Weather/", "5. Search <?>"], "#120c04", "#ffb347", 9)],
+  gopherG: [128, 96, term(["gopher://", "", " --> Welcome/", "     Software/", "     Text files/", "     Phlogs/"], "#041008", "#5fe08a", 9)],
+  retronet: [128, 96, term(["RetroNET", "", "1  Cloud CP/M", "2  Games", "3  Homebrew", "4  Chat"], "#1d2f8f", "#ffffff", 10)],
+  bbs: [128, 96, function (c, w, h) { c.fillStyle = "#000"; c.fillRect(0, 0, w, h);
+    [["OMTR BBS", "#5ff"], ["", "#fff"], ["[M] Messages", "#ff5"], ["[F] Files", "#ff5"], ["[D] Doors", "#ff5"], ["CONNECT 2400", "#f5f"]].forEach(function (l, i) { tx(c, l[0], 6, 9 + i * 13, 10, l[1], "left", MONO); }); }],
+  nadoom: [128, 96, function (c, w, h) {               // a generic first-person corridor
+    c.fillStyle = "#4a4a52"; c.fillRect(0, 0, w, h / 2); c.fillStyle = "#5a4430"; c.fillRect(0, h / 2, w, h / 2);
+    c.fillStyle = "#6f6a58"; c.beginPath(); c.moveTo(0, 0); c.lineTo(44, 30); c.lineTo(44, 62); c.lineTo(0, h); c.fill();
+    c.beginPath(); c.moveTo(w, 0); c.lineTo(84, 30); c.lineTo(84, 62); c.lineTo(w, h); c.fill();
+    c.fillStyle = "#2d2a26"; c.fillRect(44, 30, 40, 32); c.fillStyle = "#8a2a1a"; c.fillRect(58, 42, 12, 18);
+    c.fillStyle = "#333"; c.fillRect(0, 84, w, 12); tx(c, "NADOOM", w / 2, 90, 9, "#e8c35a"); }],
+  demo: [128, 96, function (c, w, h) { c.fillStyle = "#000"; c.fillRect(0, 0, w, h);
+    var cols = ["#2a2a8f", "#4f4fd8", "#9f9fff", "#fff", "#9f9fff", "#4f4fd8", "#8f2a2a", "#d84f4f", "#ff9f9f", "#fff", "#ff9f9f", "#d84f4f"];
+    cols.forEach(function (k, i) { c.fillStyle = k; c.fillRect(0, 14 + i * 3, w, 3); c.fillRect(0, 52 + i * 2, w, 2); });
+    tx(c, "TRANSMISSION64", w / 2, 84, 11, "#fff", "center", MONO, w - 6); }],
+  petscii: [128, 96, function (c, w, h) { c.fillStyle = "#6c5eb5"; c.fillRect(0, 0, w, h); c.fillStyle = "#352879"; c.fillRect(8, 8, w - 16, h - 16);
+    var p = ["#fff", "#b8c76f", "#9ae29b", "#d28b5e", "#6c5eb5", "#000"], s = 7;
+    for (var y = 0; y < 10; y++) for (var x = 0; x < 14; x++) { var k = (x * 7 + y * 13 + x * y) % 9; if (k < 6) { c.fillStyle = p[k]; c.fillRect(10 + x * 8, 10 + y * 7.6, k % 2 ? 8 : 4, 7.6); } } }],
+  c64: [128, 96, function (c, w, h) { c.fillStyle = "#6c5eb5"; c.fillRect(0, 0, w, h); c.fillStyle = "#352879"; c.fillRect(10, 9, w - 20, h - 18);
+    ["**** COMMODORE 64 ****", "", "READY.", "LOAD\"*\",8,1"].forEach(function (l, i) { tx(c, l, 14, 18 + i * 10, 8, "#a5a0ff", "left", MONO, w - 26); }); }],
+  destest: [128, 96, function (c, w, h) { c.fillStyle = "#352879"; c.fillRect(0, 0, w, h); tx(c, "RAM / CHIP TEST", w / 2, 9, 9, "#fff", "center", MONO);
+    for (var i = 0; i < 24; i++) { c.fillStyle = i === 13 ? "#d83a3a" : "#3ac25a"; c.fillRect(10 + (i % 6) * 18, 20 + Math.floor(i / 6) * 17, 15, 13); } }],
+  grind: [128, 96, function (c, w, h) { c.fillStyle = "#1a120c"; c.fillRect(0, 0, w, h); c.fillStyle = "#6b4a22"; c.beginPath(); c.moveTo(0, 6); c.lineTo(46, 32); c.lineTo(46, 66); c.lineTo(0, 92); c.fill();
+    c.beginPath(); c.moveTo(w, 6); c.lineTo(82, 32); c.lineTo(82, 66); c.lineTo(w, 92); c.fill(); c.fillStyle = "#e8a83a"; c.fillRect(60, 36, 8, 8);
+    c.fillStyle = "#3a2a1a"; c.fillRect(0, 80, w, 16); tx(c, "GRIND", w / 2, 88, 9, "#e8a83a"); }],
+  wb: [128, 96, function (c, w, h) { c.fillStyle = "#0055aa"; c.fillRect(0, 0, w, h); c.fillStyle = "#fff"; c.fillRect(0, 0, w, 9); tx(c, "Workbench", 4, 5, 7, "#0055aa", "left");
+    c.fillStyle = "#ff8800"; c.fillRect(10, 20, 14, 10); c.fillRect(10, 42, 14, 10); c.fillStyle = "#fff"; c.fillRect(40, 22, 76, 52); c.fillStyle = "#0055aa"; c.fillRect(42, 32, 72, 40); }],
+  mystery: [128, 96, function (c, w, h) { c.fillStyle = "#000"; c.fillRect(0, 0, w, h); c.strokeStyle = "#5fe08a"; c.lineWidth = 1.2;
+    c.beginPath(); c.moveTo(30, 60); c.lineTo(30, 34); c.lineTo(64, 14); c.lineTo(98, 34); c.lineTo(98, 60); c.closePath(); c.moveTo(56, 60); c.lineTo(56, 44); c.lineTo(70, 44); c.lineTo(70, 60); c.stroke();
+    tx(c, "YOU ARE IN THE FRONT YARD.", 4, 76, 7, "#5fe08a", "left", MONO, w - 8); tx(c, ">", 4, 88, 8, "#5fe08a", "left", MONO); }],
+  remake: [128, 96, function (c, w, h) { var gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, "#2a3a6a"); gr.addColorStop(1, "#c88a5a"); c.fillStyle = gr; c.fillRect(0, 0, w, h);
+    c.fillStyle = "#1a1a22"; c.beginPath(); c.moveTo(30, 80); c.lineTo(30, 46); c.lineTo(64, 24); c.lineTo(98, 46); c.lineTo(98, 80); c.fill(); c.fillStyle = "#e8c35a"; c.fillRect(44, 54, 8, 8); c.fillRect(76, 54, 8, 8);
+    c.fillStyle = "#2a3a22"; c.fillRect(0, 80, w, 16); }],
+  spec: [128, 96, function (c, w, h) { c.fillStyle = "#cfcfcf"; c.fillRect(0, 0, w, h); c.fillStyle = "#f4f4f4"; c.fillRect(10, 9, w - 20, h - 18);
+    ["#d82020", "#e8c020", "#20b020", "#20a0e0"].forEach(function (k, i) { c.fillStyle = k; c.fillRect(86 + i * 6, 70, 6, 14); });
+    tx(c, "10 PRINT \"HELLO\"", 14, 20, 8, "#000", "left", MONO, w - 30); tx(c, "20 GO TO 10", 14, 30, 8, "#000", "left", MONO); tx(c, "K", 14, 42, 8, "#fff", "left", MONO); }],
+  cpc: [128, 96, term(["", "BASIC 1.0", "", "Ready", "RUN\"DISC", ""], "#00007f", "#ffff40", 9)],
+  green: [128, 96, term(["", "READY", "] CATALOG", "", " A 002 HELLO", " B 034 GAME", "]"], "#041008", "#5fe08a", 9)],
+  bbc: [128, 96, function (c, w, h) { c.fillStyle = "#000"; c.fillRect(0, 0, w, h);
+    [["MODE 7", "#ff4"], ["", ""], ["TELETEXT", "#4ff"], ["PAGE 100", "#f4f"], ["", ""], [">_", "#fff"]].forEach(function (l, i) { tx(c, l[0], 8, 10 + i * 13, 10, l[1] || "#fff", "left", MONO); });
+    c.fillStyle = "#e33"; c.fillRect(84, 26, 32, 12); c.fillStyle = "#3e3"; c.fillRect(84, 40, 32, 12); }],
+  ti: [128, 96, function (c, w, h) { c.fillStyle = "#5fd8e8"; c.fillRect(0, 0, w, h);
+    ["#d82020", "#e8c020", "#20b020", "#2050d8", "#b030b0", "#e88020"].forEach(function (k, i) { c.fillStyle = k; c.fillRect(8 + i * 19, 8, 19, 12); });
+    tx(c, "TEXAS INSTRUMENTS", w / 2, 40, 9, "#000"); tx(c, "HOME COMPUTER", w / 2, 52, 9, "#000"); tx(c, "READY-PRESS ANY KEY", w / 2, 78, 7, "#000"); }],
+  dos: [128, 96, term(["", "C:\\>dir", "", "AUTOEXEC BAT", "COMMAND  COM", "", "C:\\>_"], "#000", "#c8c8c8", 9)],
+  mono: [128, 96, term(["", "A>dir", "", "COMMAND  COM", "BASICA   COM", "", "A>_"], "#020a02", "#3fdc5f", 9)],
+  amber: [128, 96, term(["", "login: guest", "", "$ ls", "docs  games", "$ _"], "#120c04", "#ffb347", 9)],
+  win: [128, 96, function (c, w, h) { c.fillStyle = "#008080"; c.fillRect(0, 0, w, h); c.fillStyle = "#c0c0c0"; c.fillRect(0, h - 10, w, 10); c.fillRect(24, 22, 80, 46);
+    c.fillStyle = "#000080"; c.fillRect(24, 22, 80, 8); tx(c, "Connecting...", 64, 42, 8, "#000"); c.fillStyle = "#fff"; c.fillRect(30, 52, 68, 7); c.fillStyle = "#000080"; c.fillRect(30, 52, 40, 7); }],
+  imode: [64, 80, function (c, w, h) { c.fillStyle = "#fff"; c.fillRect(0, 0, w, h); c.fillStyle = "#e0407a"; c.fillRect(0, 0, w, 14); tx(c, "i-mode", w / 2, 7, 9, "#fff");
+    ["1 News", "2 Mail", "3 Games", "4 Mall"].forEach(function (l, i) { tx(c, l, 4, 24 + i * 14, 9, "#222", "left"); }); }],
+  newton: [96, 128, function (c, w, h) { c.fillStyle = "#b8c4a8"; c.fillRect(0, 0, w, h); c.strokeStyle = "#7f8a70"; c.lineWidth = 1;
+    for (var i = 0; i < 9; i++) { c.beginPath(); c.moveTo(6, 20 + i * 11); c.lineTo(w - 6, 20 + i * 11); c.stroke(); }
+    c.strokeStyle = "#1a1a1a"; c.lineWidth = 2; c.beginPath(); c.moveTo(12, 28); c.bezierCurveTo(24, 10, 30, 36, 44, 20); c.bezierCurveTo(56, 8, 60, 30, 76, 24); c.stroke();
+    tx(c, "Notes", 8, 8, 9, "#1a1a1a", "left"); c.fillStyle = "#1a1a1a"; c.fillRect(0, h - 12, w, 12); }],
+  lcd: [128, 64, term(["TRS-80  Model 100", "BASIC  TEXT  TELCOM", "ADRS   SCHEDL"], "#a8b498", "#1a2018", 10)],
+  chip8: [128, 96, function (c, w, h) { c.fillStyle = "#000"; c.fillRect(0, 0, w, h); c.fillStyle = "#fff";
+    for (var y = 0; y < 8; y++) for (var x = 0; x < 16; x++) if (((x * 5 + y * 3) ^ (x * y)) % 5 === 0) c.fillRect(4 + x * 7.5, 10 + y * 9, 7, 8); }],
+  gametank: [128, 128, function (c, w, h) { c.fillStyle = "#1a2a5a"; c.fillRect(0, 0, w, h); c.fillStyle = "#3a8a3a"; c.fillRect(0, 96, w, 32);
+    var P = ["#e83a3a", "#e8c83a", "#3ac8e8", "#c83ae8"]; for (var i = 0; i < 8; i++) { c.fillStyle = P[i % 4]; c.fillRect(8 + i * 15, 70 - (i % 3) * 18, 10, 10); }
+    c.fillStyle = "#fff"; c.fillRect(56, 82, 12, 14); tx(c, "SCORE 0420", 6, 8, 9, "#fff", "left", MONO); }],
+  star: [128, 96, function (c, w, h) { c.fillStyle = "#06102a"; c.fillRect(0, 0, w, h); c.fillStyle = "#fff"; var s = 7;
+    for (var i = 0; i < 70; i++) { s = (s * 69069 + 1) >>> 0; c.fillRect(s % w, (s >> 8) % h, i % 7 ? 1 : 2, i % 7 ? 1 : 2); }
+    c.strokeStyle = "#5f8fd8"; c.lineWidth = 1; c.beginPath(); c.moveTo(20, 30); c.lineTo(40, 22); c.lineTo(62, 34); c.lineTo(80, 28); c.lineTo(100, 50); c.stroke(); }],
+  neb: [128, 96, function (c, w, h) { c.fillStyle = "#05060f"; c.fillRect(0, 0, w, h);
+    var g = c.createRadialGradient(60, 48, 2, 60, 48, 44); g.addColorStop(0, "rgba(255,200,230,1)"); g.addColorStop(.4, "rgba(200,70,140,.8)"); g.addColorStop(1, "rgba(30,20,80,0)"); c.fillStyle = g; c.fillRect(0, 0, w, h);
+    c.fillStyle = "#fff"; for (var i = 0; i < 30; i++) c.fillRect((i * 37) % w, (i * 53) % h, 1, 1); }],
+  edit: [128, 96, function (c, w, h) { c.fillStyle = "#1e1e24"; c.fillRect(0, 0, w, h); var P = ["#7fb8ff", "#e8c35a", "#9fe08a", "#d8d8d8", "#e87f9f"];
+    for (var i = 0; i < 10; i++) { c.fillStyle = P[i % 5]; c.fillRect(8 + (i % 3) * 8, 6 + i * 9, 30 + (i * 23) % 70, 4); } }],
+  stream: [128, 96, function (c, w, h) { c.fillStyle = "#18181f"; c.fillRect(0, 0, w, h); c.fillStyle = "#000"; c.fillRect(4, 10, 86, 56);
+    ["#4f4fd8", "#9f9fff", "#fff", "#9f9fff", "#4f4fd8", "#d84f4f", "#ff9f9f", "#fff", "#ff9f9f", "#d84f4f"].forEach(function (k, i) { c.fillStyle = k; c.fillRect(4, 18 + i * 4, 86, 3); });
+    c.fillStyle = "#d83a3a"; c.fillRect(4, 70, 22, 9); tx(c, "LIVE", 15, 75, 7, "#fff");
+    for (var i = 0; i < 7; i++) { c.fillStyle = ["#9f7fff", "#ccc", "#7fd8a8"][i % 3]; c.fillRect(95, 8 + i * 11, 18 + (i * 7) % 12, 4); } }],
+  coco: [128, 96, function (c, w, h) { c.fillStyle = "#000"; c.fillRect(0, 0, w, h); c.fillStyle = "#2fd83a"; c.fillRect(10, 10, w - 20, h - 20);
+    ["DISK EXTENDED", "COLOR BASIC", "OK"].forEach(function (l, i) { tx(c, l, 14, 20 + i * 11, 8, "#062a08", "left", MONO); }); }],
+  arcade: [96, 128, function (c, w, h) { c.fillStyle = "#000"; c.fillRect(0, 0, w, h); var P = ["#e83a3a", "#3ae8e8", "#e8e83a"];
+    for (var i = 0; i < 12; i++) { c.fillStyle = P[i % 3]; c.fillRect(10 + (i % 6) * 13, 14 + Math.floor(i / 6) * 14, 9, 7); }
+    c.fillStyle = "#fff"; c.fillRect(44, 108, 9, 9); c.fillRect(48, 70, 1, 30); }],
+  saturn: [128, 96, function (c, w, h) { var g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#0a1a5a"); g.addColorStop(1, "#5a8ae8"); c.fillStyle = g; c.fillRect(0, 0, w, h);
+    c.fillStyle = "#e8e0c0"; c.beginPath(); c.arc(64, 46, 18, 0, 7); c.fill(); c.strokeStyle = "#e8e0c0"; c.lineWidth = 3; c.beginPath(); c.ellipse(64, 46, 36, 8, -0.3, 0, 7); c.stroke(); }],
+  game: [128, 96, function (c, w, h) { c.fillStyle = "#3a6ae8"; c.fillRect(0, 0, w, h); c.fillStyle = "#3a9a3a"; c.fillRect(0, 74, w, 22); c.fillStyle = "#c86a2a";
+    c.fillRect(20, 50, 16, 16); c.fillRect(70, 40, 40, 8); c.fillStyle = "#e8e83a"; c.fillRect(46, 60, 8, 14); }],
+  atari: [128, 96, function (c, w, h) { c.fillStyle = "#2a2a6a"; c.fillRect(0, 0, w, h); var P = ["#e86a3a", "#e8c83a", "#6ae83a", "#3ac8e8", "#c83ae8"];
+    for (var i = 0; i < 5; i++) { c.fillStyle = P[i]; c.fillRect(0, 12 + i * 8, w, 6); } c.fillStyle = "#fff"; c.fillRect(56, 70, 16, 6); c.fillRect(90, 60, 4, 4); }],
+  hand: [64, 48, function (c, w, h) { c.fillStyle = "#9aa86a"; c.fillRect(0, 0, w, h); c.fillStyle = "#2a3a1a"; c.fillRect(8, 30, 10, 10); c.fillRect(30, 20, 24, 4); c.fillRect(40, 34, 6, 6); }],
+  plc: [128, 96, term(["LINE 3   RUN", "T1  072.4 C", "P2  1.20 bar", "M1  ON", "ALARM  NONE"], "#020802", "#4fe06a", 10)],
+  m80: [128, 96, term(["", "READY", ">LIST", "10 CLS", "20 PRINT", ">_"], "#000", "#e8e8e8", 9)],
+  msx: [128, 96, term(["MSX BASIC", "", "Ok", "_"], "#2a3ad8", "#ffffff", 10)]
+};
+function scr(g, kind, w, h, x, y, z, rx) { var s = SCR[kind] || SCR.game; return pl(g, cell("s:" + kind, s[0], s[1], s[2]), w, h, x, y, z, rx, false); }   // y = centre
+function keyTop(caseC, keyC, alt) {                 // a keyboard seen from above
+  return cell("k:" + caseC + keyC + (alt || ""), 96, 32, function (c, w, h) {
+    c.fillStyle = css(caseC); c.fillRect(0, 0, w, h);
+    for (var r = 0; r < 4; r++) for (var k = 0; k < 13; k++) { c.fillStyle = alt && r === 0 && k > 1 && k < 11 ? css(alt) : css(keyC); c.fillRect(3 + r * 1.5 + k * 6.9, 3 + r * 6.5, 5.6, 5.4); }
+    c.fillStyle = css(keyC); c.fillRect(26, 28.5, 38, 3);
+  });
+}
+
+// ---- builders: (g, x, z, ...) on the table top, centred at x, z (+z toward the visitor)
+function mon(g, x, z, w, h, d, c, s, y) { y = y || 0; vb(g, w, h, d, c, x, y, z); scr(g, s, w * 0.74, h * 0.64, x, y + h * 0.56, z + d / 2 + 0.06); }
+function kbd(g, x, z, w, c, kc) { vb(g, w, 1.1, 6, c, x, 0, z); pl(g, keyTop(c, kc), w * 0.94, 5.3, x, 1.16, z, UP); }
+function comp(g, x, z, w, d, h, c, kc, alt) {        // a keyboard computer (C64, Atari, Spectrum...): case + its keys
+  vb(g, w, h, d, c, x, 0, z); vb(g, w, h * 0.5, d * 0.4, c, x, h, z - d * 0.3);
+  pl(g, keyTop(c, kc, alt), w * 0.86, d * 0.5, x, h + 0.04, z + d * 0.17, UP);
+}
+function aio(g, x, z, w, h, d, c, s, kc) {           // a screen in the case (compact Mac, PET, terminal), its keyboard in front
+  vb(g, w, h, d, c, x, 0, z); scr(g, s, w * 0.66, h * 0.4, x, h * 0.62, z + d / 2 + 0.06);
+  vb(g, w * 0.36, 0.5, 0.2, 0x1a1a1a, x + w * 0.12, h * 0.25, z + d / 2);
+  if (kc !== false) kbd(g, x, z + d / 2 + 4.2, w * 1.05, c, kc || 0x9a9488);
+}
+function lap(g, x, z, w, d, c, s, kc, a) {           // a laptop, lid open
+  vb(g, w, 1.1, d, c, x, 0, z); pl(g, keyTop(c, kc || 0x2a2a2a), w * 0.84, d * 0.42, x, 1.14, z - d * 0.1, UP);
+  var l = sub(g, x, 1.1, z - d / 2 + 0.3, -(a || 0.3)), lh = d * 0.86;
+  vb(l, w, lh, 0.45, c, 0, 0, 0); scr(l, s, w * 0.8, lh * 0.76, 0, lh * 0.52, 0.25);
+}
+function drv(g, x, z, w, h, d, c, y) { y = y || 0; vb(g, w, h, d, c, x, y, z); vb(g, w * 0.6, 0.35, 0.2, 0x1a1a1a, x, y + h * 0.55, z + d / 2); vb(g, 0.5, 0.4, 0.2, 0xd83a2a, x + w * 0.38, y + h * 0.3, z + d / 2); }
+function tvs(g, x, z, w, s, c) { var h = w * 0.82, d = w * 0.78; vb(g, w, h, d, c || 0x5a3d26, x, 0, z); vb(g, w * 0.2, h * 0.86, 0.3, 0x8d9294, x + w * 0.38, h * 0.07, z + d / 2); scr(g, s, w * 0.62, h * 0.66, x - w * 0.1, h * 0.52, z + d / 2 + 0.06); }
+function joy(g, x, z, c, b) { vb(g, 3.4, 1.3, 3.4, c || 0x1e1e1e, x, 0, z); vc(g, 0.3, 4, 0x1a1a1a, x, 3.2, z - 0.3); vc(g, 0.6, 0.8, b || 0xc0302a, x, 5.2, z - 0.3); vb(g, 0.9, 0.5, 0.9, b || 0xc0302a, x - 1, 1.3, z + 1); }
+function pad(g, x, z, c, ry) { var p = sub(g, x, 0, z, 0, ry || 0); vb(p, 5.4, 0.8, 2.4, c || 0x26292b, 0, 0, 0); vb(p, 0.6, 0.3, 0.6, 0xc0302a, 1.6, 0.8, 0); vb(p, 0.6, 0.3, 0.6, 0x3a6ac0, 2.3, 0.8, -0.3); vb(p, 1.1, 0.25, 0.4, 0x111111, -1.7, 0.8, 0); vb(p, 0.4, 0.25, 1.1, 0x111111, -1.7, 0.8, 0); }
+function cart(g, x, z, c, label, y, w, h) {          // a cartridge standing face out, its label printed
+  w = w || 4; h = h || 4.6; y = y || 0; vb(g, w, h, 0.9, c, x, y, z);
+  if (label !== undefined) pl(g, cell("c:" + label + c, 64, 40, function (k, cw, ch) { k.fillStyle = "#f2efe4"; k.fillRect(0, 0, cw, ch); k.fillStyle = css(c); k.fillRect(0, 0, cw, 8);
+    if (label) { k.font = "bold 10px " + SANS; wrap(k, label, cw - 6).slice(0, 2).forEach(function (l, i) { tx(k, l, cw / 2, 18 + i * 12, 10, "#111", "center", SANS, cw - 4); }); } }), w * 0.82, h * 0.5, x, y + h * 0.55, z + 0.47);
+}
+function disks(g, x, z, c, n, y) { vb(g, 5.3, 0.12 * (n || 6), 5.3, c || 0x1a1a1a, x, y || 0, z); }
+function dbox(g, x, z, c) { vb(g, 6, 4.2, 6.2, c || 0x4a5560, x, 0, z); for (var i = 0; i < 5; i++) vb(g, 5.4, 0.9, 0.06, [0x1a1a1a, 0x2a2a2a][i % 2], x, 4.2, z - 2.4 + i * 1.1); }
+function board(g, x, z, w, d, y, tilt) {             // a bare PCB, flat or (tilt: from vertical) on a little stand
+  y = y || 0; var b = tilt ? sub(g, x, y + d / 2 * Math.cos(tilt) + 0.3, z, Math.PI / 2 - tilt) : sub(g, x, y, z);
+  if (tilt) vb(g, w * 0.5, 0.6, 2, 0x333333, x, y, z + d / 2 * Math.sin(tilt));
+  vb(b, w, 0.15, d, 0x1f6b3a, 0, 0, 0);
+  pl(b, cell("pcb", 128, 96, function (c, cw, ch) { c.fillStyle = "#1f6b3a"; c.fillRect(0, 0, cw, ch); c.strokeStyle = "#5fa86a"; c.lineWidth = 1;
+    for (var i = 0; i < 14; i++) { c.beginPath(); c.moveTo(0, 6 + i * 6.5); c.lineTo(cw, 6 + i * 6.5 + (i % 3) * 4); c.stroke(); }
+    c.fillStyle = "#151515"; [[10, 10, 40, 14], [60, 12, 26, 12], [96, 10, 22, 30], [12, 40, 30, 12], [50, 40, 36, 14], [14, 66, 22, 10], [50, 66, 50, 14]].forEach(function (r) { c.fillRect(r[0], r[1], r[2], r[3]); });
+    c.fillStyle = "#c8c8c8"; for (i = 0; i < 6; i++) c.fillRect(104, 48 + i * 7, 14, 3); }), w * 0.98, d * 0.98, 0, 0.17, 0, UP);
+}
+function tag(g, x, z, p, y) {                        // a price tag
+  pl(g, cell("t:" + p, 48, 28, function (c, w, h) { c.fillStyle = "#fffbe8"; c.fillRect(0, 0, w, h); c.fillStyle = "#d83a3a"; c.fillRect(0, 0, 5, h); tx(c, p, 27, 15, 15, "#111", "center", SANS, w - 8); }),
+    2.4, 1.4, x, (y || 0) + 0.7, z, -0.35);
+}
+function sign(g, x, z, t1, t2, w, bg, fg) {          // a tent card on the table
+  w = w || 14; var h = w * 0.34, s = sub(g, x, 0, z, -0.22);
+  vb(s, w, h, 0.25, 0x2a2a2a, 0, 0, -0.15);
+  pl(s, cell("sg:" + t1 + "|" + (t2 || "") + bg, 256, 88, function (c, cw, ch) { c.fillStyle = bg || "#fbfaf4"; c.fillRect(0, 0, cw, ch); c.fillStyle = fg || "#1d2a44"; c.fillRect(0, ch - 5, cw, 5);
+    if (t2) { tx(c, t1, cw / 2, 32, 30, fg || "#1d2a44", "center", SANS, cw - 16); tx(c, t2, cw / 2, 64, 18, fg || "#1d2a44", "center", SANS, cw - 16); }
+    else tx(c, t1, cw / 2, ch / 2, 35, fg || "#1d2a44", "center", SANS, cw - 16); }), w, h, 0, h / 2, 0.01);
+}
+function front(g, t1, t2, bg, fg) {                  // a banner taped to the front of the table (below the top)
+  pl(g, cell("fb:" + t1 + "|" + (t2 || ""), 384, 72, function (c, w, h) { c.fillStyle = bg; c.fillRect(0, 0, w, h); c.fillStyle = fg; c.fillRect(0, 3, w, 2); c.fillRect(0, h - 5, w, 2);
+    if (t2) { tx(c, t1, w / 2, 28, 30, fg, "center", SANS, w - 24); tx(c, t2, w / 2, 54, 15, fg, "center", SANS, w - 24); } else tx(c, t1, w / 2, h / 2, 36, fg, "center", SANS, w - 24); }),
+    44, 8.25, 0, -6.5, 15.15);
+}
+var ART = ["#c8402f", "#2f5fa8", "#e0b43a", "#3a8f5a", "#6a3a8f", "#1d1d22", "#d8d2c4", "#2f8f9a", "#a8532f", "#8f2f4a", "#4a4a52", "#e87f3a"];
+function art(title, plat, price, w, h) {             // generic box art: colour blocks, the platform and the title printed plainly
+  return cell("a:" + title + plat + price, w || 96, h || 128, function (c, cw, ch) {
+    var s = hash(title), A = ART, i;
+    c.fillStyle = A[s % 12]; c.fillRect(0, 0, cw, ch); c.fillStyle = A[(s >>> 4) % 12];
+    if (s % 3 === 0) for (i = 0; i < 4; i++) c.fillRect(0, 26 + i * 13, cw, 6);
+    else if (s % 3 === 1) { c.beginPath(); c.arc(cw * 0.62, ch * 0.4, cw * 0.27, 0, 7); c.fill(); }
+    else { c.beginPath(); c.moveTo(0, ch * 0.7); c.lineTo(cw * 0.6, 18); c.lineTo(cw, ch * 0.55); c.lineTo(cw, ch * 0.7); c.fill(); }
+    c.fillStyle = A[(s >>> 8) % 12]; c.fillRect(cw * 0.08, ch * 0.3, cw * 0.22, ch * 0.22);
+    c.fillStyle = "#111"; c.fillRect(0, 0, cw, 15); tx(c, plat, cw / 2, 8, 10, "#fff", "center", SANS, cw - 6);
+    c.fillStyle = "rgba(250,248,240,.94)"; c.fillRect(4, ch - 46, cw - 8, 42); c.font = "bold 13px " + SANS;
+    var L = wrap(c, title, cw - 14).slice(0, 3); L.forEach(function (l, j) { tx(c, l, cw / 2, ch - 25 - (L.length - 1) * 6.5 + j * 13, 13, "#111", "center", SANS, cw - 12); });
+    if (price) { c.fillStyle = "#f5d33b"; c.fillRect(cw - 34, 18, 31, 15); tx(c, price, cw - 18.5, 26, 11, "#111", "center", SANS, 28); }
+  });
+}
+function gbox(g, x, z, title, plat, price, y, w, h, d) {   // a game box standing face out
+  w = w || 7.4; h = h || 9.4; d = d || 1.9; y = y || 0;
+  vb(g, w, h, d, parseInt(ART[(hash(title) >>> 4) % 12].slice(1), 16), x, y, z); pl(g, art(title, plat, price), w * 0.98, h * 0.98, x, y + h / 2, z + d / 2 + 0.04);
+}
+function shelf(g, x, z, w, n, d) {                   // a small open shelf at the back of the table: n tiers 11 in apart
+  var H = n * 11 + 1; d = d || 7;
+  [-1, 1].forEach(function (s) { vb(g, 0.8, H, d, 0x7a5a3a, x + s * (w / 2 + 0.4), 0, z); });
+  for (var i = 0; i <= n; i++) vb(g, w + 1.6, 0.7, d, 0x8a6a48, x, i * 11, z);
+  vb(g, w + 1.6, H, 0.4, 0x6a4a2e, x, 0, z - d / 2);
+}
+function bin(g, x, z, w, d, c, fill) {               // a tray of small things
+  vb(g, w, 2, d, c || 0x3a3f46, x, 0, z);
+  for (var i = 0; i < (fill || []).length * 3; i++) { var k = fill[i % fill.length]; vb(g, 0.8 + (i % 3) * 0.4, 0.6, 0.8, k, x - w / 2 + 1 + ((i * 2.3) % (w - 2)), 2, z - d / 2 + 1 + ((i * 1.7) % (d - 2))); }
+}
+function poster(g, x, z, w, h, key, draw) {          // a print on a little easel
+  var s = sub(g, x, 0, z, -0.18); vb(s, w + 0.8, h + 0.8, 0.5, 0x2a2a2a, 0, 0, -0.3); pl(s, cell(key, 96, Math.round(96 * h / w), draw), w, h, 0, h / 2 + 0.4, 0.01);
+  vb(g, 0.6, h * 0.8, 0.6, 0x2a2a2a, x, 0, z - 3);
+}
+var FLAGS = {
+  ca: function (c, w, h) { c.fillStyle = "#fff"; c.fillRect(0, 0, w, h); c.fillStyle = "#d52b1e"; c.fillRect(0, 0, w / 4, h); c.fillRect(w * 0.75, 0, w / 4, h);
+    c.beginPath(); c.moveTo(w / 2, h * 0.18); c.lineTo(w * 0.6, h * 0.62); c.lineTo(w * 0.4, h * 0.62); c.fill(); c.fillRect(w / 2 - 1, h * 0.6, 2, h * 0.22); },
+  uk: function (c, w, h) { c.fillStyle = "#1f3a8a"; c.fillRect(0, 0, w, h); c.strokeStyle = "#fff"; c.lineWidth = 7; c.beginPath(); c.moveTo(0, 0); c.lineTo(w, h); c.moveTo(w, 0); c.lineTo(0, h); c.stroke();
+    c.strokeStyle = "#c8202a"; c.lineWidth = 2.5; c.stroke(); c.fillStyle = "#fff"; c.fillRect(0, h / 2 - 6, w, 12); c.fillRect(w / 2 - 6, 0, 12, h); c.fillStyle = "#c8202a"; c.fillRect(0, h / 2 - 3.5, w, 7); c.fillRect(w / 2 - 3.5, 0, 7, h); },
+  br: function (c, w, h) { c.fillStyle = "#1f8a3a"; c.fillRect(0, 0, w, h); c.fillStyle = "#f2d22a"; c.beginPath(); c.moveTo(w / 2, 4); c.lineTo(w - 6, h / 2); c.lineTo(w / 2, h - 4); c.lineTo(6, h / 2); c.fill();
+    c.fillStyle = "#1f3a8a"; c.beginPath(); c.arc(w / 2, h / 2, h * 0.24, 0, 7); c.fill(); }
+};
+function HEXPAD(c, w, h) { c.fillStyle = "#222"; c.fillRect(0, 0, w, h);
+  for (var i = 0; i < 16; i++) { c.fillStyle = "#e8e8e8"; c.fillRect(4 + (i % 4) * 15, 4 + Math.floor(i / 4) * 15, 12, 12); tx(c, "0123456789ABCDEF"[i], 10 + (i % 4) * 15, 10.5 + Math.floor(i / 4) * 15, 9, "#111"); } }
+function flag(g, x, z, k) { vc(g, 0.15, 13, 0x777777, x, 6.5, z); vb(g, 2.4, 0.5, 2.4, 0x333333, x, 0, z); pl(g, cell("f:" + k, 64, 40, FLAGS[k]), 7, 4.4, x + 3.6, 10.6, z); }
+function slab(g, x, z, w, d, c, s, tilt) {           // a handheld or tablet propped up on a little stand
+  var p = sub(g, x, 0.4, z, -(Math.PI / 2 - (tilt || 0.9))); vb(p, w, d, 0.8, c, 0, 0, 0); scr(p, s, w * 0.72, d * 0.6, 0, d * 0.55, 0.42);
+  vb(g, w * 0.6, 0.4, 2, 0x2a2a2a, x, 0, z + 0.6);
+}
+function flip(g, x, z, c, ry) {                       // a flip phone, open, on a little stand
+  var p = sub(g, x, 0, z, 0, ry || 0); vb(p, 2.4, 0.4, 2.6, 0x2a2a2a, 0, 0, 0.6);
+  var lo = sub(p, 0, 0.4, 0.3, -1.2); vb(lo, 1.9, 3.8, 0.55, c, 0, 0, 0); pl(lo, keyTop(c, 0xd8d8d8), 1.5, 2.4, 0, 1.6, 0.29);
+  var hi = sub(lo, 0, 3.8, 0, 0.75); vb(hi, 1.9, 3.8, 0.45, c, 0, 0, -0.05); scr(hi, "imode", 1.5, 2, 0, 2.1, 0.2);
+}
+function tower(g, x, z, c, s) { vb(g, 7, 16, 16, c, x - 13, 0, z - 2); vb(g, 1.8, 0.3, 0.2, 0x1a1a1a, x - 13, 12, z + 6); mon(g, x, z - 3, 15, 13, 14, c, s); kbd(g, x, z + 9, 17, c, 0x9a9488); }
+function apple2(g, x, z, s, c) { c = c || 0xd8cdb2; vb(g, 15, 4.2, 16, c, x, 0, z - 1); pl(g, keyTop(c, 0x3a3530), 13, 5.6, x, 4.25, z + 4.2, UP); mon(g, x, z - 4, 13, 11, 9, c, s || "green", 4.2); drv(g, x + 11.6, z - 3, 6.5, 3.2, 8.5, c); }
+function c64(g, x, z, s) { comp(g, x, z + 6, 16, 8, 2.6, 0x8c7a64, 0x4a3a2e); mon(g, x, z - 6, 14, 13, 14, 0x9a8f80, s || "c64"); }
+function a500(g, x, z) { comp(g, x, z, 19, 13, 2.8, 0xe4ddca, 0xd2cbb8); }
+function speaker(g, x, z, c) { vb(g, 5, 8, 5, c || 0x2a2a2a, x, 0, z); vc(g, 1.6, 0.3, 0x111111, x, 4.6, z + 2.6, Math.PI / 2); }
+
+// ---- per booth: one function per table, north to south (cycled when a booth has more tables)
+var C = { beige: 0xd8d0bc, cream: 0xe4ddca, plat: 0xd9d4c6, ivory: 0xece6d6, blk: 0x26292b, dk: 0x3c3f42, gry: 0x8d9294, lg: 0xb9bcbc, white: 0xeeede8, wood: 0x6b4a2e };
+var WARES = {
+  1: [function (g) {                                  // the Lisa and the first Mac
+    aio(g, -14, -3, 20, 14, 16, C.ivory, "lisa");
+    aio(g, 10, -4, 9.8, 13.6, 11, C.ivory, "mac"); vb(g, 2.2, 1, 3.4, C.ivory, 18, 0, 9);
+    sign(g, 22, 11, "Lisa → Macintosh → IIGS", "", 12);
+  }, function (g) {
+    aio(g, -16, -4, 9.8, 13.6, 11, C.plat, "mac"); dbox(g, -4, 9, 0x6a7280);
+    vb(g, 15, 3.5, 12, C.plat, 10, 0, -3); mon(g, 10, -3, 13.5, 11.5, 12, C.plat, "gsos", 3.5); kbd(g, 10, 9, 16, C.plat, 0x7a7a74); vb(g, 2.2, 1, 3.4, C.plat, 21, 0, 9);
+  }],
+  2: [function (g) { aio(g, -12, -4, 9.8, 13.6, 11, C.plat, "gopher"); sign(g, 12, 6, "gopher://", "", 12, "#1b2a1b", "#ffb347"); },   // guess: Gopher on old machines
+    function (g) { aio(g, -8, -4, 16, 14, 14, C.cream, "gopher", 0x8a8270); vb(g, 6, 1.5, 9, 0x2a2a2a, 14, 0, 0); vb(g, 4, 0.3, 0.3, 0xd83a2a, 14, 1.5, 4.3); },
+    function (g) { tower(g, -4, 0, C.beige, "gopherG"); vb(g, 10, 1.8, 6, C.lg, 18, 0, -6); }],
+  3: [function (g) {                                  // guess: computers made in Canada
+    vb(g, 18, 9, 9, C.beige, -14, 0, -3); scr(g, "green", 6, 4.4, -18, 5, 1.56); vb(g, 17, 1.2, 6, C.beige, -14, 0, 7);
+    aio(g, 9, -4, 14, 12, 13, C.cream, "green"); flag(g, 22, -8, "ca"); sign(g, 20, 9, "Made in Canada", "Conçu au Canada", 12);
+  }],
+  4: [function (g) {                                  // NABU.CA: the NABU PC, the network adapter, NADOOM
+    tvs(g, -18, -3, 18, "nadoom"); vb(g, 17, 4.5, 12, 0xe0d9c5, 2, 0, -6); vb(g, 9, 0.6, 0.3, 0x2a2a2a, 2, 3.2, 0.06);
+    comp(g, 2, 7, 16, 6, 1.4, 0xe0d9c5, 0x5a5048); vc(g, 0.3, 2, 0x222222, 9, 2.4, 7.5);
+    vb(g, 7, 2, 6, 0xd8d3c4, 18, 0, -8); vb(g, 0.5, 0.3, 0.2, 0x2fbf5f, 20, 1.2, -4.9); vb(g, 3.5, 1.2, 2.5, 0xc8304a, 24, 0, -9);
+    mon(g, 20, 3, 9, 8, 6, C.dk, "retronet"); front(g, "NABU.CA", "RetroNET", "#1d2f8f", "#ffffff");
+  }],
+  5: [function (g) {                                  // Retronic Design: joystick adapters, Amiga add-ons
+    a500(g, -16, 4); vb(g, 4.5, 1.6, 6, 0x1e1e1e, -4, 0, -4); mon(g, -16, -8, 11, 8, 4, C.dk, "wb");
+    for (var i = 0; i < 4; i++) { vb(g, 3, 1.2, 4, 0x151515, 2 + i * 4, 0, 1); tag(g, 2 + i * 4, 4, "$45"); }
+    joy(g, 4, -7, 0x1e1e1e); vb(g, 3.5, 1.5, 3.5, 0xc9bfa6, 10, 0, -7); vc(g, 0.25, 3, 0x222222, 10, 3, -7.4);
+    vb(g, 14, 1.6, 5, C.blk, 21, 0, -6); pl(g, keyTop(C.blk, 0xf2f2f2), 13, 2.6, 21, 1.64, -5.4, UP); vb(g, 4, 1.2, 3, 0x2a2a2a, 21, 0, 2);
+    sign(g, 20, 9, "Retronic Design", "", 11); front(g, "Retronic Design", "where retro meets electronic design", "#141414", "#e8c35a");
+  }],
+  6: [function (g) {                                  // C64 demos (PAL) and Transmission64
+    c64(g, -13, 0, "demo"); drv(g, 3, -5, 9.5, 3, 10, 0xe3dccb); joy(g, 4, 7, 0x1a1a1a, 0xd8302a);
+    comp(g, 18, 4, 16, 8, 2.6, 0x8c7a64, 0x4a3a2e); dbox(g, 18, -7);
+  }, function (g) {
+    comp(g, -16, 7, 16, 8, 2.8, 0xe3dccb, 0xd8d0bc); mon(g, -16, -6, 14, 13, 14, 0x9a8f80, "petscii");
+    lap(g, 6, 0, 13, 9, 0x3a3a3a, "stream"); sign(g, 21, 6, "Transmission64", "Nov 28, 2026", 13, "#141428", "#9f9fff");
+    front(g, "TRANSMISSION64", "the online C64 demoparty · Nov 28, 2026", "#141428", "#9f9fff");
+  }],
+  7: [function (g) {                                  // the Apple Newton
+    slab(g, -23, 3, 4.6, 7.4, 0x2a2b2a, "newton"); slab(g, -15, 3, 4.8, 8.2, 0x333432, "newton");
+    lap(g, 5, 0, 11, 9, 0x3f9f8a, "newton", 0x2a4a44, 0.35); vb(g, 9, 0.8, 4, 0x2a2b2a, -19, 0, 10); vc(g, 0.12, 5, 0x1a1a1a, -10, 0.2, 10, 0, Math.PI / 2);
+    lap(g, 20, -3, 10, 8, 0x3a3a3c, "mac");
+    poster(g, -6, -9, 9, 12, "pst:newton", function (c, w, h) { c.fillStyle = "#1d1d22"; c.fillRect(0, 0, w, h); c.fillStyle = "#b8c4a8"; c.fillRect(24, 22, 48, 64);
+      c.fillStyle = "#e0407a"; c.fillRect(0, h - 40, w, 3); tx(c, "Love Notes", w / 2, h - 28, 14, "#fff"); tx(c, "to Newton", w / 2, h - 12, 14, "#fff"); });
+    sign(g, 16, 10, "Legendary failure?", "", 12);
+  }],
+  8: [function (g) {                                  // One Maybe Two Retro: old + new, the BBS
+    comp(g, -16, 7, 16, 8, 2.8, 0xe3dccb, 0xd8d0bc); vb(g, 2.5, 1, 4, 0x1a1a1a, -6, 0, 7);
+    mon(g, -16, -6, 14, 13, 14, 0x8a7a64, "bbs"); drv(g, -1, -6, 9.5, 3, 10, 0xd8cdb2); vb(g, 7, 1.6, 10, 0x2a2a2a, 11, 0, -4);
+    for (var i = 0; i < 6; i++) vb(g, 0.4, 0.3, 0.2, i % 2 ? 0xd83a2a : 0x2fbf5f, 8.6 + i * 1, 1.2, 1.05);
+    joy(g, 11, 8); sign(g, 22, 4, "Old + new", "", 10);
+  }, function (g) {
+    apple2(g, -21, 0, "green"); comp(g, 3, 6, 15, 8, 2.6, 0xc8c2b4, 0x2a2a2a); mon(g, 3, -6, 13, 12, 13, C.dk, "atari"); a500(g, 20, 4); vb(g, 9, 3, 9, 0xbcb6a4, 21, 0, -8);
+    front(g, "One Maybe Two Retro", "advice · repairs · sales", "#20303a", "#f2efe4");
+  }],
+  9: [function (g) { tower(g, -6, 0, C.beige, "dos"); speaker(g, 19, -6); speaker(g, -25, -6); },   // unknown: kept plain
+    function (g) { tower(g, -6, 0, C.beige, "edit"); sign(g, 17, 6, "The Band.", "", 12); }],
+  11: [function (g) {                                 // British home computers
+    tvs(g, -18, -4, 16, "spec"); comp(g, -1, 4, 9.2, 5.6, 1.2, 0x1a1a1a, 0x8a8a8a); comp(g, 11, 4, 6.8, 6.8, 1.2, 0x1a1a1a, 0xf0f0f0);
+    comp(g, 22, 3, 12, 8, 1.6, 0x2a2a2a, 0xb8b8b8); vb(g, 6, 2, 10, 0x2a2a2a, 3, 0, -8); for (var i = 0; i < 5; i++) vb(g, 0.5, 2.6, 1.2, [0xd82020, 0xe8c020, 0x20b020, 0x20a0e0][i % 4], 0.6 + i * 1.2, 2, -8);
+  }, function (g) {
+    comp(g, -16, 5, 17, 7, 1.8, 0x4a4a4e, 0x2a2a2a, 0xd82020); mon(g, -16, -7, 13, 11, 11, 0x3a3a3c, "spec");
+    comp(g, 7, 6, 22, 9, 2.4, 0x2a2a2c, 0x5a5a5e, 0x3a8a3a); vb(g, 7, 1, 4, 0x2a2a2a, 11, 2.4, 3); mon(g, 7, -7, 13, 12, 12, 0x2a2a2c, "cpc");
+  }, function (g) {
+    comp(g, -14, 6, 16, 9, 2.6, 0xd8d0b0, 0x3a3530, 0xd83a2a); mon(g, -14, -7, 13, 11, 12, C.beige, "bbc");
+    comp(g, 6, 5, 13, 7, 2, 0xe0d8c4, 0x3a3530); comp(g, 21, 4, 14, 8, 2, 0x1a1a1a, 0x6a8ac8); vc(g, 0.6, 1, 0x3a3a3a, 26, 2.4, 6);
+    flag(g, 24, -8, "uk");
+  }],
+  12: [function (g) { tower(g, -6, 0, C.beige, "win"); vb(g, 6.5, 1.6, 9.5, 0x2a2a2a, 16, 0, -5); vb(g, 4, 0.3, 0.2, 0x2fbf5f, 16, 1.2, -0.2); },   // guess: modems
+    function (g) { vb(g, 9, 3, 8, 0x3a3a3a, -16, 0, -4); vb(g, 9, 2, 3, 0x2a2a2a, -16, 3, -6); lap(g, 3, 0, 12, 9, 0x2a2a2a, "dos");
+      vb(g, 10, 1.8, 6, C.lg, 19, 0, -6); for (var i = 0; i < 6; i++) vb(g, 0.4, 0.3, 0.2, 0x2fbf5f, 15.5 + i * 1.4, 1.2, -2.9); sign(g, 18, 8, "Dial-up / Networking", "", 12); }],
+  13: [function (g) {                                 // GameTank: the console, its board, carts
+    tvs(g, -19, -3, 16, "gametank"); vb(g, 9, 3.6, 8, 0x2b2d33, -4, 0, -3); vb(g, 4.2, 2.6, 0.9, 0xd8b83a, -4, 3.6, -3); pad(g, -6, 8); pad(g, 3, 9, 0x26292b, 0.3);
+    board(g, 8, -6, 9, 7, 0, 0.5); for (var i = 0; i < 5; i++) cart(g, 13 + i * 3.4, 6 - (i % 2) * 0.4, [0xd8b83a, 0x3a8ad8, 0xd83a3a, 0x3ad87a, 0xd8d8d8][i], "", 0, 3, 3.6);
+    lap(g, 21, -6, 11, 8, 0x3a3a3a, "edit"); sign(g, 22, 10, "GameTank", "new 8-bit console", 10);
+  }],
+  14: [function (g) {                                 // Mizuki Mobile: keitai back on i-mode
+    var cols = [0xd83a6a, 0x3a8ad8, 0xf2f2f2, 0xe8a83a, 0x2a2a2a, 0x8a3ad8];
+    for (var i = 0; i < 6; i++) flip(g, -22 + i * 5.2, 4 + (i % 2) * 2, cols[i], (i - 2.5) * 0.08);
+    vb(g, 6, 2.6, 5, 0xd8d8d8, 13, 0, -6); vc(g, 0.2, 6, 0x2a2a2a, 11.5, 5.6, -6); vc(g, 0.2, 6, 0x2a2a2a, 14.5, 5.6, -6);
+    lap(g, 22, -2, 11, 8, 0x2a2a2a, "edit"); for (i = 0; i < 4; i++) vb(g, 1, 0.1, 0.7, 0xe8c35a, 1 + i * 1.4, 0, 11);
+    sign(g, 14, 9, "Mizuki Mobile", "i-mode is back", 11);
+  }],
+  15: [function (g) { tower(g, -10, 0, 0xcfcab8, "mono"); lap(g, 18, 0, 12, 9, 0x1e1e1e, "dos", 0x2a2a2a); vb(g, 0.6, 0.3, 0.6, 0xd82a2a, 18, 1.15, -0.8); sign(g, 18, 10, "IBM", "", 8); }],   // guess
+  16: [function (g) {                                 // GalaxieMan: likely astronomy (kept plain)
+    vc(g, 2, 9, 0xf2f2f2, -18, 7, -5, 0.8); for (var i = 0; i < 3; i++) vc(g, 0.25, 6, 0x2a2a2a, -18 + Math.cos(i * 2.1) * 2, 2.6, -5 + Math.sin(i * 2.1) * 2, Math.sin(i * 2.1) * 0.4, -Math.cos(i * 2.1) * 0.4);
+    poster(g, -2, -8, 9, 7, "pst:neb", SCR.neb[2]); poster(g, 9, -8, 9, 7, "pst:star", SCR.star[2]);
+    lap(g, 2, 4, 12, 9, 0x3a3a3a, "star"); slab(g, 18, 3, 7, 9.5, 0x1a1a1a, "neb", 1.1); sign(g, 21, 10, "GalaxieMan", "", 10);
+  }],
+  17: [function (g) { lap(g, -18, 0, 11.5, 9, 0x4a4b4f, "pbk"); lap(g, 0, 0, 11.5, 9, 0x4a4b4f, "pbk"); lap(g, 18, 0, 11.5, 9, 0x2a2a2c, "pbk"); },   // guess: classic Macs
+    function (g) { aio(g, -14, -4, 9.8, 13.6, 11, C.plat, "mac"); lap(g, 6, 0, 13, 9.5, 0x1e1e1e, "pbk"); sign(g, 21, 6, "MacPB", "", 10); }],
+  18: [function (g) { tvs(g, -14, -4, 18, "atari"); vb(g, 13, 3, 9, 0x1e1e1e, 6, 0, 0); vb(g, 13, 1.2, 0.3, 0x6b4a2e, 6, 1.4, 4.6); joy(g, 16, 6, 0x1e1e1e); joy(g, 22, 6, 0x1e1e1e); },   // guess: Atari
+    function (g) { comp(g, -14, 6, 15, 8, 2.6, 0xc8c2b4, 0x2a2a2a); tvs(g, -14, -7, 14, "atari"); drv(g, 3, -5, 8, 4, 10, 0xc8c2b4);
+      for (var i = 0; i < 5; i++) cart(g, 4 + i * 4.4, 8, 0x2a2a2a, "", 0, 3.4, 4); sign(g, 19, -2, "Have you played", "Atari today?", 12); }],
+  19: [function (g) {                                 // Gemstone Warrior (1984)
+    apple2(g, -20, 0, "green"); joy(g, -8, 8, 0xc9bfa6, 0x2a2a2a);
+    gbox(g, -2, -7, "Gemstone Warrior", "APPLE II", "", 0, 7, 9, 1.3); gbox(g, 6, -7, "Gemstone Healer", "APPLE II", "", 0, 7, 9, 1.3);
+    pl(g, cell("man:gw", 96, 64, function (c, w, h) { c.fillStyle = "#f2ecd8"; c.fillRect(0, 0, w, h); c.fillStyle = "#888"; for (var i = 0; i < 9; i++) { c.fillRect(6, 8 + i * 6, 38, 2); c.fillRect(52, 8 + i * 6, 38, 2); } c.fillStyle = "#555"; c.fillRect(47, 0, 2, h); }), 10, 6.6, 2, 0.1, 6, UP);
+    c64(g, 18, 0, "game"); sign(g, 22, 12.3, "Made in Canada, 1984", "", 11);
+  }],
+  20: [function (g) {                                 // guess: handhelds, a timeline
+    var H = [[2.6, 4, 0xd8c84a], [3.5, 9, 0x2a2a2a], [3.6, 5.8, 0xc8c8c0], [10, 4.4, 0x2a2a2a], [8.4, 4.3, 0x1e1e1e], [3.4, 5.4, 0x2a2a2a], [5.8, 3.4, 0x6a3ad8], [5.4, 3.3, 0x3a3a8a]];
+    var x = -26; H.forEach(function (h) { slab(g, x + h[0] / 2, 1, h[0], h[1], h[2], "hand", 1.0); x += h[0] + 1.4; });
+    pl(g, cell("tl", 512, 40, function (c, w, h) { c.fillStyle = "#f2efe4"; c.fillRect(0, 0, w, h); c.fillStyle = "#1d2a44"; c.fillRect(0, 18, w, 4);
+      ["1980", "1985", "1990", "1995", "2000", "2005"].forEach(function (y, i) { c.fillRect(20 + i * 94, 12, 3, 16); tx(c, y, 22 + i * 94, 33, 11, "#1d2a44"); }); }), 54, 4.2, 0, 0.12, 10.5, UP);
+    sign(g, 14, -8, "History of Portable Gaming", "", 13);
+  }],
+  21: [function (g) {                                 // Joseph Weisbecker's RCA 1802 machines
+    vb(g, 16, 1.4, 11, 0x2a2a2a, -12, 0, 0); board(g, -12, 0, 14, 9.5, 1.4); for (var i = 0; i < 8; i++) vb(g, 0.6, 1.2, 0.6, 0xe8e8e8, -18 + i * 1.6, 1.6, 3.5);
+    pl(g, cell("hex", 64, 32, function (c, w, h) { c.fillStyle = "#200"; c.fillRect(0, 0, w, h); tx(c, "18", w / 2, h / 2 + 1, 26, "#ff3a2a", "center", MONO); }), 4, 2, -9, 1.75, -2.5, UP);
+    vb(g, 4, 1.2, 2.6, 0xb8bcc0, 4, 0, 4); sign(g, 14, -3, "Joseph Weisbecker", "RCA 1802", 14);
+  }, function (g) {
+    vb(g, 15, 2, 12, 0x2a2a2a, -12, 0, 0); board(g, -12, -1, 13, 8, 2); pl(g, cell("hexpad", 64, 64, HEXPAD), 4.6, 4.6, -18, 2.12, 4.5, UP);
+    tvs(g, 10, -3, 15, "chip8", 0x3a3a3a);
+  }, function (g) {
+    vb(g, 15, 3.4, 10, 0x6b4a2e, -12, 0, 2); vb(g, 13, 0.4, 7, 0xd8d0bc, -12, 3.4, 2); for (var i = 0; i < 2; i++) pl(g, cell("hexpad", 64, 64, HEXPAD), 4, 4, -15.5 + i * 7, 3.85, 3, UP);
+    for (i = 0; i < 4; i++) cart(g, -16 + i * 4.4, -7, 0xd8d0bc, "", 0, 3.6, 4); tvs(g, 10, -4, 14, "chip8", 0x3a3a3a);
+    bin(g, 21, 8, 8, 5, 0x3a3f46, [0x1a1a1a, 0xd8b83a, 0x3a8ad8]);
+  }],
+  22: [function (g) {                                 // Brazilian clones
+    comp(g, -18, 4, 15, 13, 2.8, 0xc0c0c0, 0x2a2a2a); comp(g, 0, 5, 16, 8, 2.6, 0x3a3a3c, 0x8a8a8a); comp(g, 16, 6, 10, 6.5, 1.2, 0x1a1a1a, 0x6a6a6a); tvs(g, 15, -6, 13, "spec");
+  }, function (g) {
+    aio(g, -14, -3, 18, 12, 18, 0xd8d0bc, "m80", false); comp(g, 6, 5, 16, 8, 2.4, 0x3a3a3c, 0x1a1a1a); vb(g, 9, 2.6, 6, 0x2a2a2a, 6, 0, -7); flag(g, 22, -6, "br");
+    sign(g, 21, 9, "Clones brasileiros", "Brazilian clones", 12);
+  }],
+  23: [function (g) {                                 // the TI-99/4A
+    vb(g, 18, 8, 13, 0x1a1a1a, -18, 0, -6); comp(g, -2, 5, 15, 10, 2.4, 0x2a2a2a, 0x3a3a3a); vb(g, 15, 1, 6, 0xb8bcc0, -2, 2.4, 3);
+    vb(g, 3, 2.4, 4, 0x2a2a2a, 7.5, 0, 5); mon(g, 4, -7, 12, 11, 12, 0x3a3a3c, "ti");
+    ["Parsec", "TI Invaders", "Hunt the Wumpus", "Alpiner"].forEach(function (t, i) { cart(g, 15 + i * 4.4, -3, 0x2a2a2a, t, 0, 4, 4.4); });
+    joy(g, -14, 9, 0x2a2a2a); sign(g, 21, 9, "OPA", "TI-99/4A", 9);
+  }],
+  24: [function (g) { vb(g, 19, 7, 15, 0x6f7478, -14, 0, -3); vb(g, 0.8, 5, 0.8, 0xb8bcc0, -23, 1, 4.5); vb(g, 0.8, 5, 0.8, 0xb8bcc0, -5, 1, 4.5);   // guess
+      vb(g, 15, 10, 4, 0x8a8f90, 9, 0, -9); pl(g, cell("plcf", 128, 80, function (c, w, h) { c.fillStyle = "#5a5f62"; c.fillRect(0, 0, w, h);
+        for (var i = 0; i < 6; i++) { c.fillStyle = ["#2a2a2a", "#3a6a8a", "#2a2a2a", "#8a3a2a", "#2a2a2a", "#3a6a3a"][i]; c.fillRect(6 + i * 20, 8, 17, 64); c.fillStyle = "#e8c35a"; c.fillRect(10 + i * 20, 14, 4, 4); } }), 14, 8.6, 9, 5, -6.9);
+      mon(g, 9, 3, 10, 8, 4, 0x3a3a3a, "plc"); },
+    function (g) { c64(g, -16, 0); apple2(g, 6, 0, "green"); sign(g, 22, 10, "Industrial vs Home", "", 11); }],
+  25: [function (g) { comp(g, -12, 6, 17, 8, 2.4, 0x2a2a2c, 0x5a5a5e); mon(g, -12, -6, 13, 12, 12, C.dk, "spec"); board(g, 8, -4, 6, 4); vb(g, 3.5, 1.2, 2.5, 0xc8304a, 16, 0, -4);   // guess
+      disks(g, 8, 6, 0x2a3a8a, 4); sign(g, 20, 6, "MGT RetroNET", "", 11); }],
+  26: [function (g) {                                 // 1Bit Fever Dreams: compact Macs, MIDI, the Foenix
+    aio(g, -22, -4, 9.8, 13.6, 11, 0xe3dfcf, "mac"); aio(g, -10, -4, 9.8, 13.6, 11, C.plat, "mac");
+    vb(g, 9, 3.4, 7, 0x1e1e1e, 4, 0, -7); vb(g, 3, 1.4, 2, 0x2a2a2a, 4, 0, -1); vb(g, 14, 1.6, 5, C.blk, 3, 0, 4); pl(g, keyTop(C.blk, 0xf2f2f2), 13, 2.6, 3, 1.64, 4.6, UP);
+    comp(g, 20, 4, 17, 7, 1.8, 0x1a1a1a, 0x3a3a3a, 0x8a3ad8); for (var i = 0; i < 2; i++) vb(g, 3, 1.2, 2.5, 0x2a2a2a, 14 + i * 4, 0, -8);
+    sign(g, 24, -7, "1Bit Fever Dreams", "", 10);
+  }],
+  27: [function (g) { c64(g, -14, 0); drv(g, 1, -6, 9.5, 3, 10, 0xd8cdb2); vb(g, 7, 2.2, 6, 0x5a544a, 4, 0, 8); joy(g, 13, 8); dbox(g, 19, -7); for (var i = 0; i < 3; i++) cart(g, 15 + i * 4.4, 1, 0x3a3a3a, "", 0, 3.6, 3.8); }],   // guess
+  28: [function (g) {                                 // likely Grind, the new Amiga 500 shooter
+    a500(g, -12, 6); mon(g, -12, -7, 14, 13, 14, 0xd8d0bc, "grind"); vb(g, 4.5, 1.6, 6, 0x1e1e1e, 2, 0, -5); joy(g, 5, 7, 0x1a1a1a);
+    poster(g, 16, -7, 10, 14, "pst:grind", function (c, w, h) { c.fillStyle = "#1a120c"; c.fillRect(0, 0, w, h); c.fillStyle = "#6b4a22"; for (var i = 0; i < 6; i++) { c.beginPath(); c.arc(w / 2, h * 0.45, 10 + i * 6, 0, 7); c.lineWidth = 2; c.strokeStyle = i % 2 ? "#e8a83a" : "#6b4a22"; c.stroke(); }
+      c.fillStyle = "#e8a83a"; c.fillRect(0, h - 30, w, 2); tx(c, "GRIND", w / 2, h - 16, 18, "#e8a83a"); });
+    sign(g, 18, 9, "Amiga 500", "1987 hardware", 11);
+  }, function (g) {
+    comp(g, -18, 5, 19, 9, 2.6, 0xe4ddca, 0xd2cbb8); mon(g, -18, -7, 13, 12, 12, 0xd8d0bc, "wb");
+    comp(g, 3, 5, 18, 8, 2.6, 0xb8b8b0, 0x5a5a5a); vb(g, 11, 2.4, 9, 0x1a1a1a, 3, 0, -7); vb(g, 4.5, 0.5, 4.5, 0x2a2a2a, 3, 2.4, -7); pad(g, 3, 11.5, 0x1a1a1a);
+    lap(g, 20, 0, 12, 9, 0x2a2a2a, "edit");
+  }],
+  30: [function (g) {                                 // guess: arcade and the computers
+    var s = sub(g, -14, 0, -2); vb(s, 14, 18, 13, 0x1e1e1e, 0, 0, -1); scr(s, "arcade", 9, 10, 0, 12, 5.6); vb(s, 14, 3, 6, 0x2a2a2a, 0, 4, 7.5); vc(s, 0.25, 2, 0x1a1a1a, -3, 8, 8.5); vc(s, 0.5, 0.5, 0xd82a2a, 2, 7.2, 8.6);
+    c64(g, 10, 0, "game"); sign(g, 22, 10, "Arcade et ordinateur", "", 11);
+  }],
+  31: [function (g) {                                 // adventure games, then
+    apple2(g, -18, 0, "mystery"); gbox(g, 2, -7, "Mystery House", "APPLE II", "", 0, 6.4, 8.5, 1.4); gbox(g, 10, -7, "King's Quest", "PC", "", 0, 6.4, 8.5, 1.4);
+    pl(g, cell("tty", 96, 128, function (c, w, h) { c.fillStyle = "#f4f0dc"; c.fillRect(0, 0, w, h); c.font = "bold 9px " + MONO;
+      wrap(c, "YOU ARE STANDING AT THE END OF A ROAD BEFORE A SMALL BRICK BUILDING. AROUND YOU IS A FOREST.", w - 10).concat(["", "> GO IN"]).forEach(function (l, i) { tx(c, l, 5, 10 + i * 11, 9, "#222", "left", MONO); }); }), 8.5, 11, 18, 0.1, 4, UP);
+    sign(g, 6, 10, "Then & Now", "", 10);
+  }, function (g) {                                   // ... and now
+    tower(g, -6, 0, 0x1e1e1e, "remake"); vb(g, 2, 7, 2, 0x2a2a2a, 16, 0, -6); vb(g, 7, 3.6, 4.5, 0x1a1a1a, 16, 7, -6); vb(g, 5.4, 1.4, 0.3, 0x3a3a3a, 16, 8, -3.7);
+    pl(g, cell("cave", 96, 96, function (c, w, h) { c.fillStyle = "#efe6cc"; c.fillRect(0, 0, w, h); c.strokeStyle = "#5a4a2a"; c.lineWidth = 2; c.beginPath();
+      c.moveTo(10, 20); c.lineTo(40, 30); c.lineTo(50, 60); c.lineTo(80, 70); c.moveTo(40, 30); c.lineTo(75, 18); c.moveTo(50, 60); c.lineTo(22, 82); c.stroke();
+      [[10, 20], [40, 30], [50, 60], [80, 70], [75, 18], [22, 82]].forEach(function (p) { c.strokeRect(p[0] - 4, p[1] - 4, 8, 8); }); }), 9, 9, 20, 0.1, 6, UP);
+  }],
+  32: [function (g) { tvs(g, -16, -4, 18, "saturn"); vb(g, 12, 3, 10, 0x1e1e1e, 6, 0, -4); vb(g, 4, 0.6, 4, 0x2a2a2a, 6, 3, -5); pad(g, 4, 8, 0x1e1e1e, -0.2); pad(g, 11, 9, 0x1e1e1e, 0.2);   // guess
+      for (var i = 0; i < 3; i++) gbox(g, 18 + i * 4.6, -5 + i * 0.3, "SEGA SATURN", "SATURN", "", 0, 4.4, 6.2, 0.9); }],
+  33: [function (g) {                                 // LGR Greets: a signing table
+    vb(g, 11, 3, 8, 0x5a3a22, -20, 0, -7); vb(g, 11, 0.4, 8, 0x7a5232, -20, 3, -7); mon(g, -20, -7, 12, 11, 11, C.beige, "dos", 3.4);
+    vb(g, 6, 1.2, 8, 0xf2f2f2, 2, 0, 4); for (var i = 0; i < 4; i++) vc(g, 0.3, 5, [0x1a1a1a, 0xc0302a, 0x2a4a9a, 0x1a1a1a][i], 9 + i * 1.2, 0.3, 6, 0, Math.PI / 2);
+    vb(g, 7, 2.2, 5, 0x6b4a2e, 16, 0, -6); sign(g, 6, -6, "LGR", "Greets", 10, "#2a1a10", "#e8c890");
+    front(g, "LGR Greets", "meet-and-greet", "#2a1a10", "#e8c890");
+  }],
+  34: [function (g) {                                 // PC Games Vault: the big-box shelf
+    shelf(g, -3, -9, 46, 2); ["Doom II", "SimCity 2000", "Myst", "Wing Commander", "Ultima VII", "The Secret of Monkey Island", "X-COM: UFO Defense", "Duke Nukem 3D", "Command & Conquer", "Diablo"]
+      .forEach(function (t, i) { gbox(g, -21.5 + (i % 5) * 9.2, -8.2, t, "PC", ["$40", "$35", "$25", "$60", "$55", "$65", "$45", "$30", "$35", "$40"][i], 0.7 + Math.floor(i / 5) * 11, 8, 10.2, 2); });
+    for (var i = 0; i < 2; i++) { var px = -14 + i * 11; gbox(g, px, 6, ["Sealed: Quake", "Sealed: Warcraft II"][i], "PC", ["$120", "$95"][i], 0, 8.5, 10.6, 2.2);   // in clear box protectors
+      vb(g, 0.3, 11, 2.8, 0xdfe8ee, px - 4.45, 0, 6); vb(g, 0.3, 11, 2.8, 0xdfe8ee, px + 4.45, 0, 6); vb(g, 9.2, 0.3, 2.8, 0xdfe8ee, px, 10.7, 6); }
+    vb(g, 9, 2.4, 6, 0x2a2a2a, 14, 0, 6); for (i = 0; i < 6; i++) vb(g, 5.6, 4.9, 0.4, i % 2 ? 0x9aa6b0 : 0xc8d2da, 14, 2.4, 3.4 + i * 1); tag(g, 14, 10, "$10");
+    front(g, "PC Games Vault", "big boxes · CD-ROMs · sealed · box protectors", "#101a2e", "#f2d24a");
+  }, function (g) {
+    shelf(g, 3, -9, 46, 2); ["StarCraft", "Half-Life", "Civilization", "Day of the Tentacle", "Wolfenstein 3D", "The 7th Guest", "Descent", "Theme Hospital", "Grim Fandango", "Baldur's Gate"]
+      .forEach(function (t, i) { gbox(g, -15.5 + (i % 5) * 9.2, -8.2, t, "PC", ["$30", "$35", "$45", "$50", "$40", "$25", "$20", "$30", "$45", "$40"][i], 0.7 + Math.floor(i / 5) * 11, 8, 10.2, 2); });
+    vb(g, 9, 9, 6, 0x5a4a3a, -20, 0, 6); for (var i = 0; i < 5; i++) vb(g, 8, 6.4, 0.3, [0xf2efe4, 0xd8c8a8, 0xe8e0d0][i % 3], -20, 9, 4 + i * 0.8);
+    vb(g, 8, 3.6, 6, 0x3a4a3a, 0, 0, 7); tag(g, 0, 10.5, "cash");
+  }],
+  35: [function (g) {                                 // Retronoix: repairs, upgrades, parts
+    comp(g, -20, 5, 16, 8, 2.6, 0x8c7a64, 0x4a3a2e); pl(g, cell("leds", 64, 8, function (c, w, h) { ["#f33", "#fa3", "#ff3", "#3f3", "#3ff", "#33f", "#f3f"].forEach(function (k, i) { c.fillStyle = k; c.fillRect(i * 9.2, 0, 9.2, h); }); }), 15, 0.6, -20, 1.3, 9.06, 0, false);
+    vb(g, 16, 3.2, 8, 0xd9c88f, -20, 0, -7); vb(g, 16, 3.2, 8, 0xe8e2d0, -20, 3.2, -7);
+    board(g, -2, -6, 13, 9, 0, 0.45); comp(g, 0, 7, 13, 6, 2, 0x3a3a3c, 0x2a2a2a); a500(g, 17, 4);
+    for (var i = 0; i < 3; i++) vb(g, 2.6, 1.2, 3.2, 0x1e1e1e, 7 + i * 3.2, 0, -8); bin(g, 21, -7, 8, 5, 0x3a3f46, [0x2a4ad8, 0x1a1a1a, 0xd8b83a]);
+    tag(g, -20, 11.2, "$"); tag(g, 17, 11.5, "$"); front(g, "Retronoix", "repairs · recaps · upgrades · parts", "#1a1a1a", "#7fe08a");
+  }],
+  36: [function (g) {                                 // A2_Games: the book and Apple II games
+    for (var i = 0; i < 3; i++) { vb(g, 8.5, 4 - i, 11, 0x1d2a44, -22 + i * 10, 0, 2); pl(g, art("Secrets of the Apple II Gaming World", "BOOK", "", 96, 128), 8.3, 10.8, -22 + i * 10, 4 - i + 0.02, 2, UP); }
+    var s = sub(g, 9, 0, -6, -0.2); vb(s, 8.5, 11, 1, 0x1d2a44, 0, 0, 0); pl(s, art("Secrets of the Apple II Gaming World", "BOOK", "", 96, 128), 8.3, 10.8, 0, 5.5, 0.52);
+    apple2(g, 20, 0, "green"); tag(g, -12, 9.5, "$");
+  }, function (g) {
+    ["Lode Runner", "Karateka", "Choplifter", "Ultima III", "Bolo", "Zoo Master"].forEach(function (t, i) { gbox(g, -24 + i * 7.6, -7, t, "APPLE II", ["$30", "$40", "$25", "$45", "$20", "$25"][i], 0, 6.8, 8.6, 1.3); });
+    for (var i = 0; i < 3; i++) { vb(g, 8.4, 0.3, 11, 0xd8d0bc, 14 + i * 0.6, i * 0.3, 4 - i * 0.6); }
+    pl(g, cell("cgw", 96, 128, function (c, w, h) { c.fillStyle = "#e8e0c8"; c.fillRect(0, 0, w, h); c.fillStyle = "#b8402f"; c.fillRect(0, 0, w, 26); tx(c, "CGW", w / 2, 14, 18, "#fff");
+      c.fillStyle = "#2f5fa8"; c.fillRect(10, 36, 76, 54); c.fillStyle = "#333"; for (var i = 0; i < 4; i++) c.fillRect(10, 98 + i * 7, 60, 3); }), 8.2, 10.8, 15.2, 1, 2.8, UP);
+    for (i = 0; i < 4; i++) vb(g, 5.3, 0.1, 5.3, 0x1a1a1a, -2 + i * 6, 0, 7); tag(g, 1, 10.5, "$");
+    front(g, "A2_Games", "Apple II games · Secrets of the Apple II Gaming World", "#20201c", "#e8c35a");
+  }],
+  37: [function (g) {                                 // vintage systems for sale: small Apple, Commodore and Tandy machines...
+    comp(g, -20, 3, 12, 11, 2, 0xeeeee8, 0xd8d8d0); aio(g, -4, -4, 9.6, 13, 11, C.plat, "mac"); comp(g, 13, 3, 17, 8, 2.6, 0xe0d8c0, 0x3a3530);
+    tag(g, -20, 10.5, "$350"); tag(g, -4, 11.5, "$275"); tag(g, 13, 10.5, "$90");
+  }, function (g) {
+    var m = sub(g, -18, 0, 2); vb(m, 12, 1.4, 8.5, 0xb8b8b0, 0, 0, 0); vb(m, 12, 0.6, 2.6, 0xb8b8b0, 0, 1.4, -2.9); pl(m, keyTop(0xb8b8b0, 0x2a2a2a), 10.6, 4.6, 0, 1.44, 1.2, UP); scr(m, "lcd", 9.6, 2.2, 0, 2.1, -1.6, UP);
+    comp(g, -2, 4, 15, 13, 3, 0xd8d8d4, 0x2a2a2a); aio(g, 16, -4, 15, 13, 13, C.cream, "amber", 0x8a8270);
+    tag(g, -18, 10.5, "$180"); tag(g, -2, 11.5, "$60"); tag(g, 16, 11.5, "$140");
+  }, function (g) {                                   // ... and bigger iron
+    vb(g, 19, 7, 16, 0x5a5f78, -18, 0, -3); pl(g, cell("pdp", 128, 48, function (c, w, h) { c.fillStyle = "#5a2a6a"; c.fillRect(0, 0, w, h); c.fillStyle = "#e8e0f0"; c.fillRect(0, 0, w, 10);
+      for (var i = 0; i < 18; i++) { c.fillStyle = Math.floor(i / 3) % 2 ? "#c83a8a" : "#7a3a9a"; c.fillRect(6 + i * 6.6, 26, 4, 14); } c.fillStyle = "#e8c35a"; for (i = 0; i < 18; i++) c.fillRect(7 + i * 6.6, 16, 2, 2); }), 18, 6.6, -18, 3.5, 5.06);
+    vb(g, 15, 3.4, 15, 0x3a5aa8, 2, 0, -3); vb(g, 16, 2.4, 15, 0x4b4a55, 2, 3.4, -3); vb(g, 12, 3, 12, 0x8a8f90, 19, 0, -5); vb(g, 12, 3, 12, 0xd8d0bc, 19, 3, -5);
+    tag(g, -18, 9, "$900"); tag(g, 2, 8, "$300"); tag(g, 19, 6, "$200"); front(g, "Apple · Commodore · Tandy", "DEC · HP · Data General · Sun · SGI · Xerox", "#232327", "#f2efe4");
+  }],
+  38: [function (g) {                                 // guess: retro stock for sale (no titles: we don't know it)
+    for (var i = 0; i < 6; i++) gbox(g, -24 + i * 7.6, -7, "GAMES · JEUX", ["NES", "PC", "SNES", "GENESIS", "N64", "PS1"][i], "$", 0, 6.4, 8.4, 1.4);
+    bin(g, 14, 4, 14, 8, 0x3a3f46, [0x2a2a2a, 0x8a8a8a, 0x3a3a3a, 0xc8c2b4]); vb(g, 10, 2.6, 8, 0x8a8a8a, -14, 0, 6); vb(g, 9, 2.2, 8, 0x1e1e1e, 0, 0, 6);
+    tag(g, -14, 10.5, "$"); tag(g, 0, 10.5, "$");
+  }, function (g) {
+    for (var i = 0; i < 6; i++) gbox(g, -24 + i * 7.6, -7, "SOFTWARE · LOGICIELS", ["PC", "APPLE II", "C64", "ATARI", "AMIGA", "MAC"][i], "$", 0, 6.4, 8.4, 1.4);
+    bin(g, 14, 4, 14, 8, 0x2a2a2a, [0x1a1a1a, 0xb8b8b0, 0x2a4ad8]); tag(g, 14, 10.5, "$");
+    front(g, "CANADIAN RETRO WAREZ", "", "#7a1a1a", "#ffffff");
+  }],
+  39: [function (g) {                                 // Factor of Matt: DesTest carts for C64 and VIC-20
+    c64(g, -18, 0, "destest"); cart(g, -11.5, 1.5, 0x1e1e1e, "", 0.8, 3, 2.4);
+    comp(g, 1, 6, 16, 8, 2.6, 0xe0d8c0, 0x3a3530); vb(g, 16, 0.6, 6, 0x2a2a2a, 1, 0, -6); for (var i = 0; i < 5; i++) vb(g, 1.4, 0.4, 0.6, 0x1a1a1a, -4.5 + i * 2.6, 0.6, -6);
+    ["DesTestMAX", "DesTest VIC20", "DesTestKernal", "DesTestFull"].forEach(function (t, i) { cart(g, 12 + i * 4.6, -6, [0x1e1e1e, 0x2a4a9a, 0x8a2a2a, 0x1e1e1e][i], t, 0, 4.2, 4.6); tag(g, 12 + i * 4.6, -3, "$"); });
+    board(g, 17, 6, 8, 5); front(g, "FACTOR OF MATT", "DesTest diagnostics · C64 · VIC-20 · C128", "#1a1a1a", "#e8c35a");
+  }],
+  40: [function (g) {                                 // PortaCoCo: battery and wireless kits for the CoCo 3 and MC-10
+    comp(g, -14, 5, 15, 13, 3, 0xd6d6d0, 0x2a2a2a); var s = sub(g, -14, 0, -9, -0.18); mon(s, 0, 0, 10, 8, 7, 0xd8d0bc, "coco");
+    for (var i = 0; i < 2; i++) { vb(g, 4.2, 3.6, 7, 0x4a8a2a, 4 + i * 5, 0, -6); vb(g, 3.4, 1.2, 4, 0x2a2a2a, 4 + i * 5, 3.6, -6); }
+    joy(g, 8, 7, 0x2a2a2a, 0xd82a2a); for (i = 0; i < 3; i++) cart(g, 15 + i * 4.4, -6, 0x3a3a3a, "", 0, 4, 3.6); sign(g, 20, 8, "No case mods", "", 10);
+  }, function (g) {
+    comp(g, -16, 3, 13.5, 8.5, 1.8, 0xeeeee8, 0x2a2a2a); vb(g, 4.2, 3.6, 7, 0x4a8a2a, -16, 0, -8);
+    comp(g, 6, 3, 15, 13, 3, 0xd6d6d0, 0x2a2a2a); mon(g, 22, -4, 8, 6.5, 4, 0x1e1e1e, "coco");
+    front(g, "PortaCoCo", "battery-powered · wireless · no case mods", "#103a1a", "#e8f2e0");
+  }]
+};
 Object.keys(booths).forEach(function (k) {
   var b = booths[k], n = +k;
   b.tables.sort(function (a, c) { return a.cz - c.cz; });
   b.cx = b.tables.reduce(function (s, t) { return s + t.cx; }, 0) / b.tables.length;
   b.cz = b.tables.reduce(function (s, t) { return s + t.cz; }, 0) / b.tables.length;
   if (n === 29 || n === 10) return;                  // built in detail below
-  var list = SHOW[n] || ["pc"], i = 0;
-  b.tables.forEach(function (t) {
-    var g = propGroup(t.cx, t.cz, b.face);
-    // along the table (60 in): local x after rotation runs along z
-    [-15, 15].forEach(function (off) { var p = list[i++ % list.length]; if (p && PROPS[p]) PROPS[p](g, b.face === "W" ? -off : off); });
-  });
+  var list = WARES[n] || [function (g) { tower(g, 0, 0, C.beige, "dos"); }];
+  b.tables.forEach(function (t, i) { list[i % list.length](propGroup(t.cx, t.cz, b.face)); });
 });
+ATEX.needsUpdate = true;
+})();
 // the speakers' corner: a laptop and a row of their books on each table, facing the aisle
 Object.keys(CORNER).forEach(function (k) {
   var c = CORNER[k], sx = c.face === "W" ? -1 : 1;
@@ -1658,13 +2167,16 @@ function mergeMeshes(list, into) {                          // world-space meshe
   });
   keys.forEach(function (k) {
     var e = by[k], pos = new Float32Array(e.n * 3), nor = new Float32Array(e.n * 3), uv = new Float32Array(e.n * 2), o = 0;
+    var col = e.mat.vertexColors ? new Float32Array(e.n * 3) : null;          // the booth wares' vertex-coloured pieces
     e.parts.forEach(function (g) {
       pos.set(g.attributes.position.array, o * 3); nor.set(g.attributes.normal.array, o * 3);
       if (g.attributes.uv) uv.set(g.attributes.uv.array, o * 2);
+      if (col && g.attributes.color) col.set(g.attributes.color.array, o * 3);
       o += g.attributes.position.count; g.dispose();
     });
     var mg = new THREE.BufferGeometry();
     mg.setAttribute("position", new THREE.BufferAttribute(pos, 3)); mg.setAttribute("normal", new THREE.BufferAttribute(nor, 3)); mg.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+    if (col) mg.setAttribute("color", new THREE.BufferAttribute(col, 3));
     into.add(new THREE.Mesh(mg, e.mat));
   });
 }
@@ -3425,29 +3937,51 @@ var crowd = (function () {
 
 // ---------------------------------------------------------------- info cards
 // Click a machine or a booth (or look at it and press E / Enter) for its card. Booth 29's
-// machines come from config.example.toml (INFO, built in); other booths get a one-line guess
-// from their name. GUESS is ours, not the exhibitors': the card says so.
+// machines come from config.example.toml (INFO, built in). Other booths: one line from
+// layout/BOOTHS-RESEARCH.md. SURE: "c" = what public sources by or about the exhibitor say they show,
+// "l" = likely (public sources about the exhibitor point that way); the rest are our guess from the booth
+// name alone, kept plain ("Expected: ...", "Details to come"). No personal names in these lines.
+var SURE = { 4: "c", 5: "c", 13: "c", 33: "c", 34: "c", 35: "c", 37: "c", 39: "c", 40: "c",
+  1: "l", 6: "l", 7: "l", 8: "l", 11: "l", 14: "l", 16: "l", 19: "l", 21: "l", 22: "l", 23: "l", 26: "l", 28: "l", 31: "l", 36: "l" };
 var GUESS = {
-  1: "Apple's graphical interfaces, from the Lisa to the classic Mac OS.", 2: "Vintage machines on Gopher and the early Internet.",
-  3: "Computers designed or built in Canada.", 4: "The NABU PC and its cable-TV network, brought back online.",
-  5: "Homebrew boards and upgrades for retro machines.", 6: "Demoscene productions on PAL Commodore 64s.",
-  7: "Machines and consoles that flopped, and why.", 8: "A hands-on retro gaming collection.",
-  9: "Music made on vintage synths and computers.", 11: "Sinclair, Timex, Amstrad, Acorn/BBC and Enterprise: British home computing.",
-  12: "Modems, BBSes and dial-up networking.", 13: "A new homebrew 8-bit console you can play.",
-  14: "Vintage mobile phones and pocket gadgets.", 15: "IBM PCs, from the 5150 onward.",
-  16: "A retro game project you can play.", 17: "Macintosh PowerBooks and other classic Macs.",
-  18: "Atari 8-bit computers and consoles, playable.", 19: "Gemstone Warrior, a Canadian game from the 1980s.",
-  20: "Handhelds from Game & Watch onward.", 21: "Joseph Weisbecker's RCA 1802 machines: COSMAC ELF, VIP and Studio.",
-  22: "Brazilian clones of the Spectrum, Apple II and IBM PC.", 23: "The TI-99/4A and its peripherals.",
-  24: "Industrial control computers next to home machines.", 25: "Spectrum-family machines online through RetroNET.",
-  26: "1-bit beeper music and graphics.", 27: "The Commodore 64, hands-on.", 28: "Amigas still at work, with new hardware and software.",
-  30: "An arcade cabinet and the computers behind arcade games.", 31: "Early adventure games, text and graphics, playable.",
-  32: "The Sega Saturn and its games.", 33: "Retro PCs and oddities, LGR style.", 34: "Boxed PC games.",
-  35: "Retro hardware and parts.", 36: "Apple II games.", 37: "Small Apple, Commodore and Tandy machines, and bigger DEC, HP and Sun gear.",
-  38: "Canadian retro software and hardware.", 39: "A retro creator's projects.", 40: "A portable Tandy Color Computer."
+  1: "Apple's graphical interfaces, from the Lisa to the classic Mac OS.", 2: "vintage machines browsing Gopher, the text-menu Internet that came before the Web.",
+  3: "computers designed or built in Canada.",
+  4: "The NABU PC, Canada's 1983 cable-TV computer, back online through NABU.CA's RetroNET, homebrew games and NADOOM included.",
+  5: "Retronic Design: USB adapters for classic Atari, C64, Amiga, Apple II and Vectrex controllers, and Amiga floppy, video and MIDI add-ons.",
+  6: "C64 demoscene productions on PAL machines, and Transmission64, the online C64 demoparty (next edition Nov. 28, 2026).",
+  7: "the Apple Newton, the 1990s handheld called a flop, and the community that still loves it.",
+  8: "refurbished Commodore 64/128, Atari, Apple and Amiga machines mixing old and new tech; at VCF Montréal 1 they revived a 30-year-old BBS.",
+  11: "Sinclair/Timex, Amstrad, Acorn/BBC and Enterprise machines, the British home computers of the 1980s.",
+  12: "modems, dial-up Internet and early networking.",
+  13: "The GameTank, a brand-new open-source 8-bit console with two 6502s, real cartridges and composite video, playable.",
+  14: "Mizuki Mobile, a homebrew network that puts Japanese i-mode flip phones (keitai) back online, with its own portal and app store.",
+  15: "IBM machines.", 16: "astronomy and astrophotography, from GalaxieMan, an amateur astronomer.",
+  17: "classic Macintosh machines; the name suggests PowerBooks.", 18: "Atari consoles and computers.",
+  19: "Gemstone Warrior (1984), an action-adventure by Canada's Paradigm Creators for the Apple II, published by SSI.",
+  20: "handheld game systems through the years.",
+  21: "Joseph Weisbecker's RCA 1802 machines, from the COSMAC ELF and VIP to the Studio II console.",
+  22: "Brazilian clones of the Spectrum, the CoCo, the TRS-80 and more, from the years Brazil closed its market to imported computers.",
+  23: "the TI-99/4A and its add-ons, with OPA's TI software and hardware.", 24: "industrial computers side by side with home computers.",
+  26: "experiments on compact black-and-white Macs (games, C code and MIDI music), plus new hardware like the Foenix F256K2.",
+  27: "the Commodore 64.", 28: "Grind, a new Doom-style shooter running on a stock 1987 Amiga 500, by Pixelglass.",
+  30: "arcade games and computers.",
+  31: "adventure games then and now, from Mystery House and Colossal Cave to their new 3D and VR remakes.",
+  32: "the Sega Saturn and its games.", 33: "A meet-and-greet with LGR, the YouTube channel on retro tech and computing history.",
+  34: "PC Games Vault: collectible PC games from the 1980s to the 2000s, with big boxes, CD-ROMs, sealed copies and box protectors.",
+  35: "Retronoix: repairs, recaps, upgrades and parts for the Commodore 64, Atari 8-bit and Amiga.",
+  36: "Apple II games and Secrets of the Apple II Gaming World, a new book on rare Apple II games.",
+  37: "Small Apple, Commodore and Tandy machines for sale, plus bigger iron: DEC (PDP-11 gear), HP, Data General, Sun, SGI and Xerox.",
+  38: "retro games, software and hardware for sale.",
+  39: "Factor of Matt: DesTest diagnostic cartridges for sick C64s and VIC-20s, plus new C128 and C64 software.",
+  40: "PortaCoCo: battery-powered, wireless kits that make the Tandy CoCo 3 and MC-10 portable, with no case modifications."
 };
 function known(n) { return +n === 29 ? T("known29") : +n === 10 ? T("known10") + (HAS_DOOM ? T("known10doom") : "") : ""; }
-function guess(n) { return LANG === "fr" && GUESS_FR[n] || GUESS[n] || T("vintage"); }
+function guess(n) {                                 // the card's line: plain when confirmed, "Expected: ..." otherwise
+  var s = LANG === "fr" && GUESS_FR[n] || GUESS[n], k = SURE[n];
+  if (!s) return T("tbc");
+  if (k === "c") return s;
+  return T("expected") + s + (k === "l" ? "" : " " + T("tbc"));
+}
 var PLACE_INFO = {                                  // place cards: { kick, title, text } in the current language
   entrance: function () { return { kick: T("east"), title: T("entrance"), text: T("entranceText") }; },
   corner: function () {
@@ -3495,7 +4029,11 @@ function boothCard(n) {
   h.push('<div class="kick">' + T("booth") + " " + n + (b ? " · " + nt + " " + T(nt > 1 ? "tables" : "table") : "") + (cat === "vendor" || cat === "creator" ? " · " + T("cat_" + cat) : "") + "</div>");
   h.push('<h2 id="info-name">' + esc(D.names[n] || T("booth") + " " + n) + "</h2>");
   if (known(n)) h.push("<p>" + esc(known(n)) + "</p>");
-  else h.push('<p><span class="guess" title="' + esc(T("guessT")) + '">' + esc(T("guess")) + "</span>" + esc(guess(n)) + "</p>");
+  else {
+    var sk = SURE[n] === "c" ? "src" : SURE[n] === "l" ? "likely" : "guess";
+    h.push('<p><span class="guess" title="' + esc(T(sk + "T")) + '">' + esc(T(sk)) + "</span>" + esc(guess(n)) + "</p>");
+    h.push('<div class="foot">' + esc(T(sk + "T")) + "</div>");
+  }
   if (+n === 29) {
     var ids = Object.keys(INFO.items).filter(function (k) { return INFO.items[k].year && INFO.items[k].kind !== "gear"; })
       .sort(function (a, c) { return INFO.items[a].year - INFO.items[c].year; });
@@ -4048,9 +4586,9 @@ var G = (function () {
   function hasSave() { try { var s = JSON.parse(localStorage.getItem(KEY) || "null"); return !!(s && s.v <= SAVE_V && s.phase < PHASES.length - 1); } catch (err) { return false; } }
 
   // ---- the game: start, phases, the clock
-  G.start = function (who, o) {                    // o: { demo: true }: the show-floor demo (G.startDemo)
+  G.start = function (who, o) {                    // o: { demo: true }: the show-floor demo (G.startDemo); { seed: n }: a repeatable game (tests)
     if (G.state.on) G.emit("quit");                    // Play again: everyone cleans up first
-    G.state = { v: SAVE_V, on: true, who: who, phase: 0, min: PHASES[0].start, speed: 1, seed: (Date.now() & 0x7fffffff) | 1, stats: { rep: 2.5 }, sys: {}, gear: {}, buzz: {}, up: {} };
+    G.state = { v: SAVE_V, on: true, who: who, phase: 0, min: PHASES[0].start, speed: 1, seed: (o && o.seed) | 0 || (Date.now() & 0x7fffffff) | 1, stats: { rep: 2.5 }, sys: {}, gear: {}, buzz: {}, up: {} };
     if (o && o.demo) { G.state.demo = true; G.state.min = phaseAt(0).start; }
     Object.keys(GEAR).forEach(function (id) { G.state.gear[id] = { where: "van", working: false, down: false, damage: 0 }; });
     Object.keys(booths).forEach(function (k) { G.state.buzz[k] = 1; });
@@ -4428,6 +4966,7 @@ var G = (function () {
     if (typeof stopTour === "function") stopTour();
     if (typeof closeInfo === "function") closeInfo();
     hud.hidden = false; playBtn.hidden = true; contBtn.hidden = true; G.walk = 1; G.paused = false; dirty = true;
+    urgentT = 0; urgentNow = false; calmT = 0;       // fair speed starts fresh: the last game's calm doesn't set this one's clock
     if (typeof setMenu === "function") setMenu(false);
     if (mode === "fly") setMode("walk");
     G.go(PLACES[WHO[G.state.who].place] ? WHO[G.state.who].place : "entrance");
@@ -5312,7 +5851,7 @@ var G = (function () {
     var t = e.target; if (!t.matches || !t.matches(HOVER)) return;
     try { if (t.matches(":focus-visible")) emit("hover"); } catch (err) {}
   });
-  // cards: Tab stays inside, Esc presses the way out (Back / Cancel / Not now / Later / Close / OK)
+  // cards: Tab stays inside, Esc presses the way out (a button marked data-esc, else Back / Cancel / Not now / Later / Close / OK)
   addEventListener("keydown", function (e) {
     var cardEl = document.getElementById("g-card"); if (!cardEl || cardEl.hidden || !G.hud.isOpen() || G.modal) return;   // (a mini-game on top: its keys)
     if (e.key === "Tab") {
@@ -5322,8 +5861,9 @@ var G = (function () {
       if (e.shiftKey && i <= 0) { f[f.length - 1].focus(); e.preventDefault(); }
       else if (!e.shiftKey && (i < 0 || i === f.length - 1)) { f[0].focus(); e.preventDefault(); }
     } else if (e.key === "Escape") {
-      var out = [].filter.call(cardEl.querySelectorAll(".ui-actions button"), function (b) { return /^(Back|Cancel|Not now|Later|Close|OK)$/.test(b.textContent); })[0];
-      if (out) { out.click(); e.preventDefault(); }
+      var out = cardEl.querySelector(".ui-actions [data-esc]") ||
+        [].filter.call(cardEl.querySelectorAll(".ui-actions button"), function (b) { return /^(Back|Cancel|Not now|Later|Close|OK)$/.test(b.textContent); })[0];
+      if (out) { out.click(); e.preventDefault(); e.stopImmediatePropagation(); }   // (consumed: a game it opens doesn't see it too)
     }
   }, true);
   var close0 = G.hud.close;
@@ -5553,7 +6093,10 @@ var G = (function () {
     // where the sparkle fades out (inches). Rewards: kudos; the score: one crowd part, weight w. demo: one on the demo's Sunday.
     cameos: { sat: { n: 1, extra: 0.35, max: 1 }, sun: { n: 2, extra: 0, max: 2 }, from: 645, to: 900, gap: 90,
       stay: [60, 100], linger: [6, 12], downLinger: [2, 4], wait: 10, speed: 32, fol: { sat: 3, sun: 5 }, bump: 0.3, machineBump: 0.5,
-      label: 360, fade: 96, hold: 30, kudos: { hello: 2, photo: 1, sig: 2, fix: 5 }, rep: 0.05, w: 1, demo: { at: 845, stay: 45 } },
+      label: 360, fade: 96, hold: 30, kudos: { hello: 2, photo: 1, sig: 2, fix: 5 }, rep: 0.05, w: 1, demo: { at: 845, stay: 45 },
+      // walking around on the game page (no game on), in real seconds: the first one after first, the next gap later (and at least
+      // after once one leaves), at most max out; each stays stay, lingers linger at a booth; a guest is drawn with weight guestW
+      walk: { first: [15, 40], gap: [120, 240], after: [30, 90], stay: [240, 420], linger: [10, 24], max: 2, guestW: 0.4, stuck: 90 } },
     // ---- juice (core's G.hitstop / G.nudge / G.dim, visitors' G.lure): the RIFA's beat, the camera turn, the 21:00 lock
     juice: { stop: 0.45, stopK: 0.12, nudge: 1.6, turn: 0.45, shake: 1.2, dim: 0.45, lure: 25, lureK: 6, lureR: 320, see: 420 },
     // ---- the scripted opener (coach.js): its fault's repairs take fixK x the minutes; the last hint stays outro game minutes
@@ -6067,11 +6610,14 @@ var G = (function () {
 //       init(m, opts), tick(m, dt), draw(m, g), key(m, e) -> true when used, ptr(m, type "down"|"move"|"up", x, y, e)
 //       -> true when used, press(m, id, how "key"|"ptr"), timeout(m) (else it ends "timeout" at q 0),
 //       auto(q, opts) -> data (headless results), after(m, r) (side effects once it closed, before onDone),
-//       esc(m) -> true when Esc was the game's (the phone hangs up first), escLabel, close(m) (it closed, any way) })
+//       esc(m) -> true when Esc was the game's (the phone hangs up first), escLabel, close(m) (it closed, any way),
+//       pause cover: keysHelp (its last help line), assists (the assist switches it shows: ["steady", "relaxed", "calm"]),
+//       coverEsc (its way-out button's label), cover(m, box) (fill box: the game's own row), resume(m) })
 //   G.mini(kind, opts, onDone) -> true when it opened (false: unknown kind, one already open, the game is off).
 //       opts: { id, kind, cause, energy, minutes (the quick fix), level, seed, free, ... (the game's own) }
 //       free: true opens it outside a weekend (a level of its own, with no G.state game): pass energy, level and seed,
-//       and tick it yourself with G.mini.step(dt) every frame (core only ticks systems while a game is on)
+//       and tick it yourself with G.mini.step(dt) every frame (core only ticks systems while a game is on); the cover
+//       then has no fix-it row. dom: overrides def.dom for this open; noEsc: true hides the Esc button
 //       onDone(r) once: r = { q 0..1, quality, outcome "win" | "partial" | "fail" | "timeout" | "skip" | "abort",
 //       secs, data, ok, skipped, note, k (minutes x, faults.js), refault {kind, after} }. Esc = "abort" (back to
 //       the quick choice); the Skip button = "skip" (the quick fix at x1.25). Closed from outside (a phase, quit):
@@ -6085,7 +6631,8 @@ var G = (function () {
 //   m (the game's state, one per open): s {} (the game's own), w, h, t (real s), left, level, fatigue, shake,
 //       opts, add(id, x, y, w, h, label) (keyboard / tap target), tgt(id), focus, ptr {x, y, down}, tip(x, y) ->
 //       m.tx, m.ty (the tool tip with the tremor), rnd() (seeded), say(t) (the caption, aria-live), sfx(name),
-//       end(q, outcome, data) (the stamp, then close), quit(q, outcome, data) (close now), dom (the DOM layer),
+//       end(q, outcome, data) (the stamp, then close), quit(q, outcome, data) (close now), dom (the DOM layer), pause()
+//       (the cover), h (init may change it: the canvas takes the new height),
 //       calm, k / refault / note (passed on in r)
 // Core: G.modal (Enter / E / P are the game's) and G.clockK (the clock multiplier) while open; the hall never
 // sees a key (captured on window), the pointer lock is released. ui.js: the card's Tab trap stands aside.
@@ -6110,8 +6657,9 @@ var G = (function () {
   var STAMP = G.ui.el("div", "stamp", F.el); STAMP.hidden = true;
   // the cover: paused, the help, the assists, Ask / Always / Never
   COVER.innerHTML = '<div class="mg-cv"><h4>Paused</h4><p class="mg-help"></p><div class="mg-as"></div><div class="mg-pl"><span>Fix-it mini-games:</span></div>' +
-    '<div class="mg-cb"></div></div>';
-  var HELP = COVER.querySelector(".mg-help"), AS = COVER.querySelector(".mg-as"), PL = COVER.querySelector(".mg-pl"), CB = COVER.querySelector(".mg-cb");
+    '<div class="mg-own"></div><div class="mg-cb"></div></div>';
+  var HELP = COVER.querySelector(".mg-help"), AS = COVER.querySelector(".mg-as"), PL = COVER.querySelector(".mg-pl"), CB = COVER.querySelector(".mg-cb"),
+    OWN = COVER.querySelector(".mg-own");
   var swS = G.ui.button("Steady hands", { kind: "sm", sw: false, on: function () { G.mini.assist("steady", !G.mini.assist("steady")); syncCover(); } });
   var swR = G.ui.button("Relaxed timers", { kind: "sm", sw: false, on: function () { G.mini.assist("relaxed", !G.mini.assist("relaxed")); syncCover(); } });
   var swC = G.ui.button("Reduced motion", { kind: "sm", sw: false, on: function () { G.mini.assist("calm", !G.mini.assist("calm")); syncCover(); } });
@@ -6119,7 +6667,7 @@ var G = (function () {
   var PLV = ["ask", "always", "never"], seg = G.ui.seg(["Ask", "Always", "Never"], 0, function (i) { G.mini.pref(PLV[i]); });
   PL.appendChild(seg);
   CB.appendChild(G.ui.button("Resume", { kind: "primary", key: "P", on: function () { resume(); } }));
-  CB.appendChild(G.ui.button("Quick choice", { kind: "sm", key: "Esc", on: function () { if (M) finish("abort", 0); } }));
+  var cEsc = G.ui.button("Quick choice", { kind: "sm", on: function () { if (M) finish("abort", 0); } }); CB.appendChild(cEsc);
   function syncCover() { swS.set(!!G.mini.assist("steady")); swR.set(!!G.mini.assist("relaxed")); swC.set(!!G.mini.assist("calm")); seg.set(PLV.indexOf(G.mini.pref())); }
 
   G.ui.css("mini-frame",
@@ -6127,8 +6675,8 @@ var G = (function () {
     ".mgx.dom-below .mg-dom,.mgx.dom-only .mg-dom{display:block}.mgx.dom-only canvas{display:none}" +
     ".mg-cover{position:absolute;inset:0;display:none;place-items:center;z-index:3;border-radius:14px;overflow:auto}.mg-cover.on{display:grid}" +
     ".mg-cv{display:grid;gap:10px;justify-items:center;text-align:center;padding:14px;max-width:520px}.mg-cv h4{margin:0}" +
-    ".mg-as,.mg-cb,.mg-pl,.mg-btns{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center}" +
-    ".mg-help{margin:0;white-space:pre-line}.mgx canvas:focus{outline:none}.mgx .timer:empty{display:none}" +
+    ".mg-as,.mg-cb,.mg-pl,.mg-own,.mg-btns{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center}" +
+    ".mg-cv [hidden],.mg-btns [hidden]{display:none!important}.mg-help{margin:0;white-space:pre-line}.mgx canvas:focus{outline:none}.mgx .timer:empty{display:none}" +
     ":root[data-ui=beige] .mg-cover{background:var(--plastic,#dfd7c2);color:var(--ui-ink)}" +
     ":root[data-ui=beige] .mg-cv h4{font:900 26px/1 var(--ui-display);text-transform:uppercase;letter-spacing:.06em}" +
     ":root[data-ui=beige] .mg-help{font:400 14.5px/1.4 var(--ui-font)}" +
@@ -6278,7 +6826,7 @@ var G = (function () {
     M = { kind: kind, def: def, opts: opts, onDone: onDone, s: {}, w: W, h: def.h || H, t: 0, targets: [], focus: -1, ptr: { x: -99, y: -99, down: false, sx: 0, sy: 0, id: -1, used: false },
       tx: 0, ty: 0, fatigue: fat, shake: G.mini.assist("steady") ? 0 : MINI.shake * fat, level: opts.level !== undefined ? opts.level : G.mini.level(opts.booth || G.mine()),
       calm: !!G.mini.assist("calm"), dom: DOM, cap: "", done: null, doneT: 0, k: 1, refault: null, note: "",
-      add: add, tgt: tgt, say: say, sfx: sfx, tip: tip, end: end, quit: function (q, outcome, data) { finish(outcome || "win", q, data); },
+      add: add, tgt: tgt, say: say, sfx: sfx, tip: tip, end: end, quit: function (q, outcome, data) { finish(outcome || "win", q, data); }, pause: function () { pause(true); },
       rnd: function () { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x80000000; } };
     var lim = def.time || 0; if (lim && G.mini.assist("relaxed")) lim *= 2;
     M.limit = lim; M.left = lim;
@@ -6288,17 +6836,22 @@ var G = (function () {
     var sk = opts.skip !== undefined ? opts.skip : def.skip === "" ? "" : def.skip || ("Quick fix" + (opts.minutes ? " · " + Math.round(opts.minutes * MINI.skipK) + " min" : ""));
     bSkip.hidden = !sk; if (sk) bSkip.firstChild.textContent = sk;
     bEsc.hidden = opts.noEsc === true; bEsc.firstChild.textContent = def.escLabel || "Quick choice";
-    HELP.textContent = (def.help || "") + "\nKeys: Tab and the arrows pick, Enter or Space uses. P pauses, Esc goes back to the quick choice.";
-    F.el.classList.toggle("dom-over", def.dom === "over"); F.el.classList.toggle("dom-below", def.dom === "below"); F.el.classList.toggle("dom-only", def.dom === "only");
+    HELP.textContent = (def.help || "") + "\n" + (def.keysHelp || "Keys: Tab and the arrows pick, Enter or Space uses. P pauses, Esc goes back to the quick choice.");
+    var asl = def.assists || ["steady", "relaxed", "calm"]; swS.hidden = asl.indexOf("steady") < 0; swR.hidden = asl.indexOf("relaxed") < 0; swC.hidden = asl.indexOf("calm") < 0;
+    PL.hidden = !!opts.free; cEsc.firstChild.textContent = def.coverEsc || def.escLabel || "Quick choice"; OWN.innerHTML = ""; OWN.hidden = !def.cover;
+    var dm = opts.dom !== undefined ? opts.dom : def.dom; M.dm = dm;
+    F.el.classList.toggle("dom-over", dm === "over"); F.el.classList.toggle("dom-below", dm === "below"); F.el.classList.toggle("dom-only", dm === "only");
     CV.style.aspectRatio = W + " / " + M.h;
     WRAP.style.display = ""; cover = false; COVER.classList.remove("on");
     prevFocus = document.activeElement;
     if (document.pointerLockElement && document.exitPointerLock) document.exitPointerLock();
     G.modal = "mini"; G.clockK = def.clock || 0; G.mini.k = G.clockK; G.mini.active = kind;
     size();
+    var h0 = M.h;
     try { def.init(M, opts); } catch (err) { oops(kind + " init", err); finish("abort", 0); return false; }
+    if (M.h !== h0) { CV.style.aspectRatio = W + " / " + M.h; size(); }   // (the game chose its own height: a tall layout on a phone)
     timer(); draw();
-    if (def.dom !== "only") { try { CV.focus({ preventScroll: true }); } catch (err) {} }
+    if (dm !== "only") { try { CV.focus({ preventScroll: true }); } catch (err) {} }
     return true;
   };
   function finish(outcome, q, data) {
@@ -6340,9 +6893,10 @@ var G = (function () {
   function pause(on) {
     if (!M || M.done) return;
     cover = on; COVER.classList.toggle("on", on); syncCover();
+    if (on && M.def.cover) { try { M.def.cover(M, OWN); } catch (err) { oops(M.kind + " cover", err); } }
     if (on) { var b = COVER.querySelector(".ui-btn.primary"); if (b) try { b.focus({ preventScroll: true }); } catch (err) {} }
   }
-  function resume() { pause(false); if (M && M.def.dom !== "only") try { CV.focus({ preventScroll: true }); } catch (err) {} if (M && M.def.resume) M.def.resume(M); }
+  function resume() { pause(false); if (M && M.dm !== "only") try { CV.focus({ preventScroll: true }); } catch (err) {} if (M && M.def.resume) M.def.resume(M); }
   addEventListener("blur", function () { if (M) pause(true); });
   document.addEventListener("visibilitychange", function () { if (M && document.hidden) pause(true); });
 
@@ -6358,7 +6912,7 @@ var G = (function () {
     try { if (M.def.key && M.def.key(M, e)) { e.preventDefault(); return; } } catch (err) { oops(M.kind + " key", err); finish("abort", 0); return; }
     if (field || !M) return;
     var onCv = document.activeElement === CV;
-    if (!onCv && (t === document.body || !WRAP.contains(t)) && M.def.dom !== "only") { CV.focus({ preventScroll: true }); onCv = true; }
+    if (!onCv && (t === document.body || !WRAP.contains(t)) && M.dm !== "only") { CV.focus({ preventScroll: true }); onCv = true; }
     if (!onCv) return;
     if (k === "Tab") { if (moveFocus(e.shiftKey ? -1 : 1)) e.preventDefault(); return; }
     if (k === "Enter" || k === " ") { e.preventDefault(); if (M.focus >= 0 && !M.targets[M.focus].off) press(M.targets[M.focus].id, "key"); return; }
@@ -6414,7 +6968,7 @@ var G = (function () {
     if (!M) return;
     if (resized) size();
     var g = G2; g.setTransform(SC, 0, 0, SC, 0, 0); g.clearRect(0, 0, W, M.h);
-    if (M.def.draw && M.def.dom !== "only") { try { M.def.draw(M, g); } catch (err) { oops(M.kind + " draw", err); finish("abort", 0); return; } }
+    if (M.def.draw && M.dm !== "only") { try { M.def.draw(M, g); } catch (err) { oops(M.kind + " draw", err); finish("abort", 0); return; } }
     if (keyNav && M.focus >= 0 && document.activeElement === CV) { var t = M.targets[M.focus]; if (t && !t.off) P.focus(g, t.x, t.y, t.w, t.h); }
   }
   function tick(dt) {
@@ -11799,8 +12353,8 @@ var G = (function () {
 })();
 
 // ---------------------------------------------------------------- VCF Tycoon: cameos (famous lookalikes)
-// CAMEOS-PLAN.md, the MVP six: fans dressed as Steve Jobs, Steve Wozniak, Bill Gates, Adam Osborne, Grace
-// Hopper and Nolan Bushnell. Every line of copy says "lookalike": nobody claims the real person is at the show,
+// CAMEOS-PLAN.md: fans dressed as Steve Jobs, Steve Wozniak, Bill Gates, Adam Osborne, Grace Hopper, Nolan Bushnell,
+// Roberta Williams, Jay Miner, Clive Sinclair, Chuck Peddle, Wes Graham and Gary Kildall, and one guest (CelGen Studios). Every line of copy says "lookalike": nobody claims the real person is at the show,
 // nobody is quoted, and every fact is from the plan's sourced table (section 7, with its links on the card).
 // Plain ES5.
 //   1-2 per show day (G.TUNE.cameos), drawn with G.rnd() when the day starts (state.sys.cameos.plan, so a
@@ -11820,7 +12374,11 @@ var G = (function () {
 //   Wraps HOOK.visitors (keeps a hijacked slot drawn), HOOK.stand (a lookalike's next stop), HOOK.booth (followers
 //   head for the lookalike's booth) and HOOK.arrive (a lookalike's linger; the others go on to visitors.js),
 //   after showrunner.js, keeping the previous function for everybody else.
-//   G.cameos = { roster, by, out(), spawn(id), hello(id), card(id, live, back), collection(back), portrait(id), album() }
+//   G.cameos = { roster, by, out(), spawn(id), hello(id), card(id, live, back), collection(back), portrait(id), album(), walk(), walking(), walkIn(id) }
+//   Walking around on the game page (window.GAME_ONLY, no game on, never the SITE_BUILD walk-through): 1-2 of them come and
+//   go on a real-seconds clock (TU.walk, G.vrnd, not saved: WK), wander their booths, and their card is read only (no album,
+//   kudos or achievements; "Play a weekend to collect badges"). Wraps HOOK.tick (that clock), HOOK.pick / HOOK.verb (their
+//   picks answer outside a game). Any start, load, quit or the pick card strips them (strip()).
 //   Emits "cameo" (id, "arrive" | "hello" | "booth" | "leave", booth).
 //   State: G.state.sys.cameos = { plan { sat [{ id, at, done, stay? }], sun }, out [{ id, k, until, at, stops, last,
 //   leaving, tgt, pend, vis [], w, wm, guest, force, folK }], met { id: { at, where, photo, sig, quiz } }, came { id: "Sat 11:20" } }
@@ -11832,11 +12390,19 @@ var G = (function () {
     3: ["Wikipedia: Bill Gates", "https://en.wikipedia.org/wiki/Bill_Gates"],
     5: ["Wikipedia: Adam Osborne", "https://en.wikipedia.org/wiki/Adam_Osborne"],
     6: ["Wikipedia: Osborne 1", "https://en.wikipedia.org/wiki/Osborne_1"],
+    8: ["Wikipedia: Gary Kildall", "https://en.wikipedia.org/wiki/Gary_Kildall"],
+    9: ["Computer History Museum: early Digital Research CP/M source code", "https://computerhistory.org/blog/early-digital-research-cpm-source-code/"],
+    12: ["Wikipedia: Chuck Peddle", "https://en.wikipedia.org/wiki/Chuck_Peddle"],
+    13: ["Wikipedia: Wes Graham", "https://en.wikipedia.org/wiki/Wes_Graham"],
+    16: ["Wikipedia: Clive Sinclair", "https://en.wikipedia.org/wiki/Clive_Sinclair"],
     17: ["Computer History Museum: Apple-1", "https://www.computerhistory.org/revolution/personal-computers/17/312/1132"],
     18: ["Wikipedia: Nolan Bushnell", "https://en.wikipedia.org/wiki/Nolan_Bushnell"],
     21: ["Wikipedia: Grace Hopper", "https://en.wikipedia.org/wiki/Grace_Hopper"],
+    23: ["Wikipedia: Roberta Williams", "https://en.wikipedia.org/wiki/Roberta_Williams"],
+    25: ["Wikipedia: Jay Miner", "https://en.wikipedia.org/wiki/Jay_Miner"],
     30: ["YouTube: CelGenStudios", "https://www.youtube.com/@CelGenStudios"],
-    31: ["IRIX Network forums: the CelGenStudios profile", "https://forums.irixnet.org/user-274.html"]
+    31: ["IRIX Network forums: the CelGenStudios profile", "https://forums.irixnet.org/user-274.html"],
+    32: ["University of Waterloo: SuperPET development, a view from the trenches", "https://uwaterloo.ca/watitis/university-waterloo-superpet-development-view-trenches"]
   };
   // the roster (CAMEOS-PLAN.md 1.1 / 1.3 / 5.1). style: the people model's style object (hall-3d.src.html, the
   // people section's header); the portrait is drawn from the same object. H / b: height and build from the person's
@@ -11896,6 +12462,62 @@ var G = (function () {
       flavour: "A Nolan Bushnell lookalike, watching the arcade cabinet with a professional eye.",
       facts: [["Co-founded Atari in 1972 with Ted Dabney.", 18], ["Atari's Pong (1972) was built by Allan Alcorn.", 18], ["The Atari VCS (2600) came out in September 1977.", 18]],
       quiz: { q: "In which year was Atari founded?", a: "1972", wrong: ["1969", "1977", "1982"], fact: "Atari was founded in 1972 by Nolan Bushnell and Ted Dabney." } },
+    // the second six (owner, 2026-10-02; CAMEOS-PLAN 1.1 / 1.3, facts rechecked against section 7 on 2026-10-02)
+    { id: "williams", name: "Roberta Williams", years: "", bg: 0xece0f2, icon: "tablet",
+      style: { H: 65, b: 0.9, skin: 0xf2d0b5, hair: "long", hairC: 0x2b1e16, beard: 0, glasses: 0, topKind: "long", top: 0x8a5aa8, print: "none",
+        pants: 0x1f2023, shoe: 0x2a2a2a, hat: 0, bag: 0, arms: "hold", prop: { size: [9, 0.6, 7], at: "chest", c: 0x3a3a3e } },
+      booths: ["31", "36", "1"], machine: null, lan: true,
+      flavour: "A Roberta Williams fan, going straight to the booth with Mystery House in its name.",
+      facts: [["Mystery House (1980) is credited as the first graphic adventure game.", 23], ["Co-founded On-Line Systems, later Sierra On-Line, with Ken Williams.", 23],
+        ["Created King's Quest (1984).", 23]],
+      quiz: { q: "Mystery House (1980) is credited as the first...", a: "Graphic adventure game", wrong: ["Text adventure", "Platform game", "Online game"],
+        fact: "Mystery House (1980) is credited as the first graphic adventure game." } },
+    { id: "miner", name: "Jay Miner", years: "1932–1994", bg: 0xdde6f0, icon: "paw",   // (no dog at heel: it would need a second prop instance)
+      style: { H: 70, b: 1.2, skin: 0xf2d0b5, hair: "short", hairC: 0x9a968e, beard: "full", beardC: 0x9a968e, glasses: 0, topKind: "collar", top: 0x6a8caf,
+        sleeves: false, pants: 0x3a3a40, shoe: 0x2a2a2a, hat: 0, bag: 0, arms: "side" },
+      booths: ["28", "18"], machine: null, lan: false,
+      flavour: "A Jay Miner lookalike, heading for the Amigas. The little dog stayed home today.",
+      facts: [["Led the chip design for the Atari VCS's display hardware, the TIA, from late 1975.", 25], ["Designed the original Amiga (1985): he is known as the father of the Amiga.", 25],
+        ["His dog Mitchy's paw print is embossed inside the Amiga 1000's top cover.", 25]],
+      quiz: { q: "What is embossed inside the Amiga 1000's top cover, with the team's signatures?", a: "A dog's paw print", wrong: ["A map of the chipset", "A floppy disk", "A boing ball"],
+        fact: "Jay Miner's dog Mitchy's paw print is embossed inside the Amiga 1000's top cover." } },
+    { id: "sinclair", name: "Clive Sinclair", years: "1940–2021", bg: 0xf2e2d8, icon: "zx",
+      style: { H: 70, b: 0.95, skin: 0xf2d0b5, hair: "bald", hairC: 0x8a3b1e, beard: "full", beardC: 0x8a3b1e, glasses: "square", glassesC: 0x2a2a2a,
+        topKind: "suit", top: 0x1f2633, tie: 0x2f3a52, shirt: 0xf2f0ea, pants: 0x1f2633, shoe: 0x1e1e1e, hat: 0, bag: 0, arms: "side",
+        prop: { size: [9, 1.4, 5.5], at: "handR", c: 0x1f1f22 } },
+      booths: ["11", "25", "22", "26"], never: ["7"], machine: null, lan: false,   // (never booth 7, "Legendary Failure?": CAMEOS-PLAN's rules)
+      flavour: "A Clive Sinclair lookalike, ginger beard and all, heading for the Spectrums.",
+      facts: [["Made the Sinclair Executive (1972), the world's first slimline electronic pocket calculator.", 16],
+        ["The ZX80 (1980) was the UK's first mass-market home computer for less than £100.", 16], ["The ZX Spectrum (April 1982) was the first ZX with colour; knighted in 1983.", 16]],
+      quiz: { q: "Which Sinclair machine, launched in April 1982, was the first ZX with colour?", a: "ZX Spectrum", wrong: ["ZX80", "ZX81", "QL"],
+        fact: "The ZX Spectrum, launched in April 1982, was the first computer in the ZX line with colour." } },
+    { id: "peddle", name: "Chuck Peddle", years: "1937–2019", bg: 0xe6e8dc, icon: "chip",
+      style: { H: 70, b: 1.15, skin: 0xf2d0b5, hair: "short", hairC: 0x3b2a1e, beard: 0, glasses: "square", glassesC: 0x2a2a2a, topKind: "collar", top: 0xf2f0ea,
+        sleeves: false, tie: 0x2f4f7a, pants: 0x3a3a40, shoe: 0x1e1e1e, hat: 0, bag: 0, arms: "side", prop: { size: [2.4, 0.5, 8], at: "handR", c: 0x1f1f22 } },
+      booths: ["27", "37", "29", "18"], machine: "superpet", lan: false,
+      flavour: "A Chuck Peddle fan with a giant 6502. Half the hall runs on one.",
+      facts: [["Led the 6502's design at MOS Technology (1975), priced at 15% of the cost of an Intel 8080.", 12], ["Designed the KIM-1 and the Commodore PET, both built on the 6502.", 12],
+        ["Later designed the Sirius 1 / Victor 9000.", 12]],
+      quiz: { q: "Which chip did Chuck Peddle's team design at MOS Technology in 1975?", a: "6502", wrong: ["Z80", "8080", "6809"],
+        fact: "The 6502 was developed at MOS Technology in 1975." } },
+    { id: "graham", name: "Wes Graham", years: "1932–1999", bg: 0xeee4d4, icon: "cards",
+      style: { H: 70, b: 1.05, skin: 0xf2d0b5, hair: "short", hairC: 0xa8a49c, beard: 0, glasses: "square", glassesC: 0x3a2a1e, topKind: "suit", top: 0x5b3a26,
+        tie: 0x7a2e3a, shirt: 0xe9e7e0, pants: 0x6a6a6a, shoe: 0x3a2a1e, hat: 0, bag: 0, arms: "side", prop: { size: [7.4, 2, 3.25], at: "handR", c: 0xe8dcb4 } },
+      booths: ["29", "3", "38"], machine: "superpet", lan: false,
+      flavour: "A Wes Graham lookalike at the SuperPET: the Waterloo machine, with Waterloo's languages.",
+      facts: [["Called the father of computing at the University of Waterloo.", 13], ["His team's WATFOR compiler (1965) was used by students at 420 institutions.", 13],
+        ["His Computer Systems Group and Commodore made the SuperPET: a second CPU and languages for first- and second-year courses.", 32]],
+      quiz: { q: "The SuperPET was designed with which university?", a: "Waterloo", wrong: ["McGill", "Toronto", "Queen's"],
+        fact: "The SuperPET was designed at the University of Waterloo for teaching programming." } },
+    { id: "kildall", name: "Gary Kildall", years: "1942–1994", bg: 0xe8e2d6, icon: "floppy",
+      style: { H: 71, b: 1.0, skin: 0xf2d0b5, hair: "short", hairC: 0x5a3a24, beard: "moustache", beardC: 0x5a3a24, glasses: 0, topKind: "collar", top: 0xe9e7e0,
+        sleeves: true, jacket: 0x5a4632, pants: 0x2c2c30, shoe: 0x3a2a1e, hat: 0, bag: 0, arms: "side", prop: { size: [8, 8, 0.3], at: "handR", c: 0x1f1f22 } },
+      booths: ["29", "15", "34"], machine: "kaypro2", lan: false,
+      flavour: "A Gary Kildall fan with an 8-inch floppy. The Osborne and the Kaypros at booth 29 boot CP/M.",
+      facts: [["Had the first CP/M running in 1974, in Pacific Grove, California.", 8], ["Incorporated Digital Research with Dorothy McEwen in 1976.", 9],
+        ["Co-hosted PBS's Computer Chronicles (1983-1990).", 8]],
+      quiz: { q: "What does CP/M stand for?", a: "Control Program for Microcomputers", wrong: ["Central Processing Monitor", "Compact Program Manager", "Computer Program/Monitor"],
+        fact: "CP/M stands for Control Program for Microcomputers." } },
     // a guest, not a lookalike (owner, 2026-10-01): the channel by its own name, an anonymous figure in a channel
     // figure from the owner's reference photo: long strawberry-blond hair, ginger beard, thin glasses, a light-blue printed tee, a big build; camera in hand; facts from the channel's public profiles only
     { id: "celgen", name: "CelGen Studios", years: "", bg: 0xe4def0, icon: "camera", guest: true,
@@ -11938,7 +12560,7 @@ var G = (function () {
   // ---- live bits (not saved): the pick box, the hello pause, per roster entry; labels and the sparkle pooled
   var live = {};
   ROSTER.forEach(function (c) { live[c.id] = { box: new THREE.Box3(), pick: null, hold: 0 }; });
-  var labels = [], cardId = null;
+  var labels = [], cardId = null, WK = { out: [], T: 0, at: -1, recent: [] };   // WK: walking around (never saved)
   for (var li = 0; li < 2; li++) { var le = G.ui.el("div", "cm-label", document.body); le.hidden = true; le.setAttribute("aria-hidden", "true"); labels.push(le); }
   var spTex = canvasTex("cm-star", 64, 64, function (g) {        // a soft four-point star, gold (CAMEOS-PLAN 2.4)
     var gr = g.createRadialGradient(32, 32, 0, 32, 32, 30); gr.addColorStop(0, "rgba(255,240,190,1)"); gr.addColorStop(0.35, "rgba(232,194,90,.9)"); gr.addColorStop(1, "rgba(232,194,90,0)");
@@ -11964,7 +12586,7 @@ var G = (function () {
     if (fresh) { var e = PLACES.entrance; v.x = e.x; v.z = e.z; v.yaw = v.tyaw = e.yaw || 0; }
     v.st = 0; v.timer = 0; v.wn = 0;
     var L = live[c.id];
-    if (!L.pick) L.pick = G.pick(L.box, cam.tag, "read their badge", function () { hello(c.id); });
+    if (!L.pick) L.pick = G.pick(L.box, cam.tag, "read their badge", function () { hello(c.id); }, { cmw: true });
     return true;
   }
   function undress(v) {
@@ -11977,7 +12599,7 @@ var G = (function () {
   function strip() {                                 // every lookalike back to their own clothes, followers released
     var vs = crowd.visitors;
     for (var i = 0; i < vs.length; i++) { if (vs[i].cameo) undress(vs[i]); vs[i].fol = null; }
-    unpickAll(); hideFx();
+    unpickAll(); hideFx(); WK.out.length = 0; WK.at = -1;
   }
   function hideFx() { for (var i = 0; i < 2; i++) { sparks[i].visible = false; labels[i].hidden = true; } fxOn = false; }
 
@@ -12010,8 +12632,8 @@ var G = (function () {
   }
 
   // ---- arrival: take over a walking visitor far from the player
-  function slot() {
-    var vs = crowd.visitors, n = Math.min(vs.length, Math.max(0, HOOK.visitors())), best = -1, bd = -1;
+  function slot(n) {
+    var vs = crowd.visitors, best = -1, bd = -1; n = Math.min(vs.length, Math.max(0, n));
     for (var j = 0; j < n; j++) {
       var v = vs[j]; if (v.st !== 1 || v.cameo || v.fol || v.lanq || v.lans !== undefined || v.seat || v.crew || v.clq >= 0) continue;
       var dx = v.x - pos.x, dz = v.z - pos.z, d = dx * dx + dz * dz; if (d > bd) { bd = d; best = j; }
@@ -12019,7 +12641,7 @@ var G = (function () {
     return best;
   }
   function arrive(e) {
-    var s = S(), cam = BY[e.id], k = slot(); if (!cam || k < 0) return false;
+    var s = S(), cam = BY[e.id], k = slot(HOOK.visitors()); if (!cam || k < 0) return false;
     var stay = e.stay || TU.stay[0] + G.rnd() * (TU.stay[1] - TU.stay[0]);
     var c = { id: e.id, k: k, until: Math.round(G.state.min + stay), at: null, stops: 0, last: null, leaving: 0, tgt: null, pend: 0, vis: [], w: 0, wm: null, guest: 0, force: null, folK: 1 };
     s.out.push(c); dress(c, true);
@@ -12042,23 +12664,23 @@ var G = (function () {
   // ---- where they go next (the plan's weights): their booths 6, any other 0.5, the last one 0, x1.5 for a busy booth;
   // the player's booth, when it is one of theirs, within the first three stops
   function pickBooth(c) {
-    var cam = BY[c.id], me = G.mine(), mine = boothsOf(cam), i, k, w, tot = 0;
+    var cam = BY[c.id], me = c.walk ? null : G.mine(), mine = boothsOf(cam), i, k, w, tot = 0;
     if (c.force && booths[c.force]) { k = c.force; c.force = null; return k; }
     if (me && mine.indexOf(me) >= 0 && c.vis.indexOf(me) < 0 && c.stops < 3 && G.vrnd() < 1 / (3 - c.stops)) return me;
-    for (i = 0; i < BK.length; i++) tot += bw(cam, mine, c, BK[i]);
+    for (i = 0; i < BK.length; i++) tot += bw(cam, mine, c, BK[i], me);
     var x = G.vrnd() * tot;
-    for (i = 0; i < BK.length; i++) { k = BK[i]; w = bw(cam, mine, c, k); if ((x -= w) <= 0 && w > 0) return k; }
+    for (i = 0; i < BK.length; i++) { k = BK[i]; w = bw(cam, mine, c, k, me); if ((x -= w) <= 0 && w > 0) return k; }
     return mine[0];
   }
-  function bw(cam, mine, c, k) {
-    if (k === c.last) return 0;
+  function bw(cam, mine, c, k, me) {
+    if (k === c.last || (cam.never && cam.never.indexOf(k) >= 0)) return 0;
     var w = mine.indexOf(k) >= 0 ? 6 : 0.5;
-    if (cam.id === "bushnell" && k === "10" && G.mine() === "10") w *= 3;
-    return G.buzz(k) > 1.2 ? w * 1.5 : w;
+    if (cam.id === "bushnell" && k === "10" && me === "10") w *= 3;
+    return !c.walk && G.buzz(k) > 1.2 ? w * 1.5 : w;
   }
   function spotAt(k, c) {                             // in front of a table, facing it (booth 29: the machine they came for)
     var b = booths[k]; if (!b || !b.tables.length) return null;
-    var dir = b.face === "W" ? -1 : 1, yaw = dir < 0 ? -Math.PI / 2 : Math.PI / 2, cam = BY[c.id], mz = null, g = cam.machine && G.gear(cam.machine);
+    var dir = b.face === "W" ? -1 : 1, yaw = dir < 0 ? -Math.PI / 2 : Math.PI / 2, cam = BY[c.id], mz = null, g = cam.machine && !c.walk && G.gear(cam.machine);
     if (k === "29" && g && g.where === "booth" && G.spot(cam.machine, SP)) mz = SP.z;
     for (var tr = 0; tr < 8; tr++) {
       var t = b.tables[Math.floor(G.vrnd() * b.tables.length)];
@@ -12073,7 +12695,7 @@ var G = (function () {
   function next(c) {
     if (c.pend && c.tgt) return c.tgt;
     c.at = null;
-    if (!c.leaving && G.state.min >= c.until) c.leaving = 1;
+    if (!c.leaving && (c.walk ? WK.T : G.state.min) >= c.until) c.leaving = 1;
     var t = null;
     if (c.leaving) { var e = PLACES.entrance; t = { x: e.x, z: e.z, yaw: 0, bk: null }; }
     else for (var i = 0; i < 6 && !t; i++) t = spotAt(pickBooth(c), c);
@@ -12086,8 +12708,9 @@ var G = (function () {
   }
   function arrived(c, v, k) {
     c.pend = 0;
-    if (!k) { if (c.leaving) leave(c); return 2; }
+    if (!k) { if (c.leaving) (c.walk ? wLeave : leave)(c); return 2; }
     k = String(k);
+    if (c.walk) { c.at = k; c.last = k; c.stops++; if (c.vis.indexOf(k) < 0) c.vis.push(k); return TU.walk.linger[0] + G.vrnd() * (TU.walk.linger[1] - TU.walk.linger[0]); }
     var cam = BY[c.id], L = TU.linger, lin = L[0] + G.vrnd() * (L[1] - L[0]);
     c.at = k; c.last = k; c.stops++; c.dbl = 0; if (c.vis.indexOf(k) < 0) c.vis.push(k);
     if (downAt(k)) lin = TU.downLinger[0] + G.vrnd() * (TU.downLinger[1] - TU.downLinger[0]);
@@ -12135,7 +12758,7 @@ var G = (function () {
     return n;
   };
   HOOK.stand = function (v) {
-    if (v.cameo && G.state.on) { var c = outOf(v.cameo); if (c) return next(c); }
+    if (v.cameo) { var c = cOf(v.cameo); if (c) return next(c); }
     return baseStand ? baseStand(v) : null;
   };
   HOOK.booth = function (v) {
@@ -12143,13 +12766,70 @@ var G = (function () {
     return baseBooth ? baseBooth(v) : null;
   };
   HOOK.arrive = function (v, k, linger) {
-    if (v.cameo && G.state.on) { var c = outOf(v.cameo); if (c) return arrived(c, v, k); }
+    if (v.cameo) { var c = cOf(v.cameo); if (c) return arrived(c, v, k); }
     if (v.fol) { var f = outOf(v.fol); if (!f || String(k) === f.at) { if (!f || --v.foln <= 0) v.fol = null; } }
     return baseArrive ? baseArrive(v, k, linger) : linger;
   };
 
+  // ---- walking around on the game page (no game on): 1-2 out at a time on a real-seconds clock, read-only cards
+  function walking() {                               // the game-only page, a walk (not the pick card), no level or mini-game up
+    return !!window.GAME_ONLY && !window.SITE_BUILD && !G.state.on && !G.modal && !document.documentElement.classList.contains("game-only");
+  }
+  function wOut(id) { for (var i = 0; i < WK.out.length; i++) if (WK.out[i].id === id) return WK.out[i]; return null; }
+  function cOf(id) { return G.state.on ? outOf(id) : walking() ? wOut(id) : null; }
+  function wCount() {                                // the walk-through's crowd setting (the hall's Visitors key: off / some / busy)
+    var b = document.getElementById("t-vis"), l = b && b.dataset.level; return l === "off" ? 0 : l === "busy" ? 110 : 45;
+  }
+  function span(a) { return a[0] + G.vrnd() * (a[1] - a[0]); }
+  function wDraw() {                                 // anyone not out and not one of the last few; a guest now and then
+    var l = [], tot = 0, i;
+    ROSTER.forEach(function (cam) { if (wOut(cam.id) || WK.recent.indexOf(cam.id) >= 0) return; var w = cam.guest ? TU.walk.guestW : 1; l.push([cam.id, w]); tot += w; });
+    var x = G.vrnd() * tot; for (i = 0; i < l.length; i++) if ((x -= l[i][1]) <= 0) return l[i][0];
+    return l.length ? l[l.length - 1][0] : null;
+  }
+  function wArrive(id) {
+    var cam = BY[id], k = cam ? slot(wCount()) : -1; if (k < 0) return false;
+    var c = { id: id, k: k, until: WK.T + span(TU.walk.stay), at: null, stops: 0, last: null, leaving: 0, tgt: null, pend: 0, vis: [], force: null, walk: 1 };
+    WK.out.push(c); dress(c, true); WK.recent.push(id); if (WK.recent.length > Math.min(3, ROSTER.length - 2)) WK.recent.shift();
+    G.hud.toast(cam.guest ? cam.name + " just came in the main entrance." : "Someone who looks a lot like " + cam.name + " just came in the main entrance.", "");
+    return true;
+  }
+  function wLeave(c) {
+    var v = crowd.visitors[c.k], i = WK.out.indexOf(c);
+    if (v && v.cameo === c.id) undress(v);
+    var L = live[c.id]; if (L.pick) { G.unpick(L.pick); L.pick = null; } L.hold = 0;
+    if (i >= 0) WK.out.splice(i, 1);
+    WK.at = Math.max(WK.at, WK.T + span(TU.walk.after));
+  }
+  function wHello(id) {                              // the read-only card: no album, kudos or achievements
+    var c = walking() && wOut(id), v = c && crowd.visitors[c.k]; if (!c || G.hud.isOpen()) return;
+    live[id].hold = TU.hold;
+    if (v && v.cameo === id) { if (v.st === 1) { v.st = 0; v.wn = 0; } v.timer = Math.max(v.timer, 1); }
+    card(id, "walk");
+  }
+  function walkTick(dt) {
+    if (G.state.on) return;                          // (a game: its own tick)
+    if (!walking()) { if (WK.out.length || WK.at >= 0) strip(); return; }
+    var W = TU.walk, i;
+    WK.T += dt; if (WK.at < 0) WK.at = WK.T + span(W.first);
+    if (WK.out.length < W.max && WK.T >= WK.at) WK.at = wArrive(wDraw()) ? WK.T + span(W.gap) : WK.T + 5;
+    for (i = WK.out.length - 1; i >= 0; i--) { var c = WK.out[i], v = crowd.visitors[c.k]; if (!v || v.cameo !== c.id || WK.T > c.until + W.stuck) wLeave(c); }
+    fxTick(WK.out, dt, false);
+  }
+  var baseTick = HOOK.tick, basePick = HOOK.pick, baseVerb = HOOK.verb;
+  HOOK.tick = function (dt) {
+    if (baseTick) baseTick(dt);
+    try { walkTick(dt); } catch (err) { if (G.errors.length < 50) G.errors.push("cameos walk: " + (err && err.message || err)); }
+  };
+  HOOK.pick = function (p, how) { if (p.cmw && !G.state.on) { if (walking() && p.fn) p.fn(p, how); return true; } return basePick ? basePick(p, how) : false; };
+  HOOK.verb = function (p, how, touch) {
+    if (p.cmw && !G.state.on) return walking() ? (touch ? "tap: " : how === "mouse" ? "click: " : "E: ") + p.verb : "";
+    return baseVerb ? baseVerb(p, how, touch) : "";
+  };
+
   // ---- say hello: the badge card (rewards once per lookalike per game)
   function hello(id) {
+    if (!G.state.on) { wHello(id); return; }
     var s = S(), cam = BY[id], c = outOf(id); if (!s || !cam || G.hud.isOpen()) return;
     var m = s.met[id];
     if (!m) {
@@ -12179,19 +12859,20 @@ var G = (function () {
     return '<p class="cm-ticks">' + t(m && m.met !== 0, "badge read") + t(m && m.photo, "photo") + t(m && m.sig, "signed") + t(m && m.quiz > 0, "question right") + "</p>";
   }
   function card(id, isLive, back) {
-    var s = S(), cam = BY[id]; if (!cam) return null;
-    var c = isLive ? outOf(id) : null, v = c && crowd.visitors[c.k], m = isLive && s ? s.met[id] : album()[id];
+    var ro = isLive === "walk", s = ro ? null : S(), cam = BY[id]; if (!cam) return null;   // ro: walking around, read only
+    var c = ro ? wOut(id) : isLive ? outOf(id) : null, v = c && crowd.visitors[c.k], m = ro ? null : isLive && s ? s.met[id] : album()[id];
     cardId = id;
     var src = [], seen = {};
     cam.facts.forEach(function (f) { if (!seen[f[1]]) { seen[f[1]] = 1; src.push('<a href="' + SRC[f[1]][1] + '" target="_blank" rel="noopener">' + esc(SRC[f[1]][0]) + "</a>"); } });
-    var html = '<div class="kick">Cameo · ' + (cam.guest ? "guest" : "lookalike") + (isLive ? "" : " · your badge collection") + "</div>" +
+    var html = '<div class="kick">Cameo · ' + (cam.guest ? "guest" : "lookalike") + (ro ? " · walking around" : isLive ? "" : " · your badge collection") + "</div>" +
       '<div class="cm-wrap"><div class="cm-body"><p class="cm-who">' + (cam.guest ? "Today's guest" : "Someone who looks a lot like") + '</p><h2>' + esc(cam.name) + "</h2>" +
       (cam.years ? '<p class="cm-yrs">' + cam.years + "</p>" : "") +
       '<p class="cm-flav">' + esc(cam.flavour) + "</p><h3>Did you know?</h3>" +
       '<ul class="cm-facts">' + cam.facts.map(function (f) { return "<li>" + esc(f[0]) + "</li>"; }).join("") + "</ul>" +
       '<p class="cm-src">Sources: ' + src.join(" · ") + "</p>" +
       '<p class="cm-near">Often seen near: ' + cam.booths.map(function (k) { return esc(bname(k)) + " (" + k + ")"; }).join(" · ") + "</p>" +
-      (m ? ticks(m) : "") + "</div></div>";
+      (m ? ticks(m) : "") + (ro ? '<p class="ui-note cm-ro">Play a weekend to collect badges: read theirs during a show day and it goes ' +
+      "into your badge collection.</p>" : "") + "</div></div>";
     var btn = [];
     if (isLive && s && m) {
       var at = c && c.at && v && v.st === 0;
@@ -12199,7 +12880,7 @@ var G = (function () {
       if (!m.sig && at && c.at === "29" && G.state.who === "29" && G.signature) btn.push(["Ask them to sign the guest book", function () { sign(id); }]);
       if (!m.quiz && G.trivia) btn.push(["Ask a question", function () { quiz(id); }]);
       btn.push(["Bye", function () { cardId = null; }, true]);
-    } else btn.push(["Back", function () { cardId = null; if (back) back(); }, true]);
+    } else btn.push([ro ? "Bye" : "Back", function () { cardId = null; if (back) back(); }, true]);
     var box = G.hud.card(html, btn, "cameo"); box.classList.add("wide");
     var b = G.ui.badge({ name: cam.name, ribbon: cam.guest ? "GUEST · INVITÉ" : RIB, portrait: img(cam) });
     b.setAttribute("aria-hidden", "true");
@@ -12348,6 +13029,16 @@ var G = (function () {
       else if (ic === "joystick") { fillS(g, "#1f1f22", function (g) { rr(g, 184, 203, 28, 12, 3); }, 2); g.lineWidth = 4; g.strokeStyle = INK; g.beginPath(); g.moveTo(198, 204); g.lineTo(198, 188); g.stroke(); fillS(g, "#c8423f", ell(198, 186, 5, 5), 2); fillS(g, "#c8423f", ell(207, 206, 2.5, 2.5), 0); }
       else if (ic === "camera") { fillS(g, "#1c1c1f", function (g) { rr(g, 180, 188, 28, 20, 3); }, 2); fillS(g, "#1c1c1f", poly([208, 192, 217, 186, 217, 210, 208, 204]), 2);
         fillS(g, "#4b3a8a", ell(194, 198, 6, 6), 1.5); fillS(g, "#c8423f", ell(185, 192, 1.8, 1.8), 0); }
+      else if (ic === "tablet") { fillS(g, "#3a3a3e", function (g) { rr(g, 181, 186, 34, 25, 3); }, 2); fillS(g, "#d8d4c8", function (g) { g.rect(186, 190, 24, 17); }, 0);
+        g.lineWidth = 3; g.strokeStyle = INK; g.beginPath(); g.moveTo(203, 203); g.lineTo(216, 178); g.stroke(); }
+      else if (ic === "paw") { fillS(g, "#5a4632", ell(198, 205, 9, 7), 0); [[186, 193], [194, 186], [203, 186], [211, 193]].forEach(function (q) { fillS(g, "#5a4632", ell(q[0], q[1], 3.6, 4.4), 0); }); }
+      else if (ic === "zx") { fillS(g, "#1f1f22", poly([180, 210, 216, 210, 214, 188, 182, 188]), 2);
+        ["#d8312a", "#f0a02a", "#f2d93a", "#3aa84a"].forEach(function (c, i) { g.fillStyle = c; g.fillRect(203 + i * 3, 199, 3, 10); }); }
+      else if (ic === "chip") { fillS(g, "#1f1f22", function (g) { rr(g, 183, 189, 30, 18, 2); }, 2); g.fillStyle = "#b8b8b0";
+        for (var px = 0; px < 6; px++) { g.fillRect(186 + px * 4.6, 185, 2, 4); g.fillRect(186 + px * 4.6, 207, 2, 4); }
+        g.fillStyle = "#f4f2ec"; g.font = "bold 8px sans-serif"; g.textAlign = "center"; g.fillText("6502", 198, 201); }
+      else if (ic === "cards") { for (var cc = 2; cc >= 0; cc--) fillS(g, cc ? "#d8cca4" : "#efe6c6", function (g) { rr(g, 181 + cc * 2, 190 - cc * 3, 32, 18, 1); }, 1.5);
+        g.fillStyle = INK; for (var hx2 = 0; hx2 < 7; hx2++) g.fillRect(185 + hx2 * 4, 193 + (hx2 * 5) % 11, 1.6, 3); }
       else if (ic === "apple2") { fillS(g, "#d8cfb4", poly([180, 212, 216, 212, 216, 194, 198, 186, 180, 194]), 2); g.fillStyle = "#6a6252"; for (var kx = 0; kx < 4; kx++) g.fillRect(185 + kx * 7, 202, 4, 3); }
     }
     g.restore();
@@ -12433,13 +13124,16 @@ var G = (function () {
   })();
 
   // ---- per frame: the pick box, the sparkle, the labels, the hello pause (no allocation)
-  function tick(dt) {
-    var s = S(); if (!s || !s.out.length) { if (fxOn) hideFx(); return; }
-    T += dt; var lab = (labT += dt) >= 0.1, fly = typeof mode !== "undefined" && mode === "fly", open = G.hud.isOpen() === "cameo";
+  function tick(dt) { var s = S(); fxTick(s && s.out, dt, true); }
+  var CALM0 = false; try { CALM0 = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (err) {}
+  function fxTick(list, dt, game) {                   // list: the game's s.out or the walk's WK.out
+    if (!list || !list.length) { if (fxOn) hideFx(); return; }
+    var calm = CALM0 || document.documentElement.classList.contains("ui-calm");   // reduced motion: a still star
+    T += calm ? 0 : dt; var lab = (labT += dt) >= 0.1, fly = typeof mode !== "undefined" && mode === "fly", open = G.hud.isOpen() === "cameo";
     if (lab) labT = 0;
     fxOn = true;
-    for (var i = 0; i < Math.max(2, s.out.length); i++) {     // (at most 2 out in a game; the sparkles and labels are a pool of 2)
-      var c = s.out[i], v = c && crowd.visitors[c.k], L = c && live[c.id], fx = i < 2;
+    for (var i = 0; i < Math.max(2, list.length); i++) {     // (at most 2 out; the sparkles and labels are a pool of 2)
+      var c = list[i], v = c && crowd.visitors[c.k], L = c && live[c.id], fx = i < 2;
       if (!c || !v || v.cameo !== c.id) { if (fx) { sparks[i].visible = false; if (!labels[i].hidden) labels[i].hidden = true; } continue; }
       personHead(v, _h);
       L.box.min.set(v.x - 11, 0, v.z - 11); L.box.max.set(v.x + 11, _h.y + 3, v.z + 11);
@@ -12448,8 +13142,8 @@ var G = (function () {
         L.hold -= dt;
         if (v.st === 0) { v.timer = Math.max(v.timer, 0.5); v.tyaw = Math.atan2(dx, dz); }
       }
-      if (!c.dbl && c.at && c.at === G.mine() && v.st === 0 && d < TU.label) { c.dbl = 1; v.timer *= 2; }   // at your booth, with you near: twice as long
-      if (c.guest && G.state.min >= c.guest) { c.guest = 0; guest(c); }
+      if (game && !c.dbl && c.at && c.at === G.mine() && v.st === 0 && d < TU.label) { c.dbl = 1; v.timer *= 2; }   // at your booth, with you near: twice as long
+      if (game && c.guest && G.state.min >= c.guest) { c.guest = 0; guest(c); }
       if (!fx) continue;
       var sk = sparks[i], tw = 9 * (0.9 + 0.1 * Math.sin(T * 2.3 + i * 2));   // a 9 in star 12 in over the head: bobbing, twinkling
       sk.visible = d >= TU.fade && !mine; sk.position.set(v.x, _h.y + 12 + Math.sin(T * Math.PI + i), v.z); sk.scale.set(tw, tw, 1);
@@ -12517,7 +13211,9 @@ var G = (function () {
 
   // ---- achievements (achieve.js): one per lookalike met, and a few more
   var AD = { jobs: ["🖱", "The turtleneck"], woz: ["🔧", "Beard and an Apple II"], gates: ["💾", "Big glasses, 1980s"], osborne: ["🧳", "A luggable in hand"],
-    hopper: ["⚓", "A nanosecond, handed over"], bushnell: ["🕹", "Insert coin"], celgen: ["📹", "On camera"] };
+    hopper: ["⚓", "A nanosecond, handed over"], bushnell: ["🕹", "Insert coin"], celgen: ["📹", "On camera"],
+    williams: ["🗝", "Mystery House"], miner: ["🐾", "A paw print inside"], sinclair: ["🌈", "Four stripes of colour"], peddle: ["🔲", "Half the hall runs on it"],
+    graham: ["🍁", "Made in Waterloo"], kildall: ["💽", "A> prompt"] };
   ROSTER.forEach(function (cam) { G.achieve.def("cm-" + cam.id, { group: "Cameos", icon: AD[cam.id][0], pts: 0, title: AD[cam.id][1], text: "You read the badge of " + cam.tag + "." }); });
   G.achieve.def("cm-home", { group: "Cameos", icon: "🏠", title: "On home turf", text: "Met a lookalike or a guest at the booth they head for first." });
   G.achieve.def("cm-garage", { group: "Cameos", icon: "🏚", secret: true, title: "Garage band", text: "Met the Steve Jobs and Steve Wozniak lookalikes in the same weekend." });
@@ -12527,6 +13223,8 @@ var G = (function () {
   G.achieve.def("cm-full", { group: "Cameos", icon: "📇", pts: 0, secret: true, title: "The full badge collection", text: "Every lookalike met, photographed, and their question answered right." });
 
   G.cameos = { roster: ROSTER, by: BY, out: function () { var s = S(); return s ? s.out : []; }, hello: hello, card: card, collection: collection, album: album,
+    walk: function () { return WK.out; }, walking: walking,             // (walking around: who is out; walkIn(id) calls one in: tests, screenshots)
+    walkIn: function (id) { return !!(walking() && BY[id] && !wOut(id) && WK.out.length < TU.walk.max && wArrive(id)); },
     portrait: function (id) { return BY[id] ? portrait(BY[id]) : ""; },
     spawn: function (id) { var s = S(); if (!on() || !BY[id] || outOf(id)) return false; return arrive({ id: id, at: G.state.min }); } };   // (tests, the screenshots)
 
@@ -13316,9 +14014,10 @@ var G = (function () {
       events(m);
     }
     if (p === "setup" || show()) {
-      var h = here(), hold = s.panel.st === "run";
+      var h = here(), hold = s.panel.st === "run", sj = G.job.running("clsign");
       for (i = s.q.length - 1; i >= 0; i--) {
-        var f = s.q[i]; if (!hold) f.w += h ? 1 : C.awayK;
+        var f = s.q[i]; if (i === 0 && sj) continue;        // (the fan being signed for doesn't give up mid-autograph)
+        if (!hold) f.w += h ? 1 : C.awayK;
         if (f.w > f.p) { leaveQ(i, f.fri ? "fri" : "gave"); if (!f.fri) say(NAMES[f.n] + " waited " + (m - f.t) + " minutes and gave up on the line.", "bad"); }
       }
     }
@@ -13349,7 +14048,7 @@ var G = (function () {
   }
   G.job.def("clsign", {
     done: function () {
-      if (!on()) return;
+      if (!on() || !S().q.length) return;                                   // (the line was cleared under the job)
       var s = S(), f = leaveQ(0, "signed"), w = now() - f.t, mg = ph() === "sun" && G.state.min >= C.mg[0] && G.state.min < C.mg[1];
       s.signed[ph()] = (s.signed[ph()] || 0) + 1; s.signs += mg ? 2 : 1; G.add("clSigned", 1); G.add("kudos", C.kudos.sign);
       if (show()) { day().signed++; s.maxW = Math.max(s.maxW, w); day().maxW = Math.max(day().maxW, w); G.rep(0.01); G.bump(HOME, 0.02); }
@@ -14181,6 +14880,9 @@ var G = (function () {
 //                              onMs 0 = continuous, reps 0 = keep the cadence going; tone(0) stops it.
 //                              G.sound.noise(kind, ms): "modem" (answer tone + handshake), "beep". No music while
 //                              a mini-game is open (G.modal).
+//   G.sound.keep(fn)           a level of its own (no weekend on) asks for sound: fn() -> true while it runs (as on the menu)
+//   G.sound.def(name, fn(dst, t, kit) -> secs)   a one-shot of its own for play(); kit: tone, noise, shot, chop, click (buffer)
+//   G.sound.bus()              the master gain (a level's own continuous voice connects here; null before the first gesture)
 // Listens to: "gear" (a new fault: rifa / power / tantalum / floppy / jam; a machine boots),
 // the "souvenirs" stat rising (the ImageWriter prints), toasts (good = up blip, bad = down blip).
 (function () {
@@ -14282,6 +14984,9 @@ var G = (function () {
     lfo.connect(g.gain); o.connect(fl); fl.type = "bandpass"; fl.frequency.value = f * 2; fl.Q.value = 1.5; fl.connect(g);
     g.connect(env(dst, t, 0.01, peak, dur)); o.start(t); lfo.start(t); o.stop(t + dur + 0.1); lfo.stop(t + dur + 0.1);
   }
+  var KIT = { tone: function (d, t, ty, f0, f1, dur, pk, a) { return tone(d, t, ty, f0, f1, dur, pk, a); },
+    noise: function (d, t, dur, ty, f, q, pk, a) { return noise(d, t, dur, ty, f, q, pk, a); }, shot: function (d, t, b, r, pk) { shot(d, t, b, r, pk); },
+    chop: function (d, t, dur, hz, f, pk) { chop(d, t, dur, hz, f, pk); }, click: function () { return clickB; } };
   var SND = {
     click: function (d, t) { shot(d, t, clickB, 0.85 + R() * 0.35, 0.5); return 0.05; },
     type: function (d, t) { var n = 3 + Math.floor(R() * 10), u = 0; for (var i = 0; i < n; i++) { u += 0.07 + R() * (R() < 0.15 ? 0.4 : 0.12); shot(d, t + u, clickB, 0.85 + R() * 0.35, 0.3 + R() * 0.3); } return u + 0.1; },
@@ -14362,7 +15067,9 @@ var G = (function () {
   }
 
   // ---- on / off: the context only runs while it can be heard
-  function menu() { return !G.state.on && (G.hud.isOpen() === "who" || !!window.GAME_ONLY); }   // the pick card, and walking around on the game page (owner: it showed the rag but was silent)
+  var keeps = [];
+  function kept() { for (var i = 0; i < keeps.length; i++) { try { if (keeps[i]()) return true; } catch (err) {} } return false; }
+  function menu() { return !G.state.on && (G.hud.isOpen() === "who" || !!window.GAME_ONLY || kept()); }   // the pick card, walking around on the game page, a level of its own
   function want() { return (G.state.on || menu()) && sOn() && !(typeof doom !== "undefined" && doom.playing); }
   var was = null;
   function live() {                                         // (cheap when nothing changed: it runs every frame)
@@ -14578,6 +15285,10 @@ var G = (function () {
       ring.on = !!on; note(on ? "ring" : "ringoff");
     },
     mute: function (off) { G.pref("sound", !off); btn.set(!off); if (!off) init(); if (A) live(); },
+    music: function (on) { if (on === undefined) return mOn(); G.pref("music", !!on); mbtn.set(mOn()); if (wmus && wset) wset(); return mOn(); },
+    keep: function (fn) { keeps.push(fn); },
+    def: function (name, fn) { SND[name] = function (d, t) { return fn(d, t, KIT); }; },
+    bus: function () { return A ? master : null; },
     on: function () { return !!A && want(); },
     ctx: function () { return A; },
     tone: toneSet,                                          // mini.js's phone: tone(f1, f2, onMs, offMs, reps) / tone(0) stops
