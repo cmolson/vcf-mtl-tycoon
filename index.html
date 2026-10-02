@@ -52,6 +52,7 @@ button.on { background: var(--ink); color: var(--panel); border-color: var(--ink
 .card .head { display: flex; align-items: flex-start; gap: 8px; }
 .card .head > div { flex: 1; min-width: 0; }
 .menu-t { flex: none; }
+.card .prelim { margin-top: 4px; font: 600 11px/1.35 var(--mono); color: var(--accent); }
 .card.min > :not(.head) { display: none; }   /* wide screens: Hide folds the panel to its title */
 button.tour { border-color: var(--accent); color: var(--accent); }
 button.tour.on { background: var(--accent); color: #fff; }
@@ -129,6 +130,7 @@ button.tour.on { background: var(--accent); color: #fff; }
   <div class="head"><div>
     <h1 data-i18n="title">VCF Montréal 2026 · Room D 121</h1>
     <div class="sub" id="sub">Booth floor plan V22 (Variant C) · 40 booths · 67 tables 60×30 in · usable 100×100 ft</div>
+    <div class="prelim" id="prelim" data-i18n="prelim" hidden></div>
   </div><button id="t-lang" class="menu-t" title="Français / English" lang="fr">FR</button><button id="menu-t" class="menu-t" aria-expanded="false" aria-controls="menu">Menu</button></div>
   <div class="row" role="group" aria-label="Camera mode" data-i18n-aria="modes">
     <button id="m-walk" class="on" data-i18n="walk">Walk</button>
@@ -1226,7 +1228,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 
 </script>
 <script>window.GAME_ONLY = true;</script>
-<script>window.VCF_BUILD = {"v": "v0.36-d717f62", "date": "2026-10-01"};</script>
+<script>window.VCF_BUILD = {"v": "v0.37-510839f", "date": "2026-10-02"};</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
 // The walk-through's own words in French or English (ported from the organisers' page): ?lang=fr|en
@@ -1238,6 +1240,7 @@ var LANG = (function () {
   if (window.GAME_ONLY) return "en";
   var q = /[?&]lang=(fr|en)\b/.exec(location.search); if (q) return q[1];
   try { var s = localStorage.getItem("hall-lang"); if (s === "fr" || s === "en") return s; } catch (err) {}
+  if (window.SITE_BUILD) try { var c = localStorage.getItem("cvcf_lang"); if (c === "fr" || c === "en") return c; } catch (err) {}
   return /^fr/i.test(navigator.language || "") ? "fr" : "en";
 })();
 var NB = " ", LANG_HOOKS = [];                  // LANG_HOOKS: redraw what a language switch changes
@@ -1299,6 +1302,16 @@ var I18N = {
     east: "Mur est", entranceText: "Salle D 121, VCF Montréal 2026. Les trois îlots sont devant et à droite; le kiosque 29 est de l'autre côté.",
     west: "Mur ouest", cornerText: "Les tables des invités, contre le mur ouest, là où étaient les machines à boules" + NB + ": {s}. Le kiosque 33 ({n}) est juste à côté." }
 };
+// SITE_BUILD (build-hall.py --site): the walk-through for the show's website, like the organisers' copy:
+// no game, no Doom, booth 29 shown like any other (no "us"), a "preliminary layout" note, the walk starts
+// at the entrance
+if (window.SITE_BUILD) {
+  I18N.en.go_ours = "Booth 29"; I18N.fr.go_ours = "Kiosque 29"; I18N.en.us = I18N.fr.us = "";
+  I18N.en.known29 = I18N.en.known29.replace(/^Our booth:/, "Land of the Portables:");
+  I18N.fr.known29 = I18N.fr.known29.replace(/^Notre kiosque/, "Land of the Portables");
+}
+I18N.en.prelim = "Preliminary layout: booths may still move before the show.";
+I18N.fr.prelim = "Plan préliminaire" + NB + ": des kiosques peuvent encore bouger d'ici l'événement.";
 // booth cards: a one-line guess from each booth's name (ours, not the exhibitors')
 var GUESS_FR = {
   1: "Les interfaces graphiques d'Apple, du Lisa au Mac OS classique.", 2: "Des machines d'époque sur Gopher et les débuts d'Internet.",
@@ -1334,6 +1347,7 @@ function applyLang() {                              // the static page text; LAN
   document.querySelectorAll("[data-i18n-title]").forEach(function (e) { e.title = T(e.dataset.i18nTitle); });
   var lb = document.getElementById("t-lang"), other = LANG === "fr" ? "en" : "fr";
   lb.textContent = other.toUpperCase(); lb.setAttribute("lang", other); lb.title = T("langT"); lb.hidden = !!window.GAME_ONLY;
+  document.getElementById("prelim").hidden = !window.SITE_BUILD;
   LANG_HOOKS.forEach(function (f) { f(); });
 }
 function setLang(l) {                               // switch in place (no reload: the walk keeps its spot)
@@ -2824,7 +2838,7 @@ function before(k, turn, text, sub, dz) {
 }
 var PLACES = {
   entrance: { x: X(870), z: Z(856), yaw: Math.PI / 2 - 0.3, text: "Public entrance", sub: "Walk in; the islands are ahead and to the right" },
-  ours: before("29", 0, "29 · Land of the Portables", "Our booth: 3 tables of luggables and laptops, the network rack behind"),
+  ours: before("29", 0, "29 · Land of the Portables", (window.SITE_BUILD ? "" : "Our booth: ") + "3 tables of luggables and laptops, the network rack behind"),
   lan: before("10", -0.2, "10 · Griefenbunker LAN Party", "Two tables of LAN PCs with LCDs, keyboards and gamepads")
 };
 (function () {
@@ -3047,7 +3061,7 @@ var mapBase = document.createElement("canvas"); mapBase.width = mapBase.height =
   zone(D.cross, "#c3e2cf");
   D.islands.forEach(function (r) { rect(r, "#ecdf9c"); });
   zone(D.corner, "#dcd2f0"); zone(D.storagezone, "#f3d6bc"); zone(D.codezone, "#cbe8e3");
-  D.tables.forEach(function (t) { rect([t.x, t.y, t.w, t.h], t.n === 29 ? "#b3342f" : t.n === 10 ? "#2f7a4f" : "#4a6b9a"); });
+  D.tables.forEach(function (t) { rect([t.x, t.y, t.w, t.h], window.SITE_BUILD ? "#4a6b9a" : t.n === 29 ? "#b3342f" : t.n === 10 ? "#2f7a4f" : "#4a6b9a"); });
   (D.speakers || []).forEach(function (t) { rect([t.x, t.y, t.w, t.h], "#6b2a2a"); });
   D.dividers.forEach(function (r) { rect(r, "#9aa3ad"); });
   D.codetables.forEach(function (r) { rect(r, "#3f8f86"); });
@@ -3080,7 +3094,7 @@ addEventListener("resize", resize); resize();
 scene.background = new THREE.Color(cssVar("--scene") || "#dfe3dc");
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () { scene.background = new THREE.Color(cssVar("--scene")); });
 
-go(PLACES[location.hash.slice(1)] || location.hash === "#top" ? location.hash.slice(1) : "start");   // #entrance, #ours, #corner, #top, ...
+go(PLACES[location.hash.slice(1)] || location.hash === "#top" ? location.hash.slice(1) : window.SITE_BUILD ? "entrance" : "start");   // #entrance, #ours, #corner, #top, ...
 // ---------------------------------------------------------------- DOOM runtime
 var doom = { ready: false, playing: false, inst: null, mem: null, img: null, dirty: false, big: false, ctx: doomCanvas.getContext("2d") };
 // Doom's clock: real time minus the gaps when it wasn't running (or a frame was slow), so it never
