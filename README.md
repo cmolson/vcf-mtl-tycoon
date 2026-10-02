@@ -40,3 +40,5 @@ game's characters are fictional; the famous computer people who turn up are fans
 ("lookalikes"), and CelGen Studios appears as a guest under the channel's own name. Music:
 Scott Joplin rags (public domain), MIDI from the Mutopia Project, played on a synthesised
 piano. 3D engine: three.js (MIT).
+
+**License:** MIT for this project's own code and content (see `LICENSE`). Third-party parts and names: see `THIRD-PARTY-NOTICES.md`.
