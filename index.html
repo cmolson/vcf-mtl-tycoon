@@ -1228,7 +1228,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 
 </script>
 <script>window.GAME_ONLY = true;</script>
-<script>window.VCF_BUILD = {"v": "v0.37-510839f", "date": "2026-10-02"};</script>
+<script>window.VCF_BUILD = {"v": "v0.39-247a4bc", "date": "2026-10-02"};</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
 // The walk-through's own words in French or English (ported from the organisers' page): ?lang=fr|en
@@ -1456,7 +1456,7 @@ wall(rx1, rz0, rx1 + 6, eOpen1[0]); wall(rx1, eOpen1[1], rx1 + 6, eDoor[0]); wal
 
 // ---------------------------------------------------------------- furniture
 var tableTop = M(0xf2f1ec), skirt = M(0x2f4f7a), skirtCreator = M(0x26357a), skirtVendor = M(0x4a6fb8), legM = M(0x3b3f3c);
-var skirts = new THREE.Group(); skirts.visible = false; scene.add(skirts);
+var skirts = new THREE.Group(); skirts.visible = !!window.SITE_BUILD; scene.add(skirts);   // the site build shows the category colours
 var edgeM = M(0x9aa09a);
 function table(cx, cz, along, opts) {              // along: "z" (long side north-south) or "x"
   // a real 60 x 30 in banquet table, 0.4 in short each way so neighbours show a seam
@@ -2856,6 +2856,11 @@ var PLACES = {
 function go(name) {
   if (HOOK.jump && !HOOK.jump(name)) return;           // the game can forbid teleporting
   if (name === "top") { setMode("fly"); camera.position.set(X(500), 1500, Z(520)); orbit.target.set(X(500), 0, Z(480)); return; }
+  if (name === "view") {                                // fly around: a three-quarter view of the whole hall from above the
+    var e = PLACES.entrance;                            // public entrance (the site build's start, like the organisers' page);
+    pos.set(e.x, EYE, e.z); yaw = e.yaw; pitch = -0.06; // Walk starts at the entrance
+    setMode("fly"); camera.position.set(104 * 12, 58 * 12, 116 * 12); orbit.target.set(50 * 12, 0, 48 * 12); orbit.update(); return;
+  }
   var p = PLACES[name]; pos.set(p.x, EYE, p.z); yaw = p.yaw; pitch = -0.06;
   if (mode === "fly") setMode("walk");
 }
@@ -2863,6 +2868,10 @@ document.getElementById("m-walk").addEventListener("click", function () { setMod
 document.getElementById("m-fly").addEventListener("click", function () { setMode("fly"); });
 document.getElementById("m-third").addEventListener("click", function () { setMode("third"); });
 document.getElementById("t-skirts").addEventListener("click", function () { skirts.visible = !skirts.visible; this.classList.toggle("on", skirts.visible); });
+if (window.SITE_BUILD) {                                // the site build: skirts shown, no "our two booths" shortcut (like the organisers' page)
+  document.getElementById("t-skirts").classList.add("on");
+  var gs = document.querySelector('[data-go="start"]'); if (gs) gs.remove();
+}
 document.getElementById("t-labels").addEventListener("click", function () { labels.visible = !labels.visible; this.classList.toggle("on", labels.visible); });
 document.querySelectorAll("[data-go]").forEach(function (b) { b.addEventListener("click", function () { go(b.dataset.go); }); });
 addEventListener("keydown", function (e) {
@@ -3094,7 +3103,7 @@ addEventListener("resize", resize); resize();
 scene.background = new THREE.Color(cssVar("--scene") || "#dfe3dc");
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () { scene.background = new THREE.Color(cssVar("--scene")); });
 
-go(PLACES[location.hash.slice(1)] || location.hash === "#top" ? location.hash.slice(1) : window.SITE_BUILD ? "entrance" : "start");   // #entrance, #ours, #corner, #top, ...
+go(PLACES[location.hash.slice(1)] || location.hash === "#top" ? location.hash.slice(1) : window.SITE_BUILD ? "view" : "start");   // #entrance, #ours, #corner, #top, ...
 // ---------------------------------------------------------------- DOOM runtime
 var doom = { ready: false, playing: false, inst: null, mem: null, img: null, dirty: false, big: false, ctx: doomCanvas.getContext("2d") };
 // Doom's clock: real time minus the gaps when it wasn't running (or a frame was slow), so it never
@@ -3586,10 +3595,12 @@ joyEl.addEventListener("pointermove", function (e) { if (e.pointerId === joy.id)
 var menu = document.getElementById("menu"), menuT = document.getElementById("menu-t");
 var narrow = window.matchMedia("(max-width: 560px)");
 function setMenu(open) { menu.classList.toggle("open", open); if (!narrow.matches) return; menuT.setAttribute("aria-expanded", open ? "true" : "false"); menuT.textContent = T(open ? "close" : "menu"); }   // phones fold with .open (closed by default); wide screens with .min (open by default, remembered)
-function setMin(on) { menu.classList.toggle("min", on); try { localStorage.setItem("hall-menu-min", on ? "1" : ""); } catch (e) {}
+function setMin(on, auto) { menu.classList.toggle("min", on); if (!auto) try { localStorage.setItem("hall-menu-min", on ? "1" : "0"); } catch (e) {}
   if (!narrow.matches) { menuT.textContent = T(on ? "show" : "hide"); menuT.setAttribute("aria-expanded", on ? "false" : "true"); } }
 menuT.addEventListener("click", function () { if (narrow.matches) setMenu(!menu.classList.contains("open")); else setMin(!menu.classList.contains("min")); this.blur(); });
-if (!narrow.matches) { var wasMin = false; try { wasMin = localStorage.getItem("hall-menu-min") === "1"; } catch (e) {} setMin(wasMin); }
+if (!narrow.matches) { var wasMin = null; try { wasMin = localStorage.getItem("hall-menu-min"); } catch (e) {}
+  // the site build sits in the organisers' page, often in a small frame: folded there unless the visitor chose otherwise
+  setMin(!wasMin && window.SITE_BUILD ? innerWidth < 600 || innerHeight < 520 : wasMin === "1", true); }
 LANG_HOOKS.push(function () { if (narrow.matches) setMenu(menu.classList.contains("open")); else menuT.textContent = T(menu.classList.contains("min") ? "show" : "hide"); });
 narrow.addListener(function () { if (narrow.matches) { menu.classList.remove("min"); setMenu(menu.classList.contains("open")); } else { menu.classList.remove("min"); menuT.textContent = T("hide"); } });
 menu.querySelectorAll("[data-go], #tour").forEach(function (b) { b.addEventListener("click", function () { setMenu(false); }); });
