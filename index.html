@@ -1228,7 +1228,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 
 </script>
 <script>window.GAME_ONLY = true;</script>
-<script>window.VCF_BUILD = {"v": "v0.40-d6b029d", "date": "2026-10-02"};</script>
+<script>window.VCF_BUILD = {"v": "v0.42-4804d42", "date": "2026-10-02"};</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
 // The walk-through's own words in French or English (ported from the organisers' page): ?lang=fr|en
@@ -3030,6 +3030,7 @@ function guide(now) {
   else {                                                 // the ring: the bearing from straight ahead
     r = Math.atan2(_gv.x, -_gv.z); x = W / 2 + Math.sin(r) * (W / 2 - 60); y = H * 0.5 - Math.cos(r) * (H * 0.36);
   }
+  var gt = HOOK.guideTop ? HOOK.guideTop() : 0; if (gt && y < gt + 18) y = gt + 18;   // (not under the game's clock bar)
   x = Math.round(x); y = Math.round(y); r = Math.round(r * 20) / 20;
   var ft = Math.round(Math.hypot(t.x - pos.x, t.z - pos.z) / 12);
   if (ft !== gd.ft) { gd.ft = ft; guideT.textContent = ft + " ft"; }
@@ -3290,6 +3291,8 @@ var crowd = (function () {
   function route(v) {                              // waypoints along aisle centrelines (plus lanes)
     var vt = nearV(v.sx), vc = nearV(v.x), inV = Math.abs(v.x - V[vc]) <= (edges[vc * 2 + 1] - edges[vc * 2]) / 2 + 2;
     v.wn = 0; v.wi = 0;
+    // west of the network (booth 33, the speakers' corner, Clint's line, the sales desk): into the west aisle first
+    if (!inV && v.x < edges[0]) { vc = 0; inV = true; add(v, V[0] + v.lv * VL[0], v.z); }
     if (!inV || vc !== vt) {
       var j = nearH(v.z);
       if (inV) {                                   // the cheapest end aisle or cross-aisle to turn through
@@ -4056,6 +4059,12 @@ var G = (function () {
     enter(0);
   };
   G.startDemo = function (who) { G.start(who, { demo: true }); };
+  // the kiosk: a demo nobody touches for G.TUNE.demo.idle real seconds goes back to the menu (from anywhere: a card, a mini-game)
+  var inputAt = performance.now();
+  function poke() { inputAt = performance.now(); }
+  ["keydown", "pointerdown", "wheel", "touchstart"].forEach(function (t) { addEventListener(t, poke, true); });
+  G.on("start", poke);
+  function demoIdle() { if (G.mini && G.mini.close) G.mini.close(); G.hud.close(); quit(); if (!ONLY) pickWho(); }
   function enter(i) {
     var s = G.state;
     while (s.demo && PHASES[i] && G.TUNE.demo.skip.indexOf(PHASES[i].id) >= 0) i++;   // (the demo skips Saturday and the evening)
@@ -4185,9 +4194,11 @@ var G = (function () {
     for (var j = 0; j < sys.length; j++) if (sys[j].tick && !sys[j].off) { try { sys[j].tick(dt, gm); } catch (err) { oops(sys[j].name, err); } }
     if (nudge.t < nudge.d) nudgeCam(dt);             // (after every system: work.js's lean too)
     G.skipping = false;                            // (a skip's minutes have all fired by now)
-    if (running && s.min >= ph.end) { endPhase(); return; }
+    if (running && s.min >= ph.end) { if (s.ended === ph.id) enter(s.phase + 1); else endPhase(); return; }   // (its summary closed some other way: go on, don't end it twice)
+    if (s.demo && ph.id !== "final" && performance.now() - inputAt > G.TUNE.demo.idle * 1000) { demoIdle(); return; }
     if ((saveT += dt) > 30) { saveT = 0; G.save(); }
     if (tq.length) toastPump();
+    if ((hudBT += dt) > 0.5) { hudBT = 0; hudB = hud.hidden ? 0 : Math.round(statsEl.getBoundingClientRect().bottom); }   // (HOOK.guideTop)
     drawHud(dt);
   };
   HOOK.tick = G.tick;
@@ -4210,6 +4221,8 @@ var G = (function () {
   document.body.appendChild(dimEl);
   G.dim = function (on) { dimEl.style.opacity = on ? String(G.TUNE.juice.dim) : "0"; };
   G.on("phase", function () { G.dim(false); }); G.on("quit", function () { G.dim(false); nudge.t = nudge.d; hitT = 0; });
+  var hudB = 0, hudBT = 1;
+  HOOK.guideTop = function () { return G.state.on ? hudB : 0; };   // the hall keeps the guide's distance tag below the clock bar and the stats
   HOOK.modal = function () { return !!(G.state.on && (cardOpen || G.modal)); };   // the hall leaves E / Enter to an open card
 
   // ---- HUD: a clock bar (top centre), the stats strip, the objective, toasts and cards
@@ -4226,15 +4239,18 @@ var G = (function () {
   var quitBtn = el("button", null, bar, "ui-btn quit"); quitBtn.innerHTML = ic("quit") + "Quit"; quitBtn.title = "Save and go back to the walk-through";
   var statsEl = el("div", "g-stats", hud), noticeEl = el("div", "g-notice", hud); noticeEl.hidden = true; noticeEl.setAttribute("role", "status");
   statsEl.setAttribute("aria-label", "Stats");
+  // (phones: the strip scrolls; "more-r" while it is cut off on the right, ui.js fades that edge)
+  function statsHint() { var m = statsEl.scrollWidth - statsEl.clientWidth - statsEl.scrollLeft > 4; if (m !== statsEl.classList.contains("more-r")) statsEl.classList.toggle("more-r", m); }
+  statsEl.addEventListener("scroll", statsHint, { passive: true }); setInterval(statsHint, 700);
   var toasts = el("div", "g-toasts"), cardEl = el("div", "g-card"); cardEl.hidden = true; toasts.setAttribute("aria-live", "polite");
   var cardOpen = false;
   pauseBtn.addEventListener("click", function () { G.paused = !G.paused; G.emit("pause", G.paused); this.blur(); });
-  skipBtn.addEventListener("click", function () { G.skip(); this.blur(); });
+  skipBtn.addEventListener("click", function () { if (!G.modal) G.skip(); this.blur(); });   // (not under a mini-game)
   quitBtn.addEventListener("click", function () { quit(); this.blur(); });
   // the HUD diet: the walk-through's camera panel (#menu) is hidden while you play; a small View button in the
-  // clock bar switches the camera (first person / 3rd person); M still toggles mouse look
-  var viewBtn = el("button", "g-view", bar, "ui-btn"); bar.insertBefore(viewBtn, quitBtn); viewBtn.innerHTML = ic("view") + "View";
-  var fullBtn = el("button", "g-full", bar, "ui-btn"); bar.insertBefore(fullBtn, quitBtn); fullBtn.textContent = "⛶ Full";
+  // clock bar switches the camera (first person / 3rd person); M still toggles mouse look. (ui.js hides their .lbl where room is short)
+  var viewBtn = el("button", "g-view", bar, "ui-btn"); bar.insertBefore(viewBtn, quitBtn); viewBtn.innerHTML = ic("view") + '<span class="lbl">View</span>';
+  var fullBtn = el("button", "g-full", bar, "ui-btn"); bar.insertBefore(fullBtn, quitBtn); fullBtn.innerHTML = '⛶<span class="lbl"> Full</span>';
   fullBtn.title = "Full screen (F): the mouse turns you, no clicking; Esc frees the pointer";
   fullBtn.addEventListener("click", function () { if (typeof setFull === "function") setFull(!isFull()); this.blur(); });
   viewBtn.title = "Camera: first person / 3rd person (M: mouse look)";
@@ -4243,6 +4259,7 @@ var G = (function () {
   G.on("start", function () { menuShown(false); }); G.on("quit", function () { menuShown(true); });
   addEventListener("keydown", function (e) {
     if (!G.state.on || e.target.tagName === "INPUT" || (typeof doom !== "undefined" && doom.playing)) return;
+    if (cardOpen && !G.modal && e.key === "Enter" && e.repeat) { e.preventDefault(); e.stopImmediatePropagation(); return; }   // (a held Enter doesn't run through the cards)
     if (cardOpen && !G.modal && e.key === "Enter") { var b = G.hud.primary(); if (b) { b.click(); e.preventDefault(); e.stopImmediatePropagation(); } }
   }, true);
   // ---- toasts (the HUD diet): the same text again (digits aside) while it is on screen or waiting adds "×N"
@@ -4977,10 +4994,16 @@ var G = (function () {
     B + " .ui-card .g-best{text-align:center}",
     B + " .ui-card [data-to]{font-variant-numeric:tabular-nums}",
     "#g-bar .more-btn{display:none}",
+    "@media (min-width:761px) and (max-width:1480px){#g-bar .lbl{display:none}#g-view,#g-full{padding-left:10px;padding-right:10px}}",   // one row beside the to-do list
+    "@media (min-width:761px) and (max-width:1360px){#g-ph{display:none}}",   // (the clock still says the day)
+    ".ui-card>.ui-actions{position:sticky;bottom:0;z-index:1}",   // a card taller than the screen scrolls; its buttons stay in view
+    // (flush with the card's bottom edge: bottom = minus the card's padding)
+    B + " .ui-card>.ui-actions{background:var(--paper);bottom:-22px;padding:8px 0 20px;margin-bottom:-20px;box-shadow:0 -10px 10px -10px rgba(0,0,0,.3)}",
     "@media (max-width:760px){",
     "  #g-bar .more-btn{display:inline-flex}",
     "  #g-view{font-size:0;padding:0 10px}#g-view svg{font-size:14px}",
-    "  #g-bar:not(.more)>#g-music,#g-bar:not(.more)>#g-trophy,#g-bar:not(.more)>.quit,#g-bar:not(.more)>.skip{display:none}",
+    "  #g-stats.more-r{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent)}",
+    "  #g-bar:not(.more)>#g-music,#g-bar:not(.more)>#g-full,#g-bar:not(.more)>#g-trophy,#g-bar:not(.more)>.quit,#g-bar:not(.more)>.skip{display:none}",
     "  #g-stats{width:100%;box-sizing:border-box}",
     "  #g-tasks,#r-radio{left:8px;right:8px;width:auto;top:auto;bottom:calc(214px + env(safe-area-inset-bottom,0px))}",
     "  #g-tasks>.ui-row~.ui-row~.ui-row,#g-tasks>.more,#g-tasks>.goals{display:none}",
@@ -4993,7 +5016,7 @@ var G = (function () {
     "  " + B + " #r-radio .screen .ui-row:nth-child(n+3){display:none}",
     "  " + B + " #g-bar{padding:6px 8px}",
     "  " + B + " #g-ph{display:none}",
-    "  " + B + " .ui-card{padding:18px 40px 18px}",
+    "  " + B + " .ui-card{padding:18px 40px 18px}" + B + " .ui-card>.ui-actions{bottom:-18px;padding-bottom:16px;margin-bottom:-16px}",
     "  " + B + " .ui-logo{padding:12px 16px 16px}" + B + " .ui-logo p{font-size:14px}",
     // the floppies lie down: a row each, the label on the right
     "  " + B + " .ui-tile.char{aspect-ratio:auto;min-height:92px;clip-path:none;padding:10px 14px 10px 74px;align-content:center;" +
@@ -5306,10 +5329,10 @@ var G = (function () {
     }
   };
 
-  // the clock bar's ⋯ (phones): skip, trophies, music and quit fold away behind it
+  // the clock bar's ⋯ (phones): skip, full screen, trophies, music and quit fold away behind it
   (function () {
     var bar = document.getElementById("g-bar"); if (!bar) return;
-    var mb = button("", { icon: "more", kind: "icon more-btn", pressed: false, title: "More: skip, trophies, music, quit" });
+    var mb = button("", { icon: "more", kind: "icon more-btn", pressed: false, title: "More: skip, full screen, trophies, music, quit" });
     mb.addEventListener("click", function () { var o = !bar.classList.contains("more"); bar.classList.toggle("more", o); mb.set(o); this.blur(); });
     bar.appendChild(mb);
   })();
@@ -5448,7 +5471,8 @@ var G = (function () {
     mini: { a: 1.25, b: 0.85, fail: 0.25, skipK: 1.25,
       shake: 6, stamp: 1.4,                              // mini.js: tremor px at 0% energy (fatigue = (60 - energy) / 60); the result stamp, s
       time: { short: 60, imagewriter: 80, dhcp: [60, 50, 45] },   // real-second limits (dhcp: easy / medium / hard); x2 with Relaxed timers
-      phone: { mus: 3, table: 3, gb: 2, busy19: 0.15, ringBonus: 2 } },   // events.js: free-play rewards a day; 1019 busy; a ring's extra kudos (max)
+      phone: { mus: 3, table: 3, gb: 2, busy19: 0.15, ringBonus: 2,   // events.js: free-play rewards a day; 1019 busy; a ring's extra kudos (max)
+        ringSecs: 30, idle: 90, idleCard: 15 } },          // mini-phone.js (real s): an unanswered ring hangs up; untouched, the phone closes (sooner with a card waiting)
     // ---- the player's energy
     energy: {
       drain: 0.12, drainBusy: 0.1, fixDrain: 0.15, sunday: 92,
@@ -5513,7 +5537,7 @@ var G = (function () {
     // card goes back to the menu by itself after idleBack real seconds.
     demo: { phases: { setup: [1200, 1260], sun: [840, 910], teardown: [1060, 1080] }, skip: ["sat", "evening"],
       loads: { "29": ["osborne1", "hyperion", "kaypro2"], "10": ["lansrv", "lan1", "lan2"] }, rifaAt: 855, rifaOn: "compaq1",
-      checkins: 5, idleBack: 90,
+      checkins: 5, idleBack: 90, idle: 180,               // idle: nobody touched the demo for 180 real s: back to the menu
       text: "A compressed weekend: the last hour of Friday's setup, the busiest stretch of Sunday with Best in Show at 15:00, and a quick teardown. No save, about 8 minutes." },
     // ---- cameos (cameos.js, CAMEOS-PLAN.md 2.1-2.4): per show day n lookalikes (+ a chance of one more), arrivals between
     // from and to (game min), gap apart; at most max out at once. stay / linger / downLinger in game minutes; speed in in/s
@@ -7045,7 +7069,7 @@ var G = (function () {
     var s = m.s;
     if (d === s.ext) { busy(m, "Busy: that's this phone."); return; }
     if (d === "1019" || d === "1020") {
-      if (d === "1019" && s.busy19) { busy(m, "Busy: somebody else is on Dial-a-Museum. (The busy-forward to 1020 isn't set up yet: dial 1020 yourself.)"); return; }
+      if (d === "1019" && s.busy19) { busy(m, "Busy: somebody else is on Dial-a-Museum. Try the second line, 1020."); return; }
       out(m, d, 1.6, "museum", d === "1019" ? "MUSEE/MUSEUM" : "MUSEE 2"); return;
     }
     if (d === "1021") { out(m, d, 1.6, "gb", "LIVRE D'OR"); return; }
@@ -7069,7 +7093,7 @@ var G = (function () {
     else if (k === "gb") ivr(m, "lang", LANG, 5, { lang: "", gb: true });
     else if (k === "modem") { s.ivr = { st: "modem", t: 5.5 }; try { if (G.sound && G.sound.noise) G.sound.noise("modem", 4000); } catch (err) {} cap(m, "Modem", "[answer tone, 2100 Hz... then the handshake: chirps, bongs and a hiss]"); s.data.modem = true; }
     else if (k === "answer") { s.ivr = { st: "modem", t: 5 }; try { if (G.sound && G.sound.noise) G.sound.noise("modem", 4000); } catch (err) {} cap(m, "2621 modem", "[answer tone and a screech: you just called the guest book server's modem with a telephone]");
-      s.data.telnet = s.why; cap(m, "", "You've been telnetted. (The RUNBOOK: never let a phone dial 1013-1018. While you're on, the " + info(s.why).name + " can't redial.)"); }
+      s.data.telnet = s.why; cap(m, "", "You've been telnetted. (Phones should never dial 1013-1018: while you're on, the " + info(s.why).name + " can't redial.)"); }
     else if (k === "table") { s.data.table = true; s.ivr = { st: "table", t: 6 };
       var L = [["Hello? Is this the museum?", "No, it's table " + (+s.dest.d - 1006) + ". Try 1019."], ["Allo? Oui? ... Oh! It works!", "It does. Ask them to dial 1024 next."],
         ["Table " + (+s.dest.d - 1006) + ", Kaypro desk, how can I help?", "Just testing. You sound very 1984."]][Math.floor(m.rnd() * 3)];
@@ -7077,7 +7101,7 @@ var G = (function () {
   }
   function transfer(m) {
     var s = m.s, c = s.held;
-    if (c && c.kind === "booth12" && s.dest && s.dest.d === "1024") { s.data.transfer = true; s.data.bonus += 2; cap(m, "", "You hang up: booth 12 hears the modem's screech. Transferred. (On the real CME this hook-flash transfer is still untested.)"); }
+    if (c && c.kind === "booth12" && s.dest && s.dest.d === "1024") { s.data.transfer = true; s.data.bonus += 2; cap(m, "", "You hang up: booth 12 hears the modem's screech. Transferred."); }
     else if (c) cap(m, "", "You hang up: the caller is transferred to " + (s.dest ? s.dest.d : "nobody") + ".");
     if (c) c.on = false; s.held = null; s.closeT = 1.6;
   }
@@ -7128,7 +7152,7 @@ var G = (function () {
     var s = m.s, iv = s.ivr;
     if ((iv.st === "lang" || iv.st === "langbad") && !iv.lang) { iv.st = "langwait"; iv.t = 0; iv.wait = 5; iv.idle = 0; return; }
     if (iv.st === "lang" || iv.st === "langbad" || iv.st === "langwait") {
-      if (!iv.lang) { iv.lang = "fr"; cap(m, "", "(Nothing pressed for five seconds: French. lang_default = fr.)"); }
+      if (!iv.lang) { iv.lang = "fr"; cap(m, "", "(Nothing pressed for five seconds: French, the default.)"); }
       if (iv.door) ivr(m, "door", null, 15); else if (iv.gb) ivr(m, "gbprompt"); else ivr(m, "welcome"); return;
     }
     if (iv.st === "welcome") { ivr(m, "menu", null, 15); return; }
@@ -7169,6 +7193,7 @@ var G = (function () {
     if (c.kind === "kid") cap(m, "A kid", "No, the OTHER sound. The long one.");
   }
 
+  var PH = G.TUNE.mini.phone;
   G.mini.def("phone", {
     title: "Meridian M9216", skill: "A booth phone: Dial-a-Museum, the tables, the modem", time: 0, clock: 0.25, h: 330, dom: "below",
     escLabel: "Hang up and leave", skip: "",
@@ -7192,7 +7217,7 @@ var G = (function () {
       if (opts.ring) ringIn(m); else cap(m, "", "A Meridian M9216 on extension " + s.ext + ". Lift the handset (Space) or just dial: 1019 is Dial-a-Museum.");
     },
     press: function (m, id) {
-      var s = m.s;
+      var s = m.s; s.still = 0;
       if (id === "hs") { if (s.hook) onHook(m); else offHook(m); return; }
       if (id.charAt(0) === "k") { key(m, id.slice(1)); return; }
       if (id.charAt(0) === "m") { memKey(m, +id.slice(1)); return; }
@@ -7217,6 +7242,7 @@ var G = (function () {
     key: function (m, e) {
       var k = e.key;
       if (e.ctrlKey || e.metaKey) return false;
+      m.s.still = 0;
       if (DT[k] && !e.altKey) { key(m, k); return true; }
       if (k === " ") { this.press(m, "hs"); return true; }
       if (k === "l" || k === "L") { link(m); return true; }
@@ -7239,6 +7265,11 @@ var G = (function () {
       s.light += dt;
       if (s.closeT > 0) { s.closeT -= dt; if (s.closeT <= 0) { if (s.hook) { s.hook = true; onHook(m); } this.leave(m); return; } }
       if (s.kid && s.kidT > 0) { s.kidT -= dt; if (s.kidT <= 0) { s.kid = false; this.leave(m); return; } }
+      s.still = (s.still || 0) + dt;                      // nobody answers: the caller hangs up (the ring's minutes, or ringSecs); nobody touches it: it closes
+      if (s.line === "ringin") { s.ringW = (s.ringW || 0) + dt;
+        if (s.ringW > PH.ringSecs || (m.opts.until && G.state.min >= m.opts.until)) { quiet(); ringOff(m); s.call = null; s.line = "idle"; lcd(m, "MISSED CALL", "EXT " + s.ext);
+          cap(m, "", "The ringing stops: they hung up."); s.closeT = 2; return; } }
+      else if (s.still > (G.hud.isOpen() ? PH.idleCard : PH.idle)) { if (s.hook) onHook(m); this.leave(m); return; }
       if (s.optT > 0) { s.optT -= dt; if (s.optT <= 0) lcd(m, s.line === "idle" ? clock(m) : s.l1, null); }
       if (s.line === "idle" && !s.optT && Math.floor(G.state.min) !== s.lastMin) { s.lastMin = Math.floor(G.state.min); lcd(m, clock(m), null); }
       if (s.line === "dial") { s.idle += dt; if (s.idle > 12 && s.digits.length && s.digits.length < 4) { reorder(m, "TIME OUT"); cap(m, "", "Too slow between digits: fast busy."); } }
@@ -7815,7 +7846,7 @@ var G = (function () {
   A.def("done29", { pts: 0, icon: "🧳", title: "A portable weekend", text: "Played a whole weekend as Land of the Portables." });
   A.def("done10", { pts: 0, icon: "🕹", title: "A LAN weekend", text: "Played a whole weekend as Griefenbunker LAN." });
   A.def("donenick", { pts: 0, icon: "📻", title: "A showrunner's weekend", text: "Played a whole weekend as Nick." });
-  A.def("allthree", { pts: 0, icon: "⭐", title: "All three badges", text: "Played a whole weekend as each of the three characters." });
+  A.def("allthree", { pts: 0, icon: "⭐", title: "All four badges", text: "Played a whole weekend as each of the four characters." });   // (id kept: earned trophies stay)
   A.def("nightowl", { pts: 0, icon: "🦉", secret: true, title: "Night owl", text: "A whole weekend at 4× speed, from Friday's load-in to Sunday's van." });
 
   G.register("achieve", {
@@ -7825,7 +7856,7 @@ var G = (function () {
       var s = S(); if (!s || G.state.demo) return;      // (a demo isn't a whole weekend)
       A("done" + G.state.who);
       if (!s.slow) A("nightowl");
-      if (A.has("done29") && A.has("done10") && A.has("donenick")) A("allthree");
+      if (A.has("done29") && A.has("done10") && A.has("donenick") && (A.has("doneclint") || !G.clint)) A("allthree");
     }
   });
 })();
@@ -7849,6 +7880,7 @@ var G = (function () {
   function S() { return G.state.sys && G.state.sys.coach; }
   function gear(id) { return G.state.gear && G.state.gear[id]; }
   function at(id) { return G.spot(id, P) ? P : null; }
+  function box(id) { var g = GEAR[id]; if (!g) return null; P.x = g.home.x; P.z = g.home.z; P.y = 0; return P; }   // its green box (not the carried crate)
   function pile() { var d = G.setupDoor; if (!d) return null; P.x = d.x - 60; P.z = d.z; return P; }
   function needs(id) { return G.setupNeeds ? G.setupNeeds(id) : null; }
   function radioDone(card) { var s = S(); return !!(s && s.inc && s.inc[card]); }
@@ -7859,7 +7891,7 @@ var G = (function () {
       ["Your crates are in the load-in pile by the west door. Walk there and press E on the pile to take the " + G.itemName(first, true) + ".",
         function () { var g = gear(first); return !!g && g.where !== "van"; }, pile],
       ["Carry it to the green box at your booth and press E to put it down. Heavy things slow you down.",
-        function () { var g = gear(first); return !!g && g.where === "booth"; }, function () { return at(first); }],
+        function () { var g = gear(first); return !!g && g.where === "booth"; }, function () { return box(first); }],
       ["It's on its table and plugged in. Press E on it to switch it on.",
         function () { var n = needs(first), g = gear(first); return !!g && (g.working || g.down || !!G.faultOf(first) || (n ? n.kind !== "on" && n.kind !== "plug" : false)); },
         function () { return at(first); }],
@@ -8079,6 +8111,7 @@ var G = (function () {
     best.box = new THREE.Box3(new THREE.Vector3(best.x - 9, 0, best.z - 7), new THREE.Vector3(best.x + 9, 46, best.z + 7));
     return best;
   })();
+  G.setupPanel = { x: PANEL.x, z: PANEL.z };          // panel P1 (tasks.js's breaker row points here)
   function strips() { return Object.keys(STRIPS).filter(function (s) { return !STRIPS[s].up || G.has(STRIPS[s].up); }); }
   function own(s) {                                 // the machines switched on on circuit s
     var w = 0; if (!S) return 0;
@@ -8861,7 +8894,7 @@ var G = (function () {
       (nbPlace ? "; your neighbour, " + G.boothName(nb) + ", placed #" + nbPlace : "") + "." +
       (place <= 3 ? " The organisers hand you a ribbon. Someone tapes it to the " + (me === "10" ? "server." : "Osborne.") : place <= 10 ? " A respectable showing." : " Next year, more blinkenlights.") + "</p>");
     if (G.skipping) G.hud.toast("Best in Show: " + G.boothName(list[0][0]) + (me ? ". You placed #" + place + "." : "."), place && place <= 3 ? "good" : "");
-    else reveal(G.hud.card(html, [["Back to the booth", function () {}]], "best"));
+    else reveal(G.hud.card(html, [[me ? "Back to the booth" : "Back to the show", function () {}]], "best"));   // (Nick and Clint have no booth)
     G.emit("best", s.best);
   }
 
@@ -10025,7 +10058,7 @@ var G = (function () {
   function phoneUp(id) { return me() === "29" && !!(G.mini && G.mini.defs && G.mini.defs.phone) && ok(id) && (!G.gear("cisco3745") || ok("cisco3745")); }
   function phone(id, ring) {
     if (!phoneUp(id) || away() || (ring && G.mini.pref() === "never")) return false;
-    return G.mini("phone", { id: id, ring: ring, skip: ring ? "Just answer it" : "", busy19: G.rnd() < PH.busy19 }, function (r) { phoneDone(id, ring, r); });
+    return G.mini("phone", { id: id, ring: ring, until: ring && S().ev[id] ? S().ev[id].until : 0, skip: ring ? "Just answer it" : "", busy19: G.rnd() < PH.busy19 }, function (r) { phoneDone(id, ring, r); });
   }
   function phoneDone(id, ring, r) {
     var s = on() && S(); if (!s) return;
@@ -10537,8 +10570,9 @@ var G = (function () {
   function find(id) { var s = S(); if (!s) return null; for (var i = 0; i < s.open.length; i++) if (s.open[i].card === id) return s.open[i]; return null; }
   function count(id) { var s = S(), n = 0, i; for (i = 0; i < s.open.length; i++) if (s.open[i].card === id) n++; for (i = 0; i < s.wait.length; i++) if (s.wait[i].card === id) n++; return n; }
   function left(inc) { return inc.t0 + inc.ttl - now(); }
+  var ending = false;                                // (the phase is ending: no new calls, e.g. from an expire handler)
   function call(id, o) {
-    var s = S(), d = CARDS[id]; if (!s || !d || !on()) return null;
+    var s = S(), d = CARDS[id]; if (!s || !d || !on() || ending) return null;
     o = o || {};
     var inc = { id: ++s.n, card: id, at: o.at || (typeof d.at === "function" ? d.at() : d.at) || "reg", pri: o.pri || d.pri || 2, t0: Math.floor(now()),
       ttl: (o.ttl || d.ttl || 20) + (R.ttlAdd || 0), state: "open", vol: null, vt: 0, data: o.data || {} };
@@ -10553,7 +10587,7 @@ var G = (function () {
   function admit(inc) {
     var s = S(), d = CARDS[inc.card];
     inc.t0 = Math.floor(now()); s.open.push(inc); s.st.total++;
-    if (G.skipping) { volDone(inc, true); return; }
+    if (G.skipping) { expire(inc); return; }          // (a call raised in skipped time: nobody took it)
     addPick(inc);
     G.hud.toast("Radio: " + d.title + " · " + spot(inc).text + (inc.pri === 1 ? " · urgent" : ""), inc.pri === 1 ? "bad" : "");
     snd("chime"); G.emit("radio", inc);
@@ -10633,16 +10667,16 @@ var G = (function () {
     dropPick(inc); var s = S(); if (s.go === inc.id) s.go = best();
     G.hud.toast(h.n + ": \"On my way.\" (" + d.title + ")", ""); lastSig = "";
   }
-  function volDone(inc, auto) {                       // auto: skipped time, the helpers handled it somehow
+  function volDone(inc) {                             // a volunteer you sent is back
     var d = CARDS[inc.card], hs = R.helpers(), h = inc.vol !== null ? hs[inc.vol] : null;
-    var N = G.TUNE.nick, p = auto ? 0.5 : Math.min(0.92, N.volOk + (h && h.skill === d.del ? N.volSkill : 0) + (h && h.en > 60 ? 0.05 : 0));
+    var N = G.TUNE.nick, p = Math.min(0.92, N.volOk + (h && h.skill === d.del ? N.volSkill : 0) + (h && h.en > 60 ? 0.05 : 0));
     if (h) h.busy = null;
     if (G.rnd() < p) {
-      if (!auto) G.hud.toast((h ? h.n : "A volunteer") + ": \"" + d.title + ": sorted.\"", "good");
-      finish(inc, null, auto ? "late" : "vol");
+      G.say((h ? h.n : "A volunteer") + ": \"" + d.title + ": sorted.\"", "good");
+      finish(inc, null, "vol");
       return;
     }
-    if (auto) { expire(inc); return; }
+    if (G.skipping) { expire(inc); return; }
     inc.state = "open"; inc.vol = null; inc.ttl += 6; addPick(inc);
     G.hud.toast((h ? h.n : "The volunteer") + ": \"" + d.title + ": I can't sort this one. It needs you.\"", "bad");
     lastSig = "";
@@ -10694,7 +10728,7 @@ var G = (function () {
     var s = S(), i, inc;
     for (i = s.open.length - 1; i >= 0; i--) {
       inc = s.open[i]; if (!inc) continue;
-      if (inc.state === "sent" && m >= inc.vt) volDone(inc, false);
+      if (inc.state === "sent" && m >= inc.vt) volDone(inc);
       else if (inc.state === "open" && m >= inc.t0 + inc.ttl) expire(inc);
     }
     var ph = G.phase(); if (ph.end <= ph.start || G.skipping) return;
@@ -10846,17 +10880,18 @@ var G = (function () {
     for (var i = 0; i < s.open.length; i++) if (s.open[i].state !== "sent") return true;
     return false;
   });
-  G.on("skip", function () {
-    if (!on()) return;
-    var s = S(); G.job.cancel("radio");
-    s.open.slice().forEach(function (inc) { if (inc.state !== "sent") inc.vol = null; volDone(inc, true); });
+  G.on("skip", function () {                         // skipped time: a volunteer you sent comes back (their roll), the call you
+    if (!on()) return;                                 // were working on ends late, nobody takes the rest (missed: no credit for skipping)
+    var s = S(), wj = G.job.running("radio"), wid = wj ? wj.data.inc : -1; G.job.cancel("radio");
+    s.open.slice().forEach(function (inc) { if (inc.state === "sent") volDone(inc); else if (inc.id === wid) finish(inc, null, "late"); else expire(inc); });
   });
-  G.on("phaseEnd", function () {                     // calls don't carry over into the next phase
+  G.on("phaseEnd", function () {                     // calls don't carry over into the next phase (nor do the calls their expiry raises)
     if (!on()) return;
     var s = S();
-    s.wait = [];
-    s.open.slice().forEach(function (inc) { if (inc.state === "sent" || inc.state === "work") finish(inc, null, "late"); else expire(inc); });
-    s.go = null;
+    s.wait = []; ending = true;
+    try { s.open.slice().forEach(function (inc) { if (inc.state === "sent" || inc.state === "work") finish(inc, null, "late"); else expire(inc); }); }
+    finally { ending = false; }
+    s.wait = []; s.go = null;
   });
   G.on("quit", function () {
     var s = S(); if (s) s.open.forEach(dropPick);
@@ -10908,7 +10943,7 @@ var G = (function () {
     { id: "nhead", name: "Radio headsets", text: "Volunteers hear you the first time: sending someone is 30% faster, and every new call gives you 5 more minutes." },
     { id: "nprinter", name: "Spare badge printer", text: "A jam means swap and go, once an hour, no card. The jammed one sulks in a box." },
     { id: "nlte", name: "LTE hotspot for the card reader", text: "When the venue Wi-Fi drops, the reader is back on its own within five minutes." },
-    { id: "nvol", name: "Extra volunteer (pizza + a T-shirt)", text: "Théo, who knows where every power bar in the building is. A sixth pair of hands." },
+    { id: "nvol", name: "Extra volunteer (pizza + a T-shirt)", text: "Théo, who knows where every power bar in the building is. A fifth pair of hands." },
     { id: "ntape", name: "Case of gaffer tape", text: "The tape never runs out, and a taped cable never comes back as a violation." },
     { id: "nurn", name: "Coffee urn for exhibitors", text: "A 100-cup urn by the sales desk. Every exhibitor is a little happier all day, and fewer of them call you about coffee." }
   ];
@@ -12451,7 +12486,8 @@ var G = (function () {
       init: function (inc) { var id = inc.data.id; if (!BY[id]) return false; inc.data.k = quiet(id); },
       text: function (inc) { return (BY[inc.data.id].guest ? "" : "Someone who looks a lot like ") + BY[inc.data.id].name + " just came in, and heads are turning. A guide to a quieter booth they'd like (" +
         bname(inc.data.k) + ") would spread the crowd; left alone they draw a following."; },
-      joke: "The badge says LOOKALIKE, in both official languages. Several people still ask for an autograph.",
+      joke: function (inc) { return BY[inc.data.id].guest ? "The badge says GUEST, in both official languages. Several people ask for an autograph, and this time they get one." :
+        "The badge says LOOKALIKE, in both official languages. Several people still ask for an autograph."; },
       choices: function (inc) { return [
         { label: "Greet them yourself and walk them over", work: 5, eff: { ex: 4 }, then: function () { var c = outOf(inc.data.id); if (c) c.force = inc.data.k; },
           done: "You walk " + BY[inc.data.id].tag + " to " + bname(inc.data.k) + ". The exhibitors there are delighted." },
@@ -12464,7 +12500,7 @@ var G = (function () {
   var AD = { jobs: ["🖱", "The turtleneck"], woz: ["🔧", "Beard and an Apple II"], gates: ["💾", "Big glasses, 1980s"], osborne: ["🧳", "A luggable in hand"],
     hopper: ["⚓", "A nanosecond, handed over"], bushnell: ["🕹", "Insert coin"], celgen: ["📹", "On camera"] };
   ROSTER.forEach(function (cam) { G.achieve.def("cm-" + cam.id, { group: "Cameos", icon: AD[cam.id][0], pts: 0, title: AD[cam.id][1], text: "You read the badge of " + cam.tag + "." }); });
-  G.achieve.def("cm-home", { group: "Cameos", icon: "🏠", title: "On home turf", text: "Met a lookalike at the booth they head for first." });
+  G.achieve.def("cm-home", { group: "Cameos", icon: "🏠", title: "On home turf", text: "Met a lookalike or a guest at the booth they head for first." });
   G.achieve.def("cm-garage", { group: "Cameos", icon: "🏚", secret: true, title: "Garage band", text: "Met the Steve Jobs and Steve Wozniak lookalikes in the same weekend." });
   G.achieve.def("cm-time", { group: "Cameos", who: "29", icon: "⏱", title: "Just in time", text: "Fixed the machine a lookalike came to see before they gave up." });
   G.achieve.def("cm-pong", { group: "Cameos", who: "10", icon: "🏓", secret: true, title: "From Pong to the LAN", text: "The Nolan Bushnell lookalike sat in for a match at your LAN." });
@@ -12510,16 +12546,19 @@ var G = (function () {
 (function () {
   var b = window.VCF_BUILD || { v: "dev", date: "" }, text = "VCF Tycoon " + b.v + (b.date ? " · " + b.date : "");
   if (window.console && console.info) console.info(text);
-  var el = document.createElement("button"); el.id = "g-ver"; el.type = "button"; el.textContent = b.v;
+  var el = document.createElement("button"); el.id = "g-ver"; el.type = "button"; show();
+  function show() {                                  // (phones hide the .vx part: "v0.41")
+    var i = b.v.indexOf("-"); el.innerHTML = i > 0 ? G.esc(b.v.slice(0, i)) + '<span class="vx">' + G.esc(b.v.slice(i)) + "</span>" : G.esc(b.v);
+  }
   el.title = text + " (click to copy, for bug reports)";
   el.setAttribute("aria-label", "Version " + b.v + ": click to copy");
-  G.ui.css("g-ver-css", "#g-ver{position:fixed;right:14px;bottom:calc(226px + env(safe-area-inset-bottom,0px));z-index:3;font:600 10px/1 ui-monospace,'IBM Plex Mono',monospace;" +
+  G.ui.css("g-ver-css", "#g-ver{position:fixed;right:216px;bottom:calc(56px + env(safe-area-inset-bottom,0px));z-index:3;font:600 10px/1 ui-monospace,'IBM Plex Mono',monospace;" +
     "color:#5a5242;background:rgba(246,240,225,.82);border:1px solid rgba(90,82,66,.35);border-radius:4px;padding:3px 5px;cursor:pointer;opacity:.85}" +
     "#g-ver:hover{opacity:1}#g-ver.ok{color:#2f7a4f}" +
-    "@media (max-width:760px){#g-ver{bottom:calc(166px + env(safe-area-inset-bottom,0px))}}");
+    "@media (max-width:760px){#g-ver{right:auto;left:142px;bottom:calc(14px + env(safe-area-inset-bottom,0px))}#g-ver .vx{display:none}}");
   document.body.appendChild(el);
   el.addEventListener("click", function () {
-    var done = function () { el.textContent = "copied"; el.classList.add("ok"); setTimeout(function () { el.textContent = b.v; el.classList.remove("ok"); }, 1200); };
+    var done = function () { el.textContent = "copied"; el.classList.add("ok"); setTimeout(function () { show(); el.classList.remove("ok"); }, 1200); };
     try { navigator.clipboard.writeText(text).then(done, done); } catch (err) { done(); }
     this.blur();
   });
@@ -12542,7 +12581,7 @@ var G = (function () {
 (function () {
   var UP = [
     { id: "trolley", booth: true, name: "Folding hand trolley", text: "Sunday teardown: a whole table of luggables in one trip instead of two in your arms, at a normal walking pace. Your back sends a thank-you card." },
-    { id: "psu", booth: true, name: "Spare PSU", text: "When a RIFA cap goes pop, swap the supply in two minutes instead of reaching for the soldering iron. The smell stays, though." },
+    { id: "psu", booth: true, name: "Spare PSU", text: "When a RIFA cap goes pop, swap the supply in eight minutes instead of reaching for the soldering iron. The smell stays, though." },
     { id: "powerbar", booth: true, name: "Extra power bar", text: "A second 15 A strip. Spread the CRTs out, trip fewer breakers, get fewer looks from the neighbours." },
     { id: "banner", booth: true, name: "Booth banner", text: "Big letters above the booth: more buzz all Sunday. People spot you from the other end of the hall." },
     { id: "volunteer", booth: true, name: "A volunteer for lunch", text: "Someone keeps an eye on the booth over lunch. You eat sitting down, like a normal person." },
@@ -13298,7 +13337,7 @@ var G = (function () {
       if (f.fri) say("Signed a program for the crew from " + nm(f.fri) + ". They go back to their cartons grinning.", "good");
       if (f.d && !G.skipping) donation(BYID[f.d], NAMES[f.n], false, after);
       else after();
-      function after() { if (here()) signNext(true); }
+      function after() { if (here() && !panelOpen()) signNext(true); }   // (at 14:00 the next E starts the panel, not another autograph)
     }
   });
 
@@ -13548,7 +13587,7 @@ var G = (function () {
     if (ph() === "setup") {
       var k = nextKit("van"); if (!k) { say("The kit is all at your table.", ""); return; }
       while (k && (!s.hand.length || handLb() + KIT[k].lb <= cap())) { s.kit[k] = "hand"; s.hand.push({ k: "kit", id: k }); k = nextKit("van"); }
-      sync(); say("Got " + handTxt() + " (" + handLb() + " lb). Booth 33 is on the east side of the hall.", ""); return;
+      sync(); say("Got " + handTxt() + " (" + handLb() + " lb). Booth 33 is on the west side of the hall, by the speakers' corner.", ""); return;
     }
     say(ph() === "teardown" ? "Bring the kit and the haul here." : "The van. " + plural(haulN("van"), "find") + " in it so far.", "");
   }
@@ -13692,9 +13731,9 @@ var G = (function () {
   // ---- the opener (coach.js): the first autograph, B-roll at booth 29, the kit
   if (G.coach && G.coach.def) G.coach.def("clint", function () {
     return [
-      ["An exhibitor is waiting at your guest table (booth 33, on the east side) for an autograph. Walk there and press E on the table to sign.",
+      ["An exhibitor is waiting at your guest table (booth 33, on the west side) for an autograph. Walk there and press E on the table to sign.",
         function () { return (S().signed.setup || 0) >= 1; }, function () { return TB; }],
-      ["Now the shot list: walk west to Land of the Portables (booth 29) and press E on their table to film some B-roll.",
+      ["Now the shot list: walk east to Land of the Portables (booth 29) and press E on their table to film some B-roll.",
         function () { return !!S().shots["29"]; }, function () { return FRONT["29"]; }],
       ["Your kit is in the crates by the west door, close by: press E on them, carry the load to your table and press E there.",
         function () { return kitN("booth") >= 1; }, function () { return hasKit() ? TB : VAN; }],
@@ -13858,7 +13897,7 @@ var G = (function () {
 // panel at the top right: machines to fix (and why), to plug in or switch on, a tripped breaker,
 // loads still in the pile, the phone ringing, a kid at a keyboard, a visitor's question, packing
 // at teardown. Click a row: a pin on the minimap, a highlight on the spot, the distance in the row.
-// Reads only published queries: setup.js G.setupNeeds / G.setupCarrying, events.js G.visitorEvents /
+// Reads only published queries: setup.js G.setupNeeds / G.setupCarrying / G.setupPanel, events.js G.visitorEvents /
 // G.visitorDay, faults.js G.faultKinds, lan.js G.lan (its rows: G.lan.todo), G.power, the gear states.
 // Goals first (like Nick's radio checklist): what this phase is about and how it's going, then the rows.
 (function () {
@@ -13886,7 +13925,7 @@ var G = (function () {
     if (G.power && G.power.strips) G.power.strips().forEach(function (s) {
       if (!G.power.tripped(s)) return;
       var mineOn = ids.some(function (id) { return G.power.stripOf(id) === s; });
-      if (mineOn) add("trip" + s, 1, "Reset breaker " + s, G.power.name(s) + " · at the panel", null, PLACES.p1 || null);
+      if (mineOn) add("trip" + s, 1, "Reset breaker " + s, G.power.name(s) + " · at the panel", null, G.setupPanel || null);
     });
     // broken machines (events.js faults and setup.js's own)
     ids.forEach(function (id) {

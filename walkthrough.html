@@ -174,7 +174,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script>window.VCF_BUILD = {"v": "v0.40-d6b029d", "date": "2026-10-02"};</script>
+<script>window.VCF_BUILD = {"v": "v0.42-4804d42", "date": "2026-10-02"};</script>
 <script>window.SITE_BUILD = true;</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
@@ -1977,6 +1977,7 @@ function guide(now) {
   else {                                                 // the ring: the bearing from straight ahead
     r = Math.atan2(_gv.x, -_gv.z); x = W / 2 + Math.sin(r) * (W / 2 - 60); y = H * 0.5 - Math.cos(r) * (H * 0.36);
   }
+  var gt = HOOK.guideTop ? HOOK.guideTop() : 0; if (gt && y < gt + 18) y = gt + 18;   // (not under the game's clock bar)
   x = Math.round(x); y = Math.round(y); r = Math.round(r * 20) / 20;
   var ft = Math.round(Math.hypot(t.x - pos.x, t.z - pos.z) / 12);
   if (ft !== gd.ft) { gd.ft = ft; guideT.textContent = ft + " ft"; }
@@ -2237,6 +2238,8 @@ var crowd = (function () {
   function route(v) {                              // waypoints along aisle centrelines (plus lanes)
     var vt = nearV(v.sx), vc = nearV(v.x), inV = Math.abs(v.x - V[vc]) <= (edges[vc * 2 + 1] - edges[vc * 2]) / 2 + 2;
     v.wn = 0; v.wi = 0;
+    // west of the network (booth 33, the speakers' corner, Clint's line, the sales desk): into the west aisle first
+    if (!inV && v.x < edges[0]) { vc = 0; inV = true; add(v, V[0] + v.lv * VL[0], v.z); }
     if (!inV || vc !== vt) {
       var j = nearH(v.z);
       if (inV) {                                   // the cheapest end aisle or cross-aisle to turn through
