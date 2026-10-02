@@ -1228,7 +1228,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 
 </script>
 <script>window.GAME_ONLY = true;</script>
-<script>window.VCF_BUILD = {"v": "v0.44-fb986bd", "date": "2026-10-02"};</script>
+<script>window.VCF_BUILD = {"v": "v0.50-32a136c", "date": "2026-10-02"};</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
 // The walk-through's own words in French or English (ported from the organisers' page): ?lang=fr|en
@@ -3708,7 +3708,8 @@ var RAGS = [{"t": "Maple Leaf Rag", "y": 1899, "b": "TVRoZAAAAAYAAQADAYBNVHJrAAA
 //                      core emits: "start", "phase" (id), "phaseEnd" (id), "minute" (min), "hour" (h),
 //                      "skip" (id: the clock jumps to closing; the minutes, hours and G.at in between still fire), "pause" (bool), "quit",
 //                      "intro" (id, x): the phase's opening card; push html to x.html, [label, fn] to x.buttons;
-//                      "who" (x): the same for the character pick card (G.pickWho() shows it); "score" (P): the
+//                      "who" (x): the same for the character pick card (G.pickWho() shows it), then "whoCard" (box): the
+//                      pick card's element, once it is drawn (decorate a tile); "score" (P): the
 //                      final score, after every system's score(P); "final" (result): the final card is up
 //   G.at(hhmm, fn)     one-shot at a game time in the current phase ("12:30" or minutes); cleared
 //                      when the phase changes
@@ -4223,7 +4224,7 @@ var G = (function () {
   G.on("phase", function () { G.dim(false); }); G.on("quit", function () { G.dim(false); nudge.t = nudge.d; hitT = 0; });
   var hudB = 0, hudBT = 1;
   HOOK.guideTop = function () { return G.state.on ? hudB : 0; };   // the hall keeps the guide's distance tag below the clock bar and the stats
-  HOOK.modal = function () { return !!(G.state.on && (cardOpen || G.modal)); };   // the hall leaves E / Enter to an open card
+  HOOK.modal = function () { return !!((G.state.on && cardOpen) || G.modal); };   // the hall leaves E / Enter to an open card or mini-game
 
   // ---- HUD: a clock bar (top centre), the stats strip, the objective, toasts and cards
   // (the look: game/ui.js, the UI kit; core builds the HUD from its classes)
@@ -4386,6 +4387,7 @@ var G = (function () {
            : [["Cancel", function () { if (!G.state.on || G.phase().id === "final") quit(); }]]), "who");
     box.classList.add("pick");                    // (ui.js: the title console, not a printout)
     box.querySelectorAll("[data-who]").forEach(function (b) { b.addEventListener("click", function () { G.hud.close(); G.start(b.dataset.who); }); });
+    G.emit("whoCard", box);                       // (systems decorate the drawn card: a tile's corner, a button in x.html)
     var row = box.querySelector(".row, .ui-actions");          // full screen from the menu (doesn't close the card)
     if (row && typeof setFull === "function") {
       var fb = document.createElement("button"); fb.className = "ui-btn"; fb.id = "g-pick-full"; fb.textContent = "⛶ Full screen (F)";
@@ -6067,7 +6069,9 @@ var G = (function () {
 //       auto(q, opts) -> data (headless results), after(m, r) (side effects once it closed, before onDone),
 //       esc(m) -> true when Esc was the game's (the phone hangs up first), escLabel, close(m) (it closed, any way) })
 //   G.mini(kind, opts, onDone) -> true when it opened (false: unknown kind, one already open, the game is off).
-//       opts: { id, kind, cause, energy, minutes (the quick fix), level, ... (the game's own) }
+//       opts: { id, kind, cause, energy, minutes (the quick fix), level, seed, free, ... (the game's own) }
+//       free: true opens it outside a weekend (a level of its own, with no G.state game): pass energy, level and seed,
+//       and tick it yourself with G.mini.step(dt) every frame (core only ticks systems while a game is on)
 //       onDone(r) once: r = { q 0..1, quality, outcome "win" | "partial" | "fail" | "timeout" | "skip" | "abort",
 //       secs, data, ok, skipped, note, k (minutes x, faults.js), refault {kind, after} }. Esc = "abort" (back to
 //       the quick choice); the Skip button = "skip" (the quick fix at x1.25). Closed from outside (a phase, quit):
@@ -6261,7 +6265,7 @@ var G = (function () {
   // ---- open / close
   G.mini = function (kind, opts, onDone) {
     var def = DEFS[kind]; opts = opts || {};
-    if (!def || M || !G.state.on) return false;
+    if (!def || M || !(G.state.on || opts.free)) return false;
     if (G.mini.auto !== null && G.mini.auto !== undefined) {   // tests: no UI, resolve now
       var a = G.mini.auto, r = typeof a === "function" ? a(kind, opts) : null;
       if (!r) { var q = +a; r = { q: q, outcome: q >= 0.85 ? "win" : q >= MINI.fail ? "partial" : "fail" }; }
@@ -6270,7 +6274,7 @@ var G = (function () {
       if (onDone) onDone(r); return true;
     }
     var e = opts.energy !== undefined ? opts.energy : G.stat("energy"), fat = G.clamp((60 - e) / 60, 0, 1);
-    var seed = (G.rnd() * 2147483647) | 1;
+    var seed = opts.seed ? opts.seed | 1 : (G.rnd() * 2147483647) | 1;
     M = { kind: kind, def: def, opts: opts, onDone: onDone, s: {}, w: W, h: def.h || H, t: 0, targets: [], focus: -1, ptr: { x: -99, y: -99, down: false, sx: 0, sy: 0, id: -1, used: false },
       tx: 0, ty: 0, fatigue: fat, shake: G.mini.assist("steady") ? 0 : MINI.shake * fat, level: opts.level !== undefined ? opts.level : G.mini.level(opts.booth || G.mine()),
       calm: !!G.mini.assist("calm"), dom: DOM, cap: "", done: null, doneT: 0, k: 1, refault: null, note: "",
@@ -6313,6 +6317,7 @@ var G = (function () {
   G.mini.defs = DEFS;
   G.mini.auto = null; G.mini.active = null; G.mini.k = 1; G.mini.paint = P;
   G.mini.close = function () { if (M) finish("external", 0); };
+  G.mini.step = function (dt) { if (!G.state.on) tick(dt); };   // (a free game outside a weekend: its owner ticks it)
   G.mini._m = function () { return M; };                // (tests: the open game's m)
   G.mini.pref = function (v) {
     if (v === undefined) { var p = G.prefs.miniPlay; return p === "always" || p === "never" ? p : "ask"; }
@@ -7763,6 +7768,8 @@ var G = (function () {
 //       ("29" | "10" | "nick") or a list of them, null = anyone (G.achieve ignores it for the others);
 //       group: the heading in the trophies view (the cameos add "Cameos"); pts: a final-card bonus (10; 0 = none; core caps all bonuses, G.TUNE.score.bonusCap)
 //   G.achieve(id) -> true when earned now (first time this weekend): a badge toast, kept for good
+//   G.achieve.earn(id) -> true when earned for the first time: outside a weekend (a level of its own): kept for good and
+//       toasted, never on a weekend's final card
 //   G.achieve.has(id) -> earned in any game;  G.achieve.got() -> this weekend's ids;  G.achieve.defs
 //   G.achieve.view(back, tag) opens the trophies card (earned and locked, n/m); back() on "Back"
 //   Buttons: "Trophies" on the pick card (core's "who" event) and 🏆 in the clock bar.
@@ -7780,6 +7787,12 @@ var G = (function () {
     if (first) { k[id] = { at: Date.now(), who: G.state.who }; G.keep(KEY, k); }
     toast(d, first);
     G.emit("achieve", id, d);
+    return true;
+  };
+  A.earn = function (id) {
+    var d = DEFS[id]; if (!d) return false;
+    var k = kept(); if (k[id]) return false;
+    k[id] = { at: Date.now(), who: null }; G.keep(KEY, k); toast(d, true); G.emit("achieve", id, d);
     return true;
   };
   A.defs = DEFS;
@@ -14349,7 +14362,7 @@ var G = (function () {
   }
 
   // ---- on / off: the context only runs while it can be heard
-  function menu() { return !G.state.on && G.hud.isOpen() === "who"; }      // the pick card (the game-only page opens on it)
+  function menu() { return !G.state.on && (G.hud.isOpen() === "who" || !!window.GAME_ONLY); }   // the pick card, and walking around on the game page (owner: it showed the rag but was silent)
   function want() { return (G.state.on || menu()) && sOn() && !(typeof doom !== "undefined" && doom.playing); }
   var was = null;
   function live() {                                         // (cheap when nothing changed: it runs every frame)
@@ -14370,6 +14383,15 @@ var G = (function () {
   var mbtn = G.ui.button("", { icon: "music", kind: "icon", sw: mOn(), title: "Music on / off", id: "g-music" });
   bar.insertBefore(mbtn, quitB);
   mbtn.addEventListener("click", function () { G.pref("music", !mOn()); mbtn.set(mOn()); this.blur(); });
+  // walking around on the game page (no clock bar): a Music key in the hall's menu, beside Full screen
+  var wfull = window.GAME_ONLY && document.getElementById("m-full"), wmus = null;
+  if (wfull) {
+    wmus = document.createElement("button"); wmus.id = "m-music"; wmus.type = "button"; wmus.title = "Music on / off";
+    var wset = function () { wmus.textContent = "♫ Music"; wmus.classList.toggle("on", mOn()); wmus.setAttribute("aria-pressed", mOn() ? "true" : "false"); };
+    wset(); wfull.parentNode.insertBefore(wmus, wfull.nextSibling);
+    wmus.addEventListener("click", function () { G.pref("music", !mOn()); mbtn.set(mOn()); wset(); gesture(); this.blur(); });
+    mbtn.addEventListener("click", wset);
+  }
 
   // ---- every ~0.1 s: crowd murmur, voices follow the listener, typing, phone cadence, random hall noises
   function update(dt) {
