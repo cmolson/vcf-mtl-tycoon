@@ -236,6 +236,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); }
 
   <footer class="foot">
     <a id="mode-link" href="?practice" data-t="practiceLink">Practice (random puzzles)</a>
+    <a id="game-link" href="index.html" data-t="playGame">Play VCF Tycoon</a>
     <span data-t="footNote">VCF Montréal 2.0 · Nov 7–8, 2026 · drawings, not photos</span>
   </footer>
 </main>
@@ -273,7 +274,12 @@ var BL = window.BOOTHLE = {};
   BL.STICKER = false;
   BL.MAX = 6;                                         // guesses
   BL.SHARE_URL = "https://cmolson.github.io/vcf-mtl-tycoon/boothle.html";   // the link in every share text (never the page's own address)
-  BL.HALL_URL = "https://cmolson.github.io/vcf-mtl-tycoon/walkthrough.html"; // "Walk the 3D hall" (the --site build of the hall)
+  // The public site's other pages: relative on the public site itself (they sit next to boothle.html), else its full address
+  // (a kiosk, a test server, a file). siteUrl(page, host): host defaults to this page's (the test passes one).
+  BL.SITE = "https://cmolson.github.io/vcf-mtl-tycoon/";
+  BL.siteUrl = function (page, host) { return (host === undefined ? location.hostname : host) === "cmolson.github.io" ? page : BL.SITE + page; };
+  BL.HALL_URL = BL.siteUrl("walkthrough.html");       // "Walk the 3D hall" (the --site build of the hall)
+  BL.GAME_URL = BL.siteUrl("index.html");             // the footer's "Play VCF Tycoon" (the game; ?lang= carries the language over)
 
   var NB = " ";                                  // French: a non-breaking space before : ? ! ;
   var S = {
@@ -286,7 +292,7 @@ var BL = window.BOOTHLE = {};
       mapHelp: "Tap a booth to see its name, then press Guess. Keyboard: arrow keys move between booths, type a booth number, Enter guesses.",
       legend: "Tables: <span class='lg ex'></span> exhibitors <span class='lg ve'></span> vendors <span class='lg cr'></span> creators",
       orList: "Or pick from the list", listNone: "Choose a booth…", share: "Share", next: "Another one", openHall: "Walk the 3D hall",
-      practiceLink: "Practice (random puzzles)", dailyLink: "Back to today's puzzle",
+      practiceLink: "Practice (random puzzles)", dailyLink: "Back to today's puzzle", playGame: "Play VCF Tycoon",
       footNote: "VCF Montréal 2.0 · Nov 7–8, 2026 · drawings, not photos",
       num: "#{n}", practice: "Practice", preview: "Preview",
       mapLabel: "Hall map, north up, the entrance on the east side. {n} booths.",
@@ -340,7 +346,7 @@ var BL = window.BOOTHLE = {};
       mapHelp: "Touchez un kiosque pour voir son nom, puis Deviner. Au clavier" + NB + ": les flèches passent d'un kiosque à l'autre, tapez un numéro, Entrée pour deviner.",
       legend: "Tables" + NB + ": <span class='lg ex'></span> exposants <span class='lg ve'></span> marchands <span class='lg cr'></span> créateurs",
       orList: "Ou choisissez dans la liste", listNone: "Choisir un kiosque…", share: "Partager", next: "Un autre", openHall: "Parcourir la salle 3D",
-      practiceLink: "Entraînement (casse-têtes au hasard)", dailyLink: "Retour au casse-tête du jour",
+      practiceLink: "Entraînement (casse-têtes au hasard)", dailyLink: "Retour au casse-tête du jour", playGame: "Jouer à VCF Tycoon",
       footNote: "VCF Montréal 2.0 · 7 et 8 nov. 2026 · des dessins, pas des photos",
       num: "n°" + NB + "{n}", practice: "Entraînement", preview: "Avant-première",
       mapLabel: "Plan de la salle, le nord en haut, l'entrée du côté est. {n} kiosques.",
@@ -2019,6 +2025,7 @@ var BL = window.BOOTHLE = {};
     lb.textContent = other.toUpperCase(); lb.setAttribute("lang", other); lb.title = other === "fr" ? "Français" : "English"; lb.setAttribute("aria-label", lb.title);
     $("num").textContent = G.mode === "practice" ? t("practice") : G.preview ? t("preview") : t("num", { n: G.n });
     var ml = $("mode-link"); ml.textContent = G.mode === "practice" ? t("dailyLink") : t("practiceLink"); ml.href = G.mode === "practice" ? location.pathname : "?practice";
+    $("game-link").href = BL.GAME_URL + "?lang=" + BL.lang;
     renderList();
   }
   function renderList() {                                // the plain list: a guessed booth is ticked and can't be picked again

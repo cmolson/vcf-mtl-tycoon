@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.108-929c0d9", "date": "2026-10-03"};</script>
+<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.117-2057c38", "date": "2026-10-03"};</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Road Trip 3D</title>
@@ -53,6 +53,19 @@ header nav { display: flex; gap: 6px; }
   #side { grid-row: 3; border-right: 0; border-top: 1px solid var(--line); padding: 6px 8px; gap: 6px; max-height: 34vh; }
   #bar { grid-row: 4; padding: 6px 8px; gap: 5px; } #bar .keys { display: none !important; } #bar kbd { display: none; }
 }
+/* the way back to the game (#rtBack, shell.html): top-left on every screen, over the cards (not over the lost-context card);
+   the header keeps clear of it here, the cards and the phone's drive HUD in hud.css */
+#rtBack.home { position: fixed; z-index: 50; top: max(8px, env(safe-area-inset-top)); left: max(8px, env(safe-area-inset-left)); width: 118px; min-height: 34px;
+  display: inline-flex; align-items: center; justify-content: center; padding: 0 8px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--panel); color: var(--ink); font-weight: 700; text-decoration: none; white-space: nowrap; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+#rtBack.home:hover { filter: brightness(1.04); }
+#rtBack.home:focus-visible { outline: 3px solid #1d55c4; outline-offset: 2px; }
+header { padding-left: calc(138px + env(safe-area-inset-left)); min-height: 50px; }
+@media (max-width: 720px), (pointer: coarse) {
+  #rtBack.home { min-height: 44px; width: 112px; top: max(6px, env(safe-area-inset-top)); font-size: 13px; }
+  header { min-height: 56px; padding-left: calc(126px + env(safe-area-inset-left)); }
+}
+@media (max-width: 440px) { header h1 { display: none; } }
 
 /* pack.css (pack.js): the tray in #side (the car pick, the clock and meters, the item list), the overlay over the canvas (.pk-ui: #msg, #views,
    #legend). Base layout and buttons: base.css. ROADTRIP-EXTRA */
@@ -316,10 +329,19 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
 @media (prefers-reduced-motion: reduce) {
   .hud #lim.over, .hud #lights.on, .hud #ap.on { animation: none; } .hud #toast, .hud #blink { transition: none; } .hud #blink { display: none; }
 }
+/* the corner's way back to the game (#rtBack, base.css): the cards start below it; a landscape phone keeps them clear from the side */
+.rt-ov { padding-top: max(58px, calc(env(safe-area-inset-top) + 50px)); }
+@media (max-height: 500px) { .rt-ov { padding-top: max(12px, env(safe-area-inset-top)); padding-left: 132px; padding-right: 132px; } }
+/* phones in the drive (no header): the HUD's top row moves below the corner button (beside it in landscape) */
+@media (pointer: coarse) and (max-width: 720px) { .hud #top3d { top: 58px; } }
+@media (pointer: coarse) and (max-width: 520px) { .hud #cargo { top: 190px; } }   /* (the load line under the clock, moved down with it) */
+@media (pointer: coarse) and (max-height: 500px) { .hud #top3d { top: 6px; left: 132px; } }
 
 </style>
 </head>
 <body>
+<!-- the way back to the game, in the corner on every screen (flow.js: straight away, or "Leave for VCF Tycoon?" mid-drive) -->
+<a id="rtBack" class="home" href="../vcf-tycoon.html#pick" aria-label="Back to VCF Tycoon">◂ VCF Tycoon</a>
 <div class="app mode-pack" id="app">
   <header id="top">
     <h1>The Road Trip · 3D</h1>
@@ -349,6 +371,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
   // (index.html#pick, next to this page as roadtrip.html); here in the repo, the local game build
   RT.GAME = window.VCF_GAME_URL || "../vcf-tycoon.html#pick";
   RT.leave = function () { location.href = RT.GAME; };              // (tests replace it)
+  if (document.getElementById("rtBack")) document.getElementById("rtBack").href = RT.GAME;   // the corner button (shell.html; flow.js wires it)
   RT.PI = PI; RT.IN = 0.1016;                                       // a packing cell: 4 in, in metres
   RT.G9 = 9.81;
 
@@ -6734,7 +6757,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     E.keys = el("span", "keys drive-only", "", RT.bar);
     el("span", "sp drive-only", "", RT.bar);
     btn("drive-only", "Controls", function () { if (RT.flow && RT.flow.help) RT.flow.help(); }, "?");
-    btn("drive-only", "Pause", function () { if (RT.flow && RT.flow.pause) RT.flow.pause(); }, "Esc");
+    btn("", "Pause", function () { if (RT.flow && RT.flow.pause) RT.flow.pause(); }, "Esc");   // (packing too)
     touch();
     E.tbar.addEventListener("click", function (e) {
       var b = e.target.closest("[data-b]"); if (!b) return; var a = b.getAttribute("data-b"); b.blur();
@@ -6895,8 +6918,9 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
       if (a && a.tagName === "BUTTON" && O.contains(a)) a.click(); else if (c !== "Space" && O.primary) O.primary.click();
       return true;
     }
-    if (c === "Tab") {                                              // keep Tab inside the card
-      var B = O.querySelectorAll("button"); if (!B.length) return true;
+    if (c === "Tab") {                                              // keep Tab inside the card (and the corner's way back to the game)
+      var B = [].slice.call(O.querySelectorAll("button")), hm = $("rtBack"); if (hm && hm.getClientRects().length) B.unshift(hm);
+      if (!B.length) return true;
       var i = [].indexOf.call(B, document.activeElement), n = B.length;
       B[(i < 0 ? 0 : (i + (e.shiftKey ? n - 1 : 1)) % n)].focus(); e.preventDefault(); return true;
     }
@@ -7586,17 +7610,15 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     var h = "<p>" + esc(C.text) + "</p><p>Champlain College Saint-Lambert is about " + C.km + " km away: the 417, the A-40, then the A-30 around the island. " +
       "Pack it so it all arrives working. There's no second trip. Leave by about " + hh((S.START[C.who] || 780) + T.leaveBy) +
           " to be at the west door before 17:00.</p>" +
-      (b ? '<p class="note">Your best in the ' + esc(C.name) + ": " + b.score + " " + S.stars(b.stars) + "</p>" : "") +
-      '<p class="note"><button type="button" class="lnk" id="rtBack">Back to VCF Tycoon</button></p>';   // (a button: Tab stays in the card)
+      (b ? '<p class="note">Your best in the ' + esc(C.name) + ": " + b.score + " " + S.stars(b.stars) + "</p>" : "");   // (the way back: the corner button)
     var btns = [["Start packing", function () { startPacking(C.who); }, true]];
     if (two) btns.unshift([C.who === "29" ? "Curtis's Highlander instead" : "The V70R instead", function () { var o = C.who === "29" ? "10" : "29";
         RT.pack.setWho(o); coldOpen(o); }]);
     if (two && RT.pack.who !== C.who) RT.pack.setWho(C.who);
     btns.unshift(["Controls", function () { F.help(function () { coldOpen(C.who); }); }]);
     if (RT.mode() !== "pack") RT.setMode("pack");
-    var cd = card("The Road Trip", h, btns, { kick: "Friday, November 6 · " + hh(S.START[C.who] || 780) + " · " + C.from + " · " + C.booth, wide: true,
-        esc: function () { F.pause(); } }), bk = cd && cd.querySelector("#rtBack");
-    if (bk) bk.addEventListener("click", function () { RT.leave(); });
+    card("The Road Trip", h, btns, { kick: "Friday, November 6 · " + hh(S.START[C.who] || 780) + " · " + C.from + " · " + C.booth, wide: true,
+        esc: function () { F.pause(); } });
   }
   function startPacking(who) {
     if (RT.pack && RT.pack.clear && RT.pack.st && RT.pack.st.pl && RT.pack.st.pl.length && F.cleanPack) RT.pack.clear();
@@ -8087,7 +8109,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
   F.redrawPause = function () { if (F.paused && !helpOn) pauseCard(); };
   var helpOn = false;
   function pauseCard() {
-    helpOn = false;
+    helpOn = false; F.asking = false;
     var snd = RT.sound ? !RT.sound.muted : false, mus = RT.sound && RT.sound.musicOn ? RT.sound.musicOn() : false, drive = RT.mode() === "drive";
     var h = "<p>" + (R ? (drive ? "On the road · " : "Packing · ") + hh(R.min) : "The road trip waits.") + " Resume carries on right where you were.</p>" +
       "<div class='sw'><button type='button' data-s='snd' aria-pressed='" + snd + "'>Sound <kbd>M</kbd></button>" +
@@ -8096,6 +8118,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     H().layer("Paused", h, [
       ["Leave the road trip", pullOver],
       ["Controls", function () { F.help(); }],
+      ["Back to VCF Tycoon", function () { RT.leave(); }, false, "rtHomeP"],
       ["Resume", F.resume, true]
     ], { kick: "The Road Trip", keep: false, esc: F.resume, after: function (box) {
       [].forEach.call(box.querySelectorAll("[data-s]"), function (b) { b.addEventListener("click", function () {
@@ -8113,6 +8136,33 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     if (RT.sound && RT.sound.pause) RT.sound.pause(false);
     drewFrozen = false;
   };
+  // the corner button (#rtBack, shell.html): menus and setup leave straight away; mid-drive (a run on the road, not yet scored) it
+  // asks once, the drive paused while it asks. Stay (the default, also Esc) carries on as it was; Leave goes.
+  F.asking = false;
+  F.inPlay = function () { return !!(R && RT.mode() === "drive" && !R.score); };
+  F.home = function () {
+    if (!F.inPlay()) { RT.leave(); return; }
+    if (F.asking) return;
+    var was = F.paused;
+    F.asking = true;
+    if (!was) { RT.paused = true; RT.clearKeys(); var T0 = RT.touchIn; T0.gas = 0; T0.brake = 0; T0.steer = 0; if (RT.sound && RT.sound.pause) RT.sound.pause(true); }
+    function stay() {
+      F.asking = false; H().closeLayer();
+      if (was) { if (F.paused) pauseCard(); return; }
+      RT.paused = false; RT.clearKeys(); if (RT.sound && RT.sound.pause) RT.sound.pause(false); drewFrozen = false;
+    }
+    H().layer("Leave for VCF Tycoon?", "<p>This run is lost.</p>", [
+      ["Leave", function () { F.asking = false; RT.leave(); }, false, "rtLeave"],
+      ["Stay", stay, true, "rtStay"]
+    ], { kick: "The Road Trip", esc: stay });
+  };
+  (function () {
+    var hb = RT.$("rtBack"); if (!hb) return;
+    hb.addEventListener("click", function (e) {
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;   // (a new tab: the browser's way)
+      e.preventDefault(); hb.blur(); F.home();
+    });
+  })();
   function pullOver() {
     H().layer("Pull over?", "<p>Leave the road trip and go back to the start? This run isn't kept.</p>", [
       ["Back to the start", function () { F.paused = false; RT.paused = false; if (RT.sound && RT.sound.pause) RT.sound.pause(false); H().closeCard();
@@ -8156,6 +8206,9 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
   addEventListener("keydown", function (e) {
     if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
     if (RT.sound) RT.sound.unlock();
+    if (e.target && e.target.id === "rtBack" && (e.code === "Enter" || e.code === "NumpadEnter" || e.code === "Space")) {   // the corner button
+      e.preventDefault(); e.stopPropagation(); if (!e.repeat) F.home(); return;
+    }
     if (RT.hud && RT.hud.key && RT.hud.cardOpen()) { if (RT.hud.key(e)) { e.stopPropagation(); } return; }
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     var c = e.code;
@@ -8325,7 +8378,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     leg: function (id) { return RT.flow.test.leg(id); },          // the run jumps to that leg (its cards, clock and HUD as in play)
     look: function (on) { RT.touchIn.back = on ? 1 : 0; },        // hold LOOK BACK (or let go)
     chase: function () { return RT.chase.state0(); }, mech: function () { return RT.mech.state(); },
-    skipIntro: function () { RT.hud.closeLayer(); RT.hud.closeCard(); RT.flow.paused = false; RT.paused = false; RT.flow.frozen = false; return RT.mode(); },   // (the cold open blocks step)
+    skipIntro: function () { RT.hud.closeLayer(); RT.hud.closeCard(); RT.flow.paused = false; RT.flow.asking = false; RT.paused = false; RT.flow.frozen = false; return RT.mode(); },   // (the cold open blocks step)
     sim: function (secs, chaos) {                                   // drive without drawing; count traffic overlap frames (must stay 0)
       RT.flow.sim = true; if (!P.assist) RT.drive.setAssist(true);
       var bad = 0, n = Math.round(secs * 60), i, laps = 0, rnd = RT.rnd, stops = 0;

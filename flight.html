@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.108-929c0d9", "date": "2026-10-03"};</script>
+<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.117-2057c38", "date": "2026-10-03"};</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>The Flight</title>
@@ -207,6 +207,13 @@ header h1 { font-size: 15px; margin: 0; white-space: nowrap; overflow: hidden; t
 
 .mode-dash .pack-only, .mode-dash .fly-only { display: none !important; }
 .fl-ov button.lnk { background: none; border: 0; padding: 0; color: var(--acc); text-decoration: underline; font-size: 12.5px; }
+/* the corner button (top left, every screen): the header sits over the card layer, and the cards start under it; the leave question covers both */
+header#top { position: relative; z-index: 45; min-height: 50px; }
+.fl-ov { padding-top: calc(50px + 10px); }
+.fl-ov.ask { z-index: 48; padding-top: 12px; } .fl-ov.ask .cd { max-width: 340px; } .fl-ov.ask .row { justify-content: flex-end; }
+a.vcfback { flex: none; min-height: 34px; padding: 5px 12px; font-weight: 700; font-size: 14px; white-space: nowrap; background: var(--acc); color: var(--acc-ink); border-color: var(--acc); }
+a.vcfback:focus-visible { outline: 3px solid #1d55c4; outline-offset: 2px; }
+@media (max-width: 720px), (pointer: coarse) { header#top { min-height: 58px; } .fl-ov { padding-top: calc(58px + 8px); } .fl-ov.ask { padding-top: 12px; } a.vcfback { min-height: 44px; } }
 /* phones: the guide box across the top, the instruments under it, the load panel under those */
 @media (max-width: 720px) {
   .hud #tr { left: 8px; right: 8px; top: 8px; max-width: none; align-items: stretch; }
@@ -335,6 +342,7 @@ header h1 { font-size: 15px; margin: 0; white-space: nowrap; overflow: hidden; t
 <body>
 <div class="app mode-pack" id="app">
   <header id="top">
+    <a id="bHome" class="btn vcfback" href="../../vcf-tycoon.html#pick" aria-label="Back to VCF Tycoon">◂ VCF Tycoon</a>
     <h1>The Flight · Manitoba to Montréal</h1>
     <span id="perf"></span>
   </header>
@@ -380,6 +388,9 @@ header h1 { font-size: 15px; margin: 0; white-space: nowrap; overflow: hidden; t
   // the game's pick card ("Continue to Friday", "Back to VCF Tycoon"): the publish script sets VCF_GAME_URL (index.html#pick)
   FL.GAME = window.VCF_GAME_URL || "../../vcf-tycoon.html#pick";
   FL.leave = function () { location.href = FL.GAME; };
+  // the corner button (top left, on every screen): straight out on the menus and the loading; mid-run it asks first (hud.js H.leaveAsk)
+  (function () { var b = FL.$("bHome"); if (!b) return; b.href = FL.GAME;
+    b.addEventListener("click", function (e) { if (FL.flow && FL.flow.active && FL.flow.active() && FL.hud && FL.hud.leaveAsk) { e.preventDefault(); FL.hud.leaveAsk(); } }); })();
 
   // ---------------------------------------------------------------- events
   var EV = {};
@@ -3516,7 +3527,31 @@ header h1 { font-size: 15px; margin: 0; white-space: nowrap; overflow: hidden; t
     for (i = 0; i < bs.length; i++) if (!label ? bs[i] === H.cardPrimary : bs[i].textContent.indexOf(label) === 0) { bs[i].click(); return true; }
     return false;
   };
+  // ---------------------------------------------------------------- the corner button's question, mid-run: its own small card over whatever is up
+  // (a stop card or the pause card stays underneath, as it was). The sim is paused while it's asked; Stay (the default, and Esc) puts it back.
+  var ask = null, askWas = null;
+  H.leaveAsk = function () {
+    if (ask) return;
+    ask = el("div", "fl-ov on ask", '<div class="cd" role="alertdialog" aria-modal="true" aria-labelledby="askH"><h2 id="askH">Leave for VCF Tycoon?</h2><p>This run is lost.</p>' +
+      '<div class="row"><a class="btn" id="askLeave"></a><button type="button" class="pri" id="askStay">Stay</button></div></div>', document.body);
+    var lv = FL.$("askLeave"); lv.href = FL.GAME; lv.textContent = "Leave";
+    askWas = { paused: FL.paused };
+    FL.paused = true; if (FL.sound) FL.sound.pause(true); FL.clearKeys();
+    FL.$("askStay").addEventListener("click", function (e) { e.preventDefault(); H.leaveStay(); });
+    FL.$("askStay").focus(); setTimeout(function () { if (ask) FL.$("askStay").focus(); }, 30);
+  };
+  H.leaveStay = function () {
+    if (!ask) return; ask.parentNode.removeChild(ask); ask = null; FL.clearKeys();
+    FL.paused = askWas.paused; if (FL.sound && !FL.paused) FL.sound.pause(false);
+    if (cardOn && H.cardPrimary) H.cardPrimary.focus(); else if (document.activeElement && document.activeElement.blur) document.activeElement.blur();   // (the keys go back to the plane)
+  };
+  H.asking = function () { return !!ask; };
   addEventListener("keydown", function (e) {
+    if (ask) {                                                         // (the question has the keys: Esc stays, Tab and Enter work its two buttons, nothing reaches the plane)
+      if (e.key === "Escape") { e.preventDefault(); H.leaveStay(); }
+      else if (e.key === "Tab") { e.preventDefault(); var a = FL.$("askLeave"), s = FL.$("askStay"); (document.activeElement === s ? a : s).focus(); }
+      e.stopImmediatePropagation(); return;
+    }
     if (!cardOn) return;
     if (e.key === "Escape" && cardO && cardO.esc) { e.preventDefault(); e.stopImmediatePropagation(); var f = cardO.esc; H.closeCard(); f(); }
     else if (e.key === "Enter" && H.cardPrimary && document.activeElement && document.activeElement.tagName !== "BUTTON") { e.preventDefault(); e.stopImmediatePropagation(); H.cardPrimary.click(); }
@@ -3822,9 +3857,7 @@ header h1 { font-size: 15px; margin: 0; white-space: nowrap; overflow: hidden; t
       "<p>Ice is forming along the shore of Eldon Lake; the middle is still open. Two days of daylight: the first night at a float base, the river at Saint-Lambert on Friday, before sunset at 16:35. Setup starts at 17:00.</p>" +
       "<div class='pick'><div><b>The Beaver</b> · " + B.call + "<small>Takes off at 5,600 lb at most: every gallon of fuel is 6 lb of cargo left on the dock, and heavy iron at the back pushes the balance (CG) past its aft limit. About 90 kt on 21 gal/h; a short run on the water.</small></div>" +
       "<div><b>The Otter</b> · " + O.call + " (charter)<small>7,967 lb on floats: the whole mainframe and a passenger fit, no balance puzzle. Faster (100 to 105 kt), fewer fuel stops, more daylight. But thirstier (34 gal/h), heavier on the controls, a longer run on the water (some small lakes are too short for her), and the charter costs " + O.charter + " points.</small></div></div>",
-      [["Charter the Otter", function () { F.pick("otter"); }], ["Load the Beaver ▸", function () { F.pick("beaver"); }, true]], { kick: "Thursday, November 5 · Lynn Lake, Manitoba · −6 °C", wide: true, after: function (cd) {
-        var p = FL.el("p", "note", "<button type='button' class='lnk' id='bHome'>Back to VCF Tycoon</button>", cd.querySelector(".bd"));
-        p.querySelector("button").addEventListener("click", function () { FL.leave(); }); } });
+      [["Charter the Otter", function () { F.pick("otter"); }], ["Load the Beaver ▸", function () { F.pick("beaver"); }, true]], { kick: "Thursday, November 5 · Lynn Lake, Manitoba · −6 °C", wide: true });   // (the way back to VCF Tycoon is the corner button, top left)
   };
   F.pick = function (id) {                                            // the plane: its numbers, its cabin, its model; the load starts again
     D.setPlane(id); FL.plan.clearCache(); L.planKey = null; if (FL.pack.plane) FL.pack.plane();
@@ -4236,6 +4269,7 @@ header h1 { font-size: 15px; margin: 0; white-space: nowrap; overflow: hidden; t
     return { total: tot, stars: st, parts: parts, cargo: cr, minRes: minRes };
   };
   function final() {
+    R.done = true;
     var sc = F.score(), cr = sc.cargo, hz = FL.haz.st, ds = FL.dash.S;
     F.result = { total: sc.total, stars: sc.stars, parts: sc.parts.map(function (p) { return [p[0], p[2], p[3]]; }), arrive: R.arrive, lands: R.lands, hits: hz.hits, shooed: hz.shooed,
       used: hz.used, photos: Object.keys(hz.photos), reported: hz.reported, fireBust: hz.fireBust, watched: hz.watched, legal: R.legal, stops: R.stops, night: R.night,
@@ -4262,14 +4296,16 @@ header h1 { font-size: 15px; margin: 0; white-space: nowrap; overflow: hidden; t
       { kick: "Friday, November 6 · Champlain College Saint-Lambert", wide: true });
     FL.emit("tripdone", F.result);
   }
+  F.active = function () { return !!R && !R.done; };                 // mid-run (flying, the dash, re-stowing): the corner button asks before it leaves
   F.again = function () { R = F.R = null; FL.warp = 1; FL.setMode("pack"); };
 
   // ---------------------------------------------------------------- pause
   F.pause = function () {
-    if (H().cardOpen()) return;
+    if (H().cardOpen() || H().asking()) return;
     FL.paused = true; if (FL.sound) FL.sound.pause(true);
     H().card("Paused", "<p class='note'>Options (each button turns on or off):</p><div class='sw'><button type='button' id='pInv' aria-pressed='" + !!FL.invert + "'>" + (FL.touch ? "Stick: drag up to climb" : "Pitch like a yoke (↑ dives)") + "</button><button type='button' id='pSnd' aria-pressed='" + !(FL.sound && FL.sound.muted) + "'>Sound <kbd>M</kbd></button></div>",
-      [["Back to loading", function () { FL.paused = false; F.again(); }]].concat(FL.mode() === "fly" && R ? [["The load", function () { resume(); loadCard(); }]] : []).concat([["Resume", resume, true]]), { kick: "The flight", esc: resume, after: function (cd) {
+      [["Back to VCF Tycoon", null, false, FL.GAME], ["Back to loading", function () { FL.paused = false; F.again(); }]].concat(FL.mode() === "fly" && R ? [["The load", function () { resume(); loadCard(); }]] : []).concat([["Resume", resume, true]]), { kick: "The flight", esc: resume, after: function (cd) {
+        cd.querySelector(".row a").id = "bHomeP";
         cd.querySelector("#pInv").addEventListener("click", function () { FL.invert = !FL.invert; this.setAttribute("aria-pressed", FL.invert); });
         cd.querySelector("#pSnd").addEventListener("click", function () { var m = FL.sound.toggle(); this.setAttribute("aria-pressed", !m); });
       } });
