@@ -71,4 +71,12 @@ game's characters are fictional; the famous computer people who turn up are fans
 Scott Joplin rags (public domain), MIDI from the Mutopia Project, played on a synthesised
 piano; COPY PROTECTED's chiptune is original. 3D engine: three.js (MIT).
 
+**Voices.** Dial-a-Museum's phone prompts, in the game and on the real phone at booth 29, are synthetic speech made with
+Piper (MIT licence) and converted to 6 kHz OKI ADPCM, the voice card's format. English: the en_US-lessac-medium voice,
+trained on recordings by Catherine Byers released by Lessac Technologies and Voice Factory for the Blizzard Challenge 2013
+(non-commercial research licence). French: the fr_FR-siwis-medium voice, trained on the SIWIS French Speech Synthesis
+Database by J. Yamagishi, P.-E. Honnet, P. Garner and A. Lazaridis (University of Edinburgh / Idiap, 2017,
+https://doi.org/10.7488/ds/1705), licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). The prompts are
+synthetic speech, not recordings of the speakers.
+
 **License:** MIT for this project's own code and content (see `LICENSE`). Third-party parts and names: see `THIRD-PARTY-NOTICES.md`.

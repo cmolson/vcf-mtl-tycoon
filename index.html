@@ -1241,7 +1241,8 @@ button.tour.on { background: var(--accent); color: #fff; }
 </script>
 <script>if (!window.THREE) (function () { var fr = /^fr/.test((new URLSearchParams(location.search).get("lang")) || localStorage.getItem("hall-lang") || navigator.language || ""), d = document.createElement("div"); d.setAttribute("role", "alert"); d.style.cssText = "position:fixed;inset:0;z-index:99;display:grid;place-items:center;padding:24px;background:#1b1a17;color:#f3ecda;font:600 17px/1.5 Archivo,system-ui,sans-serif;text-align:center"; d.innerHTML = fr ? "<p>Le moteur 3D (three.js) n'a pas pu être chargé. Un bloqueur de contenu ou un réseau qui bloque cdnjs.cloudflare.com et cdn.jsdelivr.net l'empêche peut-être.<br><br><button onclick=\"location.reload()\" style=\"font:inherit;padding:8px 18px\">Réessayer</button></p>" : "<p>Couldn't load the 3D engine (three.js). A content blocker, or a network that blocks cdnjs.cloudflare.com and cdn.jsdelivr.net, may be stopping it.<br><br><button onclick=\"location.reload()\" style=\"font:inherit;padding:8px 18px\">Try again</button></p>"; document.body.appendChild(d); })();</script>
 <script>window.GAME_ONLY = true; window.VCF_PREQUELS = {"drive": "roadtrip.html", "flight": "flight.html", "nick": "nick.html"};</script>
-<script>window.VCF_BUILD = {"v": "v0.108-929c0d9", "date": "2026-10-03"};</script>
+<script>window.VCF_BUILD = {"v": "v0.117-2057c38", "date": "2026-10-03"};</script>
+<script>window.VCF_MUSEUM_AUDIO = "audio/museum/";</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
 // The walk-through's own words in French or English (ported from the organisers' page): ?lang=fr|en
@@ -1336,7 +1337,7 @@ var GUESS_FR = {
   5: "Retronic Design" + NB + ": des adaptateurs USB pour manettes Atari, C64, Amiga, Apple II et Vectrex, et des ajouts Amiga pour disquettes, vidéo et MIDI.",
   6: "Peut-être de la démoscène C64 ?",
   7: "Peut-être autour de l'Apple Newton ?",
-  8: "Peut-être surtout du Commodore, avec un peu d'Atari, d'Apple et d'Amiga ?",
+  8: "Peut-être surtout du Commodore 8 bits, des C64 et des C128, et un BBS de 30 ans ?",
   11: "Peut-être des ordinateurs britanniques : Sinclair, Amstrad, Acorn ?",
   12: "Peut-être des modems et de l'Internet par ligne téléphonique ?",
   13: "Le GameTank, une toute nouvelle console 8 bits libre, avec deux 6502, de vraies cartouches et une sortie composite, à essayer.",
@@ -1435,7 +1436,7 @@ var D = {
 }
 ;
 var PLAN = [{"id":"osborne1","name":"Osborne 1","cat":"luggable","w":20.5,"d":11,"h":9,"x":-75.35,"z":0.25,"level":"table","stack":0,"body":"#c8b48c","scr":"green","kb":1},{"id":"hyperion","name":"Dynalogic Hyperion","cat":"luggable","w":18.3,"d":10,"h":8.8,"x":-43.65,"z":1.5,"level":"table","stack":0,"body":"#cfcbc2","scr":"amber","kb":1},{"id":"compaq1","name":"Compaq Portable","cat":"luggable","w":20,"d":14,"h":8.5,"x":-15.4,"z":-0.5,"level":"table","stack":0,"body":"#d8cfb8","scr":"green","kb":1},{"id":"kaypro2","name":"Kaypro 2","cat":"luggable","w":18,"d":13,"h":8,"x":16.3,"z":-0.5,"level":"table","stack":0,"body":"#7d8a96","scr":"green","kb":1},{"id":"ibm5155","name":"IBM Portable 5155","cat":"luggable","w":19.5,"d":14,"h":7.7,"x":44.5,"z":-0.5,"level":"table","stack":0,"body":"#d6d2c6","scr":"amber","kb":1},{"id":"kaypro1","name":"Kaypro 1","cat":"luggable","w":18,"d":13,"h":8,"x":76.25,"z":-0.5,"level":"table","stack":0,"body":"#7d8a96","scr":"green","kb":1},{"id":"souvenir","name":"ImageWriter (souvenirs)","cat":"printer","w":16.2,"d":11.8,"h":4.8,"x":76.5,"z":-3.5,"level":"shelf","stack":0,"body":"#d9cfb6","scr":null,"kb":0},{"id":"superpet","name":"Commodore SuperPET","cat":"desktop","w":16.5,"d":18.5,"h":14.2,"x":-78.15,"z":-5.5,"level":"shelf","stack":0,"body":"#e8e0c8","scr":null,"kb":0},{"id":"cbm8050","name":"Commodore 8050 drive","cat":"drive","w":15,"d":14.5,"h":7,"x":-59.8,"z":-5.5,"level":"shelf","stack":0,"body":"#e0d8c2","scr":null,"kb":0},{"id":"econopet","name":"EconoPET board (on display)","cat":"display","w":10,"d":5,"h":8.5,"x":-59.8,"z":-5.5,"level":"shelf","stack":7,"body":null,"scr":null,"kb":0},{"id":"compaq3","name":"Compaq Portable III","cat":"luggable","w":16.1,"d":7.5,"h":9.7,"x":-41.65,"z":-3.5,"level":"shelf","stack":0,"body":"#c9c2b0","scr":"plasma","kb":1},{"id":"macport","name":"Macintosh Portable","cat":"laptop","w":15.25,"d":14.43,"h":4.05,"x":-16.9,"z":-5.5,"level":"shelf","stack":0,"body":"#d7d3c7","scr":"lcd","kb":0},{"id":"bondwell200","name":"Bondwell B200","cat":"laptop","w":12.2,"d":12,"h":2.5,"x":1.35,"z":-5.5,"level":"shelf","stack":0,"body":"#d4d1c8","scr":"lcd","kb":0},{"id":"minisport","name":"Zenith MinisPort","cat":"laptop","w":12.5,"d":9.8,"h":1.29,"x":18.2,"z":-5.5,"level":"shelf","stack":0,"body":"#2e2f31","scr":"lcd","kb":0},{"id":"cbm286","name":"Commodore C286-LT","cat":"laptop","w":12.3,"d":10,"h":2,"x":41.05,"z":-5.5,"level":"shelf","stack":0,"body":"#cfcfca","scr":"bluelcd","kb":0},{"id":"bondwell310","name":"Bondwell B310SX","cat":"laptop","w":13,"d":12.5,"h":2.1,"x":57.6,"z":-5.5,"level":"shelf","stack":0,"body":"#2a2a2a","scr":"stn","kb":0},{"id":"compaq2","name":"Compaq Portable II (Dial-a-Museum)","cat":"luggable","w":17.7,"d":12,"h":7.5,"x":0,"z":-50,"level":"racktop","stack":0,"body":"#d2cab6","scr":"amber","kb":1},{"id":"phone1","name":"Phone 1007 (table 1)","cat":"phone","style":"m9216","w":7.5,"d":7.5,"h":3.5,"x":-58.95,"z":10.25,"level":"table","stack":0,"body":"#2a2a2a","scr":null,"kb":0},{"id":"phone2","name":"Phone 1008 (table 2)","cat":"phone","style":"m9216","w":7.5,"d":7.5,"h":3.5,"x":0.95,"z":10.25,"level":"table","stack":0,"body":"#2a2a2a","scr":null,"kb":0},{"id":"phone3","name":"Phone 1009 (table 3)","cat":"phone","style":"m9216","w":7.5,"d":7.5,"h":3.5,"x":60.75,"z":10.25,"level":"table","stack":0,"body":"#2a2a2a","scr":null,"kb":0},{"id":"logprinter","name":"ImageWriter (live log)","cat":"printer","w":16.2,"d":11.8,"h":4.8,"x":0,"z":-54,"level":"racktop","stack":7.5,"body":"#d9cfb6","scr":null,"kb":0},{"id":"cisco3745","name":"Cisco 3745 (CME)","cat":"network","w":17.25,"d":15,"h":5.25,"x":0,"z":-40,"level":"cart","stack":0,"body":null,"scr":null,"kb":0},{"id":"cisco2621","name":"Cisco 2621 (modem bank)","cat":"network","w":17.5,"d":11.8,"h":1.69,"x":0,"z":-40,"level":"cart","stack":8.75,"body":null,"scr":null,"kb":0},{"id":"vg248","name":"Cisco VG248","cat":"network","w":17.25,"d":16.75,"h":1.75,"x":0,"z":-40,"level":"cart","stack":10.5,"body":null,"scr":null,"kb":0},{"id":"breakout1","name":"RJ-11 breakout 1-24","cat":"network","w":17.3,"d":3,"h":1.75,"x":0,"z":-40,"level":"cart","stack":12.25,"body":null,"scr":null,"kb":0},{"id":"breakout2","name":"RJ-11 breakout 25-48","cat":"network","w":17.3,"d":3,"h":1.75,"x":0,"z":-40,"level":"cart","stack":14,"body":null,"scr":null,"kb":0},{"id":"switch","name":"Ethernet switch","cat":"network","w":17.3,"d":8,"h":1.75,"x":0,"z":-40,"level":"cart","stack":15.75,"body":null,"scr":null,"kb":0},{"id":"pdu","name":"Rack power strip","cat":"network","w":17.3,"d":6,"h":1.75,"x":0,"z":-40,"level":"cart","stack":17.5,"body":null,"scr":null,"kb":0},{"id":"pm25","name":"Livingston PortMaster PM-25","cat":"network","w":17,"d":12,"h":3.5,"x":0,"z":-40,"level":"cart","stack":5.25,"body":"#c8c6c0","scr":null,"kb":0}];
-var INFO = {"dial":"1019","items":{"superpet":{"name":"Commodore SuperPET","year":1981,"specs":"6502 + 6809 1 MHz · RAM 96K · CRT 12″ · 2 × 5¼″ 500K (8050)","about":"Before portables: the all-in-one desktop the luggables grew out of.","about_fr":"Avant les portatifs : l'ordinateur de bureau tout-en-un dont sont issus les transportables.","price":"1 995 $ US (annoncé · announced)","canada":"Designed with the University of Waterloo, Ontario.","canada_fr":"Conçu avec l’Université de Waterloo (Ontario).","clip":"9"},"osborne1":{"name":"Osborne 1","year":1981,"specs":"Z80 4 MHz · RAM 64K · CRT 5″ · 2 × 5¼″ 91K","about":"The first commercially successful portable computer.","about_fr":"Le premier ordinateur portatif à connaître un succès commercial.","price":"1 795 $ US","weight":"24.5","clip":"1"},"kaypro2":{"name":"Kaypro 2","year":1984,"specs":"Z80A 4 MHz · RAM 64K · CRT 9″ · 2 × 5¼″ 191K","about":"The 1984 Kaypro 2: a faster Z80, half-height drives, and CP/M in a metal case.","about_fr":"Le Kaypro 2 de 1984 : un Z80 plus rapide, des lecteurs demi-hauteur et CP/M dans un boîtier de métal.","price":"1 295 $ US","weight":"26 ?","clip":"2"},"kaypro1":{"name":"Kaypro 1","year":1985,"specs":"Z80A 4 MHz · RAM 64K · CRT 9″ · 2 × 5¼″ 390K","about":"The last CP/M Kaypro: $995 in 1985.","about_fr":"Le dernier Kaypro sous CP/M : 995 $ en 1985.","price":"995 $ US","weight":"26 ?","clip":"2"},"hyperion":{"name":"Dynalogic Hyperion","year":1983,"specs":"8088 4.77 MHz · RAM 256K · CRT 7″ · 2 × 5¼″ 320K","about":"An early IBM PC-compatible portable, designed and built in Ottawa.","about_fr":"L'un des premiers portatifs compatibles IBM PC, conçu et fabriqué à Ottawa.","price":"3 395 $ US","weight":"20-21","canada":"Sold by Bytec, another Ottawa company.","canada_fr":"Distribué par Bytec, une autre entreprise d’Ottawa.","clip":"3"},"compaq1":{"name":"Compaq Portable","year":1983,"specs":"8088 4.77 MHz · RAM 128K · CRT 9″ · 2 × 5¼″ 360K","about":"The portable that made 'IBM compatible' mean something.","about_fr":"Le portatif qui a donné tout son sens à « compatible IBM ».","price":"2 995 $ US","weight":"28","clip":"4"},"ibm5155":{"name":"IBM Portable PC","year":1984,"specs":"8088 4.77 MHz · RAM 256K · CRT 9″ · 2 × 5¼″ 360K","about":"IBM's answer to the Compaq: an XT in a suitcase.","about_fr":"La réponse d'IBM au Compaq : un XT dans une valise.","price":"2 795 $ US","weight":"30","clip":"4"},"compaq3":{"name":"Compaq Portable III","year":1987,"specs":"80286 12 MHz · RAM 640K · Plasma 10″ · 1 × 5¼″ 1.2 MB + HD 40 MB","about":"A 12 MHz 286 with an amber gas-plasma screen.","about_fr":"Un 286 à 12 MHz avec un écran plasma ambre.","price":"3 999–5 799 $ US","weight":"18-20","clip":"5"},"macport":{"name":"Macintosh Portable","year":1989,"specs":"68000 16 MHz · RAM 1 MB · LCD 9.8″ · 1 × 3½″ 1.44 MB","about":"Apple's first battery-powered Macintosh.","about_fr":"Le premier Macintosh fonctionnant sur batterie.","price":"5 799 $ US","weight":"15.8","clip":"6"},"minisport":{"name":"Zenith MinisPort","year":1989,"specs":"80C88 8 MHz · RAM 1 MB · LCD CGA · 1 × 2″ 720K","about":"A 6-pound laptop with DOS in ROM and 2-inch floppies.","about_fr":"Un portatif de 6 livres avec DOS en ROM et des disquettes de 2 pouces.","price":"1 999 $ US","weight":"5.9","clip":"7"},"bondwell200":{"name":"Bondwell B200","year":1989,"specs":"80C88 8 MHz · RAM 640K · LCD 10.5″ · 2 × 3½″ 720K","about":"An XT-class laptop from Bondwell of Hong Kong.","about_fr":"Un portatif de classe XT signé Bondwell, de Hong Kong.","price":"1 295 $ US","weight":"7-8","clip":"7"},"bondwell310":{"name":"Bondwell B310SX","year":1991,"specs":"386SX 16 MHz · RAM 1 MB · LCD VGA · 1 × 3½″ 1.44 MB + HD 80 MB","about":"A 386SX laptop from Bondwell.","about_fr":"Un portatif 386SX de Bondwell.","price":"2 100–2 300 $ US","weight":"8.5","clip":"8"},"cbm286":{"name":"Commodore C286-LT","year":1990,"specs":"80C286 12.5 MHz · RAM 1 MB · LCD 9.75″ · 1 × 3½″ 1.44 MB + HD 20 MB","about":"Yes, Commodore made PC-compatible laptops.","about_fr":"Eh oui, Commodore a fait des portatifs compatibles PC.","weight":"?","clip":"8"},"econopet":{"name":"EconoPET 40/8096","kind":"gear","about":"An open-source replacement mainboard for Commodore PET and CBM computers, like the SuperPET beside it. It runs the machine and emulates its disk drives.","about_fr":"Une carte mère libre qui remplace celle des Commodore PET et CBM, comme le SuperPET à côté. Elle fait tourner la machine et émule ses lecteurs de disquettes.","credit":"Designed by Daniel Lehenbauer","url":"https://dlehenbauer.github.io/econopet/40-8096-A.html"},"compaq2":{"name":"Compaq Portable II","year":1986,"specs":"80286 6/8 MHz · RAM 256K · CRT 9″ · 1–2 × 5¼″ 360K","price":"3 499–4 999 $ US","weight":"23.6","about":"Not a guest book machine: it runs Dial-a-Museum, the voice menu you reach from any phone on the booth.","about_fr":"Pas une machine du livre d'or : elle fait tourner le Musée au bout du fil, le menu vocal qu'on joint depuis les téléphones du kiosque.","clip":"5"},"cbm8050":{"name":"Commodore 8050 drive","kind":"gear","specs":"2 × 5¼″ 500K · IEEE-488","about":"The SuperPET's dual floppy drive.","about_fr":"Le double lecteur de disquettes du SuperPET."},"souvenir":{"name":"Apple ImageWriter (souvenirs)","year":1983,"kind":"gear","about":"Prints a souvenir page from the guest book.","about_fr":"Imprime une page souvenir du livre d'or."},"logprinter":{"name":"Apple ImageWriter (live log)","year":1983,"kind":"gear","about":"Prints every guest book entry as it arrives.","about_fr":"Imprime chaque entrée du livre d'or à son arrivée."},"cisco3745":{"name":"Cisco 3745 (CallManager Express)","kind":"gear","about":"The phone switch: every extension on the booth rings through it.","about_fr":"Le commutateur téléphonique : chaque poste du kiosque passe par lui."},"cisco2621":{"name":"Cisco 2621 (modem bank)","kind":"gear","about":"16 analog modems (NM-16AM) that answer the vintage machines' calls.","about_fr":"16 modems analogiques (NM-16AM) qui répondent aux appels des machines d'époque."},"vg248":{"name":"Cisco VG248","kind":"gear","about":"48 analog phone lines for the phones and the machines' modems.","about_fr":"48 lignes analogiques pour les téléphones et les modems des machines."},"pm25":{"name":"Livingston PortMaster PM-25","kind":"gear","about":"Serial ports for the machines wired straight in, and the printers.","about_fr":"Ports série pour les machines branchées en direct et les imprimantes."},"switch":{"name":"Ethernet switch","kind":"gear","about":"Ties the rack together.","about_fr":"Relie le rack."},"pdu":{"name":"Rack power strip","kind":"gear","about":"One plug to the wall for the whole rack.","about_fr":"Une seule prise murale pour tout le rack."},"breakout1":{"name":"RJ-11 breakout 1-24","kind":"gear","about":"Phone jacks for VG248 lines 1-24.","about_fr":"Prises téléphoniques des lignes 1-24 du VG248."},"breakout2":{"name":"RJ-11 breakout 25-48","kind":"gear","about":"Phone jacks for VG248 lines 25-48.","about_fr":"Prises téléphoniques des lignes 25-48 du VG248."},"phone1":{"name":"Nortel Meridian M9216 · ext. 1007","kind":"gear","about":"Pick it up and dial 1019 for Dial-a-Museum, or 1024 to hear a modem.","about_fr":"Décrochez et composez le 1019 pour le Musée au bout du fil, ou le 1024 pour entendre un modem.","canada":"Aastra, Concord (Ontario)","canada_fr":""},"phone2":{"name":"Nortel Meridian M9216 · ext. 1008","kind":"gear","about":"Pick it up and dial 1019 for Dial-a-Museum, or 1024 to hear a modem.","about_fr":"Décrochez et composez le 1019 pour le Musée au bout du fil, ou le 1024 pour entendre un modem.","canada":"Aastra, Concord (Ontario)","canada_fr":""},"phone3":{"name":"Nortel Meridian M9216 · ext. 1009","kind":"gear","about":"Pick it up and dial 1019 for Dial-a-Museum, or 1024 to hear a modem.","about_fr":"Décrochez et composez le 1019 pour le Musée au bout du fil, ou le 1024 pour entendre un modem.","canada":"Aastra, Concord (Ontario)","canada_fr":""}}} || { dial: "1019", items: {} };   // machine cards (layout/machines-json.py)
+var INFO = {"dial":"1019","items":{"superpet":{"name":"Commodore SuperPET","year":1981,"specs":"6502 + 6809 1 MHz · RAM 96K · CRT 12″ · 2 × 5¼″ 500K (8050)","about":"Before portables: the Commodore PET, the kind of all-in-one desktop the luggables grew out of.","about_fr":"Avant les portatifs : le Commodore PET, le genre d'ordinateur de bureau tout-en-un dont sont issus les transportables.","price":"1 995 $ US (annoncé · announced)","canada":"Designed with the University of Waterloo, Ontario.","canada_fr":"Conçu avec l’Université de Waterloo (Ontario).","clip":"9"},"osborne1":{"name":"Osborne 1","year":1981,"specs":"Z80 4 MHz · RAM 64K · CRT 5″ · 2 × 5¼″ 91K","about":"The first commercially successful portable computer.","about_fr":"Le premier ordinateur portatif à connaître un succès commercial.","price":"1 795 $ US","weight":"24.5","clip":"1"},"kaypro2":{"name":"Kaypro 2","year":1984,"specs":"Z80A 4 MHz · RAM 64K · CRT 9″ · 2 × 5¼″ 191K","about":"The 1984 Kaypro 2: a faster Z80, half-height drives, and CP/M in a metal case.","about_fr":"Le Kaypro 2 de 1984 : un Z80 plus rapide, des lecteurs demi-hauteur et CP/M dans un boîtier de métal.","price":"1 295 $ US","weight":"26 ?","clip":"2"},"kaypro1":{"name":"Kaypro 1","year":1985,"specs":"Z80A 4 MHz · RAM 64K · CRT 9″ · 2 × 5¼″ 390K","about":"The last CP/M Kaypro: $995 in 1985.","about_fr":"Le dernier Kaypro sous CP/M : 995 $ en 1985.","price":"995 $ US","weight":"26 ?","clip":"2"},"hyperion":{"name":"Dynalogic Hyperion","year":1983,"specs":"8088 4.77 MHz · RAM 256K · CRT 7″ · 2 × 5¼″ 320K","about":"An early IBM PC-compatible portable, designed and built in Ottawa.","about_fr":"L'un des premiers portatifs compatibles IBM PC, conçu et fabriqué à Ottawa.","price":"3 395 $ US","weight":"20-21","canada":"Sold by Bytec, another Ottawa company.","canada_fr":"Distribué par Bytec, une autre entreprise d’Ottawa.","clip":"3"},"compaq1":{"name":"Compaq Portable","year":1983,"specs":"8088 4.77 MHz · RAM 128K · CRT 9″ · 2 × 5¼″ 360K","about":"The portable that made 'IBM compatible' mean something.","about_fr":"Le portatif qui a donné tout son sens à « compatible IBM ».","price":"2 995 $ US","weight":"28","clip":"4"},"ibm5155":{"name":"IBM Portable PC","year":1984,"specs":"8088 4.77 MHz · RAM 256K · CRT 9″ · 2 × 5¼″ 360K","about":"IBM's answer to the Compaq: an XT in a suitcase.","about_fr":"La réponse d'IBM au Compaq : un XT dans une valise.","price":"2 795 $ US","weight":"30","clip":"4"},"compaq3":{"name":"Compaq Portable III","year":1987,"specs":"80286 12 MHz · RAM 640K · Plasma 10″ · 1 × 5¼″ 1.2 MB + HD 40 MB","about":"A 12 MHz 286 with an amber gas-plasma screen.","about_fr":"Un 286 à 12 MHz avec un écran plasma ambre.","price":"3 999–5 799 $ US","weight":"18-20","clip":"5"},"macport":{"name":"Macintosh Portable","year":1989,"specs":"68000 16 MHz · RAM 1 MB · LCD 9.8″ · 1 × 3½″ 1.44 MB","about":"Apple's first battery-powered Macintosh.","about_fr":"Le premier Macintosh fonctionnant sur batterie.","price":"5 799 $ US","weight":"15.8","clip":"6"},"minisport":{"name":"Zenith MinisPort","year":1989,"specs":"80C88 8 MHz · RAM 1 MB · LCD CGA · 1 × 2″ 720K","about":"A 6-pound laptop with DOS in ROM and 2-inch floppies.","about_fr":"Un portatif de 6 livres avec DOS en ROM et des disquettes de 2 pouces.","price":"1 999 $ US","weight":"5.9","clip":"7"},"bondwell200":{"name":"Bondwell B200","year":1989,"specs":"80C88 8 MHz · RAM 640K · LCD 10.5″ · 2 × 3½″ 720K","about":"An XT-class laptop from Bondwell of Hong Kong.","about_fr":"Un portatif de classe XT signé Bondwell, de Hong Kong.","price":"1 295 $ US","weight":"7-8","clip":"7"},"bondwell310":{"name":"Bondwell B310SX","year":1991,"specs":"386SX 16 MHz · RAM 1 MB · LCD VGA · 1 × 3½″ 1.44 MB + HD 80 MB","about":"A 386SX laptop from Bondwell.","about_fr":"Un portatif 386SX de Bondwell.","price":"2 100–2 300 $ US","weight":"8.5","clip":"8"},"cbm286":{"name":"Commodore C286-LT","year":1990,"specs":"80C286 12.5 MHz · RAM 1 MB · LCD 9.75″ · 1 × 3½″ 1.44 MB + HD 20 MB","about":"Yes, Commodore made PC-compatible laptops.","about_fr":"Eh oui, Commodore a fait des portatifs compatibles PC.","weight":"?","clip":"8"},"econopet":{"name":"EconoPET 40/8096","kind":"gear","about":"An open-source replacement mainboard for Commodore PET and CBM computers, like the SuperPET beside it. It runs the machine and emulates its disk drives.","about_fr":"Une carte mère libre qui remplace celle des Commodore PET et CBM, comme le SuperPET à côté. Elle fait tourner la machine et émule ses lecteurs de disquettes.","credit":"Designed by Daniel Lehenbauer","url":"https://dlehenbauer.github.io/econopet/40-8096-A.html"},"compaq2":{"name":"Compaq Portable II","year":1986,"specs":"80286 6/8 MHz · RAM 256K · CRT 9″ · 1–2 × 5¼″ 360K","price":"3 499–4 999 $ US","weight":"23.6","about":"Not a guest book machine: it runs Dial-a-Museum, the voice menu you reach from any phone on the booth.","about_fr":"Pas une machine du livre d'or : elle fait tourner le Musée au bout du fil, le menu vocal qu'on joint depuis les téléphones du kiosque.","clip":"5"},"cbm8050":{"name":"Commodore 8050 drive","kind":"gear","specs":"2 × 5¼″ 500K · IEEE-488","about":"The SuperPET's dual floppy drive.","about_fr":"Le double lecteur de disquettes du SuperPET."},"souvenir":{"name":"Apple ImageWriter (souvenirs)","year":1983,"kind":"gear","about":"Prints a souvenir page from the guest book.","about_fr":"Imprime une page souvenir du livre d'or."},"logprinter":{"name":"Apple ImageWriter (live log)","year":1983,"kind":"gear","about":"Prints every guest book entry as it arrives.","about_fr":"Imprime chaque entrée du livre d'or à son arrivée."},"cisco3745":{"name":"Cisco 3745 (CallManager Express)","kind":"gear","about":"The phone switch: every extension on the booth rings through it.","about_fr":"Le commutateur téléphonique : chaque poste du kiosque passe par lui."},"cisco2621":{"name":"Cisco 2621 (modem bank)","kind":"gear","about":"16 analog modems (NM-16AM) that answer the vintage machines' calls.","about_fr":"16 modems analogiques (NM-16AM) qui répondent aux appels des machines d'époque."},"vg248":{"name":"Cisco VG248","kind":"gear","about":"48 analog phone lines for the phones and the machines' modems.","about_fr":"48 lignes analogiques pour les téléphones et les modems des machines."},"pm25":{"name":"Livingston PortMaster PM-25","kind":"gear","about":"Serial ports for the machines wired straight in, and the printers.","about_fr":"Ports série pour les machines branchées en direct et les imprimantes."},"switch":{"name":"Ethernet switch","kind":"gear","about":"Ties the rack together.","about_fr":"Relie le rack."},"pdu":{"name":"Rack power strip","kind":"gear","about":"One plug to the wall for the whole rack.","about_fr":"Une seule prise murale pour tout le rack."},"breakout1":{"name":"RJ-11 breakout 1-24","kind":"gear","about":"Phone jacks for VG248 lines 1-24.","about_fr":"Prises téléphoniques des lignes 1-24 du VG248."},"breakout2":{"name":"RJ-11 breakout 25-48","kind":"gear","about":"Phone jacks for VG248 lines 25-48.","about_fr":"Prises téléphoniques des lignes 25-48 du VG248."},"phone1":{"name":"Nortel Meridian M9216 · ext. 1007","kind":"gear","about":"Pick it up and dial 1019 for Dial-a-Museum, or 1024 to hear a modem.","about_fr":"Décrochez et composez le 1019 pour le Musée au bout du fil, ou le 1024 pour entendre un modem.","canada":"Aastra, Concord (Ontario)","canada_fr":""},"phone2":{"name":"Nortel Meridian M9216 · ext. 1008","kind":"gear","about":"Pick it up and dial 1019 for Dial-a-Museum, or 1024 to hear a modem.","about_fr":"Décrochez et composez le 1019 pour le Musée au bout du fil, ou le 1024 pour entendre un modem.","canada":"Aastra, Concord (Ontario)","canada_fr":""},"phone3":{"name":"Nortel Meridian M9216 · ext. 1009","kind":"gear","about":"Pick it up and dial 1019 for Dial-a-Museum, or 1024 to hear a modem.","about_fr":"Décrochez et composez le 1019 pour le Musée au bout du fil, ou le 1024 pour entendre un modem.","canada":"Aastra, Concord (Ontario)","canada_fr":""}}} || { dial: "1019", items: {} };   // machine cards (layout/machines-json.py)
 // HOOK: optional callbacks the game (layout/game/*.js) fills in; the walk-through works without them.
 // GEAR: booth 29 machines and booth 10 stations kept as their own groups (hide, move, carry).
 var HOOK = {}, GEAR = {};
@@ -1608,9 +1609,8 @@ D.chairs.forEach(function (c) {
   chair(X(c[0] + c[2] / 2), Z(c[1] + c[3] / 2), c[4], c[5]).n = c[6] === null ? null : String(c[6]);
 });
 
-// power panels (ceiling-fed, red)
-D.power.forEach(function (p) { var cx = X(p[0] + 8), cz = Z(p[1] + 8);
-  box(14, 40, 10, M(0xc8423f), cx, 0, cz); box(2, WALL - 40, 2, M(0x555a56), cx, 40, cz); solid(cx - 7, cz - 5, cx + 7, cz + 5); });
+// power panels: built after the detail helpers (see "power stations"); their collision is here
+D.power.forEach(function (p) { var cx = X(p[0] + 8), cz = Z(p[1] + 8); solid(cx - 7, cz - 5, cx + 7, cz + 5); });
 
 // ---------------------------------------------------------------- props
 // Faces: each prop group is built facing +z (the visitor) and rotated to its booth's aisle; local +x is the
@@ -1961,7 +1961,8 @@ var WARES = {
     for (var i = 0; i < 6; i++) vb(g, 0.4, 0.3, 0.2, i % 2 ? 0xd83a2a : 0x2fbf5f, 8.6 + i * 1, 1.2, 1.05);
     joy(g, 11, 8); sign(g, 22, 4, "Old + new", "", 10);
   }, function (g) {
-    apple2(g, -21, 0, "green"); comp(g, 3, 6, 15, 8, 2.6, 0xc8c2b4, 0x2a2a2a); mon(g, 3, -6, 13, 12, 13, C.dk, "atari"); a500(g, 20, 4); vb(g, 9, 3, 9, 0xbcb6a4, 21, 0, -8);
+    comp(g, -14, 6, 18, 8, 2.6, 0xd8d0bc, 0x4a4a4a); mon(g, -14, -6, 14, 13, 14, 0x8a7a64, "c64");   // a C128 on a 1702
+    drv(g, 4, -5, 9.5, 3, 10, 0xd8cdb2); sign(g, 19, 4, "Collector bundles", "", 10);           // a 1541; refurbished bundles for sale
     front(g, "One Maybe Two Retro", "advice · repairs · sales", "#20303a", "#f2efe4");
   }],
   9: [function (g) { tower(g, -6, 0, C.beige, "dos"); speaker(g, 19, -6); speaker(g, -25, -6); },   // unknown: kept plain
@@ -2518,35 +2519,72 @@ D.storage.forEach(function (r) { var x0 = X(r[0]), z0 = Z(r[1]), x1 = X(r[0] + r
 // Ported from the booth view (booth-3d.html): its builders, turned to face the west aisle.
 // Booth x (left to right as a visitor sees it) runs north to south, booth z (toward the
 // visitor) points west. PLAN gives positions; DET29 the detail fields the plan export drops.
-var DET29 = {
-  osborne1: { tilt: 12, kb: { w: 20, d: 8, h: 2, keys: "#e6dcc4" }, scr: { x: .4, y: .4, w: .2, h: .45, t: "teal" },
-    face: { bezel: "#b09c76", drives: [{ x: .05, y: .1, w: .28, h: .4 }, { x: .67, y: .1, w: .28, h: .4 }],
-            pockets: [{ x: .05, y: .6, w: .28, h: .3 }, { x: .67, y: .6, w: .28, h: .3 }], knobs: [{ x: .5, y: .2 }], stand: true } },
-  hyperion: { kb: { w: 17, d: 7, h: 1.5, keys: "#e2ded4" }, scr: { x: .05, y: .22, w: .4, h: .68, t: "amber" },
-    face: { bezel: "#c3bfb5", drives: [{ x: .55, y: .15, w: .4, h: .33 }, { x: .55, y: .52, w: .4, h: .33 }], fkeys: { x: .05, y: .06, w: .4, h: .1, n: 5 }, handle: "top",
-      badge: { x: .465, y: .44, w: .07, h: .13, c: "#e8941c" }, leds: [{ x: .5, y: .505, c: "#ffb347" }] } },   // the amber power button between screen and drives
-  compaq1: { kb: { w: 19, d: 7.5, h: 1.5, keys: "#cbc3b0" }, scr: { x: .04, y: .08, w: .48, h: .84, t: "green" },
-    face: { bezel: "#4a4540", drives: [{ x: .58, y: .08, w: .38, h: .4 }, { x: .58, y: .52, w: .38, h: .4 }], badge: { x: .78, y: .935, w: .16, h: .04, c: "#c4c8cc" }, handle: "back", handleC: "#1d1d1d", vents: true } },
-  kaypro2: { kb: { w: 17.5, d: 7, h: 2, c: "#7d8a96", keys: "#d9d2c0" }, scr: { x: .05, y: .12, w: .5, h: .78, t: "green" },
-    face: { bezel: "#3c4650", drives: [{ x: .62, y: .15, w: .33, h: .3 }, { x: .62, y: .52, w: .33, h: .3 }], badge: { x: .7, y: .88, w: .22, h: .06, c: "#d9d2c0" }, vents: true } },
-  ibm5155: { kb: { w: 19, d: 7.5, h: 1.5, keys: "#c9c3b3" }, scr: { x: .08, y: .08, w: .45, h: .84, t: "amber" },
-    face: { bezel: "#cbc6b8", drives: [{ x: .6, y: .25, w: .32, h: .22 }, { x: .6, y: .52, w: .32, h: .22 }], badge: { x: .62, y: .82, w: .14, h: .08, c: "#1f4e9a" }, handle: "back", vents: true } },
-  kaypro1: { kb: { w: 17.5, d: 7, h: 2, c: "#7d8a96", keys: "#d9d2c0" }, scr: { x: .05, y: .12, w: .5, h: .78, t: "green" },
-    face: { bezel: "#3c4650", drives: [{ x: .66, y: .1, w: .13, h: .8 }, { x: .82, y: .1, w: .13, h: .8 }], vents: true } },
-  cbm8050: { face: { bezel: "#2d2a26", drives: [{ x: .06, y: .2, w: .4, h: .5, c: "#3a3733" }, { x: .54, y: .2, w: .4, h: .5, c: "#3a3733" }],
-    leds: [{ x: .44, y: .8, c: "#e04030" }, { x: .56, y: .8, c: "#58e07a" }], badge: { x: .06, y: .82, w: .2, h: .06, c: "#b8b2a2" } } },
-  compaq3: { kb: { w: 15.5, d: 7, h: 1.5 }, raised: { w: 11, h: 7.5, y: .5, tilt: 15, t: "plasma" },
-    face: { bezel: "#c0b9a6", drives: [{ x: .62, y: .08, w: .3, h: .16 }], handle: "top" } },
-  macport: { lid: { t: "lcd", h: 7.2, angle: 12, c: "#d7d3c7", bezel: "#cfcbbf", deck: "#d0ccc0", keys: "#e2ded3", latch: true }, trackball: "right", sideSlots: "right" },
-  bondwell200: { lid: { t: "lcd", h: 8.8, angle: 18, keys: "#4a4d50", deck: "#c8c5bc", bezel: "#bfbcb3" }, sideSlots: "right2" },
-  minisport: { lid: { t: "lcd", h: 6.6, angle: 16 }, sideSlots: "right" },
-  cbm286: { lid: { t: "bluelcd", h: 8.6, angle: 16, bezel: "#4a4c4e", keys: "#4a4c4e", deck: "#c4c4bf" }, sideSlots: "right" },
-  bondwell310: { lid: { t: "stn", h: 9.4, angle: 16 }, sideSlots: "right" },
-  compaq2: { kb: { w: 17, d: 7, h: 1.5, keys: "#cbc3b0" }, scr: { x: .04, y: .08, w: .52, h: .84, t: "amber" },
-    face: { bezel: "#3d3a36", drives: [{ x: .62, y: .15, w: .34, h: .3 }, { x: .62, y: .52, w: .34, h: .3 }], badge: { x: .78, y: .9, w: .16, h: .05, c: "#c4c8cc" }, handle: "back", handleC: "#1d1d1d", vents: true } },
-  cisco3745: { panel: "3745", ears: true }, cisco2621: { panel: "2621", ears: true }, vg248: { panel: "vg", ears: true },
+var DET29 = {   // fractions of the front face from its bottom-left; checked against photos (MODELS-REVIEW.md)
+  osborne1: { tilt: 12, body: "#cfc6a8", kb: { w: 20, d: 9, h: 2, c: "#cfc6a8", deck: "#2e3648", keys: "#b5ab95", mod: "#9d9480" },
+    scr: { x: .41, y: .44, w: .19, h: .3, t: "teal" },
+    face: { bezel: "#2e3648", inset: [.025, .04, .975, .96], latches: "top", stand: true,   // navy front: drives beside the CRT, pockets under them
+      drives: [{ x: .04, y: .47, w: .33, h: .36, c: "#1f2533", l: "tab" }, { x: .63, y: .47, w: .33, h: .36, c: "#1f2533", l: "tab" }],
+      pockets: [{ x: .05, y: .24, w: .31, h: .14 }, { x: .64, y: .24, w: .31, h: .14 }],
+      rects: [{ x: .41, y: .8, w: .19, h: .09, c: "#1a1f2b" }, { x: .41, y: .3, w: .19, h: .08, c: "#1a1f2b" }, { x: .08, y: .06, w: .84, h: .1, c: "#20263a" }],
+      knobs: [{ x: .45, y: .22, r: .3 }, { x: .55, y: .22, r: .3 }] } },
+  hyperion: { body: "#d6cfbf", kb: { w: 17, d: 7.5, h: 1.5, keys: "#a39c8e", mod: "#e2ddd0", pad: "#a39c8e", frow: true },
+    scr: { x: .08, y: .2, w: .3, h: .6, t: "amber", sur: "#3a3632", m: [1.12, 1.12] },
+    face: { bezel: "#d6cfbf", inset: [.01, .1, .99, .98], handle: "trough",
+      rects: [{ x: .035, y: .13, w: .385, h: .8, c: "#b9b2a4" }, { x: .615, y: .13, w: .36, h: .8, c: "#cbc4b4" }, { x: .01, y: 0, w: .98, h: .09, c: "#4a453e" }],   // screen surround, drive panel, keyboard garage
+      drives: [{ x: .63, y: .53, w: .33, h: .32, c: "#d4cec2", l: "door", lc: "#d9c89a" }, { x: .63, y: .17, w: .33, h: .32, c: "#d4cec2", l: "door", lc: "#d9c89a" }],
+      knobs: [{ x: .465, y: .76, r: .5, c: "#e2d8b8" }, { x: .465, y: .57, r: .5, c: "#e2d8b8" }],
+      badge: { x: .44, y: .3, w: .05, h: .1, c: "#e8941c", round: .55 }, leds: [{ x: .465, y: .35, c: "#ffb347", r: .3 }] } },   // the amber power button under the two knobs
+  compaq1: { tilt: 4, kb: { w: 19, d: 7.5, h: 1.5, c: "#d9d2c4", deck: "#5a5650", keys: "#e6dfcc", mod: "#b8b2a4", fn: 2 }, scr: { x: .19, y: .25, w: .33, h: .56, t: "green" },
+    face: { bezel: "#47403a", inset: [.04, .14, .96, .86], hood: .9, handle: "back", handleC: "#1d1d1d", door: "right",   // two full-height drives standing on end
+      drives: [{ x: .58, y: .2, w: .15, h: .6, c: "#2e2c2a" }, { x: .76, y: .2, w: .15, h: .6, c: "#2e2c2a" }],
+      rects: [{ x: .07, y: .38, w: .09, h: .24, c: "#3a3430" }], knobs: [{ x: .115, y: .3 }], badge: { x: .07, y: .68, w: .09, h: .06, c: "#c9b98a" } } },
+  kaypro2: { body: "#a3a8ac", kb: { w: 17.5, d: 7, h: 2, c: "#b8b9b4", keys: "#1e1e1e", mod: "#1e1e1e", pad: "#4a90c8", band: "#2b86c9" },
+    scr: { x: .11, y: .17, w: .37, h: .66, t: "green", sur: "#0d0d0d", m: [1.27, 1.3] },
+    face: { bezel: "#1c1c1c", inset: [.03, .04, .97, .94], hood: .9, latches: "side", vents: true,
+      drives: [{ x: .65, y: .56, w: .3, h: .2, c: "#111111", lc: "#c8c8c8" }, { x: .65, y: .2, w: .3, h: .2, c: "#111111", lc: "#c8c8c8" }],
+      leds: [{ x: .565, y: .47, c: "#ff3a2a", lit: 1 }] } },   // lit: a plain colour (no glow mesh of its own)
+  ibm5155: { body: "#ddd8cc", kb: { w: 18.5, d: 8, h: 1.5, c: "#d9d5c9", deck: "#9d998f", keys: "#e8e5dc", mod: "#c9c5ba", fn: 2, badge: true },
+    scr: { x: .14, y: .22, w: .32, h: .62, t: "amber", sur: "#2a2420", m: [1.3, 1.25] },
+    face: { bezel: "#cfc9ba", inset: [.03, .03, .97, .97], hood: .8, bumpers: true, handle: "back",
+      rects: [{ x: .6, y: .12, w: .32, h: .78, c: "#e3dfd4" }],
+      drives: [{ x: .62, y: .6, w: .28, h: .15, c: "#1a1a1a" }, { x: .62, y: .4, w: .28, h: .15, c: "#1a1a1a" }],
+      knobs: [{ x: .55, y: .78, r: .28 }, { x: .55, y: .63, r: .28 }, { x: .55, y: .36, r: .2, c: "#111111" }] } },
+  kaypro1: { body: "#9a9fa3", kb: { w: 17.5, d: 7, h: 2, c: "#9a9fa3", keys: "#1e1e1e", mod: "#1e1e1e", pad: "#1e1e1e", outline: "#3ea6e0" },
+    scr: { x: .12, y: .22, w: .37, h: .64, t: "green", sur: "#0d0d0d", m: [1.27, 1.3] },
+    face: { bezel: "#8f9498", inset: [.03, .04, .97, .94], hood: .9, latches: "side", vents: true,   // grey front, both drives on end in one black bezel
+      rects: [{ x: .69, y: .1, w: .22, h: .78, c: "#141414" }, { x: .565, y: .1, w: .1, h: .8, c: "#3ea6e0", o: 1 }, { x: .6, y: .9, w: .06, h: .04, c: "#3ea6e0" }],
+      drives: [{ x: .71, y: .12, w: .085, h: .72, c: "#1e1e1e" }, { x: .805, y: .12, w: .085, h: .72, c: "#1e1e1e" }],
+      leds: [{ x: .75, y: .86, c: "#ff3a2a", r: .12, lit: 1 }, { x: .845, y: .86, c: "#ff3a2a", r: .12, lit: 1 }] } },
+  cbm8050: { body: "#e6e1d3", face: { bezel: "#cfc6a6", inset: [.02, .02, .98, .98], topVent: true,   // cream frame, the black name band, black drive section
+    rects: [{ x: .07, y: .67, w: .86, h: .27, c: "#141414" }, { x: .05, y: .04, w: .9, h: .58, c: "#141414" }],
+    label: { x: .07, y: .67, w: .86, h: .27, t: "CBM 8050      dual drive floppy disk" },
+    drives: [{ x: .09, y: .08, w: .39, h: .5, c: "#1e1e1e", l: "door", lc: "#333333" }, { x: .52, y: .08, w: .39, h: .5, c: "#1e1e1e", l: "door", lc: "#333333" }],
+    leds: [{ x: .4, y: .5, c: "#58e07a", r: .14 }, { x: .83, y: .5, c: "#58e07a", r: .14 }, { x: .5, y: .5, c: "#e04030", r: .14 }] } },
+  compaq3: { body: "#cdc9bd", kb: { w: 15.5, d: 7, h: 1.5, keys: "#e3e1d9", mod: "#b9b7ae", frow: true },
+    raised: { w: 9.4, h: 5.6, fw: 14.5, fh: 8.4, iw: 11.8, ih: 6.4, frame: "#cdc9bd", inner: "#8e8b84", y: .2, tilt: 9, z: .5, t: "plasma" },   // the panel stands in front of the body
+    face: { bezel: "#c3bfb3", handle: "bar", vents: "left", sideSlot: true } },
+  // laptops: rear = a raised block behind the hinge (d: fraction of the depth, hb: the base in front of it); kbd = the keyboard
+  // area (x: centre, w, z: centre from the front, d: fractions); lid: hz hinge (fraction from the front), sw / sh / sx the screen
+  macport: { rear: { d: .33, hb: 2.3 }, kbd: { x: -.14, w: .68, z: .27, d: .42, mod: "#cfcbbf" }, trackball: { x: .36, w: .24 }, slots: [{ z: .8, y: .6, l: 3.6 }],
+    strip: { z: .54, d: .1, c: "#c9c5b9", slots: true },
+    lid: { t: "lcd", h: 8.2, angle: 12, hz: .62, c: "#d7d3c7", bezel: "#d0ccc0", deck: "#d0ccc0", keys: "#e2ded3", sw: .55, sh: .62, sy: .57, bar: true, caps: true, pads: true } },
+  bondwell200: { rear: { d: .42, hb: 2.5 }, kbd: { z: .3, d: .52, mod: "#a3a39c" }, slots: [{ z: .8, y: .5, l: 4, h: 1 }], deckVent: true,
+    lid: { t: "lcd", h: 5, angle: 22, hz: .56, c: "#dcd7c7", keys: "#e6e1d2", deck: "#dcd7c7", bezel: "#d2cdbe", frame: "#4f524d", sw: .85, sh: .58, arms: true } },
+  minisport: { body: "#e3ddcc", kbd: { z: .42, d: .7, w: .94, mod: "#9b9b97" }, slots: [{ z: .35, y: .5, l: 3.6 }], strip: { z: .84, d: .08, c: "#d6d0bf", leds: true },
+    lid: { t: "bluelcd", h: 5.8, angle: 16, c: "#e3ddcc", deck: "#e3ddcc", keys: "#ece8dc", bezel: "#dcd6c5", sw: .66, sh: .58, sx: -.08, grille: true, latches: true } },
+  cbm286: { body: "#4b4d50", kbd: { z: .4, d: .56, mod: "#4a4c4e" }, slots: [{ z: .35, y: .5, l: 3.6 }], strip: { z: .76, d: .07, c: "#aeb0b0" },
+    lid: { t: "bluelcd", h: 7.6, angle: 16, c: "#4b4d50", bezel: "#4b4d50", keys: "#8e9193", deck: "#4b4d50", sw: .68, sh: .74, sx: -.06, grille: true } },
+  bondwell310: { body: "#34352f", rear: { d: .2, hb: 1.6 }, kbd: { z: .36, d: .56, mod: "#3a3c39" }, slots: [{ z: .88, y: .6, l: 3.6 }], deckVent: true,
+    lid: { t: "stn", h: 7, angle: 16, hz: .8, c: "#34352f", bezel: "#2e2f2a", deck: "#34352f", keys: "#6b6e6a", sw: .82, sh: .7 } },
+  compaq2: { kb: { w: 17, d: 7, h: 1.5, deck: "#8f8476", keys: "#e3d6b4", mod: "#a89d8c", frow: true }, scr: { x: .13, y: .15, w: .39, h: .73, t: "amber" },
+    face: { bezel: "#9c9080", inset: [.035, .06, .965, .94], hood: .6, handle: "back", handleC: "#1d1d1d", vents: "h",   // taupe front, two half-height drives
+      rects: [{ x: .07, y: .08, w: .49, h: .84, c: "#8f8476" }],
+      drives: [{ x: .6, y: .54, w: .34, h: .17, c: "#8a7f72" }, { x: .6, y: .33, w: .34, h: .17, c: "#8a7f72" }],
+      knobs: [{ x: .66, y: .14 }], badge: { x: .85, y: .78, w: .09, h: .09, c: "#d8d4ca" } } },
+  souvenir: { body: "#e3ded0" }, logprinter: { body: "#e3ded0" }, superpet: { body: "#e2dfd4" },
+  cisco3745: { panel: "3745", ears: true, body: "#6f8294" }, cisco2621: { panel: "2621", ears: true, body: "#343c42" }, vg248: { panel: "vg", ears: true, body: "#4e6170" },
   breakout1: { panel: "rj", ears: true }, breakout2: { panel: "rj", ears: true }, "switch": { panel: "sw", ears: true },
-  pdu: { panel: "pdu", ears: true }, pm25: { panel: "pm", ears: true }
+  pdu: { panel: "pdu", ears: true }, pm25: { panel: "pm", body: "#d3d1c9" }
 };
 (function () {
   var b = booths[29], root = new THREE.Group();
@@ -2561,7 +2599,7 @@ var DET29 = {
     "[Osborne 1] Sam, Ottawa - Apple IIe", "", "Sign the book. Your name, where", "you're from, and the first computer", "> _"];
   // teal matches the real Osborne's phosphor (from a photo); keep each style on its own key, or it falls back to green
   var SCREEN_STYLE = { green: ["#06130a", "#5cff8a", 1], teal: ["#03110e", "#4ff0c6", 1], amber: ["#140b02", "#ffb431", 1], plasma: ["#1a0602", "#ff7a33", 1],
-    lcd: ["#9ea88f", "#2b3326", 0], bluelcd: ["#dfe6f0", "#3a5aa8", 0], stn: ["#b9c7d6", "#1d2c55", 0] };
+    lcd: ["#9ea88f", "#2b3326", 0], bluelcd: ["#dfe6f0", "#3a5aa8", 0], stn: ["#c8c4d6", "#4b3b8f", 0] };   // stn: the B310 SX's lavender backlight
   function scrMat(type) { var m = scrMat0(type); m.userData.screen = true; return m; }
   function scrMat0(type) {
     return TM(canvasTex("scr-" + type, 512, 384, function (g, w, h) {
@@ -2587,11 +2625,10 @@ var DET29 = {
       "14:07 #0044 [Hyperion] Ada, Verdun", "14:09 #0045 [MinisPort] Zoe, Hull"];
     for (var i = 0; i < 18; i++) g.fillText(lines[i % lines.length], 26, 20 + i * 27);
   }), true, THREE.DoubleSide);
-  function panelMat(kind) {
-    return TM(canvasTex("panel-" + kind, 512, 64, function (g, w, h) {
-      g.fillStyle = kind === "pm" ? "#6a6862" : kind === "vg" ? "#3a3f45" : "#4f6272"; g.fillRect(0, 0, w, h);
-      g.fillStyle = "#dfe7ec"; g.font = "700 18px Archivo, Arial, sans-serif";
-      g.fillText(kind === "pm" ? "PortMaster" : "CISCO", 12, 38);
+  function panelMat(kind) {                                    // printed front panels: Cisco slate-blue bezels, the PortMaster's putty vent band
+    var ph = kind === "3745" ? 128 : kind === "pm" ? 80 : 64;
+    return TM(canvasTex("panel-" + kind, 512, ph, function (g, w, h) {
+      var i, x;
       if (kind === "rj" || kind === "pdu") {                   // 24 RJ-11 jacks / 8 outlets
         g.fillStyle = kind === "rj" ? "#2e3134" : "#1f2123"; g.fillRect(0, 0, w, h);
         var k = kind === "rj" ? 24 : 8;
@@ -2603,20 +2640,50 @@ var DET29 = {
         if (kind === "pdu") { g.fillStyle = "#e04030"; g.fillRect(w - 40, 22, 22, 18); }
         return;
       }
-      var n = kind === "3745" ? 10 : kind === "vg" ? 24 : kind === "2621" ? 6 : kind === "sw" ? 16 : 8;
-      for (var i = 0; i < n; i++) {
-        var x = 120 + i * ((w - 150) / n);
+      function hatch(x0, y0, x1, y1) {                         // a diagonal-slot vent grille
+        g.fillStyle = "#1a2633"; g.fillRect(x0, y0, x1 - x0, y1 - y0); g.save(); g.beginPath(); g.rect(x0, y0, x1 - x0, y1 - y0); g.clip();
+        g.strokeStyle = "#3a5670"; g.lineWidth = 2.5; for (var q = x0 - (y1 - y0); q < x1; q += 7) { g.beginPath(); g.moveTo(q, y1); g.lineTo(q + (y1 - y0), y0); g.stroke(); }
+        g.restore();
+      }
+      function txt(t, x, y, px, c) { g.fillStyle = c; g.font = "700 " + px + "px Archivo, Arial, sans-serif"; g.fillText(t, x, y); }
+      if (kind === "pm") {                                     // PortMaster PM-25: a putty desktop box, a band of vent slots, no lights in front
+        g.fillStyle = "#d3d1c9"; g.fillRect(0, 0, w, h);
+        g.fillStyle = "#3a3a38"; for (x = 30; x < w * 0.86; x += 6) g.fillRect(x, h * 0.62, 3, h * 0.18);
+        txt("PortMaster", w - 130, 26, 18, "#4a4a46"); txt("Livingston", 14, 24, 14, "#4a4a46"); return;
+      }
+      if (kind === "3745") {                                   // 3745: slate-blue bezel, two grille bands, the LED row top left
+        g.fillStyle = "#2b4257"; g.fillRect(0, 0, w, h);
+        hatch(8, h * 0.26, w - 8, h * 0.68); hatch(8, h * 0.74, w - 8, h * 0.94);
+        txt("CISCO", 12, 20, 13, "#dfe7ec"); txt("3745", w - 52, 20, 14, "#dfe7ec");
+        for (i = 0; i < 6; i++) { g.fillStyle = i < 2 ? "#58e07a" : "#2a3a2a"; g.fillRect(74 + i * 16, 12, 6, 5); }
+        return;
+      }
+      if (kind === "2621") {                                   // 2621: teal-blue bezel, badge and three LEDs at the left
+        g.fillStyle = "#2c4a55"; g.fillRect(0, 0, w, h); txt("CISCO", 12, 26, 15, "#dfe7ec"); txt("2600", w - 56, 40, 15, "#dfe7ec");
+        for (i = 0; i < 3; i++) { g.fillStyle = i < 2 ? "#58e07a" : "#2a3a2a"; g.fillRect(14 + i * 14, 40, 6, 5); }
+        return;
+      }
+      if (kind === "vg") {                                     // VG248: two 50-pin telco connectors with bail clips, a vent field, Ethernet and console
+        g.fillStyle = "#4e6170"; g.fillRect(0, 0, w, h);
+        [50, 190].forEach(function (cx) { g.fillStyle = "#1c2228"; g.fillRect(cx, 18, 70, 26); g.fillStyle = "#c8ccd0"; g.fillRect(cx - 6, 24, 5, 14); g.fillRect(cx + 71, 24, 5, 14); });
+        g.fillStyle = "#33424e"; for (x = 290; x < 410; x += 6) for (var y = 14; y < 50; y += 6) g.fillRect(x, y, 3, 3);
+        [420, 444, 470].forEach(function (cx, j) { g.fillStyle = "#15191c"; g.fillRect(cx, 22, 18, 16); g.fillStyle = j < 2 ? "#58e07a" : "#ffb431"; g.fillRect(cx + 2, 44, 4, 4); });
+        txt("CISCO", 8, 58, 9, "#dfe7ec"); return;
+      }
+      g.fillStyle = "#4f6272"; g.fillRect(0, 0, w, h); txt("CISCO", 12, 38, 18, "#dfe7ec");   // the switch: ports and lights
+      for (i = 0; i < 16; i++) {
+        x = 120 + i * ((w - 150) / 16);
         g.fillStyle = "#15191c"; g.fillRect(x, 16, 13, 12);
         g.fillStyle = i % 3 ? "#58e07a" : "#ffb431"; g.fillRect(x + 3, 38, 5, 5);
       }
     }));
   }
-  var keypadM = TM(canvasTex("keypad", 128, 160, function (g, w, h) {
-    g.fillStyle = "#d9d3c4"; g.fillRect(0, 0, w, h);
-    var k = "123456789*0#"; g.font = "700 22px Archivo, Arial"; g.textAlign = "center";
+  var keypadM = TM(canvasTex("keypad", 128, 160, function (g, w, h) {   // M9216 dial pad: grey keys set in the black body
+    g.fillStyle = "#2a2a2a"; g.fillRect(0, 0, w, h);
+    var k = "123456789*0#"; g.font = "700 18px Archivo, Arial"; g.textAlign = "center";
     for (var i = 0; i < 12; i++) {
       var x = 22 + (i % 3) * 42, y = 20 + Math.floor(i / 3) * 36;
-      g.fillStyle = "#f7f4ec"; g.fillRect(x - 15, y - 12, 30, 28); g.fillStyle = "#333"; g.fillText(k[i], x, y + 9);
+      g.fillStyle = "#8e9295"; g.fillRect(x - 15, y - 12, 30, 26); g.fillStyle = "#1a1a1a"; g.fillText(k[i], x, y + 7);
     }
   }), true);
   var pcbM = TM(canvasTex("pcb", 512, 360, function (g, w, h) {
@@ -2666,91 +2733,184 @@ var DET29 = {
 
   // ---- item builders: group origin = front-centre of the footprint, the unit extends back (-z)
   function frontFace(it, g, fz, w, h, y0) {
-    var f = it.face || {}, s = it.scr;
-    if (f.bezel) plane(w * 0.94, h * 0.9, MC(f.bezel), 0, y0 + h / 2, fz + 0.02, g);      // inset front panel
+    var f = it.face || {}, s = it.scr, I = f.inset || [.03, .05, .97, .95];
+    function fx(x) { return -w / 2 + w * x; }
+    function fy(y) { return y0 + h * y; }
+    function rect(r, z) { cbox(w * r.w, h * r.h, 0.08, MC(r.c), fx(r.x + r.w / 2), fy(r.y + r.h / 2), fz + (z || 0.04), g); }
+    if (f.bezel) plane(w * (I[2] - I[0]), h * (I[3] - I[1]), MC(f.bezel), fx((I[0] + I[2]) / 2), fy((I[1] + I[3]) / 2), fz + 0.02, g);   // inset front panel
+    (f.rects || []).forEach(function (r) {                     // surrounds, bays, grilles; o: an outline (painted stripes)
+      if (!r.o) return rect(r);
+      var tw = 0.12 / w, th = 0.12 / h;
+      [[r.x, r.y, r.w, th], [r.x, r.y + r.h - th, r.w, th], [r.x, r.y, tw, r.h], [r.x + r.w - tw, r.y, tw, r.h]].forEach(function (q) { rect({ x: q[0], y: q[1], w: q[2], h: q[3], c: r.c }); });
+    });
+    if (f.label) {                                             // a printed band: plain type
+      var lb = f.label;
+      plane(w * lb.w * 0.9, h * lb.h * 0.42, TM(canvasTex("lbl-" + lb.t, 512, 48, function (c, cw, ch) {
+        c.fillStyle = lb.bg || "#141414"; c.fillRect(0, 0, cw, ch); c.fillStyle = lb.fg || "#e8e4d8"; c.font = "bold 30px Arial, sans-serif"; c.textBaseline = "middle"; c.fillText(lb.t, 12, ch / 2, cw - 24);
+      }), true), fx(lb.x + lb.w / 2), fy(lb.y + lb.h / 2), fz + 0.1, g);
+    }
     if (s) {
-      var sw = w * s.w, sh = h * s.h, sx = -w / 2 + w * (s.x + s.w / 2), sy = y0 + h * (s.y + s.h / 2);
-      cbox(sw * 1.14, sh * 1.16, 0.5, blk, sx, sy, fz + 0.1, g);
+      var sw = w * s.w, sh = h * s.h, sx = fx(s.x + s.w / 2), sy = fy(s.y + s.h / 2), m = s.m || [1.14, 1.16];
+      cbox(sw * m[0], sh * m[1], 0.5, s.sur ? MC(s.sur) : blk, sx, sy, fz + 0.1, g);
       plane(sw, sh, scrMat(s.t), sx, sy, fz + 0.37, g);
     }
-    (f.drives || []).forEach(function (d) {                    // floppy drives: dark face, slot, lever
-      var dw = w * d.w, dh = h * d.h, dx = -w / 2 + w * (d.x + d.w / 2), dy = y0 + h * (d.y + d.h / 2), vert = dh > dw;
+    (f.drives || []).forEach(function (d) {                    // floppy drives: face, slot, and a lever, a centre door (l: "door") or a flip tab ("tab")
+      var dw = w * d.w, dh = h * d.h, dx = fx(d.x + d.w / 2), dy = fy(d.y + d.h / 2), vert = dh > dw, l = d.l || "lever";
       cbox(dw, dh, 0.25, MC(d.c || 0x2a2c2e), dx, dy, fz + 0.05, g);
-      cbox(vert ? 0.25 : dw * 0.78, vert ? dh * 0.78 : 0.25, 0.1, blk, dx + (vert ? -dw * 0.18 : 0), dy + (vert ? 0 : dh * 0.12), fz + 0.2, g);
-      cbox(vert ? 0.7 : 0.4, vert ? 0.4 : 0.7, 0.5, M(0x8e9296), dx + (vert ? dw * 0.2 : dw * 0.3), dy - (vert ? 0 : dh * 0.22), fz + 0.3, g);
+      if (l === "lever") {
+        cbox(vert ? 0.25 : dw * 0.78, vert ? dh * 0.78 : 0.25, 0.1, blk, dx + (vert ? -dw * 0.18 : 0), dy + (vert ? 0 : dh * 0.12), fz + 0.2, g);
+        cbox(vert ? 0.7 : 0.4, vert ? 0.4 : 0.7, 0.5, MC(d.lc || 0x8e9296), dx + (vert ? dw * 0.2 : dw * 0.3), dy - (vert ? 0 : dh * 0.22), fz + 0.3, g);
+        return;
+      }
+      cbox(vert ? 0.2 : dw * 0.88, vert ? dh * 0.88 : 0.2, 0.1, blk, dx, dy + (vert ? 0 : dh * 0.1), fz + 0.2, g);
+      if (l === "door") cbox(vert ? dw * 0.6 : dw * 0.16, vert ? dh * 0.16 : dh * 0.62, 0.3, MC(d.lc || 0x2c2c2c), dx, dy + (vert ? 0 : dh * 0.05), fz + 0.25, g);
+      else cbox(dw * 0.12, dh * 0.3, 0.45, blk, dx, dy + dh * 0.1, fz + 0.3, g);
     });
-    if (f.badge) { var bd = f.badge; cbox(w * bd.w, h * bd.h, 0.08, MC(bd.c), -w / 2 + w * (bd.x + bd.w / 2), y0 + h * (bd.y + bd.h / 2), fz + 0.06, g); }
-    (f.pockets || []).forEach(function (q) { cbox(w * q.w, h * q.h, 0.15, M(0x3a3630), -w / 2 + w * (q.x + q.w / 2), y0 + h * (q.y + q.h / 2), fz + 0.02, g); });
+    if (f.badge) {
+      var bd = f.badge, bx = fx(bd.x + bd.w / 2), by = fy(bd.y + bd.h / 2);
+      if (bd.round) cyl(bd.round, 0.3, MC(bd.c), bx, by, fz + 0.15, g).rotation.x = Math.PI / 2;
+      else cbox(w * bd.w, h * bd.h, 0.08, MC(bd.c), bx, by, fz + 0.06, g);
+    }
+    (f.pockets || []).forEach(function (q) { cbox(w * q.w, h * q.h, 0.15, M(0x3a3630), fx(q.x + q.w / 2), fy(q.y + q.h / 2), fz + 0.02, g); });
     if (f.fkeys) {                                             // soft-key row under the screen
       var fk = f.fkeys, kw = w * fk.w / fk.n;
-      for (var i = 0; i < fk.n; i++) cbox(kw * 0.7, h * fk.h, 0.35, M(0x5a5752), -w / 2 + w * fk.x + kw * (i + 0.5), y0 + h * (fk.y + fk.h / 2), fz + 0.15, g);
+      for (var i = 0; i < fk.n; i++) cbox(kw * 0.7, h * fk.h, 0.35, M(0x5a5752), fx(fk.x) + kw * (i + 0.5), fy(fk.y + fk.h / 2), fz + 0.15, g);
     }
-    (f.leds || []).forEach(function (l) { dot(0.18, glow(new THREE.Color(l.c).getHex()), -w / 2 + w * l.x, y0 + h * l.y, fz + 0.2, g); });
-    (f.knobs || []).forEach(function (k) { cyl(0.35, 0.5, M(0x303234), -w / 2 + w * k.x, y0 + h * k.y, fz + 0.25, g).rotation.x = Math.PI / 2; });
+    (f.leds || []).forEach(function (l) { dot(l.r || 0.18, l.lit ? MC(l.c) : glow(new THREE.Color(l.c).getHex()), fx(l.x), fy(l.y), fz + 0.2 + (l.r || 0) * 0.5, g); });
+    (f.knobs || []).forEach(function (k) { cyl(k.r || 0.35, 0.5, MC(k.c || 0x303234), fx(k.x), fy(k.y), fz + 0.25, g).rotation.x = Math.PI / 2; });
   }
-  function handle(g, where, w, h, d, cz, col) {
+  function handle(g, where, w, h, d, cz, col, mat) {
     var m = MC(col || 0x2b2d2f);
     if (where === "top") {
       cbox(w * 0.4, 0.7, 1.1, m, 0, h + 1.6, cz, g);
       [-1, 1].forEach(function (e) { cbox(0.9, 1.6, 1.1, m, e * w * 0.2, h + 0.8, cz, g); });
     } else if (where === "back") cbox(w * 0.45, 1, 0.8, m, 0, h * 0.7, cz - d / 2 - 0.9, g);
+    else if (where === "bar") cbox(w * 0.78, 0.6, 1.5, MC(col || "#a3a29b"), 0, h + 0.3, cz, g);           // Compaq III: a flat bar along the top
+    else if (where === "trough") [-1, 1].forEach(function (e) {                                            // Hyperion: two raised blocks at the back, the grip between
+      var bz = cz - d / 2 + d * 0.22, bx = e * (w / 2 - 3.2);
+      cbox(6, 0.6, d * 0.44, mat, bx, h + 0.3, bz, g);
+      for (var i = 0; i < 6; i++) cbox(5, 0.04, 0.14, blk, bx, h + 0.61, bz - d * 0.15 + i * d * 0.06, g);
+    });
   }
-  function vents(g, w, h, d, cz) {
-    for (var i = 0; i < 8; i++) [-1, 1].forEach(function (e) { cbox(0.08, h * 0.45, 0.35, blk, e * (w / 2 + 0.02), h * 0.5, cz - d * 0.35 + i * (d * 0.7 / 8), g); });
+  function vents(g, w, h, d, cz, side) {                       // slots on the ends: both, "left" or "right"; "h": short louvres near the front
+    var sides = side === "left" ? [-1] : side === "right" ? [1] : [-1, 1];
+    sides.forEach(function (e) {
+      if (side === "h") for (var j = 0; j < 6; j++) cbox(0.08, 0.14, d * 0.3, blk, e * (w / 2 + 0.02), h * 0.3 + j * 0.45, cz + d * 0.25, g);
+      else for (var i = 0; i < 8; i++) cbox(0.08, h * 0.45, 0.35, blk, e * (w / 2 + 0.02), h * 0.5, cz - d * 0.35 + i * (d * 0.7 / 8), g);
+    });
+  }
+  function kbTex(deck, key, k) {                             // a fuller keyboard: modifiers, an optional F-key block on the left, a keypad, a painted outline
+    var mod = k.mod || key, pad = k.pad || key, fn = k.fn || 0, np = k.np === 0 ? 0 : 4, ol = k.outline || "";
+    return canvasTex("keys-" + [deck, key, mod, pad, fn, np, ol, k.frow ? 1 : 0].join(), 512, 200, function (g, w, h) {
+      g.fillStyle = deck; g.fillRect(0, 0, w, h);
+      var P = 12, kw = (w - 2 * P) / (fn + (fn ? 0.6 : 0) + 15.6 + np), kh = (h - 2 * P) / 5, xm = P + (fn ? (fn + 0.6) * kw : 0), xp = xm + 15.6 * kw, r, c, x;
+      function cap(x, y, cw, col) { g.fillStyle = "rgba(0,0,0,.35)"; g.fillRect(x + 2, y + 3, cw - 4, kh - 3); g.fillStyle = col; g.fillRect(x + 2, y + 1, cw - 5, kh - 5); }
+      for (r = 0; r < 5; r++) {
+        var y = P + r * kh;
+        for (c = 0; c < fn; c++) cap(P + c * kw, y, kw, mod);
+        for (c = 0; c < np; c++) cap(xp + c * kw, y, kw, pad);
+        if (r === 0) { for (c = 0; c < 15; c++) cap(xm + c * kw, y, kw, k.frow ? mod : key); continue; }
+        if (r === 4) { cap(xm, y, 2.5 * kw, mod); cap(xm + 2.5 * kw, y, 9 * kw, key); cap(xm + 11.5 * kw, y, 3.5 * kw, mod); continue; }
+        var first = 1.2 + r * 0.3; cap(xm, y, first * kw, mod);
+        for (c = 0, x = xm + first * kw; c < 12; c++, x += kw) cap(x, y, kw, key);
+        cap(x, y, xm + 15 * kw - x, mod);
+      }
+      if (ol) { g.strokeStyle = ol; g.lineWidth = 3; g.strokeRect(xm - 5, P - 5, 15 * kw + 10, 5 * kh + 6); if (np) g.strokeRect(xp - 5, P - 5, np * kw + 6, 5 * kh + 6); }
+    });
   }
   function keyboard(it, g, col) {
-    var k = it.kb, caseC = k.c || new THREE.Color(col).multiplyScalar(0.9).getStyle();
+    var k = it.kb, caseC = k.c || new THREE.Color(col).multiplyScalar(0.9).getStyle(), bh = Math.min(0.6, k.h * 0.35);
     cbox(k.w, k.h, k.d, MC(caseC), 0, k.h / 2, -k.d / 2, g);
-    plane(k.w * 0.94, k.d * 0.84, TM(keysTex(caseC, k.keys || "#e8e2d2", 5), true), 0, k.h + 0.05, -k.d / 2 - 0.2, g).rotation.x = -Math.PI / 2 + 0.06;
+    if (k.band) cbox(k.w + 0.04, bh, k.d + 0.04, MC(k.band), 0, bh / 2, -k.d / 2, g);           // Kaypro II: the blue base
+    var tex = k.mod || k.pad || k.fn || k.deck || k.outline ? kbTex(k.deck || caseC, k.keys || "#e8e2d2", k) : keysTex(caseC, k.keys || "#e8e2d2", 5);
+    plane(k.w * 0.94, k.d * 0.84, TM(tex, true), 0, k.h + 0.05, -k.d / 2 - 0.2, g).rotation.x = -Math.PI / 2 + 0.06;
+    if (k.badge) cbox(1.3, 0.06, 0.9, M(0xf4f2ec), k.w / 2 - 1.1, k.h + 0.12, -k.d + 0.75, g);   // IBM: the small white plate at the back right
     cyl(0.18, 1.4, blk, k.w * 0.3, 0.3, -k.d - 0.6, g).rotation.x = Math.PI / 2;           // cable back to the unit
   }
   function luggable(it, g, mat, fz) {
-    var holder = new THREE.Group(), inner = new THREE.Group(), f = it.face || {};
-    holder.position.set(0, 0, fz - it.d); holder.rotation.x = -(it.tilt || 0) * Math.PI / 180;   // tilt back on the rear-bottom edge
-    inner.position.set(0, 0, it.d); holder.add(inner); g.add(holder);
-    cbox(it.w, it.h, it.d, mat, 0, it.h / 2, -it.d / 2, inner);
-    frontFace(it, inner, 0, it.w, it.h, 0);
-    if (f.handle) handle(inner, f.handle, it.w, it.h, it.d, -it.d / 2, f.handleC);
-    if (f.vents) vents(inner, it.w, it.h, it.d, -it.d / 2);
-    if (it.raised) {                                           // Compaq III: plasma panel lifted on arms
-      var R = it.raised, arm = new THREE.Group();
-      arm.position.set(0, it.h * R.y, 1.6); arm.rotation.x = -R.tilt * Math.PI / 180; inner.add(arm);
-      cbox(R.w + 1.2, R.h + 1, 0.9, M(0x3a3a3a), 0, R.h / 2, 0, arm);
-      plane(R.w, R.h, scrMat(R.t), 0, R.h / 2, 0.46, arm);
-      [-1, 1].forEach(function (e) { cbox(0.6, 3, 0.6, M(0x8a8f93), e * (R.w / 2 + 0.2), 0.4, -1, arm); });
+    var holder = new THREE.Group(), inner = new THREE.Group(), f = it.face || {}, w = it.w, h = it.h, d = it.d;
+    holder.position.set(0, 0, fz - d); holder.rotation.x = -(it.tilt || 0) * Math.PI / 180;   // tilt back on the rear-bottom edge
+    inner.position.set(0, 0, d); holder.add(inner); g.add(holder);
+    cbox(w, h, d, mat, 0, h / 2, -d / 2, inner);
+    frontFace(it, inner, 0, w, h, 0);
+    if (f.hood) {                                              // the case frame stands proud of the recessed front
+      var I = f.inset || [.03, .05, .97, .95], hd = f.hood, zc = hd / 2 - 0.02;
+      cbox(w * I[0], h, hd, mat, -w / 2 + w * I[0] / 2, h / 2, zc, inner); cbox(w * (1 - I[2]), h, hd, mat, w / 2 - w * (1 - I[2]) / 2, h / 2, zc, inner);
+      cbox(w * (I[2] - I[0]), h * (1 - I[3]), hd, mat, -w / 2 + w * (I[0] + I[2]) / 2, h - h * (1 - I[3]) / 2, zc, inner);
+      cbox(w * (I[2] - I[0]), h * I[1], hd, mat, -w / 2 + w * (I[0] + I[2]) / 2, h * I[1] / 2, zc, inner);
     }
-    if (f.stand) cbox(it.w * 0.8, 0.8, 1.4, M(0x2b2d2f), 0, -0.2, -1.2, inner);            // Osborne: handle as a stand
+    if (f.bumpers) [-1, 1].forEach(function (e) { cyl(0.55, h, mat, e * (w / 2 - 0.45), h / 2, 0.35, inner); });   // IBM: rounded corner posts
+    if (f.latches === "side") [-1, 1].forEach(function (e) { cbox(0.35, 1.6, 1.4, blk, e * (w / 2 + 0.17), h * 0.75, -1.1, inner); });
+    if (f.latches === "top") [-1, 1].forEach(function (e) { cbox(1.4, 0.5, 1.2, blk, e * w * 0.3, h + 0.25, -0.7, inner); });
+    if (f.door) cbox(0.06, h * 0.7, d * 0.7, M(0xbdb4a0), (f.door === "left" ? -1 : 1) * (w / 2 + 0.02), h / 2, -d / 2, inner);   // Compaq: the cord door on the end
+    if (f.sideSlot) {                                          // Compaq III: the floppy loads from the right end
+      cbox(0.06, 1.3, 6, M(0x8e8b84), w / 2 + 0.02, h * 0.25, -d / 2, inner); cbox(0.1, 0.25, 5.4, blk, w / 2 + 0.04, h * 0.25, -d / 2, inner);
+    }
+    if (f.topVent) for (var i = 0; i < 8; i++) cbox(w * 0.75, 0.05, 0.14, blk, 0, h + 0.03, -1.2 - i * 0.35, inner);
+    if (f.handle) handle(inner, f.handle, w, h, d, -d / 2, f.handleC, mat);
+    if (f.vents) vents(inner, w, h, d, -d / 2, f.vents);
+    if (it.raised) {                                           // Compaq III: the plasma panel stands in front of the body on arms hidden in its sides
+      var R = it.raised, arm = new THREE.Group(), fh = R.fh || R.h + 1;
+      arm.position.set(0, h * R.y, R.z || 1.6); arm.rotation.x = -R.tilt * Math.PI / 180; inner.add(arm);
+      cbox(R.fw || R.w + 1.2, fh, 0.9, MC(R.frame || 0x3a3a3a), 0, fh / 2, 0, arm);
+      if (R.inner) { plane(R.iw, R.ih, MC(R.inner), 0, fh / 2, 0.46, arm); dot(0.22, M(0x6a6862), R.iw / 2 - 0.5, fh / 2 - R.ih / 2 + 0.4, 0.5, arm); }
+      plane(R.w, R.h, scrMat(R.t), 0, fh / 2, 0.47, arm);
+    }
+    if (f.stand) cbox(w * 0.8, 0.8, 1.4, M(0x2b2d2f), 0, -0.2, -1.2, inner);              // Osborne: handle as a stand
   }
-  function laptop(it, g, mat, col) {
-    var L = it.lid || {}, deckC = L.deck || "#2b2e31", keyC = L.keys || "#3a3d40";
-    cbox(it.w, it.h, it.d, mat, 0, it.h / 2, -it.d / 2, g);
-    plane(it.w * 0.9, it.d * (it.trackball ? 0.4 : 0.5), TM(keysTex(deckC, keyC, 5), true), 0, it.h + 0.03, -it.d * (it.trackball ? 0.72 : 0.62), g).rotation.x = -Math.PI / 2;
-    if (it.trackball) {                                        // Mac Portable: keyboard at the back, modules in front
-      var side = it.trackball === "left" ? -1 : 1;
-      cbox(it.w * 0.3, 0.15, it.d * 0.36, M(0xc6c2b6), side * it.w * 0.28, it.h + 0.05, -it.d * 0.26, g);
-      dot(1, M(0x505050), side * it.w * 0.28, it.h + 0.15, -it.d * 0.26, g);
-      cbox(it.w * 0.3, 0.15, it.d * 0.36, M(0xc6c2b6), -side * it.w * 0.28, it.h + 0.05, -it.d * 0.26, g);
+  function laptop(it, g, mat, col) {                           // base (and a raised rear block), keyboard and trackball, drive slots, the lid on its hinge
+    var L = it.lid || {}, w = it.w, d = it.d, h = it.h, deckC = L.deck || "#2b2e31", K = it.kbd || {}, R = it.rear, i;
+    var hb = R ? R.hb : h, rd = R ? d * R.d : 0;
+    cbox(w, hb, d - rd, mat, 0, hb / 2, -(d - rd) / 2, g);
+    if (R) cbox(w, h, rd, mat, 0, h / 2, -d + rd / 2, g);
+    var kw = w * (K.w || 0.9), kd = d * (K.d || 0.5), kx = w * (K.x || 0), kz = -d * (K.z || 0.62);
+    plane(kw, kd, TM(K.mod ? kbTex(deckC, L.keys || "#3a3d40", { mod: K.mod, np: 0 }) : keysTex(deckC, L.keys || "#3a3d40", 5), true), kx, hb + 0.03, kz, g).rotation.x = -Math.PI / 2;
+    if (it.trackball) {                                        // Mac Portable: the trackball module beside the keys
+      var T = it.trackball, tx = w * T.x;
+      cbox(w * T.w, 0.1, kd, M(0xc6c2b6), tx, hb + 0.05, kz, g);
+      dot(0.6, M(0x6a6a66), tx, hb + 0.1, kz, g);
+      [-1, 1].forEach(function (e) { cbox(w * T.w * 0.7, 0.12, kd * 0.14, M(0xd6d2c6), tx, hb + 0.1, kz + e * kd * 0.38, g); });
     }
-    for (var q = 0; q < (it.sideSlots === "right2" ? 2 : it.sideSlots ? 1 : 0); q++) cbox(0.1, Math.min(0.35, it.h * 0.3), 3.6, blk, it.w / 2 + 0.03, it.h * 0.5, -it.d * (0.35 + q * 0.35), g);
-    var lidH = L.h || it.d * 0.82, pivot = new THREE.Group();
-    pivot.position.set(0, it.h, -it.d + 0.4); pivot.rotation.x = -(L.angle || 15) * Math.PI / 180; g.add(pivot);
-    cbox(it.w, lidH, 0.75, MC(L.c || col), 0, lidH / 2, 0.37, pivot);
-    plane(it.w * 0.9, lidH * 0.86, MC(L.bezel || "#26292b"), 0, lidH * 0.53, 0.76, pivot);
-    plane(it.w * 0.74, lidH * 0.66, scrMat(L.t || "lcd"), 0, lidH * 0.55, 0.78, pivot);
+    if (it.strip) {                                            // behind the keys: speaker slots, status LEDs or the F-key label strip
+      var S2 = it.strip, sz = -d * S2.z;
+      plane(w * 0.9, d * S2.d, MC(S2.c), 0, hb + 0.04, sz, g).rotation.x = -Math.PI / 2;
+      if (S2.slots) for (i = 0; i < 9; i++) cbox(w * 0.04, 0.02, d * S2.d * 0.6, M(0x8e8a80), -w * 0.4 + i * w * 0.1, hb + 0.06, sz, g);
+      if (S2.leds) for (i = 0; i < 5; i++) dot(0.09, M(i ? 0x6a6a66 : 0x58e07a), -w * 0.3 + i * 0.6, hb + 0.06, sz, g);
+    }
+    if (it.deckVent) for (i = 0; i < 6; i++) cbox(w * 0.3, 0.03, 0.12, blk, w * 0.28, (R ? h : hb) + 0.02, -d + (R ? rd : d * 0.2) * (0.25 + i * 0.1), g);
+    (it.slots || []).forEach(function (q) { cbox(0.1, q.h || 0.35, q.l, blk, w / 2 + 0.03, (q.z > 1 - (R ? R.d : 0) ? h : hb) * (q.y || 0.5), -d * q.z, g); });
+    var lidH = L.h || d * 0.82, pivot = new THREE.Group(), pz = L.hz ? -d * L.hz : -d + 0.4;
+    pivot.position.set(0, hb, pz); pivot.rotation.x = -(L.angle || 15) * Math.PI / 180; g.add(pivot);
+    var lc = MC(L.c || col), sw = w * (L.sw || 0.74), sh = lidH * (L.sh || 0.66), sx = w * (L.sx || 0), sy = lidH * (L.sy || 0.55);
+    cbox(w, lidH, 0.75, lc, 0, lidH / 2, 0.37, pivot);
+    plane(w * 0.9, lidH * 0.86, MC(L.bezel || "#26292b"), 0, lidH * 0.53, 0.76, pivot);
+    if (L.frame) plane(sw + 0.8, sh + 0.7, MC(L.frame), sx, sy, 0.77, pivot);               // B200: a dark frame round the glass
+    plane(sw, sh, scrMat(L.t || "lcd"), sx, sy, 0.78, pivot);
     if (L.latch) cbox(2, 0.5, 0.3, M(0xb8b4a8), 0, lidH - 0.35, 0.8, pivot);
+    if (L.bar) cbox(w, 0.7, 1.1, lc, 0, lidH + 0.3, 0.37, pivot);                         // Mac Portable: the grab bar across the top
+    if (L.caps) [-1, 1].forEach(function (e) { cyl(0.55, 0.5, lc, e * (w / 2 + 0.2), 0.2, 0.3, pivot).rotation.z = Math.PI / 2; });
+    if (L.pads) [-1, 1].forEach(function (e) { plane(1.1, 1.1, M(0xc6c2b6), e * w * 0.39, lidH * 0.8, 0.79, pivot); });
+    if (L.grille) for (i = 0; i < 5; i++) cbox(0.08, lidH * 0.3, 0.05, M(0x2a2a2a), sx + sw / 2 + (w / 2 - sx - sw / 2) * 0.5 - 0.4 + i * 0.2, lidH * 0.62, 0.8, pivot);
+    if (L.latches) [-1, 1].forEach(function (e) { cbox(0.8, 0.25, 0.2, M(0x4a4a4a), e * w * 0.42, lidH - 0.35, 0.8, pivot); });
+    if (L.arms) [-1, 1].forEach(function (e) { cbox(0.5, 1.4, 0.9, M(0xb8b4a8), e * w * 0.36, 0.3, 0.2, pivot); });   // B200: the exposed hinge arms
   }
-  function printer(it, g, mat, y) {                            // Apple ImageWriter
-    var w = it.w, d = it.d, h = it.h, cz = -d / 2;
-    cbox(w, h * 0.7, d, mat, 0, h * 0.35, cz, g);
-    cbox(w * 0.7, h * 0.3, d * 0.55, smoke, -w * 0.05, h * 0.85, cz + d * 0.1, g);         // smoked lid
-    ["#5ebd3e", "#fbb714", "#f6821f", "#e03a3e", "#963d97", "#009ddc"].forEach(function (c, i) {   // rainbow logo
-      cbox(0.9, 0.14, 0.05, MC(c), -w * 0.38, h * 0.55 - i * 0.14, cz + d / 2 + 0.03, g);
+  function printer(it, g, mat, y) {                            // Apple ImageWriter: a flat cover in front, the smoked window over the platen, the paper tray behind
+    var w = it.w, d = it.d, h = it.h, cz = -d / 2, hb = h * 0.7, pz = cz - d * 0.15;
+    cbox(w, hb, d, mat, 0, hb / 2, cz, g);
+    cbox(w * 0.94, 0.45, d * 0.52, mat, 0, hb + 0.22, cz + d * 0.22, g);                   // the front cover
+    cbox(w * 0.74, h * 0.28, d * 0.22, smoke, 0, hb + h * 0.14, pz, g);                     // smoked window over the platen
+    cbox(w * 0.74, 0.5, d * 0.2, blk, 0, hb + 0.25, pz, g);                                  // the platen under it
+    ["#5ebd3e", "#fbb714", "#f6821f", "#e03a3e", "#963d97", "#009ddc"].forEach(function (c, i) {   // the small colour badge, front left
+      cbox(0.7, 0.1, 0.05, MC(c), -w * 0.4, hb * 0.35 - i * 0.1, cz + d / 2 + 0.03, g);
     });
-    cbox(w * 0.78, 0.9, 1.4, blk, 0, h * 0.72, cz - d * 0.22, g);                           // platen slot
-    cyl(1.2, 0.8, M(0x9a968c), w / 2 + 0.4, h * 0.6, cz - d * 0.2, g).rotation.z = Math.PI / 2;
-    for (var i = 0; i < 4; i++) {                                                          // Select, Form Feed, Line Feed, Quality
-      cbox(0.9, 0.3, 0.7, M(0xbdb9ae), w * 0.3 + i * 1.1, h * 0.72, cz + d / 2 - 0.8, g);
-      dot(0.12, i ? M(0x3a3a3a) : glow(0x58e07a), w * 0.3 + i * 1.1, h * 0.75, cz + d / 2 - 1.5, g);
+    cyl(1.2, 1.5, M(0xd6d1c3), w / 2 + 0.55, hb + 0.45, pz, g).rotation.z = Math.PI / 2;   // platen knob (right), end cap (left)
+    cyl(1.1, 0.9, mat, -w / 2 - 0.3, hb + 0.35, pz, g).rotation.z = Math.PI / 2;
+    var tray = new THREE.Group(); tray.position.set(0, hb, cz - d * 0.27); tray.rotation.x = -0.35; g.add(tray);   // ribbed paper tray, sloping up and back
+    cbox(w * 0.8, 0.2, d * 0.32, mat, 0, 0.1, -d * 0.16, tray);
+    for (var j = 0; j < 7; j++) cbox(w * 0.8, 0.14, 0.14, M(0xcfc9ba), 0, 0.27, -0.4 - j * d * 0.045, tray);
+    for (var i = 0; i < 5; i++) {                                                          // the switches stepped down the right front of the cover
+      cbox(0.9, 0.1, 0.32, M(0xc9c4b6), w * 0.36, hb + 0.5, cz + d * 0.46 - i * 0.55, g);
+      dot(0.09, i < 2 ? glow(0x58e07a) : M(0x3a3a3a), w * 0.36 + 0.75, hb + 0.5, cz + d * 0.46 - i * 0.55, g);
     }
     plane(9.5, 9, paperM, 0, h + 4, cz - d * 0.32, g).rotation.x = -0.45;                    // paper curling up and back
     if (it.id === "logprinter") {                                                          // fan-fold spilling to the floor
@@ -2760,8 +2920,8 @@ var DET29 = {
     }
   }
   var phoneGeo = null;
-  function m9216(it, g) {                                      // Nortel Meridian M9216: black wedge, handset on the left
-    var w = it.w, d = it.d, m = MC(it.body || "#2a2a2a"), yF = 1.2, yB = 3;
+  function m9216(it, g) {                                      // Nortel Meridian M9216: a black slab tilted on its foot, handset on the left, grey keys
+    var w = it.w, d = it.d, m = MC(it.body || "#2a2a2a"), yF = 0.9, yB = 3.5, kc = M(0x8e9295), r;
     if (!phoneGeo) {
       var prof = new THREE.Shape();
       prof.moveTo(0, 0); prof.lineTo(0, yF); prof.lineTo(d, yB); prof.lineTo(d, 0); prof.lineTo(0, 0);
@@ -2771,17 +2931,20 @@ var DET29 = {
     var ang = Math.atan2(yB - yF, d), top = new THREE.Group(), L = Math.hypot(d, yB - yF);
     top.position.set(0, yF, 0); top.rotation.x = ang; g.add(top);
     cbox(2, 0.9, L * 0.94, M(0x2f2f2f), -w / 2 + 1.15, 0.45, -L / 2, top);                 // handset
-    plane(2.3, 2.7, keypadM, 0.1, 0.02, -2.2, top).rotation.x = -Math.PI / 2;
-    cbox(2.8, 0.25, 1.2, M(0x1a1a1a), 0.3, 0.12, -L + 1.1, top);                            // display housing
-    plane(2.4, 0.8, glow(0x9fae8c), 0.3, 0.26, -L + 1.1, top).rotation.x = -Math.PI / 2;
-    for (var r = 0; r < 5; r++) for (var c = 0; c < 2; c++) {                               // memory keys with paper labels
-      var kx = w / 2 - 1.55 + c * 0.95, kz = -1.1 - r * 0.95;
-      cbox(0.8, 0.14, 0.42, M(0x3a3a3a), kx, 0.07, kz, top);
-      plane(0.66, 0.26, M(0xf2f0e8), kx, 0.15, kz, top).rotation.x = -Math.PI / 2;
+    for (r = 0; r < 4; r++) cbox(0.1, 0.03, 2, blk, -w / 2 + 2.4 + r * 0.2, 0.02, -2.2, top);   // speaker slots
+    plane(2.2, 2.6, keypadM, -0.2, 0.02, -1.9, top).rotation.x = -Math.PI / 2;               // dial pad, centre left
+    cbox(0.6, 0.12, 0.3, M(0xc8412e), -0.75, 0.06, -3.6, top); cbox(0.6, 0.12, 0.3, M(0xe06a2a), 0.05, 0.06, -3.6, top);   // the two red keys
+    cbox(1.3, 0.06, 0.25, M(0x9a2a24), -0.35, 0.03, -4.1, top);                            // message light
+    cbox(2.8, 0.45, 1.3, M(0x1a1a1a), 0.6, 0.22, -L + 1.1, top);                            // the display pod
+    plane(2.4, 0.9, glow(0xb9c66a), 0.6, 0.46, -L + 1.1, top).rotation.x = -Math.PI / 2;
+    for (r = 0; r < 6; r++) cbox(0.6, 0.12, 0.28, kc, w / 2 - 2.2, 0.06, -1 - r * 0.62, top);   // feature keys
+    for (r = 0; r < 10; r++) {                                                             // memory keys, their labels printed beside them
+      cbox(0.75, 0.12, 0.3, kc, w / 2 - 0.6, 0.06, -0.7 - r * 0.5, top);
+      plane(0.45, 0.08, M(0x9a9a9a), w / 2 - 1.35, 0.02, -0.7 - r * 0.5, top).rotation.x = -Math.PI / 2;
     }
     cyl(0.12, 3, blk, -w / 2 - 0.4, 0.4, -d * 0.6, g).rotation.x = Math.PI / 2;
   }
-  function pet(it, g) {                                        // SuperPET: cream wedge base, keyboard in the slope, hooded CRT
+  function pet(it, g) {                                        // SuperPET: cream wedge base on a black plinth, keyboard in the slope, a flat-faced monitor hood
     var w = it.w, h = it.h, s = it.d, cream = MC(it.body || "#e8e0c8");
     var yF = 2.4, yB = 5, kbEnd = 0.5 * s, flatEnd = 0.56 * s;
     function slab(shape, depth, xAt) {                         // side-profile shape extruded across the width
@@ -2791,24 +2954,17 @@ var DET29 = {
     var prof = new THREE.Shape();
     prof.moveTo(0, 0); prof.lineTo(0, yF); prof.lineTo(kbEnd, yB - 0.3); prof.lineTo(flatEnd, yB); prof.lineTo(s, yB); prof.lineTo(s, 0); prof.lineTo(0, 0);
     slab(prof, w, -w / 2);
+    cbox(w + 0.08, 1, s + 0.08, M(0x1c1c1c), 0, 0.5, -s / 2, g);                            // the black plinth
     var ang = Math.atan2(yB - 0.3 - yF, kbEnd), run = Math.hypot(kbEnd, yB - 0.3 - yF);
-    plane(w * 0.9, run * 0.72, TM(keysTex("#d9d1b8", "#2e2e2e", 5), true), 0, (yF + yB - 0.3) / 2 + 0.06, -kbEnd * 0.44, g).rotation.x = -Math.PI / 2 + ang;
-    [[-w * 0.33, w * 0.2, 0x2a2a2a], [0.02 * w, w * 0.22, 0x8a8f93], [w * 0.33, w * 0.16, 0x2a2a2a]].forEach(function (bd) {   // badges
-      plane(bd[1], 0.55, M(bd[2]), bd[0], yB - 0.2, -kbEnd * 0.94, g).rotation.x = -Math.PI / 2 + ang;
-    });
-    var hz0 = 0.5 * s, hw = w * 0.96, hh = h - yB, tilt = 0.25, ang2 = Math.atan(tilt), vis = 1.2;
-    var hood = new THREE.Shape();                              // monitor hood, CRT face tilted back ~14 degrees
+    plane(w * 0.9, run * 0.72, TM(kbTex("#dcd8cc", "#262626", { mod: "#262626", np: 4 }), true), 0, (yF + yB - 0.3) / 2 + 0.06, -kbEnd * 0.44, g).rotation.x = -Math.PI / 2 + ang;
+    plane(w * 0.92, 0.6, M(0x1a1a1a), 0, yB - 0.2, -kbEnd * 0.94, g).rotation.x = -Math.PI / 2 + ang;   // one black name strip
+    var hz0 = 0.5 * s, hw = w * 0.93, hh = h - yB, tilt = 0.06, ang2 = Math.atan(tilt);
+    var hood = new THREE.Shape();                              // monitor hood: flat top, the face nearly upright
     hood.moveTo(hz0, yB); hood.lineTo(hz0 + tilt * hh, h); hood.lineTo(s, h); hood.lineTo(s, yB); hood.lineTo(hz0, yB);
     slab(hood, hw, -hw / 2);
-    var cheek = new THREE.Shape();                             // visor cheeks
-    cheek.moveTo(hz0 - 0.2, yB); cheek.lineTo(hz0 - vis, h); cheek.lineTo(hz0 + tilt * hh + 0.5, h); cheek.lineTo(hz0 + 0.3, yB); cheek.lineTo(hz0 - 0.2, yB);
-    slab(cheek, 0.6, -hw / 2); slab(cheek, 0.6, hw / 2 - 0.6);
-    var brow = new THREE.Shape();                              // top overhang
-    brow.moveTo(hz0 - vis, h - 0.7); brow.lineTo(hz0 - vis, h); brow.lineTo(hz0 + tilt * hh + 0.5, h); brow.lineTo(hz0 + tilt * hh + 0.5, h - 0.7); brow.lineTo(hz0 - vis, h - 0.7);
-    slab(brow, hw, -hw / 2);
     var faceLen = Math.hypot(hh, tilt * hh), nz = Math.cos(ang2) * 0.06, ny = Math.sin(ang2) * 0.06, mz = -(hz0 + tilt * hh / 2), my = yB + hh / 2;
-    plane(hw - 1.4, faceLen - 1.2, M(0x151515), 0, my + ny, mz + nz, g).rotation.x = -ang2;
-    plane(hw * 0.7, faceLen * 0.64, scrMat("green"), 0, my + 2 * ny + 0.2, mz + 2 * nz - 0.05, g).rotation.x = -ang2;
+    plane(hw - 1.2, faceLen - 1.2, M(0x151515), 0, my + ny, mz + nz, g).rotation.x = -ang2;     // the big black bezel in a thin cream frame
+    plane(hw * 0.68, faceLen * 0.62, scrMat("green"), 0, my + 2 * ny + 0.2, mz + 2 * nz - 0.05, g).rotation.x = -ang2;
   }
   function board(it, g) {                                      // EconoPET board on a clear acrylic easel
     cbox(it.w, 0.3, it.d, acrylic, 0, 0.15, -it.d / 2, g);
@@ -2851,6 +3007,95 @@ var DET29 = {
   });
   bake(root);
   var rk = at(0, rz); solid(rk[0] - 10, rk[1] - 10.5, rk[0] + 10, rk[1] + 10.5); b.rack = { x: rk[0], z: rk[1] };
+})();
+
+// ---------------------------------------------------------------- power stations
+// The show's power panels (D.power: P1, P2...): a grey distribution cabinet on strut legs, breakers behind the dead front,
+// a hazard sticker, conduit and a cable drop to the ceiling, a yellow name box on top (readable across the hall), feeds on
+// the floor under yellow cable ramps to the nearest tables. One canvas holds the faces, the name signs and plain colour
+// swatches, so every panel together is one material (one draw call after the final merge). Collision: see "power panels".
+(function () {
+  var S = 512, DOOR = [4, 4, 248, 504], SW = { body: "#a3a9ac", dark: "#3b3f42", galv: "#8b9396", cable: "#17191b", yellow: "#f2c21b", black: "#1c1c1c" }, swAt = {}, k = 0;
+  Object.keys(SW).forEach(function (n) { swAt[n] = [262 + (k % 6) * 40, 440 + Math.floor(k / 6) * 36, 28, 28]; k++; });
+  function signR(i) { return [260, 4 + (i % 3) * 144, 248, 140]; }
+  function bolt(g, x, y, w, h) {
+    var P = [0.62, 0, 0.12, 0.56, 0.45, 0.56, 0.32, 1, 0.88, 0.4, 0.55, 0.4, 0.75, 0];
+    g.beginPath(); g.moveTo(x + P[0] * w, y + P[1] * h); for (var i = 2; i < P.length; i += 2) g.lineTo(x + P[i] * w, y + P[i + 1] * h); g.closePath(); g.fill();
+  }
+  var tex = canvasTex("power", S, S, function (g) {
+    g.fillStyle = SW.body; g.fillRect(0, 0, S, S);
+    Object.keys(SW).forEach(function (n) { var r = swAt[n]; g.fillStyle = SW[n]; g.fillRect(r[0], r[1], r[2], r[3]); });
+    g.save(); g.translate(DOOR[0], DOOR[1]); var w = DOOR[2], h = DOOR[3], r, i;
+    g.strokeStyle = "#6b7174"; g.lineWidth = 3; g.strokeRect(6, 6, w - 12, h - 12);                          // door seam
+    g.fillStyle = SW.dark; g.fillRect(2, 60, 8, 34); g.fillRect(2, h - 94, 8, 34);                             // hinges
+    g.fillStyle = "#2b2f33"; g.fillRect(28, 28, 192, 254);                                                     // the dead front
+    g.fillStyle = "#111"; g.fillRect(84, 38, 80, 34); g.fillStyle = "#d8d8d8"; g.fillRect(112, 44, 24, 20);   // main breaker
+    g.fillStyle = "#b8862f"; g.fillRect(114, 84, 20, 190);                                                     // bus bar
+    for (r = 0; r < 9; r++) [40, 138].forEach(function (x, c) {                                               // 18 breakers, toggles mostly on
+      var y = 86 + r * 21; g.fillStyle = "#151719"; g.fillRect(x, y, 70, 16);
+      g.fillStyle = (r * 2 + c) % 7 === 5 ? "#c8423f" : "#e8e8e8"; g.fillRect(x + ((r * 2 + c) % 7 === 5 ? 10 : 46), y + 4, 14, 8);
+    });
+    g.fillStyle = "#f2c21b"; g.strokeStyle = "#111"; g.lineWidth = 7; g.lineJoin = "round";                  // hazard sticker
+    g.beginPath(); g.moveTo(124, 300); g.lineTo(178, 392); g.lineTo(70, 392); g.closePath(); g.fill(); g.stroke();
+    g.fillStyle = "#111"; bolt(g, 106, 322, 36, 62);
+    g.font = "bold 24px Arial, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("120/208 V", 124, 416);
+    g.fillStyle = "#2b2f33"; g.fillRect(28, 436, 192, 52);                                                     // twist-lock outlets
+    for (i = 0; i < 4; i++) { var ox = 52 + i * 48; g.fillStyle = "#e9e5da"; g.beginPath(); g.arc(ox, 462, 17, 0, 7); g.fill();
+      g.fillStyle = "#222"; g.fillRect(ox - 9, 456, 5, 10); g.fillRect(ox + 4, 456, 5, 10); g.fillRect(ox - 2, 468, 4, 5); }
+    g.restore();
+    D.power.forEach(function (p, j) {                                                                         // the name signs
+      var s = signR(j); g.save(); g.translate(s[0], s[1]);
+      g.fillStyle = SW.yellow; g.fillRect(0, 0, s[2], s[3]); g.strokeStyle = "#111"; g.lineWidth = 8; g.strokeRect(4, 4, s[2] - 8, s[3] - 8);
+      g.fillStyle = "#111"; bolt(g, 16, 18, 52, 100);
+      g.textAlign = "center"; g.textBaseline = "middle"; g.font = "bold 88px Arial, sans-serif"; g.fillText(p[2], 154, 62, 160);
+      g.font = "bold 17px Arial, sans-serif"; g.fillText("POWER · ÉLECTRICITÉ", 152, 118, 176); g.restore();
+    });
+  });
+  var mat = TM(tex, true), geos = {}, ZAX = new THREE.Vector3(0, 0, 1);
+  function geo(base, key, r) {                               // base geometry with its uv squeezed into the canvas rect r (px)
+    if (geos[key]) return geos[key];
+    var gg = base.clone(), uv = gg.attributes.uv;
+    for (var i = 0; i < uv.count; i++) uv.setXY(i, (r[0] + uv.getX(i) * r[2]) / S, 1 - (r[1] + (1 - uv.getY(i)) * r[3]) / S);
+    return (geos[key] = gg);
+  }
+  function sw(n) { var r = swAt[n]; return [r[0] + 10, r[1] + 10, 8, 8]; }
+  function pc(w, h, d, n, x, y, z, g) { return part(geo(BOX, "b" + n, sw(n)), mat, w, h, d, x, y, z, g); }   // y = centre
+  function face(w, h, key, r, x, y, z, ry, g) { var m = part(geo(PLANE, key, r), mat, w, h, 1, x, y, z, g); m.rotation.y = ry; return m; }
+  function rod(a, b, t, n, g) {                              // a thick cable or a ramp from a to b ([x, y, z], group-local)
+    var A = new THREE.Vector3().fromArray(a), d = new THREE.Vector3().fromArray(b).sub(A), L = d.length();
+    var m = pc(t[0], t[1], L, n, A.x + d.x / 2, A.y + d.y / 2, A.z + d.z / 2, g); m.quaternion.setFromUnitVectors(ZAX, d.normalize()); return m;
+  }
+  D.power.forEach(function (p, i) {
+    var cx = X(p[0] + 8), cz = Z(p[1] + 8), g = new THREE.Group(); g.position.set(cx, 0, cz); scene.add(g);
+    pc(14, 0.8, 10, "dark", 0, 0.4, 0, g);                                                                   // floor plate
+    [-5, 5].forEach(function (x) { pc(1.6, 11.6, 1.6, "galv", x, 6.6, 0, g); pc(1.6, 1.6, 8, "galv", x, 1.6, 0, g); });   // strut legs and feet
+    pc(14, 30, 8, "body", 0, 27, 0, g);                                                                      // the cabinet, 12 to 42 in
+    pc(14.8, 0.8, 9, "dark", 0, 42.4, 0, g);                                                                 // drip cap
+    [1, -1].forEach(function (s) {
+      face(13, 29, "door", DOOR, 0, 27, s * 4.02, s > 0 ? 0 : Math.PI, g);
+      pc(0.7, 3.4, 0.7, "dark", s * 5.4, 27, s * 4.3, g);                                                   // door handle
+      pc(0.9, 0.9, 0.9, "galv", s * 4.8, 13.2, s * 4.4, g);                                                  // cable gland
+      rod([s * 4.8, 13.2, s * 4.6], [s * 4.8, 0.5, s * 6], [0.8, 0.8], "cable", g);                           // feed down to the floor
+    });
+    cyl(0.9, WALL - 42.8, mat, -4, (WALL + 42.8) / 2, 0, g).geometry = geo(CYL, "cconduit", sw("galv"));     // conduit to the ceiling
+    pc(2.4, 2.4, 2.4, "galv", -4, 44, 0, g);                                                                 // its fitting
+    pc(0.8, WALL - 42.8, 0.8, "cable", 3.5, (WALL + 42.8) / 2, -1.2, g);                                     // the cable drop
+    pc(16, 0.6, 16, "dark", 0, 62.2, 0, g); pc(16, 0.6, 16, "dark", 0, 71.8, 0, g);                          // the name box: frame
+    [[0, 7.91, 0], [0, -7.91, Math.PI], [7.91, 0, Math.PI / 2], [-7.91, 0, -Math.PI / 2]].forEach(function (f) {
+      face(15.8, 9, "sign" + i, signR(i), f[0], 67, f[1], f[2], g);
+    });
+    pc(15.8, 9, 15.8, "dark", 0, 67, 0, g);
+    // feeds to the two nearest tables, under a cable ramp where they leave the panel
+    var near = D.tables.map(function (t) { var tx = X(t.x + t.w / 2) - cx, tz = Z(t.y + t.h / 2) - cz; return [Math.hypot(tx, tz), tx, tz]; })
+      .filter(function (t) { return t[0] < 240; }).sort(function (a, b) { return a[0] - b[0]; }).slice(0, 2);
+    near.forEach(function (t, j) {
+      var s = t[2] >= 0 ? 1 : -1, ux = t[1] / t[0], uz = t[2] / t[0], a = [s * 4.8 + uz * 0, 0.4, s * 6], e = [t[1] - ux * 12, 0.4, t[2] - uz * 12];
+      rod(a, e, [0.8, 0.8], "cable", g);
+      var L = Math.min(30, t[0] - 40); if (L < 8) return;
+      var r0 = [a[0] + ux * 6, 0.45, a[2] + uz * 6], r1 = [r0[0] + ux * L, 0.45, r0[2] + uz * L];
+      rod(r0, r1, [5, 0.9], "yellow", g); rod([r0[0], 0.92, r0[2]], [r1[0], 0.92, r1[2]], [1.6, 0.08], "black", g);
+    });
+  });
 })();
 
 // ---------------------------------------------------------------- doors and signs
@@ -4187,7 +4432,7 @@ var GUESS = {
   5: "Retronic Design: USB adapters for classic Atari, C64, Amiga, Apple II and Vectrex controllers, and Amiga floppy, video and MIDI add-ons.",
   6: "Maybe some C64 demoscene stuff?",
   7: "Might be about the Apple Newton.",
-  8: "Maybe mostly Commodore, with some Atari, Apple and Amiga?",
+  8: "Maybe mostly Commodore 8-bit, C64s and C128s, and a 30-year-old BBS?",
   11: "Maybe British home computers: Sinclair, Amstrad, Acorn?",
   12: "Maybe modems and dial-up?",
   13: "The GameTank, a brand-new open-source 8-bit console with two 6502s, real cartridges and composite video, playable.",
@@ -4757,6 +5002,12 @@ var RAGS = [{"t": "Maple Leaf Rag", "y": 1899, "b": "TVRoZAAAAAYAAQADAYBNVHJrAAA
   "TIP": "ASTUCE",
   "HOLD": "RETENU",
   "DEMO": "DÉMO",
+  "PAUSED": "PAUSE",
+  "Press P or ⏸ to resume.": "Appuie sur P ou ⏸ pour reprendre.",
+  "Tap ⏸ to resume.": "Touche ⏸ pour reprendre.",
+  "Paused. {hint}": "En pause. {hint}",
+  "{what}: paused. {hint}": "{what} : en pause. {hint}",
+  "The clock runs again: you're at work.": "L'horloge repart : t'es au travail.",
   "you": "toi",
   "Paused: go back to finish it": "En pause : retourne finir",
   "{n} machine at your booth is broken: it stays broken until closing.": [
@@ -5028,6 +5279,11 @@ var RAGS = [{"t": "Maple Leaf Rag", "y": 1899, "b": "TVRoZAAAAAYAAQADAYBNVHJrAAA
   "To do": "À faire",
   "To do · {n}": "À faire · {n}",
   "{n} done": "terminés : {n}",
+  "Set up": "Installées",
+  "tap: the next one": "touche : la suivante",
+  "click: the next one": "clic : la suivante",
+  "{n} of {of} machines set up: show me the next one": "{n} machines installées sur {of} : montre-moi la suivante",
+  "All {n} machines are set up.": "Les {n} machines sont installées.",
   "{strip} · at the panel": "{strip} · au panneau",
   "Fix the {m}": "Réparer {m|le}",
   "Answer {m}": "Répondre : {m}",
@@ -5129,8 +5385,8 @@ var RAGS = [{"t": "Maple Leaf Rag", "y": 1899, "b": "TVRoZAAAAAYAAQADAYBNVHJrAAA
   "Fix it at the machine: {m} ({f}).": "Répare-le à la machine : {m} ({f}).",
   "down": "en panne",
   "it's down": "c'est en panne",
-  "{n} XP laptop bricks on top of {w} W of PCs: the breaker gave up. (The XP laptops carry on, on battery.)":
-    "{n} blocs d'alimentation de portables XP en plus de {w} W de PC : le disjoncteur a lâché. (Les portables XP continuent sur la batterie.)",
+  "{n} XP laptop bricks put circuit {s} at {l} of {c} W: the breaker tripped. (The XP laptops carry on, on battery.)":
+    "{n} blocs d'alimentation de portables XP mettent le circuit {s} à {l} sur {c} W : le disjoncteur a sauté. (Les portables XP continuent sur la batterie.)",
 
   // ---- lan.js: the XP laptops (booth 29's stash)
   "All twelve XP laptops are already on your LAN.": "Les douze portables XP sont déjà sur ton LAN.",
@@ -5619,10 +5875,12 @@ var RAGS = [{"t": "Maple Leaf Rag", "y": 1899, "b": "TVRoZAAAAAYAAQADAYBNVHJrAAA
     "{n} machines éteintes depuis vendredi : {list}. Installe-les une par une à ton kiosque, sinon elles restent éteintes jusqu'à la fermeture."],
   "Set up the server · {n} min": "Installer le serveur · {n} min",
   "Set up the PC · {n} min": "Installer le PC · {n} min",
-  "It will trip again: the shop's extra power bar (circuit D) takes the bricks off circuit C.":
-    "Il va resauter : la barre d'alimentation de la boutique (circuit D) enlève les blocs du circuit C.",
-  "Circuit C would carry {w} of {c} W with four more bricks: its breaker will trip. The shop's extra power bar (circuit D) takes them.":
-    "Avec quatre blocs de plus, le circuit C porterait {w} sur {c} W : son disjoncteur va sauter. La barre d'alimentation de la boutique (circuit D) les prend.",
+  "The shop's extra power bar (circuit D) takes the bricks.": "La barre d'alimentation de la boutique (circuit D) prend les blocs.",
+  "At the panel, switch something off on circuit {s} or move it to another one, then reset it.":
+    "Au panneau, éteins quelque chose sur le circuit {s} ou change-le de circuit, pis réarme-le.",
+  "Their four power bricks ({w} W) go on circuit {s}: {a} of {c} W.": "Leurs quatre blocs d'alimentation ({w} W) vont sur le circuit {s} : {a} sur {c} W.",
+  "No circuit has room for four more power bricks ({w} W): circuit {s} would carry {a} of {c} W and its breaker will trip.":
+    "Aucun circuit n'a de place pour quatre blocs de plus ({w} W) : le circuit {s} porterait {a} sur {c} W et son disjoncteur va sauter.",
   // ---- teardown (teardown.js): the last thing on the table, the laptops handed back, what was left behind
   "Something's still on your table: {thing}.": "Il reste quelque chose sur ta table : {thing}.",
   "Pick up {thing}": "Ramasser {thing}",
@@ -5634,6 +5892,48 @@ var RAGS = [{"t": "Maple Leaf Rag", "y": 1899, "b": "TVRoZAAAAAYAAQADAYBNVHJrAAA
   // ---- lunch (events.js): Clint has a line, not a booth
   "At lunch until {t} · nobody is signing: fans in a hurry leave the line": "Au dîner jusqu'à {t} · personne signe : les fans pressés quittent la file",
   "Back from lunch. The signing table is open again.": "De retour du dîner. La table de signature est rouverte."
+} });
+
+// Part F: booth 8's extension cord (cord.js; circuit E in setup.js, tasks.js). "Rallonge", as in Québec.
+(window.VCF_FR = window.VCF_FR || []).push({ t: {
+  "circuit E · the cord from One Maybe Two Retro (booth 8)": "circuit E · la rallonge de One Maybe Two Retro (kiosque 8)",
+  "Your arms are full of cord reel: run it to your booth first.": "T'as les bras pleins avec le dévidoir : va d'abord brancher la rallonge à ton kiosque.",
+  "Circuit E's breaker is at booth 8: One Maybe Two Retro reset it once your load on E is under {c} W.":
+    "Le disjoncteur du circuit E est au kiosque 8 : One Maybe Two Retro le réarme dès que ta charge sur E passe sous {c} W.",
+  "Get circuit E under {c} W": "Ramener le circuit E sous {c} W",
+  "booth 8 resets their breaker · move a load at the panel": "le kiosque 8 réarme son disjoncteur · déplace une charge au panneau",
+  "walk in: it plugs in at your table": "avance : elle se branche à ta table",
+  "Your cord already runs from their spare outlet. One per weekend.": "Ta rallonge part déjà de leur prise libre. Une par fin de semaine.",
+  "You have the reel: walk it to {booth}.": "T'as le dévidoir : apporte-le à {booth}.",
+  "Your arms are full: put down what you're carrying first.": "T'as les bras pleins : dépose d'abord ce que tu portes.",
+  "Walk over to One Maybe Two Retro's table first.": "Va d'abord à la table de One Maybe Two Retro.",
+  "Booth 8 · One Maybe Two Retro": "Kiosque 8 · One Maybe Two Retro",
+  "A spare outlet?": "Une prise de libre?",
+  "Commodore repairs and sales: a C64C with an SD drive, a C128, a 1541, a 1702 monitor and a modem answering calls for a 30-year-old BBS. The lot draws about 300 W.":
+    "Réparation et vente de Commodore : un C64C avec un lecteur SD, un C128, un 1541, un moniteur 1702 pis un modem qui répond aux appels d'un BBS de 30 ans. Le tout tire environ 300 W.",
+  "\"Take the reel: 50 feet of 14-gauge. Keep it under {w} W or the BBS drops carrier.\"":
+    "« Prends le dévidoir : 50 pieds de calibre 14. Reste sous {w} W, sinon le BBS perd la porteuse. »",
+  "Circuit E: {w} W more at {booth}. Their price: a coffee from the sales desk ({n} kudos), now or when you have it.":
+    "Circuit E : {w} W de plus à {booth}. Leur prix : un café du comptoir de vente ({n} kudos), tout de suite ou quand tu les auras.",
+  "Take the cord reel": "Prendre le dévidoir",
+  "You've got the reel ({lb} lb). Walk it back to {booth}: it plugs in at your table.": "T'as le dévidoir ({lb} lb). Rapporte-le à {booth} : la rallonge se branche à ta table.",
+  "−{n} kudos: a coffee for their table.": "−{n} kudos : un café pour leur table.",
+  "You owe them a coffee ({n} kudos).": "Tu leur dois un café ({n} kudos).",
+  "Cord run from booth 8. Circuit E: {w} W more at {booth}, on your power meter.": "Rallonge tirée du kiosque 8. Circuit E : {w} W de plus à {booth}, sur ton compteur de courant.",
+  "your cord runs from here": "ta rallonge part d'ici",
+  "the reel is in your arms": "le dévidoir est dans tes bras",
+  "ask for a spare outlet": "demander une prise de libre",
+  "Circuit E went too: One Maybe Two Retro's BBS dropped carrier.": "Le circuit E a sauté aussi : le BBS de One Maybe Two Retro a perdu la porteuse.",
+  "Clunk. One Maybe Two Retro's BBS just went dark. Your cord: {l} of their spare {c} W.": "Clac. Le BBS de One Maybe Two Retro vient de s'éteindre. Ta rallonge : {l} sur leurs {c} W de libres.",
+  "−{n} kudo.": ["−{n} kudo.", "−{n} kudos."],
+  "Move a load off E at the panel: they'll reset it once it fits.": "Enlève une charge du circuit E au panneau : ils vont le réarmer quand ça rentre.",
+  "Or run a cord from booth 8 (One Maybe Two Retro): {w} W more, on circuit E.": "Ou tire une rallonge du kiosque 8 (One Maybe Two Retro) : {w} W de plus, sur le circuit E.",
+  "Run the cord to your booth": "Tirer la rallonge jusqu'à ton kiosque",
+  "the reel from booth 8 · {booth}": "le dévidoir du kiosque 8 · {booth}",
+  "Ask booth 8 for a spare outlet": "Demander une prise au kiosque 8",
+  "One Maybe Two Retro · circuit E, {w} W": "One Maybe Two Retro · circuit E, {w} W",
+  "You bring One Maybe Two Retro the coffee you owed them. −{n} kudos.": "T'apportes à One Maybe Two Retro le café que tu leur devais. −{n} kudos.",
+  "One Maybe Two Retro reset their breaker. Circuit E is back on, and the BBS answers again.": "One Maybe Two Retro a réarmé son disjoncteur. Le circuit E est revenu, pis le BBS répond encore."
 } });
 
 // ---------------------------------------------------------------- VCF Tycoon in French: the mini-games
@@ -7354,6 +7654,8 @@ var RAGS = [{"t": "Maple Leaf Rag", "y": 1899, "b": "TVRoZAAAAAYAAQADAYBNVHJrAAA
 //                      key: asks first when G.skipWarn(fn) providers say something is open (fn(phaseId) -> a line or null)
 //   G.calm()           reduced motion (the OS setting or the calm option): no camera nudge, shake or hit-stop
 //   G.skipping         true from a skip until the end of the next tick (its minutes fire in between)
+//   G.paused           the ⏸ key (or P): the clock stops, the HUD says PAUSED; G.unpause() resumes it (a job you start
+//                      does, act.js); G.pauseHint() "Press P or ⏸ to resume." ("Tap ⏸" on a touch screen)
 //   G.fmt(min) "Sat 11:42";  G.rnd()  seeded random (state.seed), use it for game logic (per game minute,
 //                      a click); G.vrnd() for draws that depend on frame timing (the crowd, visuals)
 //   G.urgent(fn)       fair speed: fn() -> true while something with a timer waits for the player; then the clock
@@ -8112,8 +8414,11 @@ var G = (function () {
   pauseBtn.addEventListener("click", function () {   // (a touch screen has no Esc: ⏸ opens the pause card, with its FR / EN key)
     this.blur();
     if (G.touch && G.touch() && !G.paused && !cardOpen && !G.modal && G.state.on) { pauseCard(); return; }
-    G.paused = !G.paused; G.emit("pause", G.paused);
+    G.paused = !G.paused; G.emit("pause", G.paused); dirty = true;
   });
+  // paused (⏸ or P, nothing else pauses): the clock bar and the job bar say so (ui.js, work.js); a job you start resumes the clock (act.js)
+  G.unpause = function () { if (!G.paused) return false; G.paused = false; G.emit("pause", false); dirty = true; return true; };
+  G.pauseHint = function () { return G.touch && G.touch() ? G.t("Tap ⏸ to resume.") : G.t("Press P or ⏸ to resume."); };
   skipBtn.addEventListener("click", function () { if (!G.modal) G.skipAsk(); this.blur(); });   // (not under a mini-game; Friday with your booth not up: it asks)
   function saveNow() { if (G.state.on) { try { G.save(); } catch (err) {} } }   // phones drop background tabs: save on the way out
   addEventListener("pagehide", saveNow); document.addEventListener("visibilitychange", function () { if (document.hidden) saveNow(); });
@@ -8236,6 +8541,7 @@ var G = (function () {
     var pz = G.paused ? "true" : "false"; if (pauseBtn.getAttribute("aria-pressed") !== pz) pauseBtn.setAttribute("aria-pressed", pz);
     pauseBtn.disabled = !timed; skipBtn.disabled = !timed;
     speedBtns.forEach(function (b, i) { var p = s.speed === SPEEDS[i] ? "true" : "false"; if (b.getAttribute("aria-pressed") !== p) b.setAttribute("aria-pressed", p); b.disabled = !timed; });
+    var pd = timed && !!G.paused; if (bar.classList.contains("g-paused") !== pd) bar.classList.toggle("g-paused", pd);   // (paused: the clock says so, ui.js)
     var hd = timed && G.held(); if (bar.classList.contains("g-held") !== hd) {   // (the clock is held at 1x: something needs you)
       bar.classList.toggle("g-held", hd); segEl.title = hd ? G.t("Held at 1×: something needs you. 2× and 4× only fast-forward the quiet stretches.") : ""; }
     var hl = G.TUNE.hud[s.who], show = hl && (ph.id === "final" ? [] : hl[ph.id] || hl[ph.id === "sat" || ph.id === "sun" || ph.id === "evening" ? "show" : ""] || hl.all);
@@ -8981,6 +9287,13 @@ var G = (function () {
     B + ".g-demo #g-bar .skip{width:auto;padding-left:10px;padding-right:12px}" + B + ".g-demo #g-bar .skip .sk-l{display:inline;margin-left:6px;font-size:13px;white-space:nowrap}",
     B + ".g-demo #g-bar .clock::after{content:var(--g-w-demo,\"DEMO\");font:400 calc(16px * var(--ui-k))/1 var(--ui-num);color:var(--crt-bg);background:var(--crt);" +
       "padding:2px 5px;border-radius:2px;margin-left:2px}",
+    // paused (⏸ / P): a PAUSED tag by the clock, the time blinks (steady with reduced motion), the job bars say "Paused", grey and striped
+    B + " #g-bar.g-paused .clock::after{content:var(--g-w-paused,\"PAUSED\");font:400 calc(16px * var(--ui-k))/1 var(--ui-num);color:var(--amber-bg);" +
+      "background:var(--amber);padding:2px 5px;border-radius:2px;margin-left:2px;white-space:nowrap}",
+    B + " #g-bar.g-paused #g-clock{color:var(--amber);text-shadow:none;animation:g-blink 1.2s steps(1,end) infinite}",
+    "@keyframes g-blink{50%{opacity:.25}}",
+    B + " .job.paused .t{color:var(--amber)}",
+    B + " .job.paused .ui-bar{background:repeating-linear-gradient(45deg,#4a463e 0 6px,#2e2b25 6px 12px)}" + B + " .job.paused .ui-bar>b{background:#8a8478;box-shadow:none}",
     B + " #g-notice[data-owner=coach]{background:var(--paper);color:var(--paper-ink);font:700 14.5px/1.35 var(--ui-font);letter-spacing:0;text-shadow:none;" +
       "transform:none;clip-path:none;padding:8px 16px 8px 12px;border-top:1px dashed var(--perf);border-bottom:1px dashed var(--perf);text-align:left;position:relative}",
     B + " #g-notice[data-owner=coach]::before{content:var(--g-w-tip,\"TIP\");float:left;margin:-1px 10px 0 0;font:800 12px/1 var(--ui-display);" +
@@ -9111,7 +9424,7 @@ var G = (function () {
   G.on("quit", function () { skin(false); root.classList.remove("g-demo"); });
   try { if (G.pref && G.pref("calm")) root.classList.add("ui-calm"); } catch (err) {}
   function cssWords() {                              // the words the stylesheet draws (::before / ::after), in the page's language
-    var w = { tip: G.t("TIP"), hold: G.t("HOLD"), demo: G.t("DEMO"), you: " · " + G.t("you") };
+    var w = { tip: G.t("TIP"), hold: G.t("HOLD"), demo: G.t("DEMO"), paused: G.t("PAUSED"), you: " · " + G.t("you") };
     for (var k in w) root.style.setProperty("--g-w-" + k, JSON.stringify(w[k]));
   }
   cssWords(); G.on("lang", cssWords);
@@ -9518,31 +9831,35 @@ var G = (function () {
       draw: { osborne1: 90, hyperion: 100, compaq1: 120, kaypro2: 90, ibm5155: 130, kaypro1: 90, compaq3: 110, compaq2: 120,
         macport: 25, bondwell200: 15, minisport: 20, cbm286: 30, bondwell310: 30, superpet: 110, cbm8050: 100, souvenir: 50, logprinter: 50,
         cisco3745: 150, cisco2621: 60, vg248: 50, pm25: 25, "switch": 20, lansrv: 250, lanstation: 180, lan1: 230, lan2: 230, lan3: 230, lan4: 230 },
-      strips: { A: 1100, B: 1100, C: 1100, D: 900 },
-      xpBrick: 45,                                       // an XP laptop's power brick (lan.js, through G.power.extra)
+      strips: { A: 1100, B: 1100, C: 1440, D: 900, E: 500 },   // C: the LAN's own 15 A circuit, 80% of 1,800 W for a load that runs all day;
+                                                       // E: booth 8's spare (cord.js): their 8-bit table draws about 300 W of an 800 W share
+      xpBrick: 40,                                       // an XP laptop's power brick playing a 3D game (Pentium M: 25-45 W at the wall; lan.js)
       circuit: 1440, station: 2.4,                       // Nick: one circuit; one desk station's badges per game minute
       near: 0.85                                         // plugging in: a card only when the circuit would be past 85% (else automatic)
     },
+    // ---- booth 8's extension cord (cord.js): its price (a coffee, owed until you have the kudos), the reel's weight, how long
+    // One Maybe Two Retro take to reset their breaker once your load on E fits, and what a trip of theirs costs you
+    cord: { cost: 3, reelLb: 6, reach: 45, resetMin: 4, tripKudos: 2, tripRep: 0.1 },
     // ---- Friday boots: game minutes (else 2), and failures [chance, kind, weight, kind, weight, ...]
     boot: {
       late: 6,                                          // dark since Friday: set up by hand on a show day, this many minutes + its boot (setup.js)
       minutes: { cisco3745: 6, lansrv: 4, lanstation: 2, superpet: 2, cbm8050: 2, macport: 1, bondwell200: 1, minisport: 1, cbm286: 1,
         bondwell310: 1, souvenir: 1, logprinter: 1 },
       fail: { osborne1: [0.45, "rifa", 7, "floppy", 3], hyperion: [0.3, "hhold", 5, "floppy", 5], compaq1: [0.2, "floppy", 1],
-        kaypro2: [0.3, "floppy", 7, "rifa", 3], kaypro1: [0.3, "floppy", 8, "tantalum", 2], ibm5155: [0.25, "tantalum", 5, "floppy", 5],
+        kaypro2: [0.3, "floppy", 7, "rifa", 3], kaypro1: [0.3, "floppy", 8, "tantalum", 2], ibm5155: [0.25, "tantalum", 3, "floppy", 7],
         compaq3: [0.15, "floppy", 1], compaq2: [0.15, "tantalum", 1, "floppy", 1], macport: [0.2, "floppy", 1], minisport: [0.2, "floppy", 1],
         bondwell200: [0.2, "floppy", 1], cbm286: [0.2, "tantalum", 1], bondwell310: [0.15, "floppy", 1], superpet: [0.25, "rifa", 1, "tantalum", 1],
-        cbm8050: [0.5, "rifa", 4, "tantalum", 3, "floppy", 3], souvenir: [0.2, "jam", 1], logprinter: [0.2, "jam", 1],
+        cbm8050: [0.5, "rifa", 4, "tantalum", 2, "floppy", 4], souvenir: [0.2, "jam", 1], logprinter: [0.2, "jam", 1],
         lansrv: [0.3, "dhcp", 1], lanstation: [0.2, "cable", 1], lan1: [0.25, "cable", 1], lan2: [0.25, "cable", 1], lan3: [0.25, "cable", 1], lan4: [0.25, "cable", 1] },
       autoFail: 0.4                                      // the booth you don't play is good at this, mostly
     },
     // ---- show-day faults: per game minute hazard for a working machine, and which faults (weights)
-    hazard: {
+    hazard: {                                            // (a random tantalum: only where the boot list has one, one a day at your booth: faults.js)
       b29: { osborne1: 1 / 380, crt: 1 / 900, compaq3: 1 / 900, lap: 1 / 2600, cbm8050: 1 / 2400 },
       b29kinds: { osborne1: [["hang", 5], ["floppy", 2], ["rifa", 1.5], ["vhold", 1], ["key", 1]],
-        crt: [["rifa", 2], ["floppy", 3], ["vhold", 2], ["key", 1.5], ["tantalum", 1], ["hang", 1]],
-        compaq3: [["floppy", 3], ["key", 2], ["tantalum", 1.5], ["hang", 1], ["rifa", 1]],
-        lap: [["floppy", 3], ["key", 3], ["tantalum", 1], ["hang", 1]], cbm8050: [["floppy", 1]] },
+        crt: [["rifa", 2], ["floppy", 3], ["vhold", 2], ["key", 1.5], ["tantalum", 0.5], ["hang", 2]],
+        compaq3: [["floppy", 3], ["key", 2], ["hang", 2], ["rifa", 1]],
+        lap: [["floppy", 3], ["key", 3], ["tantalum", 0.5], ["hang", 1.5]], cbm8050: [["floppy", 1]] },
       ageK: 0.1,                                         // +10% per hour it has run
       lanNet: 1 / 450, lanPad: 1 / 600, lanXP: 1 / 380, lanLag: 1 / 800,
       autoFix: 3, autoFixAdd: 15,                        // a booth that runs itself fixes a fault in 3x its minutes + 15 (slower than a player on it)
@@ -9730,7 +10047,9 @@ var G = (function () {
       id: o.id || null, x: o.x === undefined ? null : o.x, z: o.z === undefined ? null : o.z, y: o.y || null,
       r: o.radius === undefined ? 150 : o.radius, leave: o.leave || "pause", away: false, awayText: o.awayText || "", note: o.note || "",
       kind: o.kind || "hands", fx: o.fx || "", fxId: o.fxId || null, pose: o.pose || "", ff: o.ff !== false, skip: o.skip || "", data: o.data || {} };
-    T = 1; return j;
+    T = 1;
+    if (j.kind === "hands" && G.unpause && G.unpause()) G.hud.toast(G.t("The clock runs again: you're at work."), "");   // (you chose to work: a forgotten ⏸ would hold it at "1 min" for ever)
+    return j;
   };
   J.running = function (key) { var l = jobs(); return (l && l[key]) || null; };
   J.busy = function () { var l = jobs(); if (l) for (var k in l) if (l[k].kind === "hands") return l[k]; return null; };
@@ -9795,7 +10114,8 @@ var G = (function () {
       if (!first && j.kind === "hands") first = j;
     }
     var t = "";                                     // (at it: the job bar says what and how long, so the line keeps "Next: ..."; REVIEW-PANEL2-UX m10)
-    if (first && first.away) t = G.t("{what} ({n} min left)", { what: first.awayText || G.t("Go back to finish it"), n: Math.max(1, Math.ceil(first.left)) });
+    if (first && G.paused && G.phase().end > G.phase().start) t = G.t("{what}: paused. {hint}", { what: first.note || first.label, hint: G.pauseHint() });
+    else if (first && first.away) t = G.t("{what} ({n} min left)", { what: first.awayText || G.t("Go back to finish it"), n: Math.max(1, Math.ceil(first.left)) });
     else if (first && first.note && first.note !== first.label) t = G.t("{what}: {n} min left", { what: first.note, n: Math.max(1, Math.ceil(first.left)) });
     G.hud.notice(t, "act", 3);
   }
@@ -9827,7 +10147,8 @@ var G = (function () {
 //       the fix: a reversed tantalum, a skewed sheet), r.note (a toast). G.mini.pref(): "never" hides the button,
 //       "always" opens the game straight from E (its Esc comes back to the card); the card cycles it.
 //   G.fault(id, kind, o) -> true when it broke: setGear(id, {down: true, fault: kind}), a red tag over it,
-//       (o.k: its repairs take k x the minutes: the scripted opener's RIFA)
+//       (o.k: its repairs take k x the minutes: the scripted opener's RIFA; o.random: a hazard's or a boot's roll,
+//       which a kind's swap may turn into another: one tantalum a day; o.refault: a bad repair coming back)
 //       the repair on its pick ("fix: <label>"). Works for any id in G.state.gear (not GEAR: give
 //       lib.js's G.spotOf a finder so the tag knows where it is). G.repair(id, quiet) clears it.
 //   G.faultOf(id) -> { kind, cause, tried, t, auto } or null;  G.repairUI(id): the repair card (E on it)
@@ -9937,8 +10258,9 @@ var G = (function () {
   G.fault = function (id, kind, o) {
     if (!on() || !G.state.gear[id] || !KINDS[kind] || packing()) return false;
     var s = S(), d = KINDS[kind]; if (s.list[id]) return false;
-    if (d.swap) { var k2 = d.swap(id); if (k2 && KINDS[k2]) { kind = k2; d = KINDS[k2]; } }   // (a variant of the kind: the floppy's Abort, Retry, Fail?)
+    for (var sw = 0; sw < 2 && d.swap; sw++) { var k2 = d.swap(id, o); if (!k2 || !KINDS[k2] || k2 === kind) break; kind = k2; d = KINDS[k2]; }   // (a variant of the kind: the floppy's Abort, Retry, Fail?; a tantalum too many)
     var f = record(id, kind);
+    if (kind === "tantalum" && mine(id, kind)) day().tant = (day().tant || 0) + 1;
     if (o && o.k) f.k = o.k;                            // (a scripted fault fixes faster: coach.js's opener)
     delete ev[id];
     G.setGear(id, { down: true, fault: kind });
@@ -9982,7 +10304,7 @@ var G = (function () {
     if (back) { G.hud.toast(G.t("You're at lunch until {t}.", { t: G.hhmm(back) }), ""); return true; }
     if (!mine(id, f.kind)) { G.hud.toast(G.t("Not your booth: they'll sort it out."), ""); return true; }
     var j = G.job.running("fix");
-    if (j && j.data.id === id) { G.hud.toast(G.t("Working on it: {n} min left. Stay close.", { n: Math.ceil(j.left) }), ""); return true; }
+    if (j && j.data.id === id) { G.hud.toast(G.paused ? G.t("Paused. {hint}", { hint: G.pauseHint() }) : G.t("Working on it: {n} min left. Stay close.", { n: Math.ceil(j.left) }), ""); return true; }
     var pf = typeof G.mini === "function" ? (G.mini.pref ? G.mini.pref() : "ask") : "never";
     var d = KINDS[f.kind], l = choicesOf(id, f), play = pf !== "never", mi;
     if (play && !noAuto && pf === "always") {   // "Always": straight into the game (Esc comes back to this card)
@@ -10052,7 +10374,7 @@ var G = (function () {
       var good = j.data.q !== null || c.ok === true || c.ok === undefined || (typeof c.ok === "function" ? c.ok(id, f) : typeof c.ok === "number" ? G.rnd() < c.ok : c.ok === f.cause);
       if (good) {
         G.repair(id); G.say(c.done ? sub(c.done, id) : G.t("Fixed: the {m} is back.", { m: nm(id) }), "good"); snd("boot", id);
-        var rf = j.data.rf; if (rf && rf.kind) G.at(Math.floor(G.state.min) + (rf.after || 20), function () { if (G.fault(id, rf.kind) && rf.text) G.say(rf.text, "bad"); });
+        var rf = j.data.rf; if (rf && rf.kind) G.at(Math.floor(G.state.min) + (rf.after || 20), function () { if (G.fault(id, rf.kind, { refault: true }) && rf.text) G.say(rf.text, "bad"); });
         return;
       }
       if (typeof c.ok === "string") f.tried.push(cid(c));   // a wrong guess is ruled out; bad luck can be retried (its English label)
@@ -10122,10 +10444,20 @@ var G = (function () {
     choices: [{ label: "Snip the dead cap out (it runs without it, for now)", minutes: 15, ok: true, needs: null, done: "Cap cut out. The {m} runs again without its line filter; fit a new one at home." },
               { label: "Fit a new X2 safety cap (the proper fix)", minutes: 40, ok: true, needs: null, done: "New X2 film cap soldered in, case closed. The split RIFA goes on the table beside the {m}, and people pick it up to look." },
               { label: "Swap in the spare PSU", minutes: 8, ok: true, needs: "psu", done: "Spare PSU in. The {m} is back; the old supply goes in the 'recap me' box." }] });
-  G.faultKind("tantalum", { label: "shorted tantalum cap", minutes: 55, fx: "spark",
+  G.faultKind("tantalum", { label: "shorted tantalum cap", minutes: 35, fx: "spark",
     text: "The {m} clicks and won't come up: a tantalum cap on the board has shorted a rail.",
     choices: [{ label: "Feel for the hot one, sniff for the burnt one", minutes: 15, ok: 0.4, done: "There it is, the toasty one. Replaced, and the {m} boots.", fail: "Every cap feels the same. Time for the multimeter." },
               { label: "Trace the rail with the meter, then push current in until one cap warms", minutes: 55, ok: true, mini: "short", done: "Found it: the one cap that got warm. A new tantalum, and the {m} boots." }] });
+  // a random tantalum (o.random: a show-day hazard, a Friday boot) only on a machine of yours that has one in its boot list
+  // (G.TUNE.boot.fail), and one a day at your booth: else that machine's other kind, or a hang. The owner (2026-10-03):
+  // "always a tantalum cap" at the Land of the Portables. A scripted one, a reversed cap coming back, a test's: as asked
+  KINDS.tantalum.swap = function (id, o) {
+    if (!o || !o.random || !mine(id, "tantalum")) return null;
+    var l = G.TUNE.boot.fail[id] || [], i;
+    if (l.indexOf("tantalum") > 0 && !(day().tant > 0)) return null;
+    for (i = 1; i < l.length; i += 2) if (l[i] !== "tantalum" && KINDS[l[i]]) return l[i];
+    return "hang";
+  };
   G.faultKind("floppy", { label: "floppy won't read", minutes: 10, causes: { heads: 0.45, disk: 0.4, align: 0.15 }, fx: "gear",
     text: "The {m} grinds at the boot disk and gives up: disk error.",
     choices: [{ label: "Run the cleaning disk", minutes: 5, ok: "heads", done: "The cleaning disk comes out grey. The {m} boots.", fail: "Clean heads, same error. Not the heads." },
@@ -11209,6 +11541,112 @@ var G = (function () {
   var CALLERS = ["which", "org", "mom", "booth12", "kid"];
   function dur(t) { return G.clamp(t.split(" ").length / 3.4, 2.2, 11); }
 
+  // ---------------------------------------------------------------- the real prompts
+  // voicemail/museum/prompts-tts (Piper voices, layout/AUDIO-LICENSES.md): OKI/Dialogic 4-bit ADPCM, 6000 Hz, high nibble
+  // first (voicemail/tools/vox.py). Only when the build put them next to the page (build-hall.py --museum-audio sets
+  // window.VCF_MUSEUM_AUDIO to "audio/museum/"): over http(s) each <lang>/<NAME>.VOX by XHR, the first time a call needs it;
+  // from file:// (the kiosk) <lang>.js, the same files in base64 (a script tag: a file:// page can't XHR). Decoded once into
+  // AudioBuffers, kept; anything missing or refused: the captions alone, as before. The captions always show; a prompt that
+  // plays sets the prompt's time to its length; a new prompt (a key), hold, LINK or hanging up cuts it. No French LANG, BEEP
+  // or MODEM: the card plays those from its base directory (MUSEUM.CFG promptdir), here en/. Sound off: nothing plays.
+  var VSTEP = [16, 17, 19, 21, 23, 25, 28, 31, 34, 37, 41, 45, 50, 55, 60, 66, 73, 80, 88, 97, 107, 118, 130, 143, 157, 173, 190, 209, 230, 253,
+    279, 307, 337, 371, 408, 449, 494, 544, 598, 658, 724, 796, 876, 963, 1060, 1166, 1282, 1411, 1552], VADJ = [-1, -1, -1, -1, 2, 4, 6, 8];
+  function voxDecode(b, up) {                            // bytes -> Float32Array of bytes x 2 x up samples (-1..1); up: linear upsampling
+    up = up || 1; var out = new Float32Array(b.length * 2 * up), s = 0, i = 0, o = 0, prev = 0, j, h, u, n, st, d, v;
+    for (j = 0; j < b.length; j++) for (h = 0; h < 2; h++) {
+      n = h ? b[j] & 15 : b[j] >> 4; st = VSTEP[i]; d = st >> 3;
+      if (n & 1) d += st >> 2; if (n & 2) d += st >> 1; if (n & 4) d += st;
+      s += n & 8 ? -d : d; if (s > 2047) s = 2047; else if (s < -2048) s = -2048;
+      i += VADJ[n & 7]; if (i < 0) i = 0; else if (i > 48) i = 48;
+      v = s / 2048; if (up === 1) out[o++] = v; else { for (u = 1; u <= up; u++) out[o++] = prev + (v - prev) * u / up; } prev = v;
+    }
+    return out;
+  }
+  // the clips by key (MUSEUM.CFG [prompts] clip1..clip0: a key's files play back to back)
+  var VCLIP = { "1": ["OSBORNE1"], "2": ["KAYPRO2", "KAYPRO1"], "3": ["HYPERION"], "4": ["COMPAQ", "IBM5155"], "5": ["COMPAQ2", "COMPAQ3"], "6": ["MACPORT"],
+    "7": ["B200", "MINISPRT"], "8": ["C286LT", "B310SX"], "9": ["SUPERPET"], "0": ["MODEM"] };
+  var VBASE = { LANG: 1, BEEP: 1, MODEM: 1 };
+  var VA = { log: [], fetch: null, dead: false, rate: 0 };   // (G.mini.phoneAudio: the checks read log, stub fetch(lang, name, cb(bytes|null)))
+  var vRaw = {}, vBuf = {}, vWait = {}, vBun = {}, vG = null;
+  function vBase() { var b = window.VCF_MUSEUM_AUDIO; return typeof b === "string" ? b : ""; }
+  function vOn() { return !VA.dead && !!(VA.fetch || vBase()); }
+  function vKey(lang, name) { return (VBASE[name] ? "en" : lang || "fr") + "/" + name; }
+  function vB64(t) { var str = atob(t), b = new Uint8Array(str.length); for (var i = 0; i < str.length; i++) b[i] = str.charCodeAt(i); return b; }
+  function vBundle(lang, cb) {                           // file://: audio/museum/<lang>.js sets VCF_VOX[lang] = { NAME: base64 }
+    var w = vBun[lang]; if (w === true || w === false) { cb(w); return; } if (w) { w.push(cb); return; }
+    w = vBun[lang] = [cb]; var sc = document.createElement("script");
+    function fin(ok) { vBun[lang] = ok; if (sc.parentNode) sc.parentNode.removeChild(sc); for (var i = 0; i < w.length; i++) w[i](ok); }
+    sc.onload = function () { fin(!!(window.VCF_VOX && VCF_VOX[lang])); }; sc.onerror = function () { fin(false); };
+    sc.src = vBase() + lang + ".js"; document.head.appendChild(sc);
+  }
+  function vLoad(k, cb) {                                // cb(ok), once the file's bytes are here (or never will be)
+    if (vRaw[k] || vBuf[k]) { cb(true); return; }
+    if (VA.dead) { cb(false); return; }
+    if (vWait[k]) { vWait[k].push(cb); return; }
+    vWait[k] = [cb];
+    var p = k.split("/"), lang = p[0], name = p[1];
+    function done(b) {
+      var l = vWait[k] || []; delete vWait[k];
+      if (b && b.length) vRaw[k] = b; else VA.dead = true;  // (a missing file means a page without its audio: stop asking)
+      for (var i = 0; i < l.length; i++) { try { l[i](!!vRaw[k]); } catch (err) {} }
+    }
+    try {
+      if (VA.fetch) { VA.fetch(lang, name, done); return; }
+      if (location.protocol === "file:") { vBundle(lang, function (ok) { var t = ok && VCF_VOX[lang][name]; done(t ? vB64(t) : null); }); return; }
+      var x = new XMLHttpRequest(); x.open("GET", vBase() + lang + "/" + name + ".VOX"); x.responseType = "arraybuffer";
+      x.onload = function () { done(x.status === 200 && x.response ? new Uint8Array(x.response) : null); };
+      x.onerror = x.onabort = x.ontimeout = function () { done(null); }; x.send();
+    } catch (err) { done(null); }
+  }
+  function vPre(lang, names) { if (vOn()) names.forEach(function (n) { vLoad(vKey(lang, n), function () {}); }); }
+  function vRate(A) {                                    // 6000 Hz where createBuffer takes it (the spec's floor is 3000; older
+    if (VA.rate) return VA.rate;                         // WebKit refused rates under 22050): else 12000, else 24000, upsampled
+    [6000, 12000, 24000].some(function (r) { try { A.createBuffer(1, 1, r); VA.rate = r; return true; } catch (err) { return false; } });
+    return VA.rate;
+  }
+  function vBuffer(A, k) {
+    if (vBuf[k]) return vBuf[k];
+    if (!vRaw[k] || !vRate(A)) return null;
+    var d = voxDecode(vRaw[k], VA.rate / 6000), b = A.createBuffer(1, d.length, VA.rate);
+    b.getChannelData(0).set(d); delete vRaw[k]; return (vBuf[k] = b);
+  }
+  function vVol(s) { return 0.3 * s.vol / 4; }          // the set's volume bar (1-8; 4 at the start)
+  function vStop(m) {
+    var s = m.s; s.vTok = (s.vTok || 0) + 1;
+    if (s.vSrc && s.vSrc.length) { for (var i = 0; i < s.vSrc.length; i++) { try { s.vSrc[i].stop(); s.vSrc[i].disconnect(); } catch (err) {} } s.vSrc.length = 0; }
+  }
+  function vHave(lang, names) { return names.every(function (n) { return !!(vBuf[vKey(lang, n)] || vRaw[vKey(lang, n)]); }); }
+  // play these files back to back (keys "en/NAME"); o.keepT: leave the prompt's time alone; o.now: only if already loaded
+  function voice(m, keys, o) {
+    var s = m.s; vStop(m); o = o || {};
+    if (!vOn() || !keys || !keys.length) return;
+    var tok = s.vTok, iv = s.ivr, st = iv && iv.st, at = Date.now(), left = keys.length;
+    if (o.now && !keys.every(function (k) { return vBuf[k] || vRaw[k]; })) return;
+    keys.forEach(function (k) { vLoad(k, function () { if (--left === 0) go(); }); });
+    function go() {
+      if (s.vTok !== tok || s.ivr !== iv || (iv && iv.st !== st) || s.line !== "talk" || s.onHold || Date.now() - at > 3000) return;
+      var A = G.sound && G.sound.ctx && G.sound.ctx(), bus = A && G.sound.bus();
+      if (!A || !bus || !G.sound.on()) return;
+      var bufs = [], i, t, tot = 0;
+      try {
+        for (i = 0; i < keys.length; i++) { var b = vBuffer(A, keys[i]); if (!b) return; bufs.push(b); }
+        if (!vG) { vG = A.createGain(); vG.connect(bus); }
+        vG.gain.value = vVol(s); t = A.currentTime + 0.05;
+        for (i = 0; i < bufs.length; i++) { var src = A.createBufferSource(); src.buffer = bufs[i]; src.connect(vG); src.start(t + tot); s.vSrc.push(src); tot += bufs[i].duration + (i < bufs.length - 1 ? 0.3 : 0); }
+      } catch (err) { vStop(m); return; }
+      VA.log.push(keys.join("+")); if (VA.log.length > 40) VA.log.shift();
+      if (iv && !o.keepT && iv.t > 0) iv.t = tot + 0.4;   // the prompt lasts as long as its voice
+    }
+  }
+  function vPrompt(m, st, iv) {                          // what ivr() plays for a prompt
+    var L = iv.lang || "fr";
+    if (st === "lang") return [vKey(L, "LANG")];
+    if (st === "langbad") return ["en/INVALID", "fr/INVALID"];
+    if (st === "clip") return (VCLIP[iv.clip] || []).map(function (n) { return vKey(L, n); });
+    var N = { welcome: "WELCOME", menu: "MENU", again: "AGAIN", invalid: "INVALID", goodbye: "GOODBYE", gbprompt: "GBPROMPT", gbthanks: "GBTHANKS", door: "DOOR" }[st];
+    return N ? [vKey(L, N)] : null;
+  }
+
   // ---------------------------------------------------------------- the line
   function S(m) { return m.s; }
   function cap(m, who, t) {                              // a caption line (the panel keeps the last four; the live line reads it)
@@ -11234,7 +11672,7 @@ var G = (function () {
   function onHook(m) {
     var s = m.s; if (!s.hook) return;
     if (s.held && (s.line === "out" || s.line === "talk")) { transfer(m); }
-    s.hook = false; quiet(); m.sfx("click"); ringOff(m);
+    s.hook = false; quiet(); vStop(m); m.sfx("click"); ringOff(m);
     var was = s.line; s.line = "idle"; s.ivr = null; s.digits = ""; s.held = null; lcd(m, clock(m), "EXT " + s.ext);
     if (s.call && s.call.on) { s.call.on = false; if (s.call.kind === "kid" && !s.data.bonus) { s.kid = true; s.kidT = 6; } else s.closeT = 1.4; }
     if (was !== "idle") cap(m, "", G.t("You hang up."));
@@ -11290,6 +11728,7 @@ var G = (function () {
   }
   function connect(m) {
     var s = m.s, k = s.dest.kind; s.line = "talk"; s.callT = 0; quiet(); ringOff(m);
+    if (k === "museum" || k === "door" || k === "gb") vPre("en", k === "gb" ? ["LANG"] : ["LANG", "MODEM"]);
     if (k === "museum") { s.data.museumTry = true; ivr(m, "lang", LANG, 5, { lang: "", line: s.dest.d }); }
     else if (k === "door") ivr(m, "lang", LANG, 5, { lang: "", door: true });
     else if (k === "gb") ivr(m, "lang", LANG, 5, { lang: "", gb: true });
@@ -11310,10 +11749,10 @@ var G = (function () {
   function link(m) {                                      // LINK = a hook flash: hold the call, a new dial tone (VG248: call 1, flash, call 2, hang up)
     var s = m.s;
     if (!s.hook) { cap(m, "", G.t("LINK does nothing on hook.")); return; }
-    if (s.call && s.call.on && s.line === "talk" && !s.held) { s.held = s.call; s.line = "dial"; s.digits = ""; dial(m); lcd(m, "LINK", ""); cap(m, "", G.t("Flash: the caller is on hold. Dial tone."));
+    if (s.call && s.call.on && s.line === "talk" && !s.held) { vStop(m); s.held = s.call; s.line = "dial"; s.digits = ""; dial(m); lcd(m, "LINK", ""); cap(m, "", G.t("Flash: the caller is on hold. Dial tone."));
       if (s.call.kind === "kid") { s.data.bonus++; cap(m, s.call.name, G.t("Ooooh. That's it. That's the sound.")); } return; }
     if (s.held) { s.line = "talk"; quiet(); ringOff(m); lcd(m, s.held.name, s.held.num); s.held = null; cap(m, "", G.t("Flash again: back with the caller.")); return; }
-    if (s.line !== "idle") { quiet(); s.line = "dial"; s.digits = ""; dial(m); lcd(m, clock(m), ""); cap(m, "", G.t("Flash: a fresh dial tone.")); }
+    if (s.line !== "idle") { quiet(); vStop(m); s.line = "dial"; s.digits = ""; dial(m); lcd(m, clock(m), ""); cap(m, "", G.t("Flash: a fresh dial tone.")); }
   }
   // ---- Dial-a-Museum (MUSEUM.CFG roles museum / guestbook / door)
   function ivr(m, st, text, wait, o) {
@@ -11323,6 +11762,7 @@ var G = (function () {
     var t = text || (st === "lang" ? LANG : TX[iv.lang || "fr"][st]);
     iv.t = t ? dur(t) : 0; iv.wait = wait || 0;
     if (t) cap(m, st === "clip" ? G.t("Dial-a-Museum, clip {n}", { n: iv.clip }) : G.t("Dial-a-Museum"), t);
+    voice(m, vPrompt(m, st, iv), st === "clip" && iv.clip === "0" ? { now: true } : null);   // (the modem: its file, else the synthesised one)
   }
   function heard(m, k) {                                  // a key the far end hears
     var s = m.s, iv = s.ivr, c = s.call;
@@ -11330,21 +11770,21 @@ var G = (function () {
     if (!iv) return;
     iv.idle = 0;
     if (iv.st === "lang" || iv.st === "langwait" || iv.st === "langbad") { if (k === "1" || k === "2") { iv.lang = k === "1" ? "fr" : "en"; next(m); } else ivr(m, "langbad", TX.en.invalid + " / " + TX.fr.invalid, 0); return; }
-    if (iv.st === "door") { if (k === "1") { iv.door = false; ivr(m, "welcome"); } else if (k === "2") { iv.door = false; ivr(m, "gbprompt"); } else cap(m, G.t("Dial-a-Museum"), TX[iv.lang || "fr"].invalid); return; }
+    if (iv.st === "door") { if (k === "1") { iv.door = false; ivr(m, "welcome"); } else if (k === "2") { iv.door = false; ivr(m, "gbprompt"); } else { cap(m, G.t("Dial-a-Museum"), TX[iv.lang || "fr"].invalid); voice(m, [vKey(iv.lang, "INVALID")], { keepT: true }); } return; }
     if (iv.st === "gbrec") { m.sfx("click"); ivr(m, "gbthanks"); s.data.gb = true; return; }
     if (iv.st === "gbprompt") return;
     if (iv.st === "op") { iv.op = (iv.op || "") + k; if (iv.op.length === 2) { if (iv.op === "01") { try { if (G.sound && G.sound.noise) G.sound.noise("beep", 400); } catch (err) {} cap(m, G.t("Dial-a-Museum"), G.t("[beep] Recording WELCOME.VOX. Press any key when you're done.")); iv.st = "oprec"; }
       else { cap(m, G.t("Dial-a-Museum"), G.t("[beep] Prompt {p}. Try 01, the greeting.", { p: iv.op })); iv.op = ""; } } return; }
     if (iv.st === "oprec") { cap(m, G.t("Dial-a-Museum"), G.t("[your new greeting plays back to you]")); s.data.op = true; G.hud.toast(G.t("The old one is kept as WELCOME.BAK."), ""); ivr(m, "goodbye"); return; }
     if (iv.st === "welcome" && k === "*") { iv.star = m.t; return; }
-    if (iv.star && k === "9" && m.t - iv.star < 2.5 && iv.st === "welcome") { iv.st = "op"; iv.op = ""; iv.t = 0; cap(m, G.t("Dial-a-Museum"), G.t("[beep] Operator mode. Dial the two-digit prompt number: 01 is the greeting.")); return; }
+    if (iv.star && k === "9" && m.t - iv.star < 2.5 && iv.st === "welcome") { iv.st = "op"; iv.op = ""; iv.t = 0; vStop(m); cap(m, G.t("Dial-a-Museum"), G.t("[beep] Operator mode. Dial the two-digit prompt number: 01 is the greeting.")); return; }
     iv.star = 0;
     if (iv.st === "welcome" || iv.st === "menu" || iv.st === "clip" || iv.st === "again" || iv.st === "invalid" || iv.st === "wait") {
       if (k === "*") { ivr(m, "menu"); return; }
       if (k === "#") { ivr(m, "goodbye"); return; }
       if (CLIP[k] || k === "0") {
         iv.clip = k; s.data.museum = { keys: s.keys - s.keysAt, secs: Math.round(m.t - s.callStart), clip: k, lang: iv.lang };
-        ivr(m, "clip", clipText(k, iv.lang)); if (k === "0") { try { if (G.sound && G.sound.noise) G.sound.noise("modem", 3000); } catch (err) {} }
+        ivr(m, "clip", clipText(k, iv.lang)); if (k === "0" && !(vOn() && vHave(iv.lang, VCLIP["0"]))) { try { if (G.sound && G.sound.noise) G.sound.noise("modem", 3000); } catch (err) {} }
         return;
       }
       ivr(m, "invalid", null, 0);
@@ -11355,6 +11795,7 @@ var G = (function () {
     if ((iv.st === "lang" || iv.st === "langbad") && !iv.lang) { iv.st = "langwait"; iv.t = 0; iv.wait = 5; iv.idle = 0; return; }
     if (iv.st === "lang" || iv.st === "langbad" || iv.st === "langwait") {
       if (!iv.lang) { iv.lang = "fr"; cap(m, "", G.t("(Nothing pressed for five seconds: French, the default.)")); }
+      vPre(iv.lang, iv.gb ? ["GBPROMPT", "GBTHANKS"] : iv.door ? ["DOOR", "WELCOME", "MENU", "AGAIN", "INVALID", "GOODBYE"] : ["WELCOME", "MENU", "AGAIN", "INVALID", "GOODBYE"]);
       if (iv.door) ivr(m, "door", null, 15); else if (iv.gb) ivr(m, "gbprompt"); else ivr(m, "welcome"); return;
     }
     if (iv.st === "welcome") { ivr(m, "menu", null, 15); return; }
@@ -11363,7 +11804,7 @@ var G = (function () {
     if (iv.st === "gbprompt") { try { if (G.sound && G.sound.noise) G.sound.noise("beep", 500); } catch (err) {} cap(m, "", G.t("[beep] You leave a message: your name, where you're from, your first computer. Press any key when you're done.")); iv.st = "gbrec"; iv.t = 0; iv.wait = 60; return; }
     if (iv.st === "goodbye" || iv.st === "gbthanks") { hangUpFar(m); return; }
   }
-  function hangUpFar(m) { var s = m.s; s.ivr = null; s.line = "busy"; snd(480, 620, 500, 500, 0); lcd(m, "CALL ENDED", s.dest ? s.dest.d : ""); cap(m, "", G.t("Click. The far end hangs up (busy tone). Hang up too.")); }
+  function hangUpFar(m) { var s = m.s; vStop(m); s.ivr = null; s.line = "busy"; snd(480, 620, 500, 500, 0); lcd(m, "CALL ENDED", s.dest ? s.dest.d : ""); cap(m, "", G.t("Click. The far end hangs up (busy tone). Hang up too.")); }
   // ---- incoming calls
   function ringIn(m) {
     var s = m.s, kind = m.opts.caller || CALLERS[Math.floor(m.rnd() * CALLERS.length)], tabs = ["1007", "1008", "1009"].filter(function (x) { return x !== s.ext; });
@@ -11396,6 +11837,8 @@ var G = (function () {
     if (c.kind === "kid") cap(m, G.t("A kid"), G.t("No, the OTHER sound. The long one."));
   }
 
+  G.mini.phoneAudio = { decode: voxDecode, state: VA, on: vOn, key: vKey, clips: VCLIP,
+    reset: function () { vRaw = {}; vBuf = {}; vWait = {}; vBun = {}; VA.dead = false; VA.log.length = 0; } };
   var PH = G.TUNE.mini.phone;
   G.mini.def("phone", {
     title: G.t.k("Meridian M9216"), skill: G.t.k("A booth phone: Dial-a-Museum, the tables, the modem"), time: 0, clock: 0.25, h: 330, dom: "below",
@@ -11405,7 +11848,7 @@ var G = (function () {
     init: function (m, opts) {
       var s = m.s; s.ext = EXT[opts.id] || "1008"; s.hook = false; s.line = "idle"; s.digits = ""; s.caps = []; s.keys = 0; s.mem = 0; s.fr = false;
       s.data = { answered: false, bonus: 0, caller: "", transfer: false, museum: null, modem: false, table: false, gb: false, telnet: "", op: false };
-      s.busy19 = !!opts.busy19; s.last = ""; s.idle = 0; s.closeT = 0; s.light = 0; s.vol = 4; s.ringer = true; s.l1 = ""; s.l2 = "";
+      s.busy19 = !!opts.busy19; s.last = ""; s.idle = 0; s.closeT = 0; s.light = 0; s.vol = 4; s.ringer = true; s.l1 = ""; s.l2 = ""; s.vSrc = []; s.vTok = 0;
       lcd(m, clock(m), "EXT " + s.ext);
       m.dom.innerHTML = '<div class="ph-cap" aria-hidden="true"></div>'; s.capEl = m.dom.firstChild;
       m.add("hs", 18, 18, 108, 296, G.t("the handset (Space)"));
@@ -11434,11 +11877,11 @@ var G = (function () {
         if (f === "dial") { var n = s.shown || s.digits; if (!n) { cap(m, "", G.t("Dial: nothing on the display to dial.")); return; } if (!s.hook) offHook(m, true); if (s.line === "dial") { s.digits = n; lcd(m, null, n); route(m, true); } return; }
       }
       if (id === "rel") { if (s.line !== "idle" && s.line !== "ringin") { if (s.held) transfer(m); var h = s.hook; s.hook = true; onHook(m); if (h) offHook(m, true); cap(m, "", G.t("Release: the call is dropped. Dial tone.")); } return; }
-      if (id === "hold") { if (s.line === "talk") { s.onHold = !s.onHold; lcd(m, s.onHold ? "ON HOLD" : s.l1, null); cap(m, "", s.onHold ? G.t("On hold (the light flashes fast).") : G.t("Back on the line.")); } return; }
+      if (id === "hold") { if (s.line === "talk") { s.onHold = !s.onHold; if (s.onHold) vStop(m); lcd(m, s.onHold ? "ON HOLD" : s.l1, null); cap(m, "", s.onHold ? G.t("On hold (the light flashes fast).") : G.t("Back on the line.")); } return; }
       if (id === "opt") { s.fr = !s.fr; lcd(m, s.fr ? "LANGUE: FRANCAIS" : "LANGUAGE: ENGLISH", null); s.optT = 2; return; }
       if (id === "voll" || id === "volr") {
         if (id === "voll" && s.line === "idle") { s.ringer = !s.ringer; lcd(m, null, s.ringer ? "Ringer is ON" : "Ringer is OFF"); return; }
-        s.vol = G.clamp(s.vol + (id === "volr" ? 1 : -1), 1, 8); lcd(m, null, "VOLUME " + "########".slice(0, s.vol)); return;
+        s.vol = G.clamp(s.vol + (id === "volr" ? 1 : -1), 1, 8); if (vG) { try { vG.gain.value = vVol(s); } catch (err) {} } lcd(m, null, "VOLUME " + "########".slice(0, s.vol)); return;
       }
       if (id === "sd" || id === "su" || id === "cl" || id === "cr") { if (id === "cl" && s.line === "dial" && s.digits) { s.digits = s.digits.slice(0, -1); lcd(m, null, s.digits); } else lcd(m, s.call ? "CALLERS" : "NO CALLS", s.call ? s.call.name : ""); }
     },
@@ -11466,6 +11909,7 @@ var G = (function () {
     tick: function (m, dt) {
       var s = m.s, iv = s.ivr;
       s.light += dt;
+      if (s.vSrc.length && !(G.sound && G.sound.on && G.sound.on())) vStop(m);   // (sound turned off mid-prompt)
       if (s.closeT > 0) { s.closeT -= dt; if (s.closeT <= 0) { if (s.hook) { s.hook = true; onHook(m); } this.leave(m); return; } }
       if (s.kid && s.kidT > 0) { s.kidT -= dt; if (s.kidT <= 0) { s.kid = false; this.leave(m); return; } }
       s.still = (s.still || 0) + dt;                      // nobody answers: the caller hangs up (the ring's minutes, or ringSecs); nobody touches it: it closes
@@ -11486,7 +11930,7 @@ var G = (function () {
       }
       if (s.capDirty && s.capEl) { s.capDirty = false; s.capEl.innerHTML = s.caps.map(function (c) { return "<p>" + (c[0] ? "<b>" + G.esc(G.t("{who}:", { who: c[0] })) + "</b> " : "") + G.esc(c[1]) + "</p>"; }).join(""); }
     },
-    close: function (m) { quiet(); ringOff(m); },
+    close: function (m) { quiet(); vStop(m); ringOff(m); },
     draw: function (m, g) {
       var s = m.s, i, x, y;
       g.fillStyle = "#3d3a33"; g.fillRect(0, 0, 480, 330);
@@ -12347,11 +12791,13 @@ var G = (function () {
 // G.TUNE.power.near asks with a card (fewer modals). The booth you don't play sets itself up over the
 // evening. At 21:00 whatever isn't working stays dark for Saturday.
 // Power contract (TYCOON-PLAN.md): G.power = { load(s), cap(s), trip(s, why), reset(s),
-//   tripped(s), stripOf(id), strips(), name(s), extra(s, watts, tag) }: extra puts another system's
+//   tripped(s), stripOf(id), strips(), name(s), extra(s, watts, tag), planned(s), own(s), tight() }: extra puts another system's
 //   load on circuit s (one entry per tag; 0 removes it; lan.js's XP bricks), counted in load() and
 //   the meter but unplugged for a reset. A trip puts every running item on that
 //   circuit down with fault "power" until it is reset at the panel. Emits "power" (s, "trip" |
-//   "reset" | "retrip") and "boot" (id, ok).
+//   "reset" | "retrip") and "boot" (id, ok). Circuit E is booth 8's cord (cord.js: G.cord): yours only, while it's run; its
+//   breaker is theirs, so a trip is told by cord.js and they reset it (no reset button at the panel). tight(): some circuit of
+//   yours is over, or a machine still to plug in fits nowhere (the to-do list then points at booth 8).
 // Also: G.setupPile (the pile's pick box: the to-do list and the coach point at the crates).
 (function () {
   if (typeof G === "undefined") return;
@@ -12385,7 +12831,8 @@ var G = (function () {
     superpet: G.t.k("designed with the University of Waterloo.") };
   var STRIPS = { A: { name: G.t.k("circuit A · Land of the Portables tables"), cap: TU.power.strips.A },   // (names shown with G.t: sName)
     B: { name: G.t.k("circuit B · Land of the Portables rack + Griefenbunker LAN server table"), cap: TU.power.strips.B },
-    C: { name: G.t.k("circuit C · Griefenbunker LAN clients"), cap: TU.power.strips.C }, D: { name: G.t.k("circuit D · the extra power bar"), cap: TU.power.strips.D, up: "powerbar" } };
+    C: { name: G.t.k("circuit C · Griefenbunker LAN clients"), cap: TU.power.strips.C }, D: { name: G.t.k("circuit D · the extra power bar"), cap: TU.power.strips.D, up: "powerbar" },
+    E: { name: G.t.k("circuit E · the cord from One Maybe Two Retro (booth 8)"), cap: TU.power.strips.E, cord: true } };
   var RACKSET = { compaq2: 1, logprinter: 1 }; NET.forEach(function (id) { RACKSET[id] = 1; });
 
   var LOADS = [], LOAD = {}, LOADOF = {}, IDS = [];
@@ -12489,7 +12936,8 @@ var G = (function () {
     return best;
   })();
   G.setupPanel = { x: PANEL.x, z: PANEL.z };          // panel P1 (tasks.js's breaker row points here)
-  function strips() { return Object.keys(STRIPS).filter(function (s) { return !STRIPS[s].up || G.has(STRIPS[s].up); }); }
+  function strips() { return Object.keys(STRIPS).filter(function (s) { var d = STRIPS[s]; return (!d.up || G.has(d.up)) && (!d.cord || !!(G.cord && G.cord.run())); }); }
+  function cordTip() { return G.cord ? G.cord.tip() : ""; }   // "" once the cord is had (or nobody can have it)
   function own(s) {                                 // the machines switched on on circuit s
     var w = 0; if (!S) return 0;
     for (var i = 0; i < IDS.length; i++) { var id = IDS[i]; if (S.on[id] && S.plug[id] === s && G.gear(id).where === "booth") w += draw(id); }
@@ -12502,6 +12950,7 @@ var G = (function () {
   function sName(s) { return STRIPS[s] ? G.t(STRIPS[s].name) : s; }
   function trip(s, why) {
     if (!S || !G.state.on || !STRIPS[s] || S.tripped[s] !== undefined) return;
+    var over = own(s) > cap(s);
     S.tripped[s] = G.state.min; S.trips++;
     var n = 0, mineN = 0;
     IDS.forEach(function (id) {
@@ -12510,30 +12959,44 @@ var G = (function () {
       var g = G.gear(id); if (g.working && !g.down) { G.setGear(id, { down: true, fault: "power" }); n++; if (!G.auto(GEAR[id].booth)) mineN++; }
     });
     G.emit("power", s, "trip");
-    say(G.t("Clunk. {why}{dark} Reset it at panel {p}.", { why: why || G.t("The breaker for {s} tripped.", { s: sName(s) }), p: PANEL.n,
-      dark: mineN ? " " + G.tn(mineN, "{n} of your machines went dark.", "{n} of your machines went dark.") : n ? " " + G.tn(n, "{n} machines went dark.", "{n} machines went dark.") : "" }), "bad");
+    if (STRIPS[s].cord && G.cord) G.cord.tripped(over ? "" : why, mineN, load(s), cap(s));   // (booth 8's breaker: their words, their reset)
+    else say(G.t("Clunk. {why}{dark} Reset it at panel {p}.", { why: why || G.t("The breaker for {s} tripped.", { s: sName(s) }), p: PANEL.n,
+      dark: mineN ? " " + G.tn(mineN, "{n} of your machines went dark.", "{n} of your machines went dark.") : n ? " " + G.tn(n, "{n} machines went dark.", "{n} machines went dark.") : "" }) +
+      (over && cordTip() ? " " + cordTip() : ""), "bad");
     objective();
   }
-  function reset(s) {                                // (extra loads are unplugged for the reset: own(), not load())
+  function reset(s, quiet) {                         // (extra loads are unplugged for the reset: own(), not load()); quiet: the caller says it
     if (!S || !S.tripped[s]) return true;
     if (own(s) > cap(s)) { G.emit("power", s, "retrip"); say(G.t("Clunk. It tripped again straight away: {l} W on a {c} W circuit. Switch something off or move a plug first.", { l: load(s), c: cap(s) }), "bad"); return false; }
     delete S.tripped[s];
     IDS.forEach(function (id) { var g = G.gear(id); if (S.plug[id] === s && g.fault === "power") G.setGear(id, { down: false, fault: null }); });
-    G.emit("power", s, "reset"); say(G.t("{s} is back on. Everything on it powers up again.", { s: sName(s) }), "good"); objective();
+    G.emit("power", s, "reset"); if (!quiet) say(G.t("{s} is back on. Everything on it powers up again.", { s: sName(s) }), "good"); objective();
     return true;
   }
   G.power = { load: load, cap: cap, trip: trip, reset: reset, name: sName, strips: strips,
     extra: function (s, w, tag) { if (!S) return; var x = S.extra || (S.extra = {}); if (w > 0 && STRIPS[s]) x[tag] = [s, w]; else delete x[tag]; },
     tripped: function (s) { return !!(S && S.tripped[s] !== undefined); },
-    stripOf: function (id) { return S && S.plug[id] || null; } };
-  function best(except, need) {                      // the circuit with the most room for need watts
+    stripOf: function (id) { return S && S.plug[id] || null; },
+    planned: function (s) { return S ? planned(s) : 0; },        // (what s carries with everything plugged into it switched on)
+    own: function (s) { return own(s); }, tight: function () { return !!S && tight(); } };
+  function best(except, need, nb) {                  // the circuit with the most room for need watts (nb: for the neighbours, never your cord)
     var b = null, room = -1;
-    strips().forEach(function (s) { if (s === except || S.tripped[s] !== undefined) return; var r = cap(s) - load(s); if (r >= need && r > room) { room = r; b = s; } });
+    strips().forEach(function (s) { if (s === except || S.tripped[s] !== undefined || nb && STRIPS[s].cord) return; var r = cap(s) - load(s); if (r >= need && r > room) { room = r; b = s; } });
     return b;
   }
 
   // ---- plugging in: choose a circuit for a placed machine; the meter shows the load
-  function reach(b) { return strips().filter(function (s) { return b === "29" ? s !== "C" : s !== "A"; }); }   // A is booth 29's, C is booth 10's
+  function reach(b) { return strips().filter(function (s) { return (b === "29" ? s !== "C" : s !== "A") && (!STRIPS[s].cord || b === G.mine()); }); }   // A is booth 29's, C is booth 10's, E yours
+  function tight() {                                 // a circuit of yours over its breaker, or a machine to plug in that fits nowhere
+    var b = G.mine(), r = b ? reach(b) : [], i, j; if (!b) return false;
+    for (i = 0; i < r.length; i++) if (planned(r[i]) > cap(r[i])) return true;
+    for (i = 0; i < IDS.length; i++) {
+      if (!needsPlug(IDS[i])) continue;
+      var w = draw(IDS[i]), fits = false; for (j = 0; j < r.length && !fits; j++) fits = S.tripped[r[j]] === undefined && planned(r[j]) + w <= cap(r[j]);
+      if (!fits) return true;
+    }
+    return false;
+  }
   function planned(s) { var w = extra(s); for (var i = 0; i < IDS.length; i++) { var id = IDS[i]; if (S.plug[id] === s && G.gear(id).where === "booth") w += draw(id); } return w; }
   function needsPlug(id) { var g = G.gear(id); return g.where === "booth" && !g.working && draw(id) > 0 && !S.plug[id] && !G.auto(GEAR[id].booth); }
   // the recommended circuit for w watts from booth b: its own (A the tables, B the rack, C the LAN clients) while
@@ -12567,7 +13030,8 @@ var G = (function () {
     G.hud.card('<div class="kick">' + esc(G.t("{booth} · power", { booth: G.boothName(b) })) + "</div><h2>" + esc(G.t("Plug in the {m}", { m: nm })) + "</h2>" +
       "<p>" + G.t("It draws about {w}. Which circuit? Each shows what it would carry with everything plugged into it switched on:", { w: "<b>" + w + " W</b>" }) + "</p>" +
       '<dl class="ui-rows">' + reach(b).map(function (sc) { return "<div><dt>" + esc(sName(sc)) + "</dt><dd>" + planned(sc) + " / " + cap(sc) + " W" + (S.tripped[sc] !== undefined ? " · " + esc(G.t("tripped")) : "") + "</dd></div>"; }).join("") + "</dl>" +
-      "<p>" + esc(G.t("Old CRT luggables and printers draw the most; laptops hardly anything.")) + "</p>", btn);
+      "<p>" + esc(G.t("Old CRT luggables and printers draw the most; laptops hardly anything.")) + "</p>" +
+      (rec && planned(rec) + w > cap(rec) && cordTip() ? '<p class="ui-note">' + esc(cordTip()) + "</p>" : ""), btn);
   }
   // the power meter in the stats strip: your circuits, watts running now / the breaker
   function meter() {
@@ -12592,7 +13056,7 @@ var G = (function () {
       G.hud.card('<div class="kick">' + esc(G.t("Panel {p} · {s}", { p: PANEL.n, s: sName(s) })) + "</div><h2>" + esc(G.t("That circuit is nearly full")) + "</h2><p>" +
         G.t("{s} already carries {l} of its {c} W. The {m} wants about {w} W more. Old CRTs and printers add up; a tripped breaker takes everything on it down.",
           { s: esc(sName(s)), l: "<b>" + load(s) + " W</b>", c: cap(s), m: esc(nm), w: w }) + "</p>" +
-        (alt ? "<p>" + esc(G.t("{s} has {w} W free.", { s: sName(alt), w: cap(alt) - load(alt) })) + "</p>" : "<p>" + esc(G.t("No other circuit has room.")) + "</p>"), btn);
+        (alt ? "<p>" + esc(G.t("{s} has {w} W free.", { s: sName(alt), w: cap(alt) - load(alt) })) + "</p>" : "<p>" + esc(G.t("No other circuit has room.")) + (cordTip() ? " " + esc(cordTip()) : "") + "</p>"), btn);
       return;
     }
     start(ids, s);
@@ -12615,7 +13079,7 @@ var G = (function () {
     }
     var o = mineB && G.coach ? G.coach.boot(id) : null;   // the scripted opener (coach.js): the Osborne's RIFA, the server's DHCP
     if (o) kind = o.kind;
-    if (kind) { fail(id, kind, o); G.emit("boot", id, false); return; }
+    if (kind) { fail(id, kind, o || { random: true }); G.emit("boot", id, false); return; }
     if (NET.indexOf(id) >= 0) { G.setGear(id, { working: true }); if (id === "cisco3745") { if (mineB) say(G.t("The rack is up: CallManager Express answers, the modems wait."), "good"); deps("cisco3745"); } return; }
     if (/^lan\d$/.test(id) && !(G.gear("lansrv").working && G.gear("lanstation").working && !G.gear("lansrv").down)) {
       S.wait[id] = 1; if (mineB) say(G.t("{m} boots, but gets no DHCP lease: the server and the switch have to be up first.", { m: nameOf(id) }), "bad"); objective(); return;
@@ -12845,6 +13309,7 @@ var G = (function () {
   // ---- carry and place
   function take() {
     if (!near(PILE_C, 120)) { say(G.t("Walk up to the pile first.")); toPile(); return; }
+    if (G.cord && G.cord.carrying()) { say(G.t("Your arms are full of cord reel: run it to your booth first.")); return; }
     var left = myLoads().filter(function (L) { return G.gear(L.ids[0]).where === "van"; });
     if (S.carry.length >= slots() || !left.length) {
       if (!S.carry.length) { say(G.t("The pile is empty. Everything is in the hall.")); return; }
@@ -12945,13 +13410,15 @@ var G = (function () {
           if (alt) { btn.push([G.t("Move the {m} to {s}", { m: nm, s: alt }), function () { ids.forEach(function (k) { S.plug[k] = alt; }); say(G.t("Extension run: the {m} now draws from {s}.", { m: nm, s: sName(alt) })); panelCard(); }]); mark("move"); }
         }
       }
-      btn.push([G.t("Reset breaker {s}", { s: s }), function () { reset(s); }]); mark("reset");
+      if (!STRIPS[s].cord) { btn.push([G.t("Reset breaker {s}", { s: s }), function () { reset(s); }]); mark("reset"); }   // (E's breaker is at booth 8: they reset it)
     });
-    var holds = strips().some(function (s) { return S.tripped[s] !== undefined && own(s) <= cap(s); });   // (a reset that will hold)
+    var holds = strips().some(function (s) { return S.tripped[s] !== undefined && !STRIPS[s].cord && own(s) <= cap(s); });   // (a reset that will hold)
     var rec = -1; (holds ? ["reset"] : ["move", "off", "reset"]).some(function (k) { if (first[k] !== undefined) { rec = first[k]; return true; } return false; });   // (marked where built, not by label)
     if (rec > 0) btn[rec][2] = true; else btn[0][2] = true;   // Enter: reset if it will hold, else move a load off (or switch one off); nothing tripped: close
     G.hud.card('<div class="kick">' + esc(G.t("Panel {p} · {s}", { p: PANEL.n, s: G.fmt() })) + "</div><h2>" + esc(G.t("Power panel")) + '</h2><dl class="ui-rows">' + rows + "</dl>" +
-      "<p>" + esc(strips().some(function (s) { return S.tripped[s] !== undefined; }) ? G.t("A breaker is off. If the circuit is still overloaded it will trip again: shed a load first.") : G.t("All breakers on. Booths 10 and 29 share circuit B.")) + "</p>", btn);
+      "<p>" + esc(strips().some(function (s) { return S.tripped[s] !== undefined; }) ? G.t("A breaker is off. If the circuit is still overloaded it will trip again: shed a load first.") : G.t("All breakers on. Booths 10 and 29 share circuit B.")) + "</p>" +
+      (S.tripped.E !== undefined ? "<p>" + esc(G.t("Circuit E's breaker is at booth 8: One Maybe Two Retro reset it once your load on E is under {c} W.", { c: cap("E") })) + "</p>" :
+        strips().some(function (s) { return own(s) > cap(s); }) && cordTip() ? '<p class="ui-note">' + esc(cordTip()) + "</p>" : ""), btn);
   }
   function off(id) { delete S.boot[id]; S.on[id] = false; var g = G.gear(id); G.setGear(id, { working: false, down: g.fault === "power" ? false : g.down, fault: g.fault === "power" ? null : g.fault }); }
   function panelPicks() { if (!panelPick) { panelPick = G.pick(PANEL.box, G.t("Power panel {p}", { p: PANEL.n }), G.t("power panel"), panelCard); panelPick.dyn = function () {
@@ -12968,7 +13435,7 @@ var G = (function () {
     var L = LOADOF[id], g = G.gear(id);
     if (g.where === "van" || g.where === "hand") placed({ id: L.id, ids: [id] }, true);
     if (draw(id) > 0 && !S.on[id] && !g.working) {
-      var s = plugOf(id); if (load(s) + draw(id) > cap(s)) s = best(null, draw(id));
+      var s = plugOf(id); if (load(s) + draw(id) > cap(s)) s = best(null, draw(id), true);
       if (!s) return;                                                   // no room anywhere: it stays dark
       S.plug[id] = s; S.on[id] = true;
       var f = FAIL[id]; if (f && G.rnd() < f[0] * TU.boot.autoFail) { S.dark.push(id); return; }   // the neighbours are good at this, mostly
@@ -13002,11 +13469,11 @@ var G = (function () {
   var objT = 0, verbT = 0;
   function objective() {
     objT = 0; if (!S || !G.state.on) return;
-    if (G.phase().id !== "setup") { var t = strips().filter(function (s) { return S.tripped[s] !== undefined && IDS.some(function (id) { return S.plug[id] === s && !G.auto(GEAR[id].booth); }); });
+    if (G.phase().id !== "setup") { var t = strips().filter(function (s) { return S.tripped[s] !== undefined && !STRIPS[s].cord && IDS.some(function (id) { return S.plug[id] === s && !G.auto(GEAR[id].booth); }); });
       note(t.length ? G.t("Breaker {s} is off: reset it at panel {p}.", { s: t.join(", "), p: PANEL.n }) : "", 4); return; }   // (cleared after the reset: bug C3)
     var m = myLoads(), c = carried(), txt;
     if (!m.length) { note("", 0); return; }               // (Nick and Clint: their own lines; the booths set themselves up)
-    var tr = strips().filter(function (s) { return S.tripped[s] !== undefined && IDS.some(function (id) { return S.plug[id] === s && !G.auto(GEAR[id].booth); }); });
+    var tr = strips().filter(function (s) { return S.tripped[s] !== undefined && !STRIPS[s].cord && IDS.some(function (id) { return S.plug[id] === s && !G.auto(GEAR[id].booth); }); });
     var ids = []; m.forEach(function (L) { ids = ids.concat(L.ids); });
     var broken = ids.filter(function (id) { return S.failed[id]; })[0];
     var unb = ids.filter(function (id) { return bootable(id) && (NET.indexOf(id) < 0 || id === NET[0] || !bootable(NET[0])); })[0];
@@ -13122,6 +13589,163 @@ var G = (function () {
     S.setupWorking = (G.state.demo ? demoIds() : myIds()).filter(function (k) { var g = G.gear(k); return g.working && !g.down; }).length; S.setupTrips = S.trips;
     if (G.mine() && S.setupWorking === myIds().length) G.achieve("up" + G.mine());   // every machine running at 21:00
   });
+})();
+
+// ---------------------------------------------------------------- VCF Tycoon: booth 8's extension cord (circuit E)
+// When your circuits are full, One Maybe Two Retro (booth 8, a Commodore repair and sales shop, back to back with booth 10 on
+// the island) lend you the spare outlet on their circuit. E on their table: a card in their voice; the price is a coffee
+// (G.TUNE.cord.cost kudos, owed until you have them). You carry the reel back to your booth (it slows you like a crate; the
+// load-in pile waits), and it plugs in when you reach your table: setup.js's circuit E (G.TUNE.power.strips.E) shows in the
+// power meter, the panel, the plug choice and lan.js's XP bricks. Once a weekend; the cord stays until the end.
+// Over E's cap, their breaker trips (setup.js calls G.cord.tripped): the BBS drops carrier, a toast, kudos and rep. They reset
+// it G.TUNE.cord.resetMin minutes later once your load on E fits; there's no reset button for E at your panel.
+// In the hall: an orange cord on the floor (one merged mesh in the scene from load, drawn empty until there's a cord, rewritten
+// when it's run and, while you carry the reel, from booth 8 to you) and the reel (by their table, in your arms, at your booth).
+// Booths only (G.mine()): Nick and Clint have no circuit of their own.
+// Exposes G.cord = { run(), carrying(), had(), tip(), tripped(why, mineN, load, cap), todo(add), ask(), anchor, drawn() (tests) }.
+// State: G.state.sys.cord = { got, carry, run, owe, trips, tripAt }.
+(function () {
+  if (typeof G === "undefined" || !booths[8] || !G.TUNE.power.strips.E) return;
+  var TU = G.TUNE.cord, B8 = booths[8], CAP = G.TUNE.power.strips.E, WALK = 1 / (1 + TU.reelLb / G.TUNE.carry.setup.walkLb);
+  function S() { return G.state.sys.cord || (G.state.sys.cord = { got: 0, carry: false, run: false, owe: 0, trips: 0, tripAt: 0 }); }
+  function mine() { return G.state.on ? G.mine() : null; }
+  function open() { var p = G.phase().id; return p === "setup" || p === "sat" || p === "sun"; }   // (from Friday's setup; not the evening or teardown)
+  function avail() { var s = S(); return !!mine() && !s.got && open(); }
+  function say(t, k) { G.say(t, k); }
+  function bname() { return G.boothName(mine()); }
+
+  // ---- where the cord runs: from the back of booth 8's tables, along the middle of the island, to the back of yours
+  function backX(b) { return b.face === "W" ? b.box.max.x + 3 : b.box.min.x - 3; }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  var PTS = [];                                            // [x, z] pairs (made when the cord is run: not per frame)
+  function path(k) {
+    var b = booths[k]; PTS.length = 0; if (!b) return PTS;
+    var sx = backX(B8), sz = clamp(b.cz, B8.box.min.z + 10, B8.box.max.z - 10), ex = backX(b), ez = clamp(B8.cz, b.box.min.z + 10, b.box.max.z - 10), mx = (sx + ex) / 2;
+    PTS.push(sx, sz, mx, sz, mx, ez, ex, ez);
+    return PTS;
+  }
+  var A8 = { x: backX(B8), z: B8.cz };                     // the outlet end, for the reel while you carry it
+  // ---- visuals, made at load (their shader compiles with the rest): one ribbon mesh and the reel
+  var MAXSEG = 6, cordM = new THREE.MeshLambertMaterial({ color: 0xf07818 });
+  var geo = new THREE.BufferGeometry(), pa = new THREE.BufferAttribute(new Float32Array(MAXSEG * 18), 3), na = new Float32Array(MAXSEG * 18);
+  for (var ni = 0; ni < na.length; ni += 3) na[ni + 1] = 1;
+  pa.setUsage(THREE.DynamicDrawUsage); geo.setAttribute("position", pa); geo.setAttribute("normal", new THREE.BufferAttribute(na, 3)); geo.setDrawRange(0, 0);
+  var ribbon = new THREE.Mesh(geo, cordM); ribbon.frustumCulled = false; scene.add(ribbon);
+  var reel = new THREE.Mesh(new THREE.CylinderGeometry(5.5, 5.5, 4, 14), cordM); reel.visible = false; reel.rotation.order = "YXZ"; scene.add(reel);
+  var segN = 0;
+  function seg(o, x0, z0, x1, z1) {                        // a flat strip 1.8 in wide on the carpet (over the floor plates), from (x0, z0) to (x1, z1)
+    var a = pa.array, dx = x1 - x0, dz = z1 - z0, l = Math.sqrt(dx * dx + dz * dz) || 1, hx = -dz / l * 0.9, hz = dx / l * 0.9, y = 0.8;
+    x0 -= dx / l * 0.9; z0 -= dz / l * 0.9; x1 += dx / l * 0.9; z1 += dz / l * 0.9;   // (overlapping at the corners)
+    a[o] = x0 - hx; a[o + 1] = y; a[o + 2] = z0 - hz; a[o + 3] = x1 + hx; a[o + 4] = y; a[o + 5] = z1 + hz; a[o + 6] = x1 - hx; a[o + 7] = y; a[o + 8] = z1 - hz;
+    a[o + 9] = x0 - hx; a[o + 10] = y; a[o + 11] = z0 - hz; a[o + 12] = x0 + hx; a[o + 13] = y; a[o + 14] = z0 + hz; a[o + 15] = x1 + hx; a[o + 16] = y; a[o + 17] = z1 + hz;
+    return o + 18;
+  }
+  function lay(p) {                                        // p: [x, z, ...]; null: no cord
+    var o = 0; segN = 0;
+    for (var i = 0; p && i + 3 < p.length && segN < MAXSEG; i += 2) { o = seg(o, p[i], p[i + 1], p[i + 2], p[i + 3]); segN++; }
+    pa.needsUpdate = true; geo.setDrawRange(0, segN * 6);
+  }
+  var TRAIL = [0, 0, 0, 0];
+  function trail() {                                       // carrying: the cord pays out from booth 8 to you (a reused array)
+    TRAIL[0] = A8.x; TRAIL[1] = A8.z; TRAIL[2] = pos.x; TRAIL[3] = pos.z; lay(TRAIL);
+  }
+  function reelAt(x, y, z, up) { reel.visible = true; reel.position.set(x, y, z); reel.rotation.set(up ? 0 : Math.PI / 2, up ? 0 : yaw, 0); }   // (carried: its flat side to you)
+  function sync() {                                        // the cord and the reel where the state says (not per frame)
+    var s = S(), k = mine();
+    if (!G.state.on || !k || G.phase().id === "final") { lay(null); reel.visible = false; return; }
+    if (s.run) { var p = path(k); lay(p); reelAt(p[p.length - 2], 2, p[p.length - 1], true); return; }
+    if (s.carry) { trail(); carryVis(); return; }
+    lay(null);
+    if (avail()) reelAt(B8.box.max.x + 6, 2, B8.cz + 22, true); else reel.visible = false;   // (on the floor at their aisle end: ask for it)
+  }
+  function carryVis() {                                    // per frame while carrying: in front of you, like setup's crates
+    var fx = -Math.sin(yaw), fz = -Math.cos(yaw), d = mode === "walk" ? 40 : 16;   // (walk: low in view, at the bottom of the screen)
+    reelAt(pos.x + fx * d, mode === "walk" ? EYE - 22 : 30, pos.z + fz * d, false);
+    me.arms = "carry";
+  }
+
+  // ---- asking at booth 8's table
+  function ask() {
+    var s = S();
+    if (s.run) { say(G.t("Your cord already runs from their spare outlet. One per weekend.")); return; }
+    if (s.carry) { say(G.t("You have the reel: walk it to {booth}.", { booth: bname() })); return; }
+    if (G.setupCarrying && G.setupCarrying()) { say(G.t("Your arms are full: put down what you're carrying first.")); return; }
+    if (!G.near(B8.cx, B8.cz, 160)) { say(G.t("Walk over to One Maybe Two Retro's table first.")); return; }
+    var v = { w: CAP, booth: bname(), n: TU.cost };
+    G.hud.card('<div class="kick">' + esc(G.t("Booth 8 · One Maybe Two Retro")) + "</div><h2>" + esc(G.t("A spare outlet?")) + "</h2>" +
+      "<p>" + esc(G.t("Commodore repairs and sales: a C64C with an SD drive, a C128, a 1541, a 1702 monitor and a modem answering calls for a 30-year-old BBS. The lot draws about 300 W.")) + "</p>" +
+      "<p>" + esc(G.t("\"Take the reel: 50 feet of 14-gauge. Keep it under {w} W or the BBS drops carrier.\"", v)) + "</p>" +
+      "<p>" + esc(G.t("Circuit E: {w} W more at {booth}. Their price: a coffee from the sales desk ({n} kudos), now or when you have it.", v)) + "</p>",
+      [[G.t("Not now"), function () {}, { k: "no" }], [G.t("Take the cord reel"), take, { k: "take", primary: true }]], "cord");
+  }
+  function take() {
+    var s = S(); if (s.got || !mine()) return;
+    s.got = 1; s.carry = true;
+    var paid = G.stat("kudos") >= TU.cost; if (paid) G.add("kudos", -TU.cost); else s.owe = TU.cost;
+    say(G.t("You've got the reel ({lb} lb). Walk it back to {booth}: it plugs in at your table.", { lb: TU.reelLb, booth: bname() }) + " " +
+      (paid ? G.t("−{n} kudos: a coffee for their table.", { n: TU.cost }) : G.t("You owe them a coffee ({n} kudos).", { n: TU.cost })), "good");
+    sync();
+  }
+  var _p = new THREE.Vector3();
+  function arrived() {                                     // within reach of your own tables
+    var b = booths[mine()]; if (!b) return false;
+    _p.set(pos.x, 30, pos.z); return b.box.distanceToPoint(_p) < TU.reach;
+  }
+  function plugIn(quiet) {
+    var s = S(); s.carry = false; s.run = true;
+    if (me.arms === "carry") me.arms = "side";
+    if (!quiet) say(G.t("Cord run from booth 8. Circuit E: {w} W more at {booth}, on your power meter.", { w: CAP, booth: bname() }), "good");
+    sync();
+  }
+  G.onPick(function (p) {
+    if (p.kind !== "booth" || String(p.id) !== "8" || !mine() || !open()) return false;
+    ask(); return true;
+  });
+  G.verb(function (p) {
+    if (p.kind !== "booth" || String(p.id) !== "8" || !mine() || !open()) return "";
+    var s = S(); return s.run ? G.t("your cord runs from here") : s.carry ? G.t("the reel is in your arms") : G.t("ask for a spare outlet");
+  });
+
+  // ---- their breaker (setup.js's trip on E calls this) and their reset
+  function tripped(why, mineN, l, c) {
+    var s = S(); s.tripAt = G.state.min;
+    var dark = mineN ? " " + G.tn(mineN, "{n} of your machines went dark.", "{n} of your machines went dark.") : "";
+    if (why) { say(why + dark + " " + G.t("Circuit E went too: One Maybe Two Retro's BBS dropped carrier."), "bad"); return; }   // (not your load: no penalty)
+    s.trips++;
+    var k = Math.min(TU.tripKudos, Math.floor(G.stat("kudos"))); if (k > 0) G.add("kudos", -k); G.rep(-TU.tripRep);
+    say(G.t("Clunk. One Maybe Two Retro's BBS just went dark. Your cord: {l} of their spare {c} W.", { l: l, c: c }) + dark + " " +
+      (k ? G.tn(k, "−{n} kudo.", "−{n} kudos.") + " " : "") + G.t("Move a load off E at the panel: they'll reset it once it fits."), "bad");
+  }
+  function tip() { return avail() ? G.t("Or run a cord from booth 8 (One Maybe Two Retro): {w} W more, on circuit E.", { w: CAP }) : ""; }
+  function todo(add) {
+    var s = S(), k = mine(); if (!k || !open()) return;
+    if (s.carry) add("cordrun", 2, G.t("Run the cord to your booth"), G.t("the reel from booth 8 · {booth}", { booth: bname() }), null, { box: booths[k].box });
+    else if (avail() && G.power && G.power.tight && G.power.tight())
+      add("cordask", 2, G.t("Ask booth 8 for a spare outlet"), G.t("One Maybe Two Retro · circuit E, {w} W", { w: CAP }), null, { box: B8.box });
+  }
+  G.cord = { run: function () { return !!(G.state.on && mine() && S().run); }, carrying: function () { return !!(G.state.on && mine() && S().carry); },
+    had: function () { return !!S().got; }, tip: tip, tripped: tripped, todo: todo, ask: ask, anchor: A8,
+    drawn: function () { return segN; } };              // (tests: the cord's segments on the floor)
+
+  var T = 0, walked = false;
+  G.register("cord", {
+    reset: function (st) { st.sys.cord = { got: 0, carry: false, run: false, owe: 0, trips: 0, tripAt: 0 }; walked = false; sync(); },
+    restore: function () { S(); walked = false; sync(); },
+    phase: function () { var s = S(); if (s.carry && !open()) plugIn(true); sync(); },   // (21:00 with the reel in your arms: it's run)
+    tick: function (dt, gm) {
+      var s = S(); if (!mine()) return;
+      if (s.carry) {
+        G.walk = Math.min(G.walk, WALK); walked = true; carryVis();
+        if ((T += dt) > 0.1) { T = 0; trail(); if (arrived()) plugIn(false); }
+      } else if (walked) { walked = false; G.walk = 1; }
+      if (gm <= 0) return;
+      if (s.owe && G.stat("kudos") >= s.owe) { G.add("kudos", -s.owe); say(G.t("You bring One Maybe Two Retro the coffee you owed them. −{n} kudos.", { n: s.owe })); s.owe = 0; }
+      if (G.power && G.power.tripped("E") && G.state.min - s.tripAt >= TU.resetMin && G.power.own("E") <= CAP) {
+        G.power.reset("E", true); say(G.t("One Maybe Two Retro reset their breaker. Circuit E is back on, and the BBS answers again."), "good");
+      }
+    }
+  });
+  G.on("quit", function () { lay(null); reel.visible = false; if (me.arms === "carry") me.arms = "side"; walked = false; });
 })();
 
 // ---------------------------------------------------------------- VCF Tycoon: visitors
@@ -13928,29 +14552,53 @@ var G = (function () {
   function fixAt(id) { var g = G.gear(id); if (g && g.down && !G.repairUI(id)) toast(G.t("Fix it at the machine: {m} ({f}).", { m: nm(id), f: g.fault || G.t("down") })); }
   function label(k) { return G.faultKinds[k] ? G.faultKinds[k].label : k || G.t("it's down"); }
 
-  // ---- power: the laptop bricks go on booth 10's client circuit C, or on D (the power bar upgrade),
-  // through G.power.extra (so the meter shows them). Over the cap: the breaker trips (the PCs go dark;
-  // the XP laptops carry on, on battery), once per new batch, then now and again.
+  // ---- power: each table of 4 XP laptops plugs its bricks into the circuit booth 10 can reach (B, C, the power bar's D, booth 8's cord E
+  // when you play booth 10 and ran it: cord.js) with the
+  // most room, counted with everything plugged in switched on (G.power.planned), chosen when the table is set up and again each
+  // morning (the power bar bought in the evening takes them). No circuit with room: booth 10's own C, and the ask card says so
+  // first. They go through G.power.extra (the meter shows them). Over the cap: the breaker trips (the PCs go dark; the XP laptops
+  // carry on, on battery), once per new table, then now and again until something moves.
+  function brickW() { return 4 * G.TUNE.power.xpBrick; }
+  function reach10() { var l = G.power.strips(), o = []; for (var i = 0; i < l.length; i++) if (l[i] !== "A" && (l[i] !== "E" || me10())) o.push(l[i]); return o; }
+  function brickTo(w) {                                       // the circuit for w more watts of bricks -> [circuit, fits]
+    var P = G.power, l = reach10(), best = null, room = -1;
+    for (var i = 0; i < l.length; i++) { var c = l[i], r = P.cap(c) - P.planned(c) - w; if (!P.tripped(c) && r >= 0 && r > room) { room = r; best = c; } }
+    return best ? [best, true] : [l.indexOf("D") >= 0 ? "D" : "C", false];
+  }
+  function batchN(b) { var m = 0; for (var k = 1; k <= 4; k++) if (G.gear("xp" + (b * 4 + k)).where === "booth") m++; return m; }
   function power() {
-    var s = S(), n = 0, k;
-    for (k = 1; k <= NX; k++) if (G.gear("xp" + k).where === "booth") n++;
+    var s = S(), P = G.power, n = 0, b, c, done = null;
+    s.xpc = s.xpc || {}; if (P) P.extra("C", 0, "xp");        // (a save from before the tables had a circuit each)
+    for (b = 0; b < 3; b++) {
+      var m = batchN(b); n += m;
+      if (!P) continue;
+      if (!m) { P.extra("C", 0, "xp" + b); delete s.xpc[b]; continue; }
+      if (!s.xpc[b]) { P.extra("C", 0, "xp" + b); s.xpc[b] = brickTo(m * G.TUNE.power.xpBrick)[0]; }
+      P.extra(s.xpc[b], m * G.TUNE.power.xpBrick, "xp" + b);
+    }
     s.watts = G.TUNE.power.xpBrick * n;
-    var P = G.power; if (!P) return;
-    var c = G.has("powerbar") && P.strips().indexOf("D") >= 0 ? "D" : "C";
-    P.extra(c, s.watts, "xp");
-    if (!n || P.tripped(c) || P.load(c) <= P.cap(c)) return;
-    if (s.pwr !== n || G.rnd() < 1 / 120) {
-      s.pwr = n;
-      P.trip(c, G.t("{n} XP laptop bricks on top of {w} W of PCs: the breaker gave up. (The XP laptops carry on, on battery.)", { n: n, w: P.load(c) - s.watts }) +
-        (c === "C" ? " " + G.t("It will trip again: the shop's extra power bar (circuit D) takes the bricks off circuit C.") : ""));
+    if (!P || !n) return;
+    var newBatch = s.pwr !== n; s.pwr = n;
+    for (b = 0; b < 3; b++) {
+      c = s.xpc[b]; if (!c || c === done || P.tripped(c) || P.load(c) <= P.cap(c)) continue;
+      if (!newBatch && G.rnd() >= 1 / 120) continue;
+      done = c; var nb = 0; for (var k = 0; k < 3; k++) if (s.xpc[k] === c) nb += batchN(k);
+      P.trip(c, G.t("{n} XP laptop bricks put circuit {s} at {l} of {c} W: the breaker tripped. (The XP laptops carry on, on battery.)",
+        { n: nb, s: c, l: P.load(c), c: P.cap(c) }) + " " + powerFix(c));
     }
   }
-  function powerWarn() {                                      // the ask card: four more bricks would put circuit C over its cap
-    var P = G.power; if (!P || G.has("powerbar") || P.strips().indexOf("C") < 0) return "";
-    var w = P.load("C") + 4 * G.TUNE.power.xpBrick; if (w <= P.cap("C")) return "";
-    return G.t("Circuit C would carry {w} of {c} W with four more bricks: its breaker will trip. The shop's extra power bar (circuit D) takes them.",
-      { w: w, c: P.cap("C") });
+  function powerFix(c) {                                      // what to do about an overloaded circuit c (and booth 8's cord, while you can have it)
+    var t = c !== "D" && !G.has("powerbar") ? G.t("The shop's extra power bar (circuit D) takes the bricks.") :
+      G.t("At the panel, switch something off on circuit {s} or move it to another one, then reset it.", { s: c }), cd = me10() && G.cord ? G.cord.tip() : "";
+    return cd ? t + " " + cd : t;
   }
+  function powerPlan() {                                      // the ask card: where four more bricks would go, and whether they fit
+    var P = G.power; if (!P || !P.planned) return "";
+    var w = brickW(), to = brickTo(w), c = to[0], v = { s: c, w: w, a: P.planned(c) + w, c: P.cap(c) };
+    return to[1] ? G.t("Their four power bricks ({w} W) go on circuit {s}: {a} of {c} W.", v) :
+      G.t("No circuit has room for four more power bricks ({w} W): circuit {s} would carry {a} of {c} W and its breaker will trip.", v) + " " + powerFix(c);
+  }
+  function powerFits() { var P = G.power; return !P || !P.planned || brickTo(brickW())[1]; }
 
   // ---- the XP laptops: a batch of 4 (a table) at a time
   function grant(why) {
@@ -13970,7 +14618,7 @@ var G = (function () {
     G.hud.card('<div class="kick">Land of the Portables</div><h2>' + esc(G.t("Four Windows XP laptops")) + "</h2>" +
       "<p>" + esc(G.t("From the stash under their table: ThinkPads and Latitudes, XP SP2, the games already installed (they say). Your crew needs {n} minutes to set up a table and cable them in.", { n: READY })) +
       "</p><p>" + esc(G.t("Four more seats, four more players, four more power bricks and four more things to break.")) + "</p>" +
-      (powerWarn() ? '<p class="ui-note">' + esc(powerWarn()) + "</p>" : ""),
+      (powerPlan() ? "<p" + (powerFits() ? "" : ' class="ui-note"') + ">" + esc(powerPlan()) + "</p>" : ""),
       [[G.t("Not now"), function () {}, { k: "no" }], [G.t("Borrow 4 laptops ({n} kudos)", { n: COST }), function () {
         G.add("kudos", -COST); grant("ask");
         toast(G.t("Land of the Portables hands over four laptops in their original bags. Setting up: {n} min.", { n: READY }), "good");
@@ -14418,7 +15066,8 @@ var G = (function () {
     phase: function (id) {
       var s = S(); if (!s) return;
       releaseAll(); s.q = []; s.seats.forEach(function (q) { q.o = 0; });
-      if (G.power) G.power.extra("C", 0, "xp");      // (power() puts the bricks back each show-day minute)
+      if (G.power) ["xp", "xp0", "xp1", "xp2"].forEach(function (t) { G.power.extra("C", 0, t); });   // (power() plugs the bricks back in each show-day minute)
+      s.xpc = {};                                    // (and picks their circuits again: the power bar bought last night)
       s.match = null; s.tour = null; s.tourAt = 0; s.gameT = 0; s.mcool = 0; s.lastArr = -999;
       if (s.help) { s.help = 0; G.emit("lan:help", 0); }
       note("");
@@ -14839,7 +15488,7 @@ var G = (function () {
     for (i = 0; i < all.length; i++) {
       id = all[i]; if (!ok(id)) continue;
       var t = id === "osborne1" || id === "compaq3" || id === "cbm8050" ? id : LAP.indexOf(id) >= 0 ? "lap" : "crt";
-      if (G.rnd() < HAZ[t] * (1 + G.TUNE.hazard.ageK * (s.on[id] || 0) / 60)) G.fault(id, G.pickW(KT[t]));
+      if (G.rnd() < HAZ[t] * (1 + G.TUNE.hazard.ageK * (s.on[id] || 0) / 60)) G.fault(id, G.pickW(KT[t]), { random: true });
     }
     if (m - (s.lastArrive || 0) > 20 && G.rnd() < 0.4 * c) visit29(null);   // no visitors.js: abstract arrivals
   });
@@ -19733,7 +20382,9 @@ var G = (function () {
     if (G.power && G.power.strips) G.power.strips().forEach(function (s) {
       if (!G.power.tripped(s)) return;
       var mineOn = ids.some(function (id) { return G.power.stripOf(id) === s; });
-      if (mineOn) add("trip" + s, 1, G.t("Reset breaker {s}", { s: s }), G.t("{strip} · at the panel", { strip: G.power.name(s) }), null, G.setupPanel || null);
+      if (!mineOn) return;
+      if (s === "E") add("tripE", 1, G.t("Get circuit E under {c} W", { c: G.power.cap(s) }), G.t("booth 8 resets their breaker · move a load at the panel"), null, G.setupPanel || null);   // (cord.js)
+      else add("trip" + s, 1, G.t("Reset breaker {s}", { s: s }), G.t("{strip} · at the panel", { strip: G.power.name(s) }), null, G.setupPanel || null);
     });
     // broken machines (events.js faults and setup.js's own)
     ids.forEach(function (id) {
@@ -19786,6 +20437,7 @@ var G = (function () {
       if (G.teardown && G.teardown.todo) G.teardown.todo(add);   // the banner, booth 10's borrowed XP laptops
     }
     if (G.lan && G.lan.todo) G.lan.todo(add);             // booth 10's show days: bored players, the console, the queue
+    if (G.cord && G.cord.todo) G.cord.todo(add);           // booth 8's cord: run the reel to your booth; ask for it when power is tight
     if (clint()) G.clint.todo(add);                       // Clint: the queue, the kit, the haul, the panel, the shot list
     out.sort(function (a, b) { return a.pri - b.pri; });
     return out;
@@ -19829,7 +20481,7 @@ var G = (function () {
   }
   // ---- the focus (R1): the next job when no row is clicked. Bands (REVIEW-WAYFINDING.md section 6), the lowest wins,
   // ties the nearest; the focus stays until it's done or a lower band shows up (no flip-flop as you walk)
-  var BANDS = [[/^(carry|clcarry|xpret)$/, 0], [/^(ev|clpanel|clbig|clrifa)/, 1], [/^trip/, 2], [/^fix/, 3], [/^(plug|on|pack|clpack|xpbox|banner)/, 4],
+  var BANDS = [[/^(carry|clcarry|xpret|cordrun)$/, 0], [/^(ev|clpanel|clbig|clrifa)/, 1], [/^trip/, 2], [/^fix/, 3], [/^cordask$/, 3.5], [/^(plug|on|pack|clpack|xpbox|banner)/, 4],
     [/^(van|clkit|clhaul)$/, 5]];
   function band(r) {
     if (r.x === null || /^(wait|zone)/.test(r.key)) return -1;   // (booting, a LAN player in the zone: nothing to do there yet)
@@ -19856,6 +20508,8 @@ var G = (function () {
     if (k === "van" && G.phase().id === "setup") return t ? G.t("tap the pile") : G.t("E on the pile");
     if (/^trip/.test(k)) return t ? G.t("tap the panel") : G.t("E on the panel");
     if (k === "carry") return t ? G.t("tap its green spot") : G.t("E on its green spot");
+    if (k === "cordask") return t ? G.t("tap their table") : G.t("E on their table");
+    if (k === "cordrun") return G.t("walk in: it plugs in at your table");
     if (/^(clshot|clfilm|clrifa)$/.test(k)) return t ? G.t("tap their table") : G.t("E on their table");
     if (/^(clq|clpanel|clpack|clcarry)$/.test(k)) return t ? G.t("tap your table") : G.t("E on your table");
     return t ? G.t("tap it") : G.t("E on it");
@@ -19910,43 +20564,152 @@ var G = (function () {
         sub: esc(r.sub) + (w ? " · " + esc(w) : ""), cls: (pin ? "sel" : "") + (t ? " next" : ""), attrs: 'data-i="' + i + '" tabindex="0" role="button"' });
     });
     if (list.length > MAX) h += '<div class="more">' + esc(G.tn(list.length - MAX, "+ {n} more", "+ {n} more")) + "</div>";
-    if (h !== last) { el.innerHTML = h; last = h; }
+    if (h !== last) { while (el.lastChild && el.lastChild !== chip) el.removeChild(el.lastChild); el.insertAdjacentHTML("beforeend", h); last = h; }   // (the chip stays: its pulse runs on)
   }
   el.addEventListener("click", function (e) {
     if (e.target.closest && e.target.closest("[data-endday]")) { endDay(); return; }
+    if (e.target.closest && e.target.closest("#g-setchip")) { chipGo(); return; }
     var r = e.target.closest(".ui-row"); if (!r) return;
     var t = rows[+r.getAttribute("data-i")]; if (!t) return;
     sel = sel === t.key ? null : t.key; draw();
   });
   el.addEventListener("keydown", function (e) { if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("ui-row")) { e.target.click(); e.preventDefault(); } });
 
-  // ---- yellow tags over the machines that wait for you: a plug (plug it in), the power symbol (switch it on)
-  // (events.js draws the red "!" for broken ones and the yellow phone / "?" / "Aa" ones)
-  var tagMats = {}, tags = [];
-  function tagMat(k) {
-    if (tagMats[k] || !G.tagTex) return tagMats[k];
-    var Y = "#f2c230", K = "#1c2427", t = k === "plug" ? G.tagTex("plug", Y, function (g) {
-      g.fillRect(22, 26, 20, 16); g.fillRect(25, 13, 4, 14); g.fillRect(35, 13, 4, 14); g.lineWidth = 4; g.beginPath(); g.moveTo(32, 42); g.lineTo(32, 54); g.stroke();
-    }, K) : G.tagTex("power", Y, function (g) {
-      g.lineWidth = 5; g.lineCap = "round"; g.beginPath(); g.arc(32, 35, 14, -Math.PI / 2 + 0.6, Math.PI * 1.5 - 0.6); g.stroke();
-      g.beginPath(); g.moveTo(32, 14); g.lineTo(32, 33); g.stroke();
-    }, K);
-    return (tagMats[k] = new THREE.SpriteMaterial({ map: t, depthTest: false, transparent: true }));
-  }
-  function drawTags(list) {
-    var n = 0;
-    for (var i = 0; i < list.length; i++) {
-      var r = list[i], k = /^plug/.test(r.key) ? "plug" : /^on/.test(r.key) ? "power" : null;
-      if (!k || !r.box || !tagMat(k)) continue;
-      var sp = tags[n]; if (!sp) { sp = tags[n] = new THREE.Sprite(tagMat(k)); sp.scale.set(7, 8.75, 1); sp.renderOrder = 5; scene.add(sp); }
-      sp.material = tagMat(k); sp.visible = true;
-      sp.position.set((r.box.min.x + r.box.max.x) / 2, r.box.max.y + 6, (r.box.min.z + r.box.max.z) / 2); n++;
+  // ---- markers over each machine of yours that isn't set up yet (Friday; a show day: the ones dark since Friday). Round, so they never
+  // read as faults.js's square tags (the red "!", the yellow phone / "?" / "Aa"); each state has its own glyph and colour:
+  //   grey crate: still in the pile (or in your arms) · amber plug: placed, not plugged in · green power: plugged in, switch it on
+  //   (a show day: set it up by hand) · dark hourglass, dashed ring: waiting for the rack, the server or its boot
+  // A broken one keeps the red "!" (set up, but broken: faults.js's job). An empty spot also gets a dashed outline of the machine's
+  // footprint on its table (two merged meshes made here, rewritten only when the set changes). The rack gets one marker.
+  var MK = { crate: ["#8e959c", "#1c2427"], plug: ["#ef8a1d", "#1c2427"], power: ["#2f9e5a", "#ffffff"], wait: ["#3d4349", "#e6e6e6"] }, mkM = {};
+  Object.keys(MK).forEach(function (k) {
+    var t = canvasTex("mk-" + k, 96, 120, function (g) {
+      g.scale(1.5, 1.5); g.fillStyle = "#fff"; g.beginPath(); g.moveTo(24, 55); g.lineTo(32, 76); g.lineTo(40, 55); g.fill();
+      g.fillStyle = MK[k][0]; g.strokeStyle = "#fff"; g.lineWidth = 5; if (k === "wait") g.setLineDash([7, 5]);
+      g.beginPath(); g.arc(32, 32, 27, 0, 6.2832); g.fill(); g.stroke(); g.setLineDash([]);
+      g.fillStyle = g.strokeStyle = MK[k][1]; g.lineWidth = 4; g.lineCap = "round"; g.lineJoin = "round";
+      if (k === "crate") { g.strokeRect(17, 20, 30, 26); g.beginPath(); g.moveTo(17, 28); g.lineTo(47, 28); g.moveTo(27, 28); g.lineTo(27, 46); g.moveTo(37, 28); g.lineTo(37, 46); g.stroke(); }
+      else if (k === "plug") { g.fillRect(22, 23, 20, 15); g.fillRect(25, 12, 4, 12); g.fillRect(35, 12, 4, 12); g.beginPath(); g.moveTo(32, 38); g.lineTo(32, 50); g.stroke(); }
+      else if (k === "power") { g.lineWidth = 5; g.beginPath(); g.arc(32, 34, 13, -Math.PI / 2 + 0.65, Math.PI * 1.5 - 0.65); g.stroke(); g.beginPath(); g.moveTo(32, 14); g.lineTo(32, 31); g.stroke(); }
+      else { g.beginPath(); g.moveTo(21, 15); g.lineTo(43, 15); g.lineTo(21, 49); g.lineTo(43, 49); g.closePath(); g.stroke(); g.beginPath(); g.moveTo(25, 46); g.lineTo(39, 46); g.lineTo(32, 37); g.fill(); }
+    });
+    mkM[k] = new THREE.SpriteMaterial({ map: t, depthTest: false, transparent: true });
+  });
+  var MKMAX = 32, mkS = [], mkU = [], mkN = 0, units = {}, setN = 0, setOf = 0, lastSet = -1, lastPh = "", fpSig = -1;
+  for (var mi = 0; mi < MKMAX; mi++) { var ms = new THREE.Sprite(mkM.crate); ms.visible = false; ms.renderOrder = 4; scene.add(ms); mkS.push(ms); }
+  var narrowQ = window.matchMedia ? matchMedia("(max-width: 760px)") : null;
+  function unitsOf(b) {                                  // [{ id, ids, box, cx, cz, top, k }] for booth b, one per machine (built once)
+    if (units[b]) return units[b];
+    var l = [], rk = null, ids = G.gearOf(b);
+    for (var i = 0; i < ids.length; i++) {
+      var id = ids[i]; if (!GEAR[id]) continue;
+      if (RACK[id]) { if (!rk) { rk = { id: id, ids: [], box: new THREE.Box3() }; l.push(rk); } rk.ids.push(id); rk.box.union(GEAR[id].box); continue; }
+      l.push({ id: id, ids: [id], box: GEAR[id].box });
     }
-    for (; n < tags.length; n++) tags[n].visible = false;
-    tagPicks(list);
+    l.forEach(function (u) { u.cx = (u.box.min.x + u.box.max.x) / 2; u.cz = (u.box.min.z + u.box.max.z) / 2; u.top = u.box.max.y; u.k = ""; u.fp = false; u.s = 1; });
+    return (units[b] = l);
   }
-  // the tags over machines (ours: plug / power; faults.js: the red "!" and the yellow phone / "?" / "Aa")
-  // are clickable too: a small pick box at the tag that does what clicking the machine does (owner)
+  function setUp(id) { var g = G.gear(id); return !!g && g.where === "booth" && (g.working || (g.down && !!g.fault)); }
+  function kindOf(u) {                                   // "" (set up) | "crate" | "plug" | "power" | "wait"; u.fp: its spot is empty
+    var id = null, i; u.fp = false;
+    for (i = 0; i < u.ids.length; i++) if (!setUp(u.ids[i])) { id = u.ids[i]; break; }
+    if (!id) return "";
+    var g = G.gear(id), n = G.setupNeeds ? G.setupNeeds(id) : null, k = n ? n.kind : "";
+    if (g.where === "van" || g.where === "hand" || k === "van" || k === "place") { u.fp = g.where === "van"; return "crate"; }
+    return k === "plug" ? "plug" : k === "on" || k === "late" ? "power" : "wait";
+  }
+  // the footprints: a faint fill and a dashed outline per empty spot, on the table where the machine goes
+  function fpMesh(n, col, op) {
+    var geo = new THREE.BufferGeometry(), at = new THREE.BufferAttribute(new Float32Array(n * 18), 3);
+    at.setUsage(THREE.DynamicDrawUsage); geo.setAttribute("position", at); geo.setDrawRange(0, 0);
+    var m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: op, depthWrite: false }));
+    m.frustumCulled = false; m.renderOrder = 1; scene.add(m); return m;   // (always in the scene, drawn empty: its shader compiles at load)
+  }
+  var fpFill = fpMesh(MKMAX, 0x39424a, 0.12), fpLine = fpMesh(MKMAX * 48, 0x39424a, 0.8);
+  function quad(a, o, x0, z0, x1, z1, y) {               // a flat rectangle facing up: two triangles
+    a[o] = x0; a[o + 1] = y; a[o + 2] = z0; a[o + 3] = x1; a[o + 4] = y; a[o + 5] = z1; a[o + 6] = x1; a[o + 7] = y; a[o + 8] = z0;
+    a[o + 9] = x0; a[o + 10] = y; a[o + 11] = z0; a[o + 12] = x0; a[o + 13] = y; a[o + 14] = z1; a[o + 15] = x1; a[o + 16] = y; a[o + 17] = z1;
+    return o + 18;
+  }
+  function dashes(a, o, p0, p1, q, y, alongX, cap) {     // dashes along one edge (from p0 to p1 at q), one on each corner
+    var L = p1 - p0, n = Math.max(1, Math.round(L / 6)), s = L / n, h = 0.45;
+    for (var i = 0; i <= n && o < cap; i++) {
+      var d0 = Math.max(p0, p0 + i * s - s * 0.3), d1 = Math.min(p1, p0 + i * s + s * 0.3);
+      o = alongX ? quad(a, o, d0, q - h, d1, q + h, y) : quad(a, o, q - h, d0, q + h, d1, y);
+    }
+    return o;
+  }
+  function footprints() {                                // only when the set of empty spots changed
+    var sig = 0, i, u; for (i = 0; i < mkN; i++) if (mkU[i].fp) sig += (i + 1) * (i + 7) * (mkU[i].cx + 3);
+    if (sig === fpSig) return; fpSig = sig;
+    var fa = fpFill.geometry.attributes.position, la = fpLine.geometry.attributes.position, f = 0, o = 0, cap = la.array.length - 18;
+    for (i = 0; i < mkN; i++) {
+      u = mkU[i]; if (!u.fp) continue;
+      var x0 = u.box.min.x + 0.5, x1 = u.box.max.x - 0.5, z0 = u.box.min.z + 0.5, z1 = u.box.max.z - 0.5, y = u.box.min.y + 0.35;
+      f = quad(fa.array, f, x0, z0, x1, z1, y);
+      o = dashes(la.array, o, x0, x1, z0, y, true, cap); o = dashes(la.array, o, x0, x1, z1, y, true, cap);
+      o = dashes(la.array, o, z0, z1, x0, y, false, cap); o = dashes(la.array, o, z0, z1, x1, y, false, cap);
+    }
+    fa.needsUpdate = la.needsUpdate = true; fpFill.geometry.setDrawRange(0, f / 3); fpLine.geometry.setDrawRange(0, o / 3);
+  }
+  function marks() {                                     // per 0.4 s: which machines need a marker, the chip's count
+    var b = G.mine(), ph = G.phase().id, i; mkU.length = 0; setN = setOf = 0;
+    if (on() && b && (ph === "setup" || ph === "sat" || ph === "sun")) {
+      var l = unitsOf(b);
+      for (i = 0; i < l.length; i++) {                   // (the count is per item, like the goal's "All 29 running"; the rack's 8 have one marker)
+        var u = l[i]; for (var j = 0; j < u.ids.length; j++) { setOf++; if (setUp(u.ids[j])) setN++; }
+        u.k = kindOf(u); if (u.k && mkU.length < MKMAX) mkU.push(u);
+      }
+    }
+    mkN = mkU.length;
+    for (i = 0; i < MKMAX; i++) { var sp = mkS[i]; if (i < mkN) { if (sp.material !== mkM[mkU[i].k]) sp.material = mkM[mkU[i].k]; sp.visible = true; } else sp.visible = false; }
+    footprints(); sizeMarks(); chipShow(ph);
+  }
+  function sizeMarks() {                                 // per frame: bigger with distance (readable across the booth), bigger on a phone
+    var px = camera.position.x, pz = camera.position.z, nk = narrowQ && narrowQ.matches ? 1.35 : 1;
+    for (var i = 0; i < mkN; i++) {
+      var u = mkU[i], dx = u.cx - px, dz = u.cz - pz, k = Math.min(1.9, Math.max(1, Math.sqrt(dx * dx + dz * dz) / 150)) * nk;
+      u.s = k; mkS[i].scale.set(6.4 * k, 8 * k, 1); mkS[i].position.set(u.cx, u.top + 4 * k + 1.5, u.cz);
+    }
+  }
+  // ---- the chip at the top of the to-do list: "Set up 7/24"; it pulses when the count changes, a click points the arrow
+  G.ui.css("tasks-setchip",
+    "#g-setchip{order:1;display:flex;align-items:center;gap:8px;width:100%;min-height:34px;margin:0 0 6px;padding:4px 10px;box-sizing:border-box;" +
+      "border:1px solid var(--ui-edge,#888);border-radius:6px;background:var(--amber-bg,#170d02);color:var(--amber,#ffb53b);cursor:pointer;text-align:left;" +
+      "font:800 12px/1 var(--ui-display,Arial);letter-spacing:.1em;text-transform:uppercase}" +
+    "#g-setchip[hidden]{display:none}#g-setchip b{font:400 calc(20px * var(--ui-k,1))/1 var(--ui-num,monospace);letter-spacing:0}" +
+    "#g-setchip i{width:14px;height:14px;border-radius:50%;background:#ef8a1d;box-shadow:0 0 0 2px #fff inset;flex:none}" +
+    "#g-setchip small{margin-left:auto;font:700 11.5px/1 var(--ui-font,Arial);letter-spacing:0;text-transform:none;opacity:.85}" +
+    "#g-setchip:hover,#g-setchip:focus-visible{background:#3a2405}" +
+    "#g-setchip.pulse{animation:g-chip 1.1s ease-out 1}@keyframes g-chip{0%,100%{background:var(--amber-bg,#170d02)}25%{background:#8a5410;color:#fff}}" +
+    "#g-tasks>.ui-panel-h{order:0}#g-tasks>*{order:2}#g-tasks>#g-setchip{order:1}" +
+    "@media (max-width:760px){#g-setchip{min-height:44px;font-size:13.5px}#g-setchip small{display:none}}");
+  var chip = document.createElement("button"); chip.id = "g-setchip"; chip.type = "button"; chip.hidden = true; el.appendChild(chip);
+  var chipTxt = "";
+  function chipShow(ph) {
+    var show = setOf > 0 && setN < setOf;
+    if (ph === lastPh && lastSet >= 0 && setN !== lastSet && setOf) {
+      if (show) { chip.classList.remove("pulse"); void chip.offsetWidth; chip.classList.add("pulse"); }
+      else if (lastSet < setOf) G.hud.toast(G.t("All {n} machines are set up.", { n: setOf }), "good");
+    }
+    lastPh = ph; lastSet = setOf ? setN : -1;
+    var t = G.t("Set up") + "|" + setN + "/" + setOf + "|" + (touch() ? G.t("tap: the next one") : G.t("click: the next one"));
+    if (t !== chipTxt) { chipTxt = t; var p = t.split("|");
+      chip.innerHTML = '<i aria-hidden="true"></i>' + esc(p[0]) + " <b>" + esc(p[1]) + "</b><small>" + esc(p[2]) + "</small>";
+      chip.setAttribute("aria-label", G.t("{n} of {of} machines set up: show me the next one", { n: setN, of: setOf })); }
+    if (chip.hidden === show) chip.hidden = !show;
+  }
+  function chipGo() {                                    // the arrow: the nearest machine you can set up now, else the pile, else one that waits
+    var best = null, bd = 0, i, r, d;
+    best = rowOf("cordrun") || rowOf("cordask");           // booth 8's cord: the fix when nothing fits (cord.js shows the row only then)
+    if (!best) for (i = 0; i < rows.length; i++) { r = rows[i]; if (!/^(carry$|plug|on|late)/.test(r.key) || r.x === null) continue; d = d2(r); if (!best || d < bd) { best = r; bd = d; } }
+    if (!best) best = rowOf("van");
+    if (!best) for (i = 0; i < rows.length; i++) { r = rows[i]; if (!/^wait/.test(r.key) || r.x === null) continue; d = d2(r); if (!best || d < bd) { best = r; bd = d; } }
+    if (!best) return;
+    sel = best.key; last = ""; draw(); T = 1;
+  }
+  // the tags over machines (the markers; faults.js: the red "!" and the yellow phone / "?" / "Aa") are clickable too: a pick box at
+  // the tag that does what clicking the machine does (owner)
   var tpicks = [];
   function under(id, self) {                          // the machine's own pick: the hall's item pick, else a game pick on it
     var g = GEAR[id], c = g && g.box.getCenter(new THREE.Vector3()), i, p;
@@ -19954,22 +20717,28 @@ var G = (function () {
     if (c) for (i = 0; i < PICKS.length; i++) { p = PICKS[i]; if (p.kind === "game" && !p.tag && p !== self && p.box.containsPoint(c)) return p; }
     return null;
   }
+  function tagPick(n, id, cx, cz, y0, hw, hh, name, verb) {
+    var t = tpicks[n];
+    if (!t) t = tpicks[n] = G.pick(new THREE.Box3(), "", "", function (p, how) { var u = under(p.tagId, p); if (u) { if (u.kind === "game") { if (u.fn) u.fn(u, how); } else HOOK.pick(u, how); } }, { tag: true });
+    else if (PICKS.indexOf(t) < 0) PICKS.push(t);
+    t.box.min.set(cx - hw, y0, cz - hw); t.box.max.set(cx + hw, y0 + hh, cz + hw); t.tagId = id; t.name = name; t.verb = verb;
+  }
   function tagPicks(list) {
-    var n = 0;
-    for (var i = 0; i < list.length && n < 12; i++) {
+    var n = 0, i;
+    for (i = 0; i < list.length && n < 12; i++) {
       var r = list[i];
-      if (!r.id || !r.box || !GEAR[r.id] || !/^(fix|plug|on|ev)/.test(r.key)) continue;
-      var t = tpicks[n];
-      if (!t) {
-        t = tpicks[n] = G.pick(new THREE.Box3(), "", "", function (p, how) { var u = under(p.tagId, p); if (u) { if (u.kind === "game") { if (u.fn) u.fn(u, how); } else HOOK.pick(u, how); } }, { tag: true });
-      } else if (PICKS.indexOf(t) < 0) PICKS.push(t);
-      var cx = (r.box.min.x + r.box.max.x) / 2, cz = (r.box.min.z + r.box.max.z) / 2, y = r.box.max.y + 6;
-      t.box.min.set(cx - 4.5, y - 5, cz - 4.5); t.box.max.set(cx + 4.5, y + 5, cz + 4.5);
-      t.tagId = r.id; t.name = r.text; t.verb = r.key.indexOf("plug") === 0 ? G.t("plug it in") : r.key.indexOf("on") === 0 ? G.t("switch it on") : r.key.indexOf("fix") === 0 ? G.t("fix it") : G.t("go to it");
-      n++;
+      if (!r.id || !r.box || !GEAR[r.id] || !/^(fix|ev)/.test(r.key)) continue;
+      tagPick(n++, r.id, (r.box.min.x + r.box.max.x) / 2, (r.box.min.z + r.box.max.z) / 2, r.box.max.y + 1, 4.5, 10, r.text, r.key.indexOf("fix") === 0 ? G.t("fix it") : G.t("go to it"));
+    }
+    // the markers: plug and power only (a crate or an hourglass has nothing to click, and its box would take the aim from what's behind)
+    for (i = 0; i < mkN; i++) {
+      var u = mkU[i], ne = G.setupNeeds ? G.setupNeeds(u.id) : null;
+      if (u.k !== "plug" && u.k !== "power") continue;
+      tagPick(n++, u.id, u.cx, u.cz, u.top + 1.5, 3.2 * u.s + 1, 8 * u.s + 1, u.ids.length > 1 ? G.t("network rack") : nm(u.id), ne ? ne.text : G.t("waiting"));
     }
     for (; n < tpicks.length; n++) { var k = PICKS.indexOf(tpicks[n]); if (k >= 0) PICKS.splice(k, 1); }
   }
+  function drawTags(list) { marks(); tagPicks(list); }
 
   // ---- tracking: a job that disappears without failing counts as done
   var DONE = /^(fix|ev|trip|plug|on|cheer|rot$|board$)/;   // rows that go away only when you did them (a cheer row: also when the player leaves)
@@ -20028,7 +20797,8 @@ var G = (function () {
     phase: function () { sel = focus = null; last = lastLine = ""; },
     tick: function (dt) {
       el.hidden = !on();
-      if (!on()) { hilite(); if (tags.length && tags[0].visible) drawTags([]); if (lastLine) { lastLine = ""; G.hud.notice("", "tasks"); } return; }
+      if (!on()) { hilite(); if (mkN || !chip.hidden) drawTags([]); if (lastLine) { lastLine = ""; G.hud.notice("", "tasks"); } return; }
+      if (mkN) sizeMarks();
       if ((T += dt) < 0.4) { hilite(); return; }
       T = 0; rows = collect(); gls = goals(); track(rows); drawTags(rows); if (!G.state.demo) offerEnd();
       if (!rowOf(sel)) sel = null;
@@ -20042,9 +20812,11 @@ var G = (function () {
     }
   });
   G.on("quit", function () { el.hidden = true; hl.hidden = true; sel = focus = null; lastLine = ""; drawTags([]); });
-  G.on("gear", function () { T = 1; });
-  G.tasks = { next: function () { return aim(); }, band: band, rows: function () { return rows; } };   // (tests: the target row, its band)                   // (picked up, placed, fixed: the next job at once, not 0.4 s later)
-  if (tagMat("plug")) { tagMat("power"); var warm = new THREE.Sprite(tagMat("plug")); warm.visible = false; scene.add(warm); }   // compiled up front (core's precompile)
+  G.on("gear", function () { T = 1; });                 // (picked up, placed, fixed: the next job at once, not 0.4 s later)
+  // (tests: the target row, its band, the markers over the machines not set up yet, the chip's count)
+  G.tasks = { next: function () { return aim(); }, band: band, rows: function () { return rows; },
+    marks: function () { return mkU.slice(0, mkN).map(function (u) { return { id: u.id, k: u.k, empty: u.fp }; }); },
+    chip: function () { return { n: setN, of: setOf, shown: !chip.hidden, el: chip }; } };
 })();
 
 // ---------------------------------------------------------------- VCF Tycoon: sound
@@ -20713,8 +21485,8 @@ var G = (function () {
 
   // ---- the HUD rows, the break card, the marker (8 Hz)
   function fill(r, j, mini) {
-    var a = !!j.away, f = Math.round(100 * frac(j)), cls = "job ui-panel" + (mini ? " mini-job" : "") + (a ? " away" : !mini && kT > 1 ? " ff" : "");
-    var lt = a ? j.away : j.label, tt = a ? G.t("{t} left", { t: mm(j.left) }) : mm(shown(j)), it = ICON[j.fx] || ICON[""];
+    var a = !!j.away, f = Math.round(100 * frac(j)), cls = "job ui-panel" + (mini ? " mini-job" : "") + (pz ? " paused" : "") + (a ? " away" : !mini && kT > 1 ? " ff" : "");
+    var lt = a ? j.away : j.label, tt = pz ? G.t("Paused") : a ? G.t("{t} left", { t: mm(j.left) }) : mm(shown(j)), it = ICON[j.fx] || ICON[""];
     if (!r.on) { box.appendChild(r.el); r.on = true; }
     if (r.cls !== cls) { r.el.className = cls; r.cls = cls; }
     if (r.lt !== lt) { r.l.textContent = lt; r.lt = lt; }
@@ -20724,7 +21496,9 @@ var G = (function () {
   }
   function off(r) { if (r.on) { box.removeChild(r.el); r.on = false; } }
   var bT = "", bKk = "", bSx = -1, ffT = "", ringOn = false, ringF = -1, tintOn = false, barFF = false;
+  var pz = false;                                       // (paused: the rows say "Paused", their bars grey and striped: ui.js)
   function draw(h, b) {
+    var ph = G.phase(); pz = !!G.paused && ph.end > ph.start;
     if (h) fill(MAIN, h, false); else off(MAIN);
     var n = 0;
     for (var m = 0; m < L.length && n < MINI.length; m++) if (L[m].kind === "bg") fill(MINI[n++], L[m], true);

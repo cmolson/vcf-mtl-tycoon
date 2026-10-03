@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf-8">
-<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_PUBLIC_URL = "https://cmolson.github.io/vcf-mtl-tycoon/copyprotected.html"; window.VCF_BUILD = "v0.108-929c0d9";</script>
+<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_PUBLIC_URL = "https://cmolson.github.io/vcf-mtl-tycoon/copyprotected.html"; window.VCF_BUILD = "v0.117-2057c38";</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>COPY PROTECTED</title>
 <link rel="icon" href="data:,">
@@ -142,9 +142,10 @@ button.tour.on { background: var(--accent); color: #fff; }
 /* COPY PROTECTED: the game's own layer over the hall (the hall's menu, readout and tour are hidden by hall.js).
    Phone portrait first. Colours follow the hall's drafting-paper variables (--panel, --ink, --accent ...). */
 #cp-ov { position: fixed; inset: 0; z-index: 10; touch-action: none; display: none; }
-#cp-hud { position: fixed; left: 12px; top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 6; display: flex; align-items: center; gap: 8px;
+#cp-hud { position: fixed; left: calc(190px + env(safe-area-inset-left, 0px)); top: calc(8px + env(safe-area-inset-top, 0px)); min-height: 44px; z-index: 6; display: flex; align-items: center; gap: 8px;
   background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px 6px 12px; font: 700 14px/1.2 var(--display);
-  max-width: calc(100vw - 24px); box-sizing: border-box; min-width: 0; }
+  max-width: calc(100vw - 198px); box-sizing: border-box; min-width: 0; }
+#cp.kio #cp-hud { left: calc(60px + env(safe-area-inset-left, 0px)); max-width: calc(100vw - 68px); }
 #cp-hud > * { flex: 0 0 auto; }
 #cp-hud .tt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; min-width: 0; }
 @media (max-width: 420px) { #cp-hud { gap: 6px; padding: 5px 6px 5px 10px; } #cp-hud .tt { display: none; } }
@@ -241,6 +242,30 @@ body.cp-frozen #joy, body.cp-frozen #guide, body.cp-frozen #aim, body.cp-frozen 
 @media (prefers-reduced-motion: reduce) { #cp-toast { transition: none; } }
 @media (pointer: coarse) { #cp-hud button { min-height: 36px; } }
 body.cp-play #cp-hud { display: none; }
+/* the corner (top left): back to VCF Tycoon (straight out, or a question while a booth is in progress) and II (walk and microgames).
+   Above the cards and the microgame strip (the strip's text starts right of it, or under it on a phone: micro.js M.inset);
+   under the leave question, the cracktro, the attract loop and "Still playing?". The HUD sits right of it, or under it on a phone */
+#cp-corner { position: fixed; z-index: 25; left: calc(8px + env(safe-area-inset-left, 0px)); top: calc(8px + env(safe-area-inset-top, 0px)); display: flex; gap: 6px; }
+#cp-corner a, #cp-corner button { box-sizing: border-box; height: 44px; display: inline-flex; align-items: center; justify-content: center; margin: 0;
+  font: 800 14px/1 var(--display); border: 2px solid #1c2427; border-radius: 10px; background: #f0a21a; color: #1c2427; text-decoration: none; cursor: pointer; box-shadow: 0 2px 0 #1c2427; }
+#cp-back { width: 124px; padding: 0 8px; white-space: nowrap; }
+#cp-pause { width: 44px; padding: 0; letter-spacing: 1px; background: var(--panel) !important; color: var(--ink) !important; }
+#cp-corner [hidden] { display: none !important; }
+#cp-corner a:focus-visible, #cp-corner button:focus-visible, #cp-ask a:focus-visible, #cp-ask button:focus-visible { outline: 3px solid #1d55c4; outline-offset: 2px; }
+@media (max-width: 599px) {
+  #cp-hud, #cp.kio #cp-hud { left: calc(8px + env(safe-area-inset-left, 0px)); top: calc(58px + env(safe-area-inset-top, 0px)); max-width: calc(100vw - 16px); }
+  #cp-toast { top: calc(112px + env(safe-area-inset-top, 0px)); }
+}
+/* the cards start under the corner where they could reach it (a card is 440 px wide, centred) */
+@media (max-width: 820px) { #cp-card { padding-top: calc(60px + env(safe-area-inset-top, 0px)); } }
+#cp-ask { position: fixed; inset: 0; z-index: 27; display: grid; place-items: center; padding: 16px; box-sizing: border-box; background: rgba(10,12,14,0.6); }
+#cp-ask .cd { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 12px; padding: 18px; width: min(340px, 100%); box-sizing: border-box; display: grid; gap: 10px; }
+#cp-ask h2 { margin: 0; font: 800 22px/1.15 var(--display); }
+#cp-ask p { margin: 0; font: 15px/1.45 var(--display); }
+#cp-ask .row { display: flex; gap: 8px; justify-content: flex-end; }
+#cp-ask .row > * { box-sizing: border-box; flex: 1 1 0; min-height: 48px; display: inline-flex; align-items: center; justify-content: center; font: 700 15px var(--display); padding: 10px 14px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); text-decoration: none; cursor: pointer; }
+#cp-ask .row > .pri { background: #f0a21a; color: #1c2427; border-color: #1c2427; }
 
 </style>
 
@@ -391,7 +416,7 @@ var GUESS_FR = {
   5: "Retronic Design" + NB + ": des adaptateurs USB pour manettes Atari, C64, Amiga, Apple II et Vectrex, et des ajouts Amiga pour disquettes, vidéo et MIDI.",
   6: "Peut-être de la démoscène C64 ?",
   7: "Peut-être autour de l'Apple Newton ?",
-  8: "Peut-être surtout du Commodore, avec un peu d'Atari, d'Apple et d'Amiga ?",
+  8: "Peut-être surtout du Commodore 8 bits, des C64 et des C128, et un BBS de 30 ans ?",
   11: "Peut-être des ordinateurs britanniques : Sinclair, Amstrad, Acorn ?",
   12: "Peut-être des modems et de l'Internet par ligne téléphonique ?",
   13: "Le GameTank, une toute nouvelle console 8 bits libre, avec deux 6502, de vraies cartouches et une sortie composite, à essayer.",
@@ -490,7 +515,7 @@ var D = {
 }
 ;
 var PLAN = [{"id":"osborne1","name":"Osborne 1","cat":"luggable","w":20.5,"d":11,"h":9,"x":-75.35,"z":0.25,"level":"table","stack":0,"body":"#c8b48c","scr":"green","kb":1},{"id":"hyperion","name":"Dynalogic Hyperion","cat":"luggable","w":18.3,"d":10,"h":8.8,"x":-43.65,"z":1.5,"level":"table","stack":0,"body":"#cfcbc2","scr":"amber","kb":1},{"id":"compaq1","name":"Compaq Portable","cat":"luggable","w":20,"d":14,"h":8.5,"x":-15.4,"z":-0.5,"level":"table","stack":0,"body":"#d8cfb8","scr":"green","kb":1},{"id":"kaypro2","name":"Kaypro 2","cat":"luggable","w":18,"d":13,"h":8,"x":16.3,"z":-0.5,"level":"table","stack":0,"body":"#7d8a96","scr":"green","kb":1},{"id":"ibm5155","name":"IBM Portable 5155","cat":"luggable","w":19.5,"d":14,"h":7.7,"x":44.5,"z":-0.5,"level":"table","stack":0,"body":"#d6d2c6","scr":"amber","kb":1},{"id":"kaypro1","name":"Kaypro 1","cat":"luggable","w":18,"d":13,"h":8,"x":76.25,"z":-0.5,"level":"table","stack":0,"body":"#7d8a96","scr":"green","kb":1},{"id":"souvenir","name":"ImageWriter (souvenirs)","cat":"printer","w":16.2,"d":11.8,"h":4.8,"x":76.5,"z":-3.5,"level":"shelf","stack":0,"body":"#d9cfb6","scr":null,"kb":0},{"id":"superpet","name":"Commodore SuperPET","cat":"desktop","w":16.5,"d":18.5,"h":14.2,"x":-78.15,"z":-5.5,"level":"shelf","stack":0,"body":"#e8e0c8","scr":null,"kb":0},{"id":"cbm8050","name":"Commodore 8050 drive","cat":"drive","w":15,"d":14.5,"h":7,"x":-59.8,"z":-5.5,"level":"shelf","stack":0,"body":"#e0d8c2","scr":null,"kb":0},{"id":"econopet","name":"EconoPET board (on display)","cat":"display","w":10,"d":5,"h":8.5,"x":-59.8,"z":-5.5,"level":"shelf","stack":7,"body":null,"scr":null,"kb":0},{"id":"compaq3","name":"Compaq Portable III","cat":"luggable","w":16.1,"d":7.5,"h":9.7,"x":-41.65,"z":-3.5,"level":"shelf","stack":0,"body":"#c9c2b0","scr":"plasma","kb":1},{"id":"macport","name":"Macintosh Portable","cat":"laptop","w":15.25,"d":14.43,"h":4.05,"x":-16.9,"z":-5.5,"level":"shelf","stack":0,"body":"#d7d3c7","scr":"lcd","kb":0},{"id":"bondwell200","name":"Bondwell B200","cat":"laptop","w":12.2,"d":12,"h":2.5,"x":1.35,"z":-5.5,"level":"shelf","stack":0,"body":"#d4d1c8","scr":"lcd","kb":0},{"id":"minisport","name":"Zenith MinisPort","cat":"laptop","w":12.5,"d":9.8,"h":1.29,"x":18.2,"z":-5.5,"level":"shelf","stack":0,"body":"#2e2f31","scr":"lcd","kb":0},{"id":"cbm286","name":"Commodore C286-LT","cat":"laptop","w":12.3,"d":10,"h":2,"x":41.05,"z":-5.5,"level":"shelf","stack":0,"body":"#cfcfca","scr":"bluelcd","kb":0},{"id":"bondwell310","name":"Bondwell B310SX","cat":"laptop","w":13,"d":12.5,"h":2.1,"x":57.6,"z":-5.5,"level":"shelf","stack":0,"body":"#2a2a2a","scr":"stn","kb":0},{"id":"compaq2","name":"Compaq Portable II (Dial-a-Museum)","cat":"luggable","w":17.7,"d":12,"h":7.5,"x":0,"z":-50,"level":"racktop","stack":0,"body":"#d2cab6","scr":"amber","kb":1},{"id":"phone1","name":"Phone 1007 (table 1)","cat":"phone","style":"m9216","w":7.5,"d":7.5,"h":3.5,"x":-58.95,"z":10.25,"level":"table","stack":0,"body":"#2a2a2a","scr":null,"kb":0},{"id":"phone2","name":"Phone 1008 (table 2)","cat":"phone","style":"m9216","w":7.5,"d":7.5,"h":3.5,"x":0.95,"z":10.25,"level":"table","stack":0,"body":"#2a2a2a","scr":null,"kb":0},{"id":"phone3","name":"Phone 1009 (table 3)","cat":"phone","style":"m9216","w":7.5,"d":7.5,"h":3.5,"x":60.75,"z":10.25,"level":"table","stack":0,"body":"#2a2a2a","scr":null,"kb":0},{"id":"logprinter","name":"ImageWriter (live log)","cat":"printer","w":16.2,"d":11.8,"h":4.8,"x":0,"z":-54,"level":"racktop","stack":7.5,"body":"#d9cfb6","scr":null,"kb":0},{"id":"cisco3745","name":"Cisco 3745 (CME)","cat":"network","w":17.25,"d":15,"h":5.25,"x":0,"z":-40,"level":"cart","stack":0,"body":null,"scr":null,"kb":0},{"id":"cisco2621","name":"Cisco 2621 (modem bank)","cat":"network","w":17.5,"d":11.8,"h":1.69,"x":0,"z":-40,"level":"cart","stack":8.75,"body":null,"scr":null,"kb":0},{"id":"vg248","name":"Cisco VG248","cat":"network","w":17.25,"d":16.75,"h":1.75,"x":0,"z":-40,"level":"cart","stack":10.5,"body":null,"scr":null,"kb":0},{"id":"breakout1","name":"RJ-11 breakout 1-24","cat":"network","w":17.3,"d":3,"h":1.75,"x":0,"z":-40,"level":"cart","stack":12.25,"body":null,"scr":null,"kb":0},{"id":"breakout2","name":"RJ-11 breakout 25-48","cat":"network","w":17.3,"d":3,"h":1.75,"x":0,"z":-40,"level":"cart","stack":14,"body":null,"scr":null,"kb":0},{"id":"switch","name":"Ethernet switch","cat":"network","w":17.3,"d":8,"h":1.75,"x":0,"z":-40,"level":"cart","stack":15.75,"body":null,"scr":null,"kb":0},{"id":"pdu","name":"Rack power strip","cat":"network","w":17.3,"d":6,"h":1.75,"x":0,"z":-40,"level":"cart","stack":17.5,"body":null,"scr":null,"kb":0},{"id":"pm25","name":"Livingston PortMaster PM-25","cat":"network","w":17,"d":12,"h":3.5,"x":0,"z":-40,"level":"cart","stack":5.25,"body":"#c8c6c0","scr":null,"kb":0}];
-var INFO = {"dial":"1019","items":{"superpet":{"name":"Commodore SuperPET","year":1981,"specs":"6502 + 6809 1 MHz · RAM 96K · CRT 12″ · 2 × 5¼″ 500K (8050)","about":"Before portables: the all-in-one desktop the luggables grew out of.","about_fr":"Avant les portatifs : l'ordinateur de bureau tout-en-un dont sont issus les transportables.","price":"1 995 $ US (annoncé · announced)","canada":"Designed with the University of Waterloo, Ontario.","canada_fr":"Conçu avec l’Université de Waterloo (Ontario).","clip":"9"},"osborne1":{"name":"Osborne 1","year":1981,"specs":"Z80 4 MHz · RAM 64K · CRT 5″ · 2 × 5¼″ 91K","about":"The first commercially successful portable computer.","about_fr":"Le premier ordinateur portatif à connaître un succès commercial.","price":"1 795 $ US","weight":"24.5","clip":"1"},"kaypro2":{"name":"Kaypro 2","year":1984,"specs":"Z80A 4 MHz · RAM 64K · CRT 9″ · 2 × 5¼″ 191K","about":"The 1984 Kaypro 2: a faster Z80, half-height drives, and CP/M in a metal case.","about_fr":"Le Kaypro 2 de 1984 : un Z80 plus rapide, des lecteurs demi-hauteur et CP/M dans un boîtier de métal.","price":"1 295 $ US","weight":"26 ?","clip":"2"},"kaypro1":{"name":"Kaypro 1","year":1985,"specs":"Z80A 4 MHz · RAM 64K · CRT 9″ · 2 × 5¼″ 390K","about":"The last CP/M Kaypro: $995 in 1985.","about_fr":"Le dernier Kaypro sous CP/M : 995 $ en 1985.","price":"995 $ US","weight":"26 ?","clip":"2"},"hyperion":{"name":"Dynalogic Hyperion","year":1983,"specs":"8088 4.77 MHz · RAM 256K · CRT 7″ · 2 × 5¼″ 320K","about":"An early IBM PC-compatible portable, designed and built in Ottawa.","about_fr":"L'un des premiers portatifs compatibles IBM PC, conçu et fabriqué à Ottawa.","price":"3 395 $ US","weight":"20-21","canada":"Sold by Bytec, another Ottawa company.","canada_fr":"Distribué par Bytec, une autre entreprise d’Ottawa.","clip":"3"},"compaq1":{"name":"Compaq Portable","year":1983,"specs":"8088 4.77 MHz · RAM 128K · CRT 9″ · 2 × 5¼″ 360K","about":"The portable that made 'IBM compatible' mean something.","about_fr":"Le portatif qui a donné tout son sens à « compatible IBM ».","price":"2 995 $ US","weight":"28","clip":"4"},"ibm5155":{"name":"IBM Portable PC","year":1984,"specs":"8088 4.77 MHz · RAM 256K · CRT 9″ · 2 × 5¼″ 360K","about":"IBM's answer to the Compaq: an XT in a suitcase.","about_fr":"La réponse d'IBM au Compaq : un XT dans une valise.","price":"2 795 $ US","weight":"30","clip":"4"},"compaq3":{"name":"Compaq Portable III","year":1987,"specs":"80286 12 MHz · RAM 640K · Plasma 10″ · 1 × 5¼″ 1.2 MB + HD 40 MB","about":"A 12 MHz 286 with an amber gas-plasma screen.","about_fr":"Un 286 à 12 MHz avec un écran plasma ambre.","price":"3 999–5 799 $ US","weight":"18-20","clip":"5"},"macport":{"name":"Macintosh Portable","year":1989,"specs":"68000 16 MHz · RAM 1 MB · LCD 9.8″ · 1 × 3½″ 1.44 MB","about":"Apple's first battery-powered Macintosh.","about_fr":"Le premier Macintosh fonctionnant sur batterie.","price":"5 799 $ US","weight":"15.8","clip":"6"},"minisport":{"name":"Zenith MinisPort","year":1989,"specs":"80C88 8 MHz · RAM 1 MB · LCD CGA · 1 × 2″ 720K","about":"A 6-pound laptop with DOS in ROM and 2-inch floppies.","about_fr":"Un portatif de 6 livres avec DOS en ROM et des disquettes de 2 pouces.","price":"1 999 $ US","weight":"5.9","clip":"7"},"bondwell200":{"name":"Bondwell B200","year":1989,"specs":"80C88 8 MHz · RAM 640K · LCD 10.5″ · 2 × 3½″ 720K","about":"An XT-class laptop from Bondwell of Hong Kong.","about_fr":"Un portatif de classe XT signé Bondwell, de Hong Kong.","price":"1 295 $ US","weight":"7-8","clip":"7"},"bondwell310":{"name":"Bondwell B310SX","year":1991,"specs":"386SX 16 MHz · RAM 1 MB · LCD VGA · 1 × 3½″ 1.44 MB + HD 80 MB","about":"A 386SX laptop from Bondwell.","about_fr":"Un portatif 386SX de Bondwell.","price":"2 100–2 300 $ US","weight":"8.5","clip":"8"},"cbm286":{"name":"Commodore C286-LT","year":1990,"specs":"80C286 12.5 MHz · RAM 1 MB · LCD 9.75″ · 1 × 3½″ 1.44 MB + HD 20 MB","about":"Yes, Commodore made PC-compatible laptops.","about_fr":"Eh oui, Commodore a fait des portatifs compatibles PC.","weight":"?","clip":"8"},"econopet":{"name":"EconoPET 40/8096","kind":"gear","about":"An open-source replacement mainboard for Commodore PET and CBM computers, like the SuperPET beside it. It runs the machine and emulates its disk drives.","about_fr":"Une carte mère libre qui remplace celle des Commodore PET et CBM, comme le SuperPET à côté. Elle fait tourner la machine et émule ses lecteurs de disquettes.","credit":"Designed by Daniel Lehenbauer","url":"https://dlehenbauer.github.io/econopet/40-8096-A.html"},"compaq2":{"name":"Compaq Portable II","year":1986,"specs":"80286 6/8 MHz · RAM 256K · CRT 9″ · 1–2 × 5¼″ 360K","price":"3 499–4 999 $ US","weight":"23.6","about":"Not a guest book machine: it runs Dial-a-Museum, the voice menu you reach from any phone on the booth.","about_fr":"Pas une machine du livre d'or : elle fait tourner le Musée au bout du fil, le menu vocal qu'on joint depuis les téléphones du kiosque.","clip":"5"},"cbm8050":{"name":"Commodore 8050 drive","kind":"gear","specs":"2 × 5¼″ 500K · IEEE-488","about":"The SuperPET's dual floppy drive.","about_fr":"Le double lecteur de disquettes du SuperPET."},"souvenir":{"name":"Apple ImageWriter (souvenirs)","year":1983,"kind":"gear","about":"Prints a souvenir page from the guest book.","about_fr":"Imprime une page souvenir du livre d'or."},"logprinter":{"name":"Apple ImageWriter (live log)","year":1983,"kind":"gear","about":"Prints every guest book entry as it arrives.","about_fr":"Imprime chaque entrée du livre d'or à son arrivée."},"cisco3745":{"name":"Cisco 3745 (CallManager Express)","kind":"gear","about":"The phone switch: every extension on the booth rings through it.","about_fr":"Le commutateur téléphonique : chaque poste du kiosque passe par lui."},"cisco2621":{"name":"Cisco 2621 (modem bank)","kind":"gear","about":"16 analog modems (NM-16AM) that answer the vintage machines' calls.","about_fr":"16 modems analogiques (NM-16AM) qui répondent aux appels des machines d'époque."},"vg248":{"name":"Cisco VG248","kind":"gear","about":"48 analog phone lines for the phones and the machines' modems.","about_fr":"48 lignes analogiques pour les téléphones et les modems des machines."},"pm25":{"name":"Livingston PortMaster PM-25","kind":"gear","about":"Serial ports for the machines wired straight in, and the printers.","about_fr":"Ports série pour les machines branchées en direct et les imprimantes."},"switch":{"name":"Ethernet switch","kind":"gear","about":"Ties the rack together.","about_fr":"Relie le rack."},"pdu":{"name":"Rack power strip","kind":"gear","about":"One plug to the wall for the whole rack.","about_fr":"Une seule prise murale pour tout le rack."},"breakout1":{"name":"RJ-11 breakout 1-24","kind":"gear","about":"Phone jacks for VG248 lines 1-24.","about_fr":"Prises téléphoniques des lignes 1-24 du VG248."},"breakout2":{"name":"RJ-11 breakout 25-48","kind":"gear","about":"Phone jacks for VG248 lines 25-48.","about_fr":"Prises téléphoniques des lignes 25-48 du VG248."},"phone1":{"name":"Nortel Meridian M9216 · ext. 1007","kind":"gear","about":"Pick it up and dial 1019 for Dial-a-Museum, or 1024 to hear a modem.","about_fr":"Décrochez et composez le 1019 pour le Musée au bout du fil, ou le 1024 pour entendre un modem.","canada":"Aastra, Concord (Ontario)","canada_fr":""},"phone2":{"name":"Nortel Meridian M9216 · ext. 1008","kind":"gear","about":"Pick it up and dial 1019 for Dial-a-Museum, or 1024 to hear a modem.","about_fr":"Décrochez et composez le 1019 pour le Musée au bout du fil, ou le 1024 pour entendre un modem.","canada":"Aastra, Concord (Ontario)","canada_fr":""},"phone3":{"name":"Nortel Meridian M9216 · ext. 1009","kind":"gear","about":"Pick it up and dial 1019 for Dial-a-Museum, or 1024 to hear a modem.","about_fr":"Décrochez et composez le 1019 pour le Musée au bout du fil, ou le 1024 pour entendre un modem.","canada":"Aastra, Concord (Ontario)","canada_fr":""}}} || { dial: "1019", items: {} };   // machine cards (layout/machines-json.py)
+var INFO = {"dial":"1019","items":{"superpet":{"name":"Commodore SuperPET","year":1981,"specs":"6502 + 6809 1 MHz · RAM 96K · CRT 12″ · 2 × 5¼″ 500K (8050)","about":"Before portables: the Commodore PET, the kind of all-in-one desktop the luggables grew out of.","about_fr":"Avant les portatifs : le Commodore PET, le genre d'ordinateur de bureau tout-en-un dont sont issus les transportables.","price":"1 995 $ US (annoncé · announced)","canada":"Designed with the University of Waterloo, Ontario.","canada_fr":"Conçu avec l’Université de Waterloo (Ontario).","clip":"9"},"osborne1":{"name":"Osborne 1","year":1981,"specs":"Z80 4 MHz · RAM 64K · CRT 5″ · 2 × 5¼″ 91K","about":"The first commercially successful portable computer.","about_fr":"Le premier ordinateur portatif à connaître un succès commercial.","price":"1 795 $ US","weight":"24.5","clip":"1"},"kaypro2":{"name":"Kaypro 2","year":1984,"specs":"Z80A 4 MHz · RAM 64K · CRT 9″ · 2 × 5¼″ 191K","about":"The 1984 Kaypro 2: a faster Z80, half-height drives, and CP/M in a metal case.","about_fr":"Le Kaypro 2 de 1984 : un Z80 plus rapide, des lecteurs demi-hauteur et CP/M dans un boîtier de métal.","price":"1 295 $ US","weight":"26 ?","clip":"2"},"kaypro1":{"name":"Kaypro 1","year":1985,"specs":"Z80A 4 MHz · RAM 64K · CRT 9″ · 2 × 5¼″ 390K","about":"The last CP/M Kaypro: $995 in 1985.","about_fr":"Le dernier Kaypro sous CP/M : 995 $ en 1985.","price":"995 $ US","weight":"26 ?","clip":"2"},"hyperion":{"name":"Dynalogic Hyperion","year":1983,"specs":"8088 4.77 MHz · RAM 256K · CRT 7″ · 2 × 5¼″ 320K","about":"An early IBM PC-compatible portable, designed and built in Ottawa.","about_fr":"L'un des premiers portatifs compatibles IBM PC, conçu et fabriqué à Ottawa.","price":"3 395 $ US","weight":"20-21","canada":"Sold by Bytec, another Ottawa company.","canada_fr":"Distribué par Bytec, une autre entreprise d’Ottawa.","clip":"3"},"compaq1":{"name":"Compaq Portable","year":1983,"specs":"8088 4.77 MHz · RAM 128K · CRT 9″ · 2 × 5¼″ 360K","about":"The portable that made 'IBM compatible' mean something.","about_fr":"Le portatif qui a donné tout son sens à « compatible IBM ».","price":"2 995 $ US","weight":"28","clip":"4"},"ibm5155":{"name":"IBM Portable PC","year":1984,"specs":"8088 4.77 MHz · RAM 256K · CRT 9″ · 2 × 5¼″ 360K","about":"IBM's answer to the Compaq: an XT in a suitcase.","about_fr":"La réponse d'IBM au Compaq : un XT dans une valise.","price":"2 795 $ US","weight":"30","clip":"4"},"compaq3":{"name":"Compaq Portable III","year":1987,"specs":"80286 12 MHz · RAM 640K · Plasma 10″ · 1 × 5¼″ 1.2 MB + HD 40 MB","about":"A 12 MHz 286 with an amber gas-plasma screen.","about_fr":"Un 286 à 12 MHz avec un écran plasma ambre.","price":"3 999–5 799 $ US","weight":"18-20","clip":"5"},"macport":{"name":"Macintosh Portable","year":1989,"specs":"68000 16 MHz · RAM 1 MB · LCD 9.8″ · 1 × 3½″ 1.44 MB","about":"Apple's first battery-powered Macintosh.","about_fr":"Le premier Macintosh fonctionnant sur batterie.","price":"5 799 $ US","weight":"15.8","clip":"6"},"minisport":{"name":"Zenith MinisPort","year":1989,"specs":"80C88 8 MHz · RAM 1 MB · LCD CGA · 1 × 2″ 720K","about":"A 6-pound laptop with DOS in ROM and 2-inch floppies.","about_fr":"Un portatif de 6 livres avec DOS en ROM et des disquettes de 2 pouces.","price":"1 999 $ US","weight":"5.9","clip":"7"},"bondwell200":{"name":"Bondwell B200","year":1989,"specs":"80C88 8 MHz · RAM 640K · LCD 10.5″ · 2 × 3½″ 720K","about":"An XT-class laptop from Bondwell of Hong Kong.","about_fr":"Un portatif de classe XT signé Bondwell, de Hong Kong.","price":"1 295 $ US","weight":"7-8","clip":"7"},"bondwell310":{"name":"Bondwell B310SX","year":1991,"specs":"386SX 16 MHz · RAM 1 MB · LCD VGA · 1 × 3½″ 1.44 MB + HD 80 MB","about":"A 386SX laptop from Bondwell.","about_fr":"Un portatif 386SX de Bondwell.","price":"2 100–2 300 $ US","weight":"8.5","clip":"8"},"cbm286":{"name":"Commodore C286-LT","year":1990,"specs":"80C286 12.5 MHz · RAM 1 MB · LCD 9.75″ · 1 × 3½″ 1.44 MB + HD 20 MB","about":"Yes, Commodore made PC-compatible laptops.","about_fr":"Eh oui, Commodore a fait des portatifs compatibles PC.","weight":"?","clip":"8"},"econopet":{"name":"EconoPET 40/8096","kind":"gear","about":"An open-source replacement mainboard for Commodore PET and CBM computers, like the SuperPET beside it. It runs the machine and emulates its disk drives.","about_fr":"Une carte mère libre qui remplace celle des Commodore PET et CBM, comme le SuperPET à côté. Elle fait tourner la machine et émule ses lecteurs de disquettes.","credit":"Designed by Daniel Lehenbauer","url":"https://dlehenbauer.github.io/econopet/40-8096-A.html"},"compaq2":{"name":"Compaq Portable II","year":1986,"specs":"80286 6/8 MHz · RAM 256K · CRT 9″ · 1–2 × 5¼″ 360K","price":"3 499–4 999 $ US","weight":"23.6","about":"Not a guest book machine: it runs Dial-a-Museum, the voice menu you reach from any phone on the booth.","about_fr":"Pas une machine du livre d'or : elle fait tourner le Musée au bout du fil, le menu vocal qu'on joint depuis les téléphones du kiosque.","clip":"5"},"cbm8050":{"name":"Commodore 8050 drive","kind":"gear","specs":"2 × 5¼″ 500K · IEEE-488","about":"The SuperPET's dual floppy drive.","about_fr":"Le double lecteur de disquettes du SuperPET."},"souvenir":{"name":"Apple ImageWriter (souvenirs)","year":1983,"kind":"gear","about":"Prints a souvenir page from the guest book.","about_fr":"Imprime une page souvenir du livre d'or."},"logprinter":{"name":"Apple ImageWriter (live log)","year":1983,"kind":"gear","about":"Prints every guest book entry as it arrives.","about_fr":"Imprime chaque entrée du livre d'or à son arrivée."},"cisco3745":{"name":"Cisco 3745 (CallManager Express)","kind":"gear","about":"The phone switch: every extension on the booth rings through it.","about_fr":"Le commutateur téléphonique : chaque poste du kiosque passe par lui."},"cisco2621":{"name":"Cisco 2621 (modem bank)","kind":"gear","about":"16 analog modems (NM-16AM) that answer the vintage machines' calls.","about_fr":"16 modems analogiques (NM-16AM) qui répondent aux appels des machines d'époque."},"vg248":{"name":"Cisco VG248","kind":"gear","about":"48 analog phone lines for the phones and the machines' modems.","about_fr":"48 lignes analogiques pour les téléphones et les modems des machines."},"pm25":{"name":"Livingston PortMaster PM-25","kind":"gear","about":"Serial ports for the machines wired straight in, and the printers.","about_fr":"Ports série pour les machines branchées en direct et les imprimantes."},"switch":{"name":"Ethernet switch","kind":"gear","about":"Ties the rack together.","about_fr":"Relie le rack."},"pdu":{"name":"Rack power strip","kind":"gear","about":"One plug to the wall for the whole rack.","about_fr":"Une seule prise murale pour tout le rack."},"breakout1":{"name":"RJ-11 breakout 1-24","kind":"gear","about":"Phone jacks for VG248 lines 1-24.","about_fr":"Prises téléphoniques des lignes 1-24 du VG248."},"breakout2":{"name":"RJ-11 breakout 25-48","kind":"gear","about":"Phone jacks for VG248 lines 25-48.","about_fr":"Prises téléphoniques des lignes 25-48 du VG248."},"phone1":{"name":"Nortel Meridian M9216 · ext. 1007","kind":"gear","about":"Pick it up and dial 1019 for Dial-a-Museum, or 1024 to hear a modem.","about_fr":"Décrochez et composez le 1019 pour le Musée au bout du fil, ou le 1024 pour entendre un modem.","canada":"Aastra, Concord (Ontario)","canada_fr":""},"phone2":{"name":"Nortel Meridian M9216 · ext. 1008","kind":"gear","about":"Pick it up and dial 1019 for Dial-a-Museum, or 1024 to hear a modem.","about_fr":"Décrochez et composez le 1019 pour le Musée au bout du fil, ou le 1024 pour entendre un modem.","canada":"Aastra, Concord (Ontario)","canada_fr":""},"phone3":{"name":"Nortel Meridian M9216 · ext. 1009","kind":"gear","about":"Pick it up and dial 1019 for Dial-a-Museum, or 1024 to hear a modem.","about_fr":"Décrochez et composez le 1019 pour le Musée au bout du fil, ou le 1024 pour entendre un modem.","canada":"Aastra, Concord (Ontario)","canada_fr":""}}} || { dial: "1019", items: {} };   // machine cards (layout/machines-json.py)
 // HOOK: optional callbacks the game (layout/game/*.js) fills in; the walk-through works without them.
 // GEAR: booth 29 machines and booth 10 stations kept as their own groups (hide, move, carry).
 var HOOK = {}, GEAR = {};
@@ -663,9 +688,8 @@ D.chairs.forEach(function (c) {
   chair(X(c[0] + c[2] / 2), Z(c[1] + c[3] / 2), c[4], c[5]).n = c[6] === null ? null : String(c[6]);
 });
 
-// power panels (ceiling-fed, red)
-D.power.forEach(function (p) { var cx = X(p[0] + 8), cz = Z(p[1] + 8);
-  box(14, 40, 10, M(0xc8423f), cx, 0, cz); box(2, WALL - 40, 2, M(0x555a56), cx, 40, cz); solid(cx - 7, cz - 5, cx + 7, cz + 5); });
+// power panels: built after the detail helpers (see "power stations"); their collision is here
+D.power.forEach(function (p) { var cx = X(p[0] + 8), cz = Z(p[1] + 8); solid(cx - 7, cz - 5, cx + 7, cz + 5); });
 
 // ---------------------------------------------------------------- props
 // Faces: each prop group is built facing +z (the visitor) and rotated to its booth's aisle; local +x is the
@@ -1016,7 +1040,8 @@ var WARES = {
     for (var i = 0; i < 6; i++) vb(g, 0.4, 0.3, 0.2, i % 2 ? 0xd83a2a : 0x2fbf5f, 8.6 + i * 1, 1.2, 1.05);
     joy(g, 11, 8); sign(g, 22, 4, "Old + new", "", 10);
   }, function (g) {
-    apple2(g, -21, 0, "green"); comp(g, 3, 6, 15, 8, 2.6, 0xc8c2b4, 0x2a2a2a); mon(g, 3, -6, 13, 12, 13, C.dk, "atari"); a500(g, 20, 4); vb(g, 9, 3, 9, 0xbcb6a4, 21, 0, -8);
+    comp(g, -14, 6, 18, 8, 2.6, 0xd8d0bc, 0x4a4a4a); mon(g, -14, -6, 14, 13, 14, 0x8a7a64, "c64");   // a C128 on a 1702
+    drv(g, 4, -5, 9.5, 3, 10, 0xd8cdb2); sign(g, 19, 4, "Collector bundles", "", 10);           // a 1541; refurbished bundles for sale
     front(g, "One Maybe Two Retro", "advice · repairs · sales", "#20303a", "#f2efe4");
   }],
   9: [function (g) { tower(g, -6, 0, C.beige, "dos"); speaker(g, 19, -6); speaker(g, -25, -6); },   // unknown: kept plain
@@ -1573,35 +1598,72 @@ D.storage.forEach(function (r) { var x0 = X(r[0]), z0 = Z(r[1]), x1 = X(r[0] + r
 // Ported from the booth view (booth-3d.html): its builders, turned to face the west aisle.
 // Booth x (left to right as a visitor sees it) runs north to south, booth z (toward the
 // visitor) points west. PLAN gives positions; DET29 the detail fields the plan export drops.
-var DET29 = {
-  osborne1: { tilt: 12, kb: { w: 20, d: 8, h: 2, keys: "#e6dcc4" }, scr: { x: .4, y: .4, w: .2, h: .45, t: "teal" },
-    face: { bezel: "#b09c76", drives: [{ x: .05, y: .1, w: .28, h: .4 }, { x: .67, y: .1, w: .28, h: .4 }],
-            pockets: [{ x: .05, y: .6, w: .28, h: .3 }, { x: .67, y: .6, w: .28, h: .3 }], knobs: [{ x: .5, y: .2 }], stand: true } },
-  hyperion: { kb: { w: 17, d: 7, h: 1.5, keys: "#e2ded4" }, scr: { x: .05, y: .22, w: .4, h: .68, t: "amber" },
-    face: { bezel: "#c3bfb5", drives: [{ x: .55, y: .15, w: .4, h: .33 }, { x: .55, y: .52, w: .4, h: .33 }], fkeys: { x: .05, y: .06, w: .4, h: .1, n: 5 }, handle: "top",
-      badge: { x: .465, y: .44, w: .07, h: .13, c: "#e8941c" }, leds: [{ x: .5, y: .505, c: "#ffb347" }] } },   // the amber power button between screen and drives
-  compaq1: { kb: { w: 19, d: 7.5, h: 1.5, keys: "#cbc3b0" }, scr: { x: .04, y: .08, w: .48, h: .84, t: "green" },
-    face: { bezel: "#4a4540", drives: [{ x: .58, y: .08, w: .38, h: .4 }, { x: .58, y: .52, w: .38, h: .4 }], badge: { x: .78, y: .935, w: .16, h: .04, c: "#c4c8cc" }, handle: "back", handleC: "#1d1d1d", vents: true } },
-  kaypro2: { kb: { w: 17.5, d: 7, h: 2, c: "#7d8a96", keys: "#d9d2c0" }, scr: { x: .05, y: .12, w: .5, h: .78, t: "green" },
-    face: { bezel: "#3c4650", drives: [{ x: .62, y: .15, w: .33, h: .3 }, { x: .62, y: .52, w: .33, h: .3 }], badge: { x: .7, y: .88, w: .22, h: .06, c: "#d9d2c0" }, vents: true } },
-  ibm5155: { kb: { w: 19, d: 7.5, h: 1.5, keys: "#c9c3b3" }, scr: { x: .08, y: .08, w: .45, h: .84, t: "amber" },
-    face: { bezel: "#cbc6b8", drives: [{ x: .6, y: .25, w: .32, h: .22 }, { x: .6, y: .52, w: .32, h: .22 }], badge: { x: .62, y: .82, w: .14, h: .08, c: "#1f4e9a" }, handle: "back", vents: true } },
-  kaypro1: { kb: { w: 17.5, d: 7, h: 2, c: "#7d8a96", keys: "#d9d2c0" }, scr: { x: .05, y: .12, w: .5, h: .78, t: "green" },
-    face: { bezel: "#3c4650", drives: [{ x: .66, y: .1, w: .13, h: .8 }, { x: .82, y: .1, w: .13, h: .8 }], vents: true } },
-  cbm8050: { face: { bezel: "#2d2a26", drives: [{ x: .06, y: .2, w: .4, h: .5, c: "#3a3733" }, { x: .54, y: .2, w: .4, h: .5, c: "#3a3733" }],
-    leds: [{ x: .44, y: .8, c: "#e04030" }, { x: .56, y: .8, c: "#58e07a" }], badge: { x: .06, y: .82, w: .2, h: .06, c: "#b8b2a2" } } },
-  compaq3: { kb: { w: 15.5, d: 7, h: 1.5 }, raised: { w: 11, h: 7.5, y: .5, tilt: 15, t: "plasma" },
-    face: { bezel: "#c0b9a6", drives: [{ x: .62, y: .08, w: .3, h: .16 }], handle: "top" } },
-  macport: { lid: { t: "lcd", h: 7.2, angle: 12, c: "#d7d3c7", bezel: "#cfcbbf", deck: "#d0ccc0", keys: "#e2ded3", latch: true }, trackball: "right", sideSlots: "right" },
-  bondwell200: { lid: { t: "lcd", h: 8.8, angle: 18, keys: "#4a4d50", deck: "#c8c5bc", bezel: "#bfbcb3" }, sideSlots: "right2" },
-  minisport: { lid: { t: "lcd", h: 6.6, angle: 16 }, sideSlots: "right" },
-  cbm286: { lid: { t: "bluelcd", h: 8.6, angle: 16, bezel: "#4a4c4e", keys: "#4a4c4e", deck: "#c4c4bf" }, sideSlots: "right" },
-  bondwell310: { lid: { t: "stn", h: 9.4, angle: 16 }, sideSlots: "right" },
-  compaq2: { kb: { w: 17, d: 7, h: 1.5, keys: "#cbc3b0" }, scr: { x: .04, y: .08, w: .52, h: .84, t: "amber" },
-    face: { bezel: "#3d3a36", drives: [{ x: .62, y: .15, w: .34, h: .3 }, { x: .62, y: .52, w: .34, h: .3 }], badge: { x: .78, y: .9, w: .16, h: .05, c: "#c4c8cc" }, handle: "back", handleC: "#1d1d1d", vents: true } },
-  cisco3745: { panel: "3745", ears: true }, cisco2621: { panel: "2621", ears: true }, vg248: { panel: "vg", ears: true },
+var DET29 = {   // fractions of the front face from its bottom-left; checked against photos (MODELS-REVIEW.md)
+  osborne1: { tilt: 12, body: "#cfc6a8", kb: { w: 20, d: 9, h: 2, c: "#cfc6a8", deck: "#2e3648", keys: "#b5ab95", mod: "#9d9480" },
+    scr: { x: .41, y: .44, w: .19, h: .3, t: "teal" },
+    face: { bezel: "#2e3648", inset: [.025, .04, .975, .96], latches: "top", stand: true,   // navy front: drives beside the CRT, pockets under them
+      drives: [{ x: .04, y: .47, w: .33, h: .36, c: "#1f2533", l: "tab" }, { x: .63, y: .47, w: .33, h: .36, c: "#1f2533", l: "tab" }],
+      pockets: [{ x: .05, y: .24, w: .31, h: .14 }, { x: .64, y: .24, w: .31, h: .14 }],
+      rects: [{ x: .41, y: .8, w: .19, h: .09, c: "#1a1f2b" }, { x: .41, y: .3, w: .19, h: .08, c: "#1a1f2b" }, { x: .08, y: .06, w: .84, h: .1, c: "#20263a" }],
+      knobs: [{ x: .45, y: .22, r: .3 }, { x: .55, y: .22, r: .3 }] } },
+  hyperion: { body: "#d6cfbf", kb: { w: 17, d: 7.5, h: 1.5, keys: "#a39c8e", mod: "#e2ddd0", pad: "#a39c8e", frow: true },
+    scr: { x: .08, y: .2, w: .3, h: .6, t: "amber", sur: "#3a3632", m: [1.12, 1.12] },
+    face: { bezel: "#d6cfbf", inset: [.01, .1, .99, .98], handle: "trough",
+      rects: [{ x: .035, y: .13, w: .385, h: .8, c: "#b9b2a4" }, { x: .615, y: .13, w: .36, h: .8, c: "#cbc4b4" }, { x: .01, y: 0, w: .98, h: .09, c: "#4a453e" }],   // screen surround, drive panel, keyboard garage
+      drives: [{ x: .63, y: .53, w: .33, h: .32, c: "#d4cec2", l: "door", lc: "#d9c89a" }, { x: .63, y: .17, w: .33, h: .32, c: "#d4cec2", l: "door", lc: "#d9c89a" }],
+      knobs: [{ x: .465, y: .76, r: .5, c: "#e2d8b8" }, { x: .465, y: .57, r: .5, c: "#e2d8b8" }],
+      badge: { x: .44, y: .3, w: .05, h: .1, c: "#e8941c", round: .55 }, leds: [{ x: .465, y: .35, c: "#ffb347", r: .3 }] } },   // the amber power button under the two knobs
+  compaq1: { tilt: 4, kb: { w: 19, d: 7.5, h: 1.5, c: "#d9d2c4", deck: "#5a5650", keys: "#e6dfcc", mod: "#b8b2a4", fn: 2 }, scr: { x: .19, y: .25, w: .33, h: .56, t: "green" },
+    face: { bezel: "#47403a", inset: [.04, .14, .96, .86], hood: .9, handle: "back", handleC: "#1d1d1d", door: "right",   // two full-height drives standing on end
+      drives: [{ x: .58, y: .2, w: .15, h: .6, c: "#2e2c2a" }, { x: .76, y: .2, w: .15, h: .6, c: "#2e2c2a" }],
+      rects: [{ x: .07, y: .38, w: .09, h: .24, c: "#3a3430" }], knobs: [{ x: .115, y: .3 }], badge: { x: .07, y: .68, w: .09, h: .06, c: "#c9b98a" } } },
+  kaypro2: { body: "#a3a8ac", kb: { w: 17.5, d: 7, h: 2, c: "#b8b9b4", keys: "#1e1e1e", mod: "#1e1e1e", pad: "#4a90c8", band: "#2b86c9" },
+    scr: { x: .11, y: .17, w: .37, h: .66, t: "green", sur: "#0d0d0d", m: [1.27, 1.3] },
+    face: { bezel: "#1c1c1c", inset: [.03, .04, .97, .94], hood: .9, latches: "side", vents: true,
+      drives: [{ x: .65, y: .56, w: .3, h: .2, c: "#111111", lc: "#c8c8c8" }, { x: .65, y: .2, w: .3, h: .2, c: "#111111", lc: "#c8c8c8" }],
+      leds: [{ x: .565, y: .47, c: "#ff3a2a", lit: 1 }] } },   // lit: a plain colour (no glow mesh of its own)
+  ibm5155: { body: "#ddd8cc", kb: { w: 18.5, d: 8, h: 1.5, c: "#d9d5c9", deck: "#9d998f", keys: "#e8e5dc", mod: "#c9c5ba", fn: 2, badge: true },
+    scr: { x: .14, y: .22, w: .32, h: .62, t: "amber", sur: "#2a2420", m: [1.3, 1.25] },
+    face: { bezel: "#cfc9ba", inset: [.03, .03, .97, .97], hood: .8, bumpers: true, handle: "back",
+      rects: [{ x: .6, y: .12, w: .32, h: .78, c: "#e3dfd4" }],
+      drives: [{ x: .62, y: .6, w: .28, h: .15, c: "#1a1a1a" }, { x: .62, y: .4, w: .28, h: .15, c: "#1a1a1a" }],
+      knobs: [{ x: .55, y: .78, r: .28 }, { x: .55, y: .63, r: .28 }, { x: .55, y: .36, r: .2, c: "#111111" }] } },
+  kaypro1: { body: "#9a9fa3", kb: { w: 17.5, d: 7, h: 2, c: "#9a9fa3", keys: "#1e1e1e", mod: "#1e1e1e", pad: "#1e1e1e", outline: "#3ea6e0" },
+    scr: { x: .12, y: .22, w: .37, h: .64, t: "green", sur: "#0d0d0d", m: [1.27, 1.3] },
+    face: { bezel: "#8f9498", inset: [.03, .04, .97, .94], hood: .9, latches: "side", vents: true,   // grey front, both drives on end in one black bezel
+      rects: [{ x: .69, y: .1, w: .22, h: .78, c: "#141414" }, { x: .565, y: .1, w: .1, h: .8, c: "#3ea6e0", o: 1 }, { x: .6, y: .9, w: .06, h: .04, c: "#3ea6e0" }],
+      drives: [{ x: .71, y: .12, w: .085, h: .72, c: "#1e1e1e" }, { x: .805, y: .12, w: .085, h: .72, c: "#1e1e1e" }],
+      leds: [{ x: .75, y: .86, c: "#ff3a2a", r: .12, lit: 1 }, { x: .845, y: .86, c: "#ff3a2a", r: .12, lit: 1 }] } },
+  cbm8050: { body: "#e6e1d3", face: { bezel: "#cfc6a6", inset: [.02, .02, .98, .98], topVent: true,   // cream frame, the black name band, black drive section
+    rects: [{ x: .07, y: .67, w: .86, h: .27, c: "#141414" }, { x: .05, y: .04, w: .9, h: .58, c: "#141414" }],
+    label: { x: .07, y: .67, w: .86, h: .27, t: "CBM 8050      dual drive floppy disk" },
+    drives: [{ x: .09, y: .08, w: .39, h: .5, c: "#1e1e1e", l: "door", lc: "#333333" }, { x: .52, y: .08, w: .39, h: .5, c: "#1e1e1e", l: "door", lc: "#333333" }],
+    leds: [{ x: .4, y: .5, c: "#58e07a", r: .14 }, { x: .83, y: .5, c: "#58e07a", r: .14 }, { x: .5, y: .5, c: "#e04030", r: .14 }] } },
+  compaq3: { body: "#cdc9bd", kb: { w: 15.5, d: 7, h: 1.5, keys: "#e3e1d9", mod: "#b9b7ae", frow: true },
+    raised: { w: 9.4, h: 5.6, fw: 14.5, fh: 8.4, iw: 11.8, ih: 6.4, frame: "#cdc9bd", inner: "#8e8b84", y: .2, tilt: 9, z: .5, t: "plasma" },   // the panel stands in front of the body
+    face: { bezel: "#c3bfb3", handle: "bar", vents: "left", sideSlot: true } },
+  // laptops: rear = a raised block behind the hinge (d: fraction of the depth, hb: the base in front of it); kbd = the keyboard
+  // area (x: centre, w, z: centre from the front, d: fractions); lid: hz hinge (fraction from the front), sw / sh / sx the screen
+  macport: { rear: { d: .33, hb: 2.3 }, kbd: { x: -.14, w: .68, z: .27, d: .42, mod: "#cfcbbf" }, trackball: { x: .36, w: .24 }, slots: [{ z: .8, y: .6, l: 3.6 }],
+    strip: { z: .54, d: .1, c: "#c9c5b9", slots: true },
+    lid: { t: "lcd", h: 8.2, angle: 12, hz: .62, c: "#d7d3c7", bezel: "#d0ccc0", deck: "#d0ccc0", keys: "#e2ded3", sw: .55, sh: .62, sy: .57, bar: true, caps: true, pads: true } },
+  bondwell200: { rear: { d: .42, hb: 2.5 }, kbd: { z: .3, d: .52, mod: "#a3a39c" }, slots: [{ z: .8, y: .5, l: 4, h: 1 }], deckVent: true,
+    lid: { t: "lcd", h: 5, angle: 22, hz: .56, c: "#dcd7c7", keys: "#e6e1d2", deck: "#dcd7c7", bezel: "#d2cdbe", frame: "#4f524d", sw: .85, sh: .58, arms: true } },
+  minisport: { body: "#e3ddcc", kbd: { z: .42, d: .7, w: .94, mod: "#9b9b97" }, slots: [{ z: .35, y: .5, l: 3.6 }], strip: { z: .84, d: .08, c: "#d6d0bf", leds: true },
+    lid: { t: "bluelcd", h: 5.8, angle: 16, c: "#e3ddcc", deck: "#e3ddcc", keys: "#ece8dc", bezel: "#dcd6c5", sw: .66, sh: .58, sx: -.08, grille: true, latches: true } },
+  cbm286: { body: "#4b4d50", kbd: { z: .4, d: .56, mod: "#4a4c4e" }, slots: [{ z: .35, y: .5, l: 3.6 }], strip: { z: .76, d: .07, c: "#aeb0b0" },
+    lid: { t: "bluelcd", h: 7.6, angle: 16, c: "#4b4d50", bezel: "#4b4d50", keys: "#8e9193", deck: "#4b4d50", sw: .68, sh: .74, sx: -.06, grille: true } },
+  bondwell310: { body: "#34352f", rear: { d: .2, hb: 1.6 }, kbd: { z: .36, d: .56, mod: "#3a3c39" }, slots: [{ z: .88, y: .6, l: 3.6 }], deckVent: true,
+    lid: { t: "stn", h: 7, angle: 16, hz: .8, c: "#34352f", bezel: "#2e2f2a", deck: "#34352f", keys: "#6b6e6a", sw: .82, sh: .7 } },
+  compaq2: { kb: { w: 17, d: 7, h: 1.5, deck: "#8f8476", keys: "#e3d6b4", mod: "#a89d8c", frow: true }, scr: { x: .13, y: .15, w: .39, h: .73, t: "amber" },
+    face: { bezel: "#9c9080", inset: [.035, .06, .965, .94], hood: .6, handle: "back", handleC: "#1d1d1d", vents: "h",   // taupe front, two half-height drives
+      rects: [{ x: .07, y: .08, w: .49, h: .84, c: "#8f8476" }],
+      drives: [{ x: .6, y: .54, w: .34, h: .17, c: "#8a7f72" }, { x: .6, y: .33, w: .34, h: .17, c: "#8a7f72" }],
+      knobs: [{ x: .66, y: .14 }], badge: { x: .85, y: .78, w: .09, h: .09, c: "#d8d4ca" } } },
+  souvenir: { body: "#e3ded0" }, logprinter: { body: "#e3ded0" }, superpet: { body: "#e2dfd4" },
+  cisco3745: { panel: "3745", ears: true, body: "#6f8294" }, cisco2621: { panel: "2621", ears: true, body: "#343c42" }, vg248: { panel: "vg", ears: true, body: "#4e6170" },
   breakout1: { panel: "rj", ears: true }, breakout2: { panel: "rj", ears: true }, "switch": { panel: "sw", ears: true },
-  pdu: { panel: "pdu", ears: true }, pm25: { panel: "pm", ears: true }
+  pdu: { panel: "pdu", ears: true }, pm25: { panel: "pm", body: "#d3d1c9" }
 };
 (function () {
   var b = booths[29], root = new THREE.Group();
@@ -1616,7 +1678,7 @@ var DET29 = {
     "[Osborne 1] Sam, Ottawa - Apple IIe", "", "Sign the book. Your name, where", "you're from, and the first computer", "> _"];
   // teal matches the real Osborne's phosphor (from a photo); keep each style on its own key, or it falls back to green
   var SCREEN_STYLE = { green: ["#06130a", "#5cff8a", 1], teal: ["#03110e", "#4ff0c6", 1], amber: ["#140b02", "#ffb431", 1], plasma: ["#1a0602", "#ff7a33", 1],
-    lcd: ["#9ea88f", "#2b3326", 0], bluelcd: ["#dfe6f0", "#3a5aa8", 0], stn: ["#b9c7d6", "#1d2c55", 0] };
+    lcd: ["#9ea88f", "#2b3326", 0], bluelcd: ["#dfe6f0", "#3a5aa8", 0], stn: ["#c8c4d6", "#4b3b8f", 0] };   // stn: the B310 SX's lavender backlight
   function scrMat(type) { var m = scrMat0(type); m.userData.screen = true; return m; }
   function scrMat0(type) {
     return TM(canvasTex("scr-" + type, 512, 384, function (g, w, h) {
@@ -1642,11 +1704,10 @@ var DET29 = {
       "14:07 #0044 [Hyperion] Ada, Verdun", "14:09 #0045 [MinisPort] Zoe, Hull"];
     for (var i = 0; i < 18; i++) g.fillText(lines[i % lines.length], 26, 20 + i * 27);
   }), true, THREE.DoubleSide);
-  function panelMat(kind) {
-    return TM(canvasTex("panel-" + kind, 512, 64, function (g, w, h) {
-      g.fillStyle = kind === "pm" ? "#6a6862" : kind === "vg" ? "#3a3f45" : "#4f6272"; g.fillRect(0, 0, w, h);
-      g.fillStyle = "#dfe7ec"; g.font = "700 18px Archivo, Arial, sans-serif";
-      g.fillText(kind === "pm" ? "PortMaster" : "CISCO", 12, 38);
+  function panelMat(kind) {                                    // printed front panels: Cisco slate-blue bezels, the PortMaster's putty vent band
+    var ph = kind === "3745" ? 128 : kind === "pm" ? 80 : 64;
+    return TM(canvasTex("panel-" + kind, 512, ph, function (g, w, h) {
+      var i, x;
       if (kind === "rj" || kind === "pdu") {                   // 24 RJ-11 jacks / 8 outlets
         g.fillStyle = kind === "rj" ? "#2e3134" : "#1f2123"; g.fillRect(0, 0, w, h);
         var k = kind === "rj" ? 24 : 8;
@@ -1658,20 +1719,50 @@ var DET29 = {
         if (kind === "pdu") { g.fillStyle = "#e04030"; g.fillRect(w - 40, 22, 22, 18); }
         return;
       }
-      var n = kind === "3745" ? 10 : kind === "vg" ? 24 : kind === "2621" ? 6 : kind === "sw" ? 16 : 8;
-      for (var i = 0; i < n; i++) {
-        var x = 120 + i * ((w - 150) / n);
+      function hatch(x0, y0, x1, y1) {                         // a diagonal-slot vent grille
+        g.fillStyle = "#1a2633"; g.fillRect(x0, y0, x1 - x0, y1 - y0); g.save(); g.beginPath(); g.rect(x0, y0, x1 - x0, y1 - y0); g.clip();
+        g.strokeStyle = "#3a5670"; g.lineWidth = 2.5; for (var q = x0 - (y1 - y0); q < x1; q += 7) { g.beginPath(); g.moveTo(q, y1); g.lineTo(q + (y1 - y0), y0); g.stroke(); }
+        g.restore();
+      }
+      function txt(t, x, y, px, c) { g.fillStyle = c; g.font = "700 " + px + "px Archivo, Arial, sans-serif"; g.fillText(t, x, y); }
+      if (kind === "pm") {                                     // PortMaster PM-25: a putty desktop box, a band of vent slots, no lights in front
+        g.fillStyle = "#d3d1c9"; g.fillRect(0, 0, w, h);
+        g.fillStyle = "#3a3a38"; for (x = 30; x < w * 0.86; x += 6) g.fillRect(x, h * 0.62, 3, h * 0.18);
+        txt("PortMaster", w - 130, 26, 18, "#4a4a46"); txt("Livingston", 14, 24, 14, "#4a4a46"); return;
+      }
+      if (kind === "3745") {                                   // 3745: slate-blue bezel, two grille bands, the LED row top left
+        g.fillStyle = "#2b4257"; g.fillRect(0, 0, w, h);
+        hatch(8, h * 0.26, w - 8, h * 0.68); hatch(8, h * 0.74, w - 8, h * 0.94);
+        txt("CISCO", 12, 20, 13, "#dfe7ec"); txt("3745", w - 52, 20, 14, "#dfe7ec");
+        for (i = 0; i < 6; i++) { g.fillStyle = i < 2 ? "#58e07a" : "#2a3a2a"; g.fillRect(74 + i * 16, 12, 6, 5); }
+        return;
+      }
+      if (kind === "2621") {                                   // 2621: teal-blue bezel, badge and three LEDs at the left
+        g.fillStyle = "#2c4a55"; g.fillRect(0, 0, w, h); txt("CISCO", 12, 26, 15, "#dfe7ec"); txt("2600", w - 56, 40, 15, "#dfe7ec");
+        for (i = 0; i < 3; i++) { g.fillStyle = i < 2 ? "#58e07a" : "#2a3a2a"; g.fillRect(14 + i * 14, 40, 6, 5); }
+        return;
+      }
+      if (kind === "vg") {                                     // VG248: two 50-pin telco connectors with bail clips, a vent field, Ethernet and console
+        g.fillStyle = "#4e6170"; g.fillRect(0, 0, w, h);
+        [50, 190].forEach(function (cx) { g.fillStyle = "#1c2228"; g.fillRect(cx, 18, 70, 26); g.fillStyle = "#c8ccd0"; g.fillRect(cx - 6, 24, 5, 14); g.fillRect(cx + 71, 24, 5, 14); });
+        g.fillStyle = "#33424e"; for (x = 290; x < 410; x += 6) for (var y = 14; y < 50; y += 6) g.fillRect(x, y, 3, 3);
+        [420, 444, 470].forEach(function (cx, j) { g.fillStyle = "#15191c"; g.fillRect(cx, 22, 18, 16); g.fillStyle = j < 2 ? "#58e07a" : "#ffb431"; g.fillRect(cx + 2, 44, 4, 4); });
+        txt("CISCO", 8, 58, 9, "#dfe7ec"); return;
+      }
+      g.fillStyle = "#4f6272"; g.fillRect(0, 0, w, h); txt("CISCO", 12, 38, 18, "#dfe7ec");   // the switch: ports and lights
+      for (i = 0; i < 16; i++) {
+        x = 120 + i * ((w - 150) / 16);
         g.fillStyle = "#15191c"; g.fillRect(x, 16, 13, 12);
         g.fillStyle = i % 3 ? "#58e07a" : "#ffb431"; g.fillRect(x + 3, 38, 5, 5);
       }
     }));
   }
-  var keypadM = TM(canvasTex("keypad", 128, 160, function (g, w, h) {
-    g.fillStyle = "#d9d3c4"; g.fillRect(0, 0, w, h);
-    var k = "123456789*0#"; g.font = "700 22px Archivo, Arial"; g.textAlign = "center";
+  var keypadM = TM(canvasTex("keypad", 128, 160, function (g, w, h) {   // M9216 dial pad: grey keys set in the black body
+    g.fillStyle = "#2a2a2a"; g.fillRect(0, 0, w, h);
+    var k = "123456789*0#"; g.font = "700 18px Archivo, Arial"; g.textAlign = "center";
     for (var i = 0; i < 12; i++) {
       var x = 22 + (i % 3) * 42, y = 20 + Math.floor(i / 3) * 36;
-      g.fillStyle = "#f7f4ec"; g.fillRect(x - 15, y - 12, 30, 28); g.fillStyle = "#333"; g.fillText(k[i], x, y + 9);
+      g.fillStyle = "#8e9295"; g.fillRect(x - 15, y - 12, 30, 26); g.fillStyle = "#1a1a1a"; g.fillText(k[i], x, y + 7);
     }
   }), true);
   var pcbM = TM(canvasTex("pcb", 512, 360, function (g, w, h) {
@@ -1721,91 +1812,184 @@ var DET29 = {
 
   // ---- item builders: group origin = front-centre of the footprint, the unit extends back (-z)
   function frontFace(it, g, fz, w, h, y0) {
-    var f = it.face || {}, s = it.scr;
-    if (f.bezel) plane(w * 0.94, h * 0.9, MC(f.bezel), 0, y0 + h / 2, fz + 0.02, g);      // inset front panel
+    var f = it.face || {}, s = it.scr, I = f.inset || [.03, .05, .97, .95];
+    function fx(x) { return -w / 2 + w * x; }
+    function fy(y) { return y0 + h * y; }
+    function rect(r, z) { cbox(w * r.w, h * r.h, 0.08, MC(r.c), fx(r.x + r.w / 2), fy(r.y + r.h / 2), fz + (z || 0.04), g); }
+    if (f.bezel) plane(w * (I[2] - I[0]), h * (I[3] - I[1]), MC(f.bezel), fx((I[0] + I[2]) / 2), fy((I[1] + I[3]) / 2), fz + 0.02, g);   // inset front panel
+    (f.rects || []).forEach(function (r) {                     // surrounds, bays, grilles; o: an outline (painted stripes)
+      if (!r.o) return rect(r);
+      var tw = 0.12 / w, th = 0.12 / h;
+      [[r.x, r.y, r.w, th], [r.x, r.y + r.h - th, r.w, th], [r.x, r.y, tw, r.h], [r.x + r.w - tw, r.y, tw, r.h]].forEach(function (q) { rect({ x: q[0], y: q[1], w: q[2], h: q[3], c: r.c }); });
+    });
+    if (f.label) {                                             // a printed band: plain type
+      var lb = f.label;
+      plane(w * lb.w * 0.9, h * lb.h * 0.42, TM(canvasTex("lbl-" + lb.t, 512, 48, function (c, cw, ch) {
+        c.fillStyle = lb.bg || "#141414"; c.fillRect(0, 0, cw, ch); c.fillStyle = lb.fg || "#e8e4d8"; c.font = "bold 30px Arial, sans-serif"; c.textBaseline = "middle"; c.fillText(lb.t, 12, ch / 2, cw - 24);
+      }), true), fx(lb.x + lb.w / 2), fy(lb.y + lb.h / 2), fz + 0.1, g);
+    }
     if (s) {
-      var sw = w * s.w, sh = h * s.h, sx = -w / 2 + w * (s.x + s.w / 2), sy = y0 + h * (s.y + s.h / 2);
-      cbox(sw * 1.14, sh * 1.16, 0.5, blk, sx, sy, fz + 0.1, g);
+      var sw = w * s.w, sh = h * s.h, sx = fx(s.x + s.w / 2), sy = fy(s.y + s.h / 2), m = s.m || [1.14, 1.16];
+      cbox(sw * m[0], sh * m[1], 0.5, s.sur ? MC(s.sur) : blk, sx, sy, fz + 0.1, g);
       plane(sw, sh, scrMat(s.t), sx, sy, fz + 0.37, g);
     }
-    (f.drives || []).forEach(function (d) {                    // floppy drives: dark face, slot, lever
-      var dw = w * d.w, dh = h * d.h, dx = -w / 2 + w * (d.x + d.w / 2), dy = y0 + h * (d.y + d.h / 2), vert = dh > dw;
+    (f.drives || []).forEach(function (d) {                    // floppy drives: face, slot, and a lever, a centre door (l: "door") or a flip tab ("tab")
+      var dw = w * d.w, dh = h * d.h, dx = fx(d.x + d.w / 2), dy = fy(d.y + d.h / 2), vert = dh > dw, l = d.l || "lever";
       cbox(dw, dh, 0.25, MC(d.c || 0x2a2c2e), dx, dy, fz + 0.05, g);
-      cbox(vert ? 0.25 : dw * 0.78, vert ? dh * 0.78 : 0.25, 0.1, blk, dx + (vert ? -dw * 0.18 : 0), dy + (vert ? 0 : dh * 0.12), fz + 0.2, g);
-      cbox(vert ? 0.7 : 0.4, vert ? 0.4 : 0.7, 0.5, M(0x8e9296), dx + (vert ? dw * 0.2 : dw * 0.3), dy - (vert ? 0 : dh * 0.22), fz + 0.3, g);
+      if (l === "lever") {
+        cbox(vert ? 0.25 : dw * 0.78, vert ? dh * 0.78 : 0.25, 0.1, blk, dx + (vert ? -dw * 0.18 : 0), dy + (vert ? 0 : dh * 0.12), fz + 0.2, g);
+        cbox(vert ? 0.7 : 0.4, vert ? 0.4 : 0.7, 0.5, MC(d.lc || 0x8e9296), dx + (vert ? dw * 0.2 : dw * 0.3), dy - (vert ? 0 : dh * 0.22), fz + 0.3, g);
+        return;
+      }
+      cbox(vert ? 0.2 : dw * 0.88, vert ? dh * 0.88 : 0.2, 0.1, blk, dx, dy + (vert ? 0 : dh * 0.1), fz + 0.2, g);
+      if (l === "door") cbox(vert ? dw * 0.6 : dw * 0.16, vert ? dh * 0.16 : dh * 0.62, 0.3, MC(d.lc || 0x2c2c2c), dx, dy + (vert ? 0 : dh * 0.05), fz + 0.25, g);
+      else cbox(dw * 0.12, dh * 0.3, 0.45, blk, dx, dy + dh * 0.1, fz + 0.3, g);
     });
-    if (f.badge) { var bd = f.badge; cbox(w * bd.w, h * bd.h, 0.08, MC(bd.c), -w / 2 + w * (bd.x + bd.w / 2), y0 + h * (bd.y + bd.h / 2), fz + 0.06, g); }
-    (f.pockets || []).forEach(function (q) { cbox(w * q.w, h * q.h, 0.15, M(0x3a3630), -w / 2 + w * (q.x + q.w / 2), y0 + h * (q.y + q.h / 2), fz + 0.02, g); });
+    if (f.badge) {
+      var bd = f.badge, bx = fx(bd.x + bd.w / 2), by = fy(bd.y + bd.h / 2);
+      if (bd.round) cyl(bd.round, 0.3, MC(bd.c), bx, by, fz + 0.15, g).rotation.x = Math.PI / 2;
+      else cbox(w * bd.w, h * bd.h, 0.08, MC(bd.c), bx, by, fz + 0.06, g);
+    }
+    (f.pockets || []).forEach(function (q) { cbox(w * q.w, h * q.h, 0.15, M(0x3a3630), fx(q.x + q.w / 2), fy(q.y + q.h / 2), fz + 0.02, g); });
     if (f.fkeys) {                                             // soft-key row under the screen
       var fk = f.fkeys, kw = w * fk.w / fk.n;
-      for (var i = 0; i < fk.n; i++) cbox(kw * 0.7, h * fk.h, 0.35, M(0x5a5752), -w / 2 + w * fk.x + kw * (i + 0.5), y0 + h * (fk.y + fk.h / 2), fz + 0.15, g);
+      for (var i = 0; i < fk.n; i++) cbox(kw * 0.7, h * fk.h, 0.35, M(0x5a5752), fx(fk.x) + kw * (i + 0.5), fy(fk.y + fk.h / 2), fz + 0.15, g);
     }
-    (f.leds || []).forEach(function (l) { dot(0.18, glow(new THREE.Color(l.c).getHex()), -w / 2 + w * l.x, y0 + h * l.y, fz + 0.2, g); });
-    (f.knobs || []).forEach(function (k) { cyl(0.35, 0.5, M(0x303234), -w / 2 + w * k.x, y0 + h * k.y, fz + 0.25, g).rotation.x = Math.PI / 2; });
+    (f.leds || []).forEach(function (l) { dot(l.r || 0.18, l.lit ? MC(l.c) : glow(new THREE.Color(l.c).getHex()), fx(l.x), fy(l.y), fz + 0.2 + (l.r || 0) * 0.5, g); });
+    (f.knobs || []).forEach(function (k) { cyl(k.r || 0.35, 0.5, MC(k.c || 0x303234), fx(k.x), fy(k.y), fz + 0.25, g).rotation.x = Math.PI / 2; });
   }
-  function handle(g, where, w, h, d, cz, col) {
+  function handle(g, where, w, h, d, cz, col, mat) {
     var m = MC(col || 0x2b2d2f);
     if (where === "top") {
       cbox(w * 0.4, 0.7, 1.1, m, 0, h + 1.6, cz, g);
       [-1, 1].forEach(function (e) { cbox(0.9, 1.6, 1.1, m, e * w * 0.2, h + 0.8, cz, g); });
     } else if (where === "back") cbox(w * 0.45, 1, 0.8, m, 0, h * 0.7, cz - d / 2 - 0.9, g);
+    else if (where === "bar") cbox(w * 0.78, 0.6, 1.5, MC(col || "#a3a29b"), 0, h + 0.3, cz, g);           // Compaq III: a flat bar along the top
+    else if (where === "trough") [-1, 1].forEach(function (e) {                                            // Hyperion: two raised blocks at the back, the grip between
+      var bz = cz - d / 2 + d * 0.22, bx = e * (w / 2 - 3.2);
+      cbox(6, 0.6, d * 0.44, mat, bx, h + 0.3, bz, g);
+      for (var i = 0; i < 6; i++) cbox(5, 0.04, 0.14, blk, bx, h + 0.61, bz - d * 0.15 + i * d * 0.06, g);
+    });
   }
-  function vents(g, w, h, d, cz) {
-    for (var i = 0; i < 8; i++) [-1, 1].forEach(function (e) { cbox(0.08, h * 0.45, 0.35, blk, e * (w / 2 + 0.02), h * 0.5, cz - d * 0.35 + i * (d * 0.7 / 8), g); });
+  function vents(g, w, h, d, cz, side) {                       // slots on the ends: both, "left" or "right"; "h": short louvres near the front
+    var sides = side === "left" ? [-1] : side === "right" ? [1] : [-1, 1];
+    sides.forEach(function (e) {
+      if (side === "h") for (var j = 0; j < 6; j++) cbox(0.08, 0.14, d * 0.3, blk, e * (w / 2 + 0.02), h * 0.3 + j * 0.45, cz + d * 0.25, g);
+      else for (var i = 0; i < 8; i++) cbox(0.08, h * 0.45, 0.35, blk, e * (w / 2 + 0.02), h * 0.5, cz - d * 0.35 + i * (d * 0.7 / 8), g);
+    });
+  }
+  function kbTex(deck, key, k) {                             // a fuller keyboard: modifiers, an optional F-key block on the left, a keypad, a painted outline
+    var mod = k.mod || key, pad = k.pad || key, fn = k.fn || 0, np = k.np === 0 ? 0 : 4, ol = k.outline || "";
+    return canvasTex("keys-" + [deck, key, mod, pad, fn, np, ol, k.frow ? 1 : 0].join(), 512, 200, function (g, w, h) {
+      g.fillStyle = deck; g.fillRect(0, 0, w, h);
+      var P = 12, kw = (w - 2 * P) / (fn + (fn ? 0.6 : 0) + 15.6 + np), kh = (h - 2 * P) / 5, xm = P + (fn ? (fn + 0.6) * kw : 0), xp = xm + 15.6 * kw, r, c, x;
+      function cap(x, y, cw, col) { g.fillStyle = "rgba(0,0,0,.35)"; g.fillRect(x + 2, y + 3, cw - 4, kh - 3); g.fillStyle = col; g.fillRect(x + 2, y + 1, cw - 5, kh - 5); }
+      for (r = 0; r < 5; r++) {
+        var y = P + r * kh;
+        for (c = 0; c < fn; c++) cap(P + c * kw, y, kw, mod);
+        for (c = 0; c < np; c++) cap(xp + c * kw, y, kw, pad);
+        if (r === 0) { for (c = 0; c < 15; c++) cap(xm + c * kw, y, kw, k.frow ? mod : key); continue; }
+        if (r === 4) { cap(xm, y, 2.5 * kw, mod); cap(xm + 2.5 * kw, y, 9 * kw, key); cap(xm + 11.5 * kw, y, 3.5 * kw, mod); continue; }
+        var first = 1.2 + r * 0.3; cap(xm, y, first * kw, mod);
+        for (c = 0, x = xm + first * kw; c < 12; c++, x += kw) cap(x, y, kw, key);
+        cap(x, y, xm + 15 * kw - x, mod);
+      }
+      if (ol) { g.strokeStyle = ol; g.lineWidth = 3; g.strokeRect(xm - 5, P - 5, 15 * kw + 10, 5 * kh + 6); if (np) g.strokeRect(xp - 5, P - 5, np * kw + 6, 5 * kh + 6); }
+    });
   }
   function keyboard(it, g, col) {
-    var k = it.kb, caseC = k.c || new THREE.Color(col).multiplyScalar(0.9).getStyle();
+    var k = it.kb, caseC = k.c || new THREE.Color(col).multiplyScalar(0.9).getStyle(), bh = Math.min(0.6, k.h * 0.35);
     cbox(k.w, k.h, k.d, MC(caseC), 0, k.h / 2, -k.d / 2, g);
-    plane(k.w * 0.94, k.d * 0.84, TM(keysTex(caseC, k.keys || "#e8e2d2", 5), true), 0, k.h + 0.05, -k.d / 2 - 0.2, g).rotation.x = -Math.PI / 2 + 0.06;
+    if (k.band) cbox(k.w + 0.04, bh, k.d + 0.04, MC(k.band), 0, bh / 2, -k.d / 2, g);           // Kaypro II: the blue base
+    var tex = k.mod || k.pad || k.fn || k.deck || k.outline ? kbTex(k.deck || caseC, k.keys || "#e8e2d2", k) : keysTex(caseC, k.keys || "#e8e2d2", 5);
+    plane(k.w * 0.94, k.d * 0.84, TM(tex, true), 0, k.h + 0.05, -k.d / 2 - 0.2, g).rotation.x = -Math.PI / 2 + 0.06;
+    if (k.badge) cbox(1.3, 0.06, 0.9, M(0xf4f2ec), k.w / 2 - 1.1, k.h + 0.12, -k.d + 0.75, g);   // IBM: the small white plate at the back right
     cyl(0.18, 1.4, blk, k.w * 0.3, 0.3, -k.d - 0.6, g).rotation.x = Math.PI / 2;           // cable back to the unit
   }
   function luggable(it, g, mat, fz) {
-    var holder = new THREE.Group(), inner = new THREE.Group(), f = it.face || {};
-    holder.position.set(0, 0, fz - it.d); holder.rotation.x = -(it.tilt || 0) * Math.PI / 180;   // tilt back on the rear-bottom edge
-    inner.position.set(0, 0, it.d); holder.add(inner); g.add(holder);
-    cbox(it.w, it.h, it.d, mat, 0, it.h / 2, -it.d / 2, inner);
-    frontFace(it, inner, 0, it.w, it.h, 0);
-    if (f.handle) handle(inner, f.handle, it.w, it.h, it.d, -it.d / 2, f.handleC);
-    if (f.vents) vents(inner, it.w, it.h, it.d, -it.d / 2);
-    if (it.raised) {                                           // Compaq III: plasma panel lifted on arms
-      var R = it.raised, arm = new THREE.Group();
-      arm.position.set(0, it.h * R.y, 1.6); arm.rotation.x = -R.tilt * Math.PI / 180; inner.add(arm);
-      cbox(R.w + 1.2, R.h + 1, 0.9, M(0x3a3a3a), 0, R.h / 2, 0, arm);
-      plane(R.w, R.h, scrMat(R.t), 0, R.h / 2, 0.46, arm);
-      [-1, 1].forEach(function (e) { cbox(0.6, 3, 0.6, M(0x8a8f93), e * (R.w / 2 + 0.2), 0.4, -1, arm); });
+    var holder = new THREE.Group(), inner = new THREE.Group(), f = it.face || {}, w = it.w, h = it.h, d = it.d;
+    holder.position.set(0, 0, fz - d); holder.rotation.x = -(it.tilt || 0) * Math.PI / 180;   // tilt back on the rear-bottom edge
+    inner.position.set(0, 0, d); holder.add(inner); g.add(holder);
+    cbox(w, h, d, mat, 0, h / 2, -d / 2, inner);
+    frontFace(it, inner, 0, w, h, 0);
+    if (f.hood) {                                              // the case frame stands proud of the recessed front
+      var I = f.inset || [.03, .05, .97, .95], hd = f.hood, zc = hd / 2 - 0.02;
+      cbox(w * I[0], h, hd, mat, -w / 2 + w * I[0] / 2, h / 2, zc, inner); cbox(w * (1 - I[2]), h, hd, mat, w / 2 - w * (1 - I[2]) / 2, h / 2, zc, inner);
+      cbox(w * (I[2] - I[0]), h * (1 - I[3]), hd, mat, -w / 2 + w * (I[0] + I[2]) / 2, h - h * (1 - I[3]) / 2, zc, inner);
+      cbox(w * (I[2] - I[0]), h * I[1], hd, mat, -w / 2 + w * (I[0] + I[2]) / 2, h * I[1] / 2, zc, inner);
     }
-    if (f.stand) cbox(it.w * 0.8, 0.8, 1.4, M(0x2b2d2f), 0, -0.2, -1.2, inner);            // Osborne: handle as a stand
+    if (f.bumpers) [-1, 1].forEach(function (e) { cyl(0.55, h, mat, e * (w / 2 - 0.45), h / 2, 0.35, inner); });   // IBM: rounded corner posts
+    if (f.latches === "side") [-1, 1].forEach(function (e) { cbox(0.35, 1.6, 1.4, blk, e * (w / 2 + 0.17), h * 0.75, -1.1, inner); });
+    if (f.latches === "top") [-1, 1].forEach(function (e) { cbox(1.4, 0.5, 1.2, blk, e * w * 0.3, h + 0.25, -0.7, inner); });
+    if (f.door) cbox(0.06, h * 0.7, d * 0.7, M(0xbdb4a0), (f.door === "left" ? -1 : 1) * (w / 2 + 0.02), h / 2, -d / 2, inner);   // Compaq: the cord door on the end
+    if (f.sideSlot) {                                          // Compaq III: the floppy loads from the right end
+      cbox(0.06, 1.3, 6, M(0x8e8b84), w / 2 + 0.02, h * 0.25, -d / 2, inner); cbox(0.1, 0.25, 5.4, blk, w / 2 + 0.04, h * 0.25, -d / 2, inner);
+    }
+    if (f.topVent) for (var i = 0; i < 8; i++) cbox(w * 0.75, 0.05, 0.14, blk, 0, h + 0.03, -1.2 - i * 0.35, inner);
+    if (f.handle) handle(inner, f.handle, w, h, d, -d / 2, f.handleC, mat);
+    if (f.vents) vents(inner, w, h, d, -d / 2, f.vents);
+    if (it.raised) {                                           // Compaq III: the plasma panel stands in front of the body on arms hidden in its sides
+      var R = it.raised, arm = new THREE.Group(), fh = R.fh || R.h + 1;
+      arm.position.set(0, h * R.y, R.z || 1.6); arm.rotation.x = -R.tilt * Math.PI / 180; inner.add(arm);
+      cbox(R.fw || R.w + 1.2, fh, 0.9, MC(R.frame || 0x3a3a3a), 0, fh / 2, 0, arm);
+      if (R.inner) { plane(R.iw, R.ih, MC(R.inner), 0, fh / 2, 0.46, arm); dot(0.22, M(0x6a6862), R.iw / 2 - 0.5, fh / 2 - R.ih / 2 + 0.4, 0.5, arm); }
+      plane(R.w, R.h, scrMat(R.t), 0, fh / 2, 0.47, arm);
+    }
+    if (f.stand) cbox(w * 0.8, 0.8, 1.4, M(0x2b2d2f), 0, -0.2, -1.2, inner);              // Osborne: handle as a stand
   }
-  function laptop(it, g, mat, col) {
-    var L = it.lid || {}, deckC = L.deck || "#2b2e31", keyC = L.keys || "#3a3d40";
-    cbox(it.w, it.h, it.d, mat, 0, it.h / 2, -it.d / 2, g);
-    plane(it.w * 0.9, it.d * (it.trackball ? 0.4 : 0.5), TM(keysTex(deckC, keyC, 5), true), 0, it.h + 0.03, -it.d * (it.trackball ? 0.72 : 0.62), g).rotation.x = -Math.PI / 2;
-    if (it.trackball) {                                        // Mac Portable: keyboard at the back, modules in front
-      var side = it.trackball === "left" ? -1 : 1;
-      cbox(it.w * 0.3, 0.15, it.d * 0.36, M(0xc6c2b6), side * it.w * 0.28, it.h + 0.05, -it.d * 0.26, g);
-      dot(1, M(0x505050), side * it.w * 0.28, it.h + 0.15, -it.d * 0.26, g);
-      cbox(it.w * 0.3, 0.15, it.d * 0.36, M(0xc6c2b6), -side * it.w * 0.28, it.h + 0.05, -it.d * 0.26, g);
+  function laptop(it, g, mat, col) {                           // base (and a raised rear block), keyboard and trackball, drive slots, the lid on its hinge
+    var L = it.lid || {}, w = it.w, d = it.d, h = it.h, deckC = L.deck || "#2b2e31", K = it.kbd || {}, R = it.rear, i;
+    var hb = R ? R.hb : h, rd = R ? d * R.d : 0;
+    cbox(w, hb, d - rd, mat, 0, hb / 2, -(d - rd) / 2, g);
+    if (R) cbox(w, h, rd, mat, 0, h / 2, -d + rd / 2, g);
+    var kw = w * (K.w || 0.9), kd = d * (K.d || 0.5), kx = w * (K.x || 0), kz = -d * (K.z || 0.62);
+    plane(kw, kd, TM(K.mod ? kbTex(deckC, L.keys || "#3a3d40", { mod: K.mod, np: 0 }) : keysTex(deckC, L.keys || "#3a3d40", 5), true), kx, hb + 0.03, kz, g).rotation.x = -Math.PI / 2;
+    if (it.trackball) {                                        // Mac Portable: the trackball module beside the keys
+      var T = it.trackball, tx = w * T.x;
+      cbox(w * T.w, 0.1, kd, M(0xc6c2b6), tx, hb + 0.05, kz, g);
+      dot(0.6, M(0x6a6a66), tx, hb + 0.1, kz, g);
+      [-1, 1].forEach(function (e) { cbox(w * T.w * 0.7, 0.12, kd * 0.14, M(0xd6d2c6), tx, hb + 0.1, kz + e * kd * 0.38, g); });
     }
-    for (var q = 0; q < (it.sideSlots === "right2" ? 2 : it.sideSlots ? 1 : 0); q++) cbox(0.1, Math.min(0.35, it.h * 0.3), 3.6, blk, it.w / 2 + 0.03, it.h * 0.5, -it.d * (0.35 + q * 0.35), g);
-    var lidH = L.h || it.d * 0.82, pivot = new THREE.Group();
-    pivot.position.set(0, it.h, -it.d + 0.4); pivot.rotation.x = -(L.angle || 15) * Math.PI / 180; g.add(pivot);
-    cbox(it.w, lidH, 0.75, MC(L.c || col), 0, lidH / 2, 0.37, pivot);
-    plane(it.w * 0.9, lidH * 0.86, MC(L.bezel || "#26292b"), 0, lidH * 0.53, 0.76, pivot);
-    plane(it.w * 0.74, lidH * 0.66, scrMat(L.t || "lcd"), 0, lidH * 0.55, 0.78, pivot);
+    if (it.strip) {                                            // behind the keys: speaker slots, status LEDs or the F-key label strip
+      var S2 = it.strip, sz = -d * S2.z;
+      plane(w * 0.9, d * S2.d, MC(S2.c), 0, hb + 0.04, sz, g).rotation.x = -Math.PI / 2;
+      if (S2.slots) for (i = 0; i < 9; i++) cbox(w * 0.04, 0.02, d * S2.d * 0.6, M(0x8e8a80), -w * 0.4 + i * w * 0.1, hb + 0.06, sz, g);
+      if (S2.leds) for (i = 0; i < 5; i++) dot(0.09, M(i ? 0x6a6a66 : 0x58e07a), -w * 0.3 + i * 0.6, hb + 0.06, sz, g);
+    }
+    if (it.deckVent) for (i = 0; i < 6; i++) cbox(w * 0.3, 0.03, 0.12, blk, w * 0.28, (R ? h : hb) + 0.02, -d + (R ? rd : d * 0.2) * (0.25 + i * 0.1), g);
+    (it.slots || []).forEach(function (q) { cbox(0.1, q.h || 0.35, q.l, blk, w / 2 + 0.03, (q.z > 1 - (R ? R.d : 0) ? h : hb) * (q.y || 0.5), -d * q.z, g); });
+    var lidH = L.h || d * 0.82, pivot = new THREE.Group(), pz = L.hz ? -d * L.hz : -d + 0.4;
+    pivot.position.set(0, hb, pz); pivot.rotation.x = -(L.angle || 15) * Math.PI / 180; g.add(pivot);
+    var lc = MC(L.c || col), sw = w * (L.sw || 0.74), sh = lidH * (L.sh || 0.66), sx = w * (L.sx || 0), sy = lidH * (L.sy || 0.55);
+    cbox(w, lidH, 0.75, lc, 0, lidH / 2, 0.37, pivot);
+    plane(w * 0.9, lidH * 0.86, MC(L.bezel || "#26292b"), 0, lidH * 0.53, 0.76, pivot);
+    if (L.frame) plane(sw + 0.8, sh + 0.7, MC(L.frame), sx, sy, 0.77, pivot);               // B200: a dark frame round the glass
+    plane(sw, sh, scrMat(L.t || "lcd"), sx, sy, 0.78, pivot);
     if (L.latch) cbox(2, 0.5, 0.3, M(0xb8b4a8), 0, lidH - 0.35, 0.8, pivot);
+    if (L.bar) cbox(w, 0.7, 1.1, lc, 0, lidH + 0.3, 0.37, pivot);                         // Mac Portable: the grab bar across the top
+    if (L.caps) [-1, 1].forEach(function (e) { cyl(0.55, 0.5, lc, e * (w / 2 + 0.2), 0.2, 0.3, pivot).rotation.z = Math.PI / 2; });
+    if (L.pads) [-1, 1].forEach(function (e) { plane(1.1, 1.1, M(0xc6c2b6), e * w * 0.39, lidH * 0.8, 0.79, pivot); });
+    if (L.grille) for (i = 0; i < 5; i++) cbox(0.08, lidH * 0.3, 0.05, M(0x2a2a2a), sx + sw / 2 + (w / 2 - sx - sw / 2) * 0.5 - 0.4 + i * 0.2, lidH * 0.62, 0.8, pivot);
+    if (L.latches) [-1, 1].forEach(function (e) { cbox(0.8, 0.25, 0.2, M(0x4a4a4a), e * w * 0.42, lidH - 0.35, 0.8, pivot); });
+    if (L.arms) [-1, 1].forEach(function (e) { cbox(0.5, 1.4, 0.9, M(0xb8b4a8), e * w * 0.36, 0.3, 0.2, pivot); });   // B200: the exposed hinge arms
   }
-  function printer(it, g, mat, y) {                            // Apple ImageWriter
-    var w = it.w, d = it.d, h = it.h, cz = -d / 2;
-    cbox(w, h * 0.7, d, mat, 0, h * 0.35, cz, g);
-    cbox(w * 0.7, h * 0.3, d * 0.55, smoke, -w * 0.05, h * 0.85, cz + d * 0.1, g);         // smoked lid
-    ["#5ebd3e", "#fbb714", "#f6821f", "#e03a3e", "#963d97", "#009ddc"].forEach(function (c, i) {   // rainbow logo
-      cbox(0.9, 0.14, 0.05, MC(c), -w * 0.38, h * 0.55 - i * 0.14, cz + d / 2 + 0.03, g);
+  function printer(it, g, mat, y) {                            // Apple ImageWriter: a flat cover in front, the smoked window over the platen, the paper tray behind
+    var w = it.w, d = it.d, h = it.h, cz = -d / 2, hb = h * 0.7, pz = cz - d * 0.15;
+    cbox(w, hb, d, mat, 0, hb / 2, cz, g);
+    cbox(w * 0.94, 0.45, d * 0.52, mat, 0, hb + 0.22, cz + d * 0.22, g);                   // the front cover
+    cbox(w * 0.74, h * 0.28, d * 0.22, smoke, 0, hb + h * 0.14, pz, g);                     // smoked window over the platen
+    cbox(w * 0.74, 0.5, d * 0.2, blk, 0, hb + 0.25, pz, g);                                  // the platen under it
+    ["#5ebd3e", "#fbb714", "#f6821f", "#e03a3e", "#963d97", "#009ddc"].forEach(function (c, i) {   // the small colour badge, front left
+      cbox(0.7, 0.1, 0.05, MC(c), -w * 0.4, hb * 0.35 - i * 0.1, cz + d / 2 + 0.03, g);
     });
-    cbox(w * 0.78, 0.9, 1.4, blk, 0, h * 0.72, cz - d * 0.22, g);                           // platen slot
-    cyl(1.2, 0.8, M(0x9a968c), w / 2 + 0.4, h * 0.6, cz - d * 0.2, g).rotation.z = Math.PI / 2;
-    for (var i = 0; i < 4; i++) {                                                          // Select, Form Feed, Line Feed, Quality
-      cbox(0.9, 0.3, 0.7, M(0xbdb9ae), w * 0.3 + i * 1.1, h * 0.72, cz + d / 2 - 0.8, g);
-      dot(0.12, i ? M(0x3a3a3a) : glow(0x58e07a), w * 0.3 + i * 1.1, h * 0.75, cz + d / 2 - 1.5, g);
+    cyl(1.2, 1.5, M(0xd6d1c3), w / 2 + 0.55, hb + 0.45, pz, g).rotation.z = Math.PI / 2;   // platen knob (right), end cap (left)
+    cyl(1.1, 0.9, mat, -w / 2 - 0.3, hb + 0.35, pz, g).rotation.z = Math.PI / 2;
+    var tray = new THREE.Group(); tray.position.set(0, hb, cz - d * 0.27); tray.rotation.x = -0.35; g.add(tray);   // ribbed paper tray, sloping up and back
+    cbox(w * 0.8, 0.2, d * 0.32, mat, 0, 0.1, -d * 0.16, tray);
+    for (var j = 0; j < 7; j++) cbox(w * 0.8, 0.14, 0.14, M(0xcfc9ba), 0, 0.27, -0.4 - j * d * 0.045, tray);
+    for (var i = 0; i < 5; i++) {                                                          // the switches stepped down the right front of the cover
+      cbox(0.9, 0.1, 0.32, M(0xc9c4b6), w * 0.36, hb + 0.5, cz + d * 0.46 - i * 0.55, g);
+      dot(0.09, i < 2 ? glow(0x58e07a) : M(0x3a3a3a), w * 0.36 + 0.75, hb + 0.5, cz + d * 0.46 - i * 0.55, g);
     }
     plane(9.5, 9, paperM, 0, h + 4, cz - d * 0.32, g).rotation.x = -0.45;                    // paper curling up and back
     if (it.id === "logprinter") {                                                          // fan-fold spilling to the floor
@@ -1815,8 +1999,8 @@ var DET29 = {
     }
   }
   var phoneGeo = null;
-  function m9216(it, g) {                                      // Nortel Meridian M9216: black wedge, handset on the left
-    var w = it.w, d = it.d, m = MC(it.body || "#2a2a2a"), yF = 1.2, yB = 3;
+  function m9216(it, g) {                                      // Nortel Meridian M9216: a black slab tilted on its foot, handset on the left, grey keys
+    var w = it.w, d = it.d, m = MC(it.body || "#2a2a2a"), yF = 0.9, yB = 3.5, kc = M(0x8e9295), r;
     if (!phoneGeo) {
       var prof = new THREE.Shape();
       prof.moveTo(0, 0); prof.lineTo(0, yF); prof.lineTo(d, yB); prof.lineTo(d, 0); prof.lineTo(0, 0);
@@ -1826,17 +2010,20 @@ var DET29 = {
     var ang = Math.atan2(yB - yF, d), top = new THREE.Group(), L = Math.hypot(d, yB - yF);
     top.position.set(0, yF, 0); top.rotation.x = ang; g.add(top);
     cbox(2, 0.9, L * 0.94, M(0x2f2f2f), -w / 2 + 1.15, 0.45, -L / 2, top);                 // handset
-    plane(2.3, 2.7, keypadM, 0.1, 0.02, -2.2, top).rotation.x = -Math.PI / 2;
-    cbox(2.8, 0.25, 1.2, M(0x1a1a1a), 0.3, 0.12, -L + 1.1, top);                            // display housing
-    plane(2.4, 0.8, glow(0x9fae8c), 0.3, 0.26, -L + 1.1, top).rotation.x = -Math.PI / 2;
-    for (var r = 0; r < 5; r++) for (var c = 0; c < 2; c++) {                               // memory keys with paper labels
-      var kx = w / 2 - 1.55 + c * 0.95, kz = -1.1 - r * 0.95;
-      cbox(0.8, 0.14, 0.42, M(0x3a3a3a), kx, 0.07, kz, top);
-      plane(0.66, 0.26, M(0xf2f0e8), kx, 0.15, kz, top).rotation.x = -Math.PI / 2;
+    for (r = 0; r < 4; r++) cbox(0.1, 0.03, 2, blk, -w / 2 + 2.4 + r * 0.2, 0.02, -2.2, top);   // speaker slots
+    plane(2.2, 2.6, keypadM, -0.2, 0.02, -1.9, top).rotation.x = -Math.PI / 2;               // dial pad, centre left
+    cbox(0.6, 0.12, 0.3, M(0xc8412e), -0.75, 0.06, -3.6, top); cbox(0.6, 0.12, 0.3, M(0xe06a2a), 0.05, 0.06, -3.6, top);   // the two red keys
+    cbox(1.3, 0.06, 0.25, M(0x9a2a24), -0.35, 0.03, -4.1, top);                            // message light
+    cbox(2.8, 0.45, 1.3, M(0x1a1a1a), 0.6, 0.22, -L + 1.1, top);                            // the display pod
+    plane(2.4, 0.9, glow(0xb9c66a), 0.6, 0.46, -L + 1.1, top).rotation.x = -Math.PI / 2;
+    for (r = 0; r < 6; r++) cbox(0.6, 0.12, 0.28, kc, w / 2 - 2.2, 0.06, -1 - r * 0.62, top);   // feature keys
+    for (r = 0; r < 10; r++) {                                                             // memory keys, their labels printed beside them
+      cbox(0.75, 0.12, 0.3, kc, w / 2 - 0.6, 0.06, -0.7 - r * 0.5, top);
+      plane(0.45, 0.08, M(0x9a9a9a), w / 2 - 1.35, 0.02, -0.7 - r * 0.5, top).rotation.x = -Math.PI / 2;
     }
     cyl(0.12, 3, blk, -w / 2 - 0.4, 0.4, -d * 0.6, g).rotation.x = Math.PI / 2;
   }
-  function pet(it, g) {                                        // SuperPET: cream wedge base, keyboard in the slope, hooded CRT
+  function pet(it, g) {                                        // SuperPET: cream wedge base on a black plinth, keyboard in the slope, a flat-faced monitor hood
     var w = it.w, h = it.h, s = it.d, cream = MC(it.body || "#e8e0c8");
     var yF = 2.4, yB = 5, kbEnd = 0.5 * s, flatEnd = 0.56 * s;
     function slab(shape, depth, xAt) {                         // side-profile shape extruded across the width
@@ -1846,24 +2033,17 @@ var DET29 = {
     var prof = new THREE.Shape();
     prof.moveTo(0, 0); prof.lineTo(0, yF); prof.lineTo(kbEnd, yB - 0.3); prof.lineTo(flatEnd, yB); prof.lineTo(s, yB); prof.lineTo(s, 0); prof.lineTo(0, 0);
     slab(prof, w, -w / 2);
+    cbox(w + 0.08, 1, s + 0.08, M(0x1c1c1c), 0, 0.5, -s / 2, g);                            // the black plinth
     var ang = Math.atan2(yB - 0.3 - yF, kbEnd), run = Math.hypot(kbEnd, yB - 0.3 - yF);
-    plane(w * 0.9, run * 0.72, TM(keysTex("#d9d1b8", "#2e2e2e", 5), true), 0, (yF + yB - 0.3) / 2 + 0.06, -kbEnd * 0.44, g).rotation.x = -Math.PI / 2 + ang;
-    [[-w * 0.33, w * 0.2, 0x2a2a2a], [0.02 * w, w * 0.22, 0x8a8f93], [w * 0.33, w * 0.16, 0x2a2a2a]].forEach(function (bd) {   // badges
-      plane(bd[1], 0.55, M(bd[2]), bd[0], yB - 0.2, -kbEnd * 0.94, g).rotation.x = -Math.PI / 2 + ang;
-    });
-    var hz0 = 0.5 * s, hw = w * 0.96, hh = h - yB, tilt = 0.25, ang2 = Math.atan(tilt), vis = 1.2;
-    var hood = new THREE.Shape();                              // monitor hood, CRT face tilted back ~14 degrees
+    plane(w * 0.9, run * 0.72, TM(kbTex("#dcd8cc", "#262626", { mod: "#262626", np: 4 }), true), 0, (yF + yB - 0.3) / 2 + 0.06, -kbEnd * 0.44, g).rotation.x = -Math.PI / 2 + ang;
+    plane(w * 0.92, 0.6, M(0x1a1a1a), 0, yB - 0.2, -kbEnd * 0.94, g).rotation.x = -Math.PI / 2 + ang;   // one black name strip
+    var hz0 = 0.5 * s, hw = w * 0.93, hh = h - yB, tilt = 0.06, ang2 = Math.atan(tilt);
+    var hood = new THREE.Shape();                              // monitor hood: flat top, the face nearly upright
     hood.moveTo(hz0, yB); hood.lineTo(hz0 + tilt * hh, h); hood.lineTo(s, h); hood.lineTo(s, yB); hood.lineTo(hz0, yB);
     slab(hood, hw, -hw / 2);
-    var cheek = new THREE.Shape();                             // visor cheeks
-    cheek.moveTo(hz0 - 0.2, yB); cheek.lineTo(hz0 - vis, h); cheek.lineTo(hz0 + tilt * hh + 0.5, h); cheek.lineTo(hz0 + 0.3, yB); cheek.lineTo(hz0 - 0.2, yB);
-    slab(cheek, 0.6, -hw / 2); slab(cheek, 0.6, hw / 2 - 0.6);
-    var brow = new THREE.Shape();                              // top overhang
-    brow.moveTo(hz0 - vis, h - 0.7); brow.lineTo(hz0 - vis, h); brow.lineTo(hz0 + tilt * hh + 0.5, h); brow.lineTo(hz0 + tilt * hh + 0.5, h - 0.7); brow.lineTo(hz0 - vis, h - 0.7);
-    slab(brow, hw, -hw / 2);
     var faceLen = Math.hypot(hh, tilt * hh), nz = Math.cos(ang2) * 0.06, ny = Math.sin(ang2) * 0.06, mz = -(hz0 + tilt * hh / 2), my = yB + hh / 2;
-    plane(hw - 1.4, faceLen - 1.2, M(0x151515), 0, my + ny, mz + nz, g).rotation.x = -ang2;
-    plane(hw * 0.7, faceLen * 0.64, scrMat("green"), 0, my + 2 * ny + 0.2, mz + 2 * nz - 0.05, g).rotation.x = -ang2;
+    plane(hw - 1.2, faceLen - 1.2, M(0x151515), 0, my + ny, mz + nz, g).rotation.x = -ang2;     // the big black bezel in a thin cream frame
+    plane(hw * 0.68, faceLen * 0.62, scrMat("green"), 0, my + 2 * ny + 0.2, mz + 2 * nz - 0.05, g).rotation.x = -ang2;
   }
   function board(it, g) {                                      // EconoPET board on a clear acrylic easel
     cbox(it.w, 0.3, it.d, acrylic, 0, 0.15, -it.d / 2, g);
@@ -1906,6 +2086,95 @@ var DET29 = {
   });
   bake(root);
   var rk = at(0, rz); solid(rk[0] - 10, rk[1] - 10.5, rk[0] + 10, rk[1] + 10.5); b.rack = { x: rk[0], z: rk[1] };
+})();
+
+// ---------------------------------------------------------------- power stations
+// The show's power panels (D.power: P1, P2...): a grey distribution cabinet on strut legs, breakers behind the dead front,
+// a hazard sticker, conduit and a cable drop to the ceiling, a yellow name box on top (readable across the hall), feeds on
+// the floor under yellow cable ramps to the nearest tables. One canvas holds the faces, the name signs and plain colour
+// swatches, so every panel together is one material (one draw call after the final merge). Collision: see "power panels".
+(function () {
+  var S = 512, DOOR = [4, 4, 248, 504], SW = { body: "#a3a9ac", dark: "#3b3f42", galv: "#8b9396", cable: "#17191b", yellow: "#f2c21b", black: "#1c1c1c" }, swAt = {}, k = 0;
+  Object.keys(SW).forEach(function (n) { swAt[n] = [262 + (k % 6) * 40, 440 + Math.floor(k / 6) * 36, 28, 28]; k++; });
+  function signR(i) { return [260, 4 + (i % 3) * 144, 248, 140]; }
+  function bolt(g, x, y, w, h) {
+    var P = [0.62, 0, 0.12, 0.56, 0.45, 0.56, 0.32, 1, 0.88, 0.4, 0.55, 0.4, 0.75, 0];
+    g.beginPath(); g.moveTo(x + P[0] * w, y + P[1] * h); for (var i = 2; i < P.length; i += 2) g.lineTo(x + P[i] * w, y + P[i + 1] * h); g.closePath(); g.fill();
+  }
+  var tex = canvasTex("power", S, S, function (g) {
+    g.fillStyle = SW.body; g.fillRect(0, 0, S, S);
+    Object.keys(SW).forEach(function (n) { var r = swAt[n]; g.fillStyle = SW[n]; g.fillRect(r[0], r[1], r[2], r[3]); });
+    g.save(); g.translate(DOOR[0], DOOR[1]); var w = DOOR[2], h = DOOR[3], r, i;
+    g.strokeStyle = "#6b7174"; g.lineWidth = 3; g.strokeRect(6, 6, w - 12, h - 12);                          // door seam
+    g.fillStyle = SW.dark; g.fillRect(2, 60, 8, 34); g.fillRect(2, h - 94, 8, 34);                             // hinges
+    g.fillStyle = "#2b2f33"; g.fillRect(28, 28, 192, 254);                                                     // the dead front
+    g.fillStyle = "#111"; g.fillRect(84, 38, 80, 34); g.fillStyle = "#d8d8d8"; g.fillRect(112, 44, 24, 20);   // main breaker
+    g.fillStyle = "#b8862f"; g.fillRect(114, 84, 20, 190);                                                     // bus bar
+    for (r = 0; r < 9; r++) [40, 138].forEach(function (x, c) {                                               // 18 breakers, toggles mostly on
+      var y = 86 + r * 21; g.fillStyle = "#151719"; g.fillRect(x, y, 70, 16);
+      g.fillStyle = (r * 2 + c) % 7 === 5 ? "#c8423f" : "#e8e8e8"; g.fillRect(x + ((r * 2 + c) % 7 === 5 ? 10 : 46), y + 4, 14, 8);
+    });
+    g.fillStyle = "#f2c21b"; g.strokeStyle = "#111"; g.lineWidth = 7; g.lineJoin = "round";                  // hazard sticker
+    g.beginPath(); g.moveTo(124, 300); g.lineTo(178, 392); g.lineTo(70, 392); g.closePath(); g.fill(); g.stroke();
+    g.fillStyle = "#111"; bolt(g, 106, 322, 36, 62);
+    g.font = "bold 24px Arial, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("120/208 V", 124, 416);
+    g.fillStyle = "#2b2f33"; g.fillRect(28, 436, 192, 52);                                                     // twist-lock outlets
+    for (i = 0; i < 4; i++) { var ox = 52 + i * 48; g.fillStyle = "#e9e5da"; g.beginPath(); g.arc(ox, 462, 17, 0, 7); g.fill();
+      g.fillStyle = "#222"; g.fillRect(ox - 9, 456, 5, 10); g.fillRect(ox + 4, 456, 5, 10); g.fillRect(ox - 2, 468, 4, 5); }
+    g.restore();
+    D.power.forEach(function (p, j) {                                                                         // the name signs
+      var s = signR(j); g.save(); g.translate(s[0], s[1]);
+      g.fillStyle = SW.yellow; g.fillRect(0, 0, s[2], s[3]); g.strokeStyle = "#111"; g.lineWidth = 8; g.strokeRect(4, 4, s[2] - 8, s[3] - 8);
+      g.fillStyle = "#111"; bolt(g, 16, 18, 52, 100);
+      g.textAlign = "center"; g.textBaseline = "middle"; g.font = "bold 88px Arial, sans-serif"; g.fillText(p[2], 154, 62, 160);
+      g.font = "bold 17px Arial, sans-serif"; g.fillText("POWER · ÉLECTRICITÉ", 152, 118, 176); g.restore();
+    });
+  });
+  var mat = TM(tex, true), geos = {}, ZAX = new THREE.Vector3(0, 0, 1);
+  function geo(base, key, r) {                               // base geometry with its uv squeezed into the canvas rect r (px)
+    if (geos[key]) return geos[key];
+    var gg = base.clone(), uv = gg.attributes.uv;
+    for (var i = 0; i < uv.count; i++) uv.setXY(i, (r[0] + uv.getX(i) * r[2]) / S, 1 - (r[1] + (1 - uv.getY(i)) * r[3]) / S);
+    return (geos[key] = gg);
+  }
+  function sw(n) { var r = swAt[n]; return [r[0] + 10, r[1] + 10, 8, 8]; }
+  function pc(w, h, d, n, x, y, z, g) { return part(geo(BOX, "b" + n, sw(n)), mat, w, h, d, x, y, z, g); }   // y = centre
+  function face(w, h, key, r, x, y, z, ry, g) { var m = part(geo(PLANE, key, r), mat, w, h, 1, x, y, z, g); m.rotation.y = ry; return m; }
+  function rod(a, b, t, n, g) {                              // a thick cable or a ramp from a to b ([x, y, z], group-local)
+    var A = new THREE.Vector3().fromArray(a), d = new THREE.Vector3().fromArray(b).sub(A), L = d.length();
+    var m = pc(t[0], t[1], L, n, A.x + d.x / 2, A.y + d.y / 2, A.z + d.z / 2, g); m.quaternion.setFromUnitVectors(ZAX, d.normalize()); return m;
+  }
+  D.power.forEach(function (p, i) {
+    var cx = X(p[0] + 8), cz = Z(p[1] + 8), g = new THREE.Group(); g.position.set(cx, 0, cz); scene.add(g);
+    pc(14, 0.8, 10, "dark", 0, 0.4, 0, g);                                                                   // floor plate
+    [-5, 5].forEach(function (x) { pc(1.6, 11.6, 1.6, "galv", x, 6.6, 0, g); pc(1.6, 1.6, 8, "galv", x, 1.6, 0, g); });   // strut legs and feet
+    pc(14, 30, 8, "body", 0, 27, 0, g);                                                                      // the cabinet, 12 to 42 in
+    pc(14.8, 0.8, 9, "dark", 0, 42.4, 0, g);                                                                 // drip cap
+    [1, -1].forEach(function (s) {
+      face(13, 29, "door", DOOR, 0, 27, s * 4.02, s > 0 ? 0 : Math.PI, g);
+      pc(0.7, 3.4, 0.7, "dark", s * 5.4, 27, s * 4.3, g);                                                   // door handle
+      pc(0.9, 0.9, 0.9, "galv", s * 4.8, 13.2, s * 4.4, g);                                                  // cable gland
+      rod([s * 4.8, 13.2, s * 4.6], [s * 4.8, 0.5, s * 6], [0.8, 0.8], "cable", g);                           // feed down to the floor
+    });
+    cyl(0.9, WALL - 42.8, mat, -4, (WALL + 42.8) / 2, 0, g).geometry = geo(CYL, "cconduit", sw("galv"));     // conduit to the ceiling
+    pc(2.4, 2.4, 2.4, "galv", -4, 44, 0, g);                                                                 // its fitting
+    pc(0.8, WALL - 42.8, 0.8, "cable", 3.5, (WALL + 42.8) / 2, -1.2, g);                                     // the cable drop
+    pc(16, 0.6, 16, "dark", 0, 62.2, 0, g); pc(16, 0.6, 16, "dark", 0, 71.8, 0, g);                          // the name box: frame
+    [[0, 7.91, 0], [0, -7.91, Math.PI], [7.91, 0, Math.PI / 2], [-7.91, 0, -Math.PI / 2]].forEach(function (f) {
+      face(15.8, 9, "sign" + i, signR(i), f[0], 67, f[1], f[2], g);
+    });
+    pc(15.8, 9, 15.8, "dark", 0, 67, 0, g);
+    // feeds to the two nearest tables, under a cable ramp where they leave the panel
+    var near = D.tables.map(function (t) { var tx = X(t.x + t.w / 2) - cx, tz = Z(t.y + t.h / 2) - cz; return [Math.hypot(tx, tz), tx, tz]; })
+      .filter(function (t) { return t[0] < 240; }).sort(function (a, b) { return a[0] - b[0]; }).slice(0, 2);
+    near.forEach(function (t, j) {
+      var s = t[2] >= 0 ? 1 : -1, ux = t[1] / t[0], uz = t[2] / t[0], a = [s * 4.8 + uz * 0, 0.4, s * 6], e = [t[1] - ux * 12, 0.4, t[2] - uz * 12];
+      rod(a, e, [0.8, 0.8], "cable", g);
+      var L = Math.min(30, t[0] - 40); if (L < 8) return;
+      var r0 = [a[0] + ux * 6, 0.45, a[2] + uz * 6], r1 = [r0[0] + ux * L, 0.45, r0[2] + uz * L];
+      rod(r0, r1, [5, 0.9], "yellow", g); rod([r0[0], 0.92, r0[2]], [r1[0], 0.92, r1[2]], [1.6, 0.08], "black", g);
+    });
+  });
 })();
 
 // ---------------------------------------------------------------- doors and signs
@@ -3242,7 +3511,7 @@ var GUESS = {
   5: "Retronic Design: USB adapters for classic Atari, C64, Amiga, Apple II and Vectrex controllers, and Amiga floppy, video and MIDI add-ons.",
   6: "Maybe some C64 demoscene stuff?",
   7: "Might be about the Apple Newton.",
-  8: "Maybe mostly Commodore, with some Atari, Apple and Amiga?",
+  8: "Maybe mostly Commodore 8-bit, C64s and C128s, and a 30-year-old BBS?",
   11: "Maybe British home computers: Sinclair, Amstrad, Acorn?",
   12: "Maybe modems and dial-up?",
   13: "The GameTank, a brand-new open-source 8-bit console with two 6502s, real cartridges and composite video, playable.",
@@ -3919,9 +4188,12 @@ renderer.setAnimationLoop(frame);
   }
 
   // ---- the canvas (made on first use: micro-dev.html and the game both call M.mount())
-  var cv = null, g = null, sr = null, dpr = 1, W = 0, H = 0, card = { x: 0, y: 0, w: 0, h: 0 }, top = { h: 0 }, ask = { y: 0, h: 0 }, keysY = 0, cb = null, flip = 0;
+  var cv = null, g = null, sr = null, dpr = 1, W = 0, H = 0, card = { x: 0, y: 0, w: 0, h: 0 }, top = { h: 0, y: 0, x: 14, m: 0 }, ask = { y: 0, h: 0 }, keysY = 0, cb = null, flip = 0;
   var lastPointer = false;                                     // the last input was a pointer (no key since): touch wording
   M.card = card; M.LINE_PAD = 12;                              // (tests) the card rect; the result lines' side padding
+  // the game's corner buttons (top left, over the strip): l = the x the strip's text starts after, h = the y they end at; the
+  // bench leaves it at 0. Narrow (< 600 px): the strip gets a row of its own under them; wider: the text moves right of them
+  M.inset = { l: 0, h: 0 };
   M.mount = function () {
     if (cv) return cv;
     cv = document.createElement("canvas"); cv.id = "cp-ov"; cv.setAttribute("aria-hidden", "true"); document.body.appendChild(cv);
@@ -3942,7 +4214,10 @@ renderer.setAnimationLoop(frame);
     if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
     cv.style.width = W + "px"; cv.style.height = H + "px";
     var narrow = W < 600, w = Math.min(W - 24, 440);
-    top.h = narrow ? 44 : 48; ask.h = 60; ask.y = top.h + 4;
+    var ins = M.inset, stack = ins.l > 0 && narrow;
+    top.y = stack ? ins.h : 0; top.x = ins.l > 0 && !stack ? ins.l : 14;
+    top.h = stack ? ins.h + 44 : Math.max(narrow ? 44 : 48, ins.h); top.m = top.y + (top.h - top.y) / 2;
+    ask.h = 60; ask.y = top.h + 4;
     var y0 = ask.y + ask.h + 8, h = Math.min(Math.round(w * 1.05), H - y0 - 64);
     card.x = Math.round((W - w) / 2); card.y = y0; card.w = w; card.h = Math.max(240, h);
     keysY = card.y + card.h + 34;
@@ -3970,18 +4245,18 @@ renderer.setAnimationLoop(frame);
     ch.lives = HEART[Math.max(0, Math.min(3, hud.lives | 0))];
     // the top strip: lives (icons + "♥ 2") top right, the count bottom right; the booth line and the title fit what's left
     M.font(g, 11, 700, true); var livesW = 3 * 18 + 6 + g.measureText(ch.lives).width;
-    ch.booth = hud.booth || ""; ch.boothPx = fit1(ch.booth, W - 28 - livesW - 10, 11, 9, 600, true);
+    ch.booth = hud.booth || ""; ch.boothPx = fit1(ch.booth, W - 14 - top.x - livesW - 10, 11, 9, 600, true);
     M.font(g, ch.boothPx, 600, true);
-    if (g.measureText(ch.booth).width > W - 28 - livesW - 10) {
-      while (ch.booth.length > 4 && g.measureText(ch.booth + "…").width > W - 28 - livesW - 10) ch.booth = ch.booth.slice(0, -1);
+    if (g.measureText(ch.booth).width > W - 14 - top.x - livesW - 10) {
+      while (ch.booth.length > 4 && g.measureText(ch.booth + "…").width > W - 14 - top.x - livesW - 10) ch.booth = ch.booth.slice(0, -1);
       ch.booth += "…";
     }
     ch.count = hud.count || ""; ch.title = CP.T("title") + (hud.step ? "  ·  " + hud.step : "");
-    M.font(g, 12, 600, true); wCount = g.measureText(ch.count).width; avail = W - 28 - wCount - 10;
+    M.font(g, 12, 600, true); wCount = g.measureText(ch.count).width; avail = W - 14 - top.x - wCount - 10;
     M.font(g, 15, 800); wTitle = g.measureText(ch.title).width;
     if (wTitle > avail) {                                          // narrow: the count loses its word ("0 / 40"), then the title shrinks
       ch.count = ch.count.replace(/[^0-9\/ ]/g, "").replace(/^\s+|\s+$/g, "");
-      M.font(g, 12, 600, true); wCount = g.measureText(ch.count).width; avail = W - 28 - wCount - 10;
+      M.font(g, 12, 600, true); wCount = g.measureText(ch.count).width; avail = W - 14 - top.x - wCount - 10;
     }
     ch.titlePx = fit1(ch.title, avail, 15, 11, 800);
     M.font(g, ch.titlePx, 800);
@@ -4067,12 +4342,12 @@ renderer.setAnimationLoop(frame);
     g.fillStyle = PAL.scrim; g.fillRect(0, 0, W, H);
     // the top strip: booth and step on the left; lives (icons and the number) and the count on the right
     g.fillStyle = "rgba(28,36,39,0.92)"; g.fillRect(0, 0, W, top.h);
-    M.text(g, ch.booth, 14, top.h / 2 - 9, ch.boothPx, "#9fc5ff", "left", 600, true);
-    M.text(g, ch.title, 14, top.h / 2 + 9, ch.titlePx, "#ffffff", "left", 800);
-    M.text(g, ch.count, W - 14, top.h / 2 + 9, 12, "#dfe7ec", "right", 600, true);
+    M.text(g, ch.booth, top.x, top.m - 9, ch.boothPx, "#9fc5ff", "left", 600, true);
+    M.text(g, ch.title, top.x, top.m + 9, ch.titlePx, "#ffffff", "left", 800);
+    M.text(g, ch.count, W - 14, top.m + 9, 12, "#dfe7ec", "right", 600, true);
     var i, lx = W - 14;                                        // lives: three screens, lost ones hollow
-    for (i = 0; i < 3; i++) { lx -= 18; g.fillStyle = i < hud.lives ? PAL.phosphor : "rgba(255,255,255,0.25)"; g.fillRect(lx, top.h / 2 - 15, 13, 11); g.fillStyle = "#1c2427"; g.fillRect(lx + 4, top.h / 2 - 12, 5, 4); }
-    M.text(g, ch.lives, lx - 6, top.h / 2 - 9, 11, "#ffffff", "right", 700, true);
+    for (i = 0; i < 3; i++) { lx -= 18; g.fillStyle = i < hud.lives ? PAL.phosphor : "rgba(255,255,255,0.25)"; g.fillRect(lx, top.m - 15, 13, 11); g.fillStyle = "#1c2427"; g.fillRect(lx + 4, top.m - 12, 5, 4); }
+    M.text(g, ch.lives, lx - 6, top.m - 9, 11, "#ffffff", "right", 700, true);
     // the CRT band: the machine's demand; the small prompt word on the right of its top line once the big one has gone
     var ax = card.x, aw = card.w;
     M.rrect(g, ax, ask.y, aw, ask.h, 6); g.fillStyle = PAL.crt; g.fill(); g.strokeStyle = "#2a4a33"; g.lineWidth = 2; g.stroke();
@@ -6452,9 +6727,16 @@ renderer.setAnimationLoop(frame);
     beFirst: ["Be the first to crack a booth", "Craque le premier kiosque de la journée"],
     board: ["Today's crackers", "Les craqueurs du jour"],
     scanKeep: ["Scan to keep your card", "Scanne pour garder ta carte"],
-    islandOf: ["{i} · {a}/{b}", "{i} · {a}/{b}"]
+    islandOf: ["{i} · {a}/{b}", "{i} · {a}/{b}"],
+    backCorner: ["◂ VCF Tycoon", "◂ VCF Tycoon"],
+    backTo: ["Back to VCF Tycoon", "Retour à VCF Tycoon"],
+    pauseBtn: ["Pause", "Pause"],
+    leaveQ: ["Leave for VCF Tycoon?", "Quitter pour VCF Tycoon ?"],
+    leaveNote: ["Your cracks are saved. This booth starts over next time.", "Tes cracks sont sauvegardés. Ce kiosque recommencera."],
+    stay: ["Stay", "Rester"],
+    leave: ["Leave", "Quitter"]
   });
-  var root, hud, act, toast, card, cd, tro, attract, still, toastT = null, built = {};
+  var root, hud, act, toast, card, cd, tro, attract, still, corner, cBack, cPause, askBox = null, askWas = false, toastT = null, built = {};
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
   function btn(text, cls, fn) { var b = el("button", cls, text); b.type = "button"; b.addEventListener("click", function () { CP.sound.play("click"); fn(); }); return b; }
   function cls(e, c, on) { if (on) e.classList.add(c); else e.classList.remove(c); }
@@ -6468,6 +6750,11 @@ renderer.setAnimationLoop(frame);
   // answers "Still playing?" or leaves the attract loop does nothing else
   addEventListener("keydown", function (e) {
     if (!root) return;
+    if (askBox) {                                                 // the leave question has the keys: Esc stays, Tab moves between its two buttons
+      if (e.key === "Escape") { e.preventDefault(); U.leaveStay(); }
+      else if (e.key === "Tab") { e.preventDefault(); var lv = askBox.querySelector("a"), sy = askBox.querySelector("button"); (document.activeElement === sy ? lv : sy).focus(); }
+      e.stopImmediatePropagation(); return;
+    }
     if (stillOn) { e.preventDefault(); e.stopImmediatePropagation(); poke(); return; }
     if (attractOn()) {
       e.preventDefault(); e.stopImmediatePropagation();
@@ -6483,6 +6770,16 @@ renderer.setAnimationLoop(frame);
     if (root) return;
     root = el("div"); root.id = "cp"; document.body.appendChild(root);
     hud = el("div"); hud.id = "cp-hud"; root.appendChild(hud);
+    // the corner (top left, every screen but the cracktro and the kiosk's own layers): back to VCF Tycoon, and II while walking or playing
+    corner = el("div"); corner.id = "cp-corner"; root.appendChild(corner);
+    cBack = el("a"); cBack.id = "cp-back"; cBack.href = CP.GAME; corner.appendChild(cBack);
+    cBack.addEventListener("click", function (e) {
+      if (CP.kiosk) { e.preventDefault(); return; }                  // (the kiosk never leaves; the button is hidden there anyway)
+      if (CP.seq.st === "booth") { e.preventDefault(); U.leaveAsk(); }   // a booth in progress: ask first
+    });
+    cPause = btn("II", "", function () { if (!U.open && !askBox && (CP.seq.st === "walk" || CP.seq.st === "booth")) U.pause(); }); cPause.id = "cp-pause"; corner.appendChild(cPause);
+    cornerLabels();
+    addEventListener("resize", function () { cornerKey = -1; });
     act = btn("", "", function () { if (+act.dataset.n) CP.emit("crackBooth", +act.dataset.n); }); act.id = "cp-act"; root.appendChild(act);
     toast = el("div"); toast.id = "cp-toast"; toast.setAttribute("role", "status"); toast.setAttribute("aria-live", "polite"); root.appendChild(toast);
     card = el("div"); card.id = "cp-card"; cd = el("div", "cd"); cd.setAttribute("role", "dialog"); cd.setAttribute("aria-modal", "true"); card.appendChild(cd); root.appendChild(card);
@@ -6497,10 +6794,11 @@ renderer.setAnimationLoop(frame);
       if (U.open === "pause") { U.unpause(); e.preventDefault(); return; }
       if (!U.open && (CP.seq.st === "walk" || CP.seq.st === "booth")) { U.pause(); e.preventDefault(); }
     }, true);
-    CP.on("lang", function () { U.hud(); if (U.open && built[U.open]) built[U.open](); CP.micro.hud.count = CP.T("booths", { a: CP.seq.count(), b: 40 }); if (attractOn()) attractPaint(); if (stillOn) stillPaint(true); });
+    CP.on("lang", function () { cornerLabels(); if (askBox) askPaint(); U.hud(); if (U.open && built[U.open]) built[U.open](); CP.micro.hud.count = CP.T("booths", { a: CP.seq.count(), b: 40 }); if (attractOn()) attractPaint(); if (stillOn) stillPaint(true); });
     CP.on("tickUI", idleTick);
     CP.on("tick", idleTick);
     CP.on("tick", watchTarget);
+    CP.on("tick", cornerTick); CP.on("tickUI", cornerTick);
     CP.on("greetz", function () { if (attractOn()) attractPaint(); });
     U.hud();
   };
@@ -6529,7 +6827,48 @@ renderer.setAnimationLoop(frame);
   }
   U.action = function (n) { if ((+act.dataset.n || 0) === n) return; act.dataset.n = n || ""; act.textContent = CP.T("crack", { n: n }); cls(act, "on", !!n); };
   U.toast = function (s, ms) { toast.textContent = s; toast.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(function () { toast.classList.remove("on"); }, ms || 2200); };
-  U.modal = function () { return !!U.open || tro.classList.contains("on") || attractOn() || stillOn; };
+  U.modal = function () { return !!U.open || !!askBox || tro.classList.contains("on") || attractOn() || stillOn; };
+  // ---- the corner: its words, what shows (a number compared each frame, no allocation), and the room the microgame strip leaves it
+  function cornerLabels() {
+    cBack.textContent = CP.T("backCorner"); cBack.setAttribute("aria-label", CP.T("backTo")); cBack.title = CP.T("backTo");
+    cPause.setAttribute("aria-label", CP.T("pauseBtn")); cPause.title = CP.T("pauseBtn") + " (Esc)";
+  }
+  var cornerKey = -1;
+  function cornerTick() {
+    var play = (CP.seq.st === "walk" || CP.seq.st === "booth") && !U.open && !askBox && !stillOn && !attractOn(), k = (CP.kiosk ? 2 : 0) + (play ? 1 : 0);
+    if (k === cornerKey) return; cornerKey = k;
+    cBack.hidden = !!CP.kiosk; cPause.hidden = !play;
+    cls(root, "kio", !!CP.kiosk);
+    if (play) {                                                   // the microgame strip starts right of the corner (or under it on a phone)
+      var r = corner.getBoundingClientRect();
+      CP.micro.inset.l = r.width ? Math.ceil(r.right + 8) : 0; CP.micro.inset.h = r.height ? Math.ceil(r.bottom + 4) : 0;
+      CP.micro.layout();
+    }
+  }
+  U.corner = function () { cornerKey = -1; cornerTick(); };
+  // ---- the leave question (a booth in progress): a small card over everything; the play waits while it is asked; Stay (the default, Esc) goes back
+  function askPaint() {
+    askBox.innerHTML = "";
+    var c = el("div", "cd"); c.setAttribute("role", "alertdialog"); c.setAttribute("aria-modal", "true"); c.setAttribute("aria-labelledby", "cp-ask-h");
+    var h = el("h2", "", CP.T("leaveQ")); h.id = "cp-ask-h"; c.appendChild(h);
+    c.appendChild(el("p", "", CP.T("leaveNote")));
+    var r = el("div", "row"), lv = el("a", "btn", CP.T("leave")); lv.href = CP.GAME; r.appendChild(lv);
+    var sy = btn(CP.T("stay"), "pri", function () { U.leaveStay(); }); r.appendChild(sy); c.appendChild(r);
+    askBox.appendChild(c);
+    try { sy.focus({ preventScroll: true }); } catch (e) {}
+  }
+  U.leaveAsk = function () {
+    if (askBox || CP.kiosk) return;
+    askWas = !!CP.paused; CP.paused = true;
+    askBox = el("div"); askBox.id = "cp-ask"; root.appendChild(askBox); askPaint(); U.corner();
+  };
+  U.leaveStay = function () {
+    if (!askBox) return; root.removeChild(askBox); askBox = null;
+    if (!askWas) CP.paused = false;
+    var f = U.open && cd.querySelector(".pri"); if (f) f.focus(); else if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    U.corner();
+  };
+  U.asking = function () { return !!askBox; };
   // ---- cards
   function show(name, build) { built[name] = build; U.open = name; cd.innerHTML = ""; build(); card.classList.add("on"); document.body.classList.add("cp-frozen"); cd.scrollTop = 0; var f = cd.querySelector(".pri, input"); if (f) setTimeout(function () { try { f.focus({ preventScroll: true }); } catch (e) {} cd.scrollTop = 0; }, 0); }
   U.close = function () { U.open = null; card.classList.remove("on"); cd.innerHTML = ""; cls(document.body, "cp-frozen", CP.hall.frozen); };
@@ -6644,7 +6983,7 @@ renderer.setAnimationLoop(frame);
       row.appendChild(btn(CP.T("share"), "", function () { U.share("pause"); }));
       row.appendChild(btn(CP.T("resume"), "pri", function () { U.unpause(wasFrozen); }));
       cd.appendChild(row);
-      if (!kioskHide()) { var row2 = el("div", "row"); var back = el("a", "btn lnk", CP.T("vcfGame") + " →"); back.href = CP.GAME; row2.appendChild(back); cd.appendChild(row2); }
+      if (!kioskHide()) { var row2 = el("div", "row"); var back = el("a", "btn lnk", CP.T("backTo")); back.id = "cp-pause-back"; back.href = CP.GAME; row2.appendChild(back); cd.appendChild(row2); }
     });
     U.unpause = function () { U.paused = false; CP.paused = false; U.close(); if (!wasFrozen) CP.hall.freeze(false); };
   };
