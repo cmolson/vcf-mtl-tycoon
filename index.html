@@ -1241,7 +1241,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 </script>
 <script>if (!window.THREE) (function () { var fr = /^fr/.test((new URLSearchParams(location.search).get("lang")) || localStorage.getItem("hall-lang") || navigator.language || ""), d = document.createElement("div"); d.setAttribute("role", "alert"); d.style.cssText = "position:fixed;inset:0;z-index:99;display:grid;place-items:center;padding:24px;background:#1b1a17;color:#f3ecda;font:600 17px/1.5 Archivo,system-ui,sans-serif;text-align:center"; d.innerHTML = fr ? "<p>Le moteur 3D (three.js) n'a pas pu être chargé. Un bloqueur de contenu ou un réseau qui bloque cdnjs.cloudflare.com et cdn.jsdelivr.net l'empêche peut-être.<br><br><button onclick=\"location.reload()\" style=\"font:inherit;padding:8px 18px\">Réessayer</button></p>" : "<p>Couldn't load the 3D engine (three.js). A content blocker, or a network that blocks cdnjs.cloudflare.com and cdn.jsdelivr.net, may be stopping it.<br><br><button onclick=\"location.reload()\" style=\"font:inherit;padding:8px 18px\">Try again</button></p>"; document.body.appendChild(d); })();</script>
 <script>window.GAME_ONLY = true; window.VCF_PREQUELS = {"drive": "roadtrip.html", "flight": "flight.html", "nick": "nick.html"};</script>
-<script>window.VCF_BUILD = {"v": "v0.117-2057c38", "date": "2026-10-03"};</script>
+<script>window.VCF_BUILD = {"v": "v0.119-fb572b5", "date": "2026-10-03"};</script>
 <script>window.VCF_MUSEUM_AUDIO = "audio/museum/";</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
@@ -5964,6 +5964,7 @@ var RAGS = [{"t": "Maple Leaf Rag", "y": 1899, "b": "TVRoZAAAAAYAAQADAYBNVHJrAAA
   "volume: softer": "volume : moins fort",
   "volume: louder": "volume : plus fort",
   "(in your hand)": "(dans ta main)",
+  "pick up the phone (Dial-a-Museum: {n})": "décrocher le téléphone (Musée au bout du fil : {n})",
   "A Meridian M9216 on extension {ext}. Lift the handset (Space) or just dial: 1019 is Dial-a-Museum.": "Un Meridian M9216, poste {ext}. Décroche le combiné (Espace) ou compose direct : le 1019, c'est le Musée au bout du fil.",
 
   // ---- the line
@@ -11489,7 +11490,8 @@ var G = (function () {
 // lines 1001 / 1002 / 1005 / 1006 (online: busy; else it rings, they never auto-answer); the 2621's answering modems
 // 1013 / 1014 / 1017 / 1018 (the RUNBOOK: never let a phone dial these); no outside line (outbound = false); 911 gets
 // the phone card's text, no joke. Sounds (G.sound.tone) are the North American precise-tone plan; captions carry
-// everything. opts: { id: "phone1".."phone3", ring: true (a call is ringing in: events.js), caller (a CALLERS kind) }.
+// everything. opts: { id: "phone1".."phone3", ring: true (a call is ringing in: events.js), caller (a CALLERS kind), free (walking
+// around, below: no G.state read or written, the LCD shows the wall clock) }.
 // r.data: { answered, bonus, caller, transfer, museum {keys, secs, clip}, modem, table, gb, telnet, op }. Plain ES5.
 (function () {
   if (!G.mini) return;
@@ -11656,8 +11658,9 @@ var G = (function () {
   function quiet() { snd(0); }
   function dial(m) { snd(350, 440, 0, 0, 0); }
   function lcd(m, a, b) { m.s.l1 = a === null ? m.s.l1 : String(a).slice(0, 16); m.s.l2 = b === null ? m.s.l2 : String(b).slice(0, 16); }
+  function nowMin(m) { if (!m.opts.free) return G.state.min; var d = new Date(); return d.getHours() * 60 + d.getMinutes(); }   // (free play: the wall clock)
   function clock(m) {
-    var d = G.phase().day || "Sat", fr = m.s.fr, t = G.hhmm(G.state.min, "clock");   // (an LCD: 11:42 in both languages)
+    var d = m.opts.free ? "Sat" : G.phase().day || "Sat", fr = m.s.fr, t = G.hhmm(nowMin(m), "clock");   // (an LCD: 11:42 in both languages)
     var DAY = { Fri: ["FRI NOV 6", "VEN 6 NOV"], Sat: ["SAT NOV 7", "SAM 7 NOV"], Sun: ["SUN NOV 8", "DIM 8 NOV"] }[d] || ["SAT NOV 7", "SAM 7 NOV"];
     return DAY[fr ? 1 : 0] + " " + t;
   }
@@ -11716,7 +11719,7 @@ var G = (function () {
     if (d === "1022") { out(m, d, 1.6, "door", "PORTE/DOOR"); return; }
     if (d === "1024") { out(m, d, 2.4, "modem", "MODEM"); return; }
     if (d === "1007" || d === "1008" || d === "1009") { var pick = m.opts.tablesBusy ? m.opts.tablesBusy(d) : m.rnd() < 0.6; out(m, d, pick ? 4 + m.rnd() * 4 : 999, "table", "TABLE " + (+d - 1006)); return; }
-    if (MODEMS[d]) { var g = G.gear(MODEMS[d]); if (g && g.working && !g.down) { busy(m, G.t("Busy: the {m}'s modem is online, talking to the guest book.", { m: info(MODEMS[d]).name })); return; }
+    if (MODEMS[d]) { var g = !m.opts.free && G.gear(MODEMS[d]); if (g && g.working && !g.down) { busy(m, G.t("Busy: the {m}'s modem is online, talking to the guest book.", { m: info(MODEMS[d]).name })); return; }
       out(m, d, 999, "machine", "EXT " + d); s.why = MODEMS[d]; return; }
     if (ANSWER[d]) { out(m, d, 1.2, "answer", "EXT " + d); s.why = ANSWER[d]; return; }
     reorder(m, "NOT IN SERVICE"); cap(m, "", d === "1010" || d === "1011" || d === "1012" ? G.t("Fast busy: {d} isn't in service (a spare phone port, nothing plugged in).", { d: d }) : G.t("Fast busy: {d} isn't in service (nothing on that line).", { d: d }));
@@ -11914,11 +11917,11 @@ var G = (function () {
       if (s.kid && s.kidT > 0) { s.kidT -= dt; if (s.kidT <= 0) { s.kid = false; this.leave(m); return; } }
       s.still = (s.still || 0) + dt;                      // nobody answers: the caller hangs up (the ring's minutes, or ringSecs); nobody touches it: it closes
       if (s.line === "ringin") { s.ringW = (s.ringW || 0) + dt;
-        if (s.ringW > PH.ringSecs || (m.opts.until && G.state.min >= m.opts.until)) { quiet(); ringOff(m); s.call = null; s.line = "idle"; lcd(m, "MISSED CALL", "EXT " + s.ext);
+        if (s.ringW > PH.ringSecs || (m.opts.until && !m.opts.free && G.state.min >= m.opts.until)) { quiet(); ringOff(m); s.call = null; s.line = "idle"; lcd(m, "MISSED CALL", "EXT " + s.ext);
           cap(m, "", G.t("The ringing stops: they hung up.")); s.closeT = 2; return; } }
       else if (s.still > (G.hud.isOpen() ? PH.idleCard : PH.idle)) { if (s.hook) onHook(m); this.leave(m); return; }
       if (s.optT > 0) { s.optT -= dt; if (s.optT <= 0) lcd(m, s.line === "idle" ? clock(m) : s.l1, null); }
-      if (s.line === "idle" && !s.optT && Math.floor(G.state.min) !== s.lastMin) { s.lastMin = Math.floor(G.state.min); lcd(m, clock(m), null); }
+      if (s.line === "idle" && !s.optT && Math.floor(nowMin(m)) !== s.lastMin) { s.lastMin = Math.floor(nowMin(m)); lcd(m, clock(m), null); }
       if (s.line === "dial") { s.idle += dt; if (s.idle > 12 && s.digits.length && s.digits.length < 4) { reorder(m, "TIME OUT"); cap(m, "", G.t("Too slow between digits: fast busy.")); } }
       if (s.line === "out") { s.answerT -= dt; s.ringT += dt; if (s.answerT <= 0) connect(m); else if (s.ringT > 24 && s.dest.kind === "machine") { cap(m, "", G.t("It rings and rings: the {m}'s modem never answers. It only calls out. It's that kind of computer.", { m: info(s.why).name })); s.ringT = -999; }
         else if (s.ringT > 30 && s.dest.kind === "table") { cap(m, "", G.t("Nobody at that table picks up.")); s.ringT = -999; } }
@@ -11970,6 +11973,36 @@ var G = (function () {
       g.fillStyle = "#151517"; for (i = 0; i < 8; i++) g.fillRect(230 + i * 10, 300, 5, 16);   // the small grille, bottom centre
     }
   });
+  // ---- walking around (the game page, no game on): E / a click / a tap on a booth phone picks it up in free play. G.mini's
+  // free mode (no G.state: no kudos, no jobs, no clock, no calls coming in, nothing saved; the guest book's "recording" is its
+  // prompts and a thank-you); core ticks no system outside a game, so HOOK.tick steps it here. Closes like any mini-game (Esc,
+  // Hang up and leave, its own idle); the pick card, a start or a quit (the kiosk's idle reset: G.mini.close) close it too.
+  var WALK = null;                                       // the phone picked up while walking around (its id), or null
+  function walkOk(p) {
+    var r = document.documentElement;
+    return !!(p && p.kind === "item" && EXT[p.id]) && !G.state.on && !G.modal && !!window.GAME_ONLY && !window.SITE_BUILD &&
+      !r.classList.contains("game-only") && !G.hud.isOpen() && !(G.kiosk && G.kiosk.state && G.kiosk.state() !== "play");
+  }
+  function walkPick(id) {
+    var ok = G.mini("phone", { id: id, free: true, energy: 100, level: 0, seed: ((Math.random() * 2147483646) | 0) + 1, busy19: false },
+      function () { WALK = null; });
+    if (ok && G.mini.active === "phone") WALK = id;
+    return ok;
+  }
+  G.mini.phoneWalk = function () { return WALK; };      // (tests: the phone open from the walk-around)
+  if (typeof HOOK !== "undefined") {
+    var pick0 = HOOK.pick, verb0 = HOOK.verb, tick0 = HOOK.tick;
+    HOOK.pick = function (p, how) { if (walkOk(p) && walkPick(p.id)) return true; return pick0 ? pick0(p, how) : false; };
+    HOOK.verb = function (p, how, touch) {
+      if (walkOk(p)) { var v = G.t("pick up the phone (Dial-a-Museum: {n})", { n: "1019" });
+        return touch ? G.t("tap: {v}", { v: v }) : how === "mouse" ? G.t("click: {v}", { v: v }) : G.t("E: {v}", { v: v }); }
+      return verb0 ? verb0(p, how, touch) : "";
+    };
+    HOOK.tick = function (dt) {
+      if (tick0) tick0(dt);
+      if (WALK) { if (G.mini.active === "phone" && !G.state.on) G.mini.step(dt); else WALK = null; }
+    };
+  }
   G.ui.css("mini-phone", ".ph-cap{min-height:4.6em;display:grid;gap:2px;padding:8px 12px;border-radius:6px;box-sizing:border-box}.ph-cap p{margin:0}" +
     ":root[data-ui=beige] .ph-cap{background:var(--paper);color:var(--paper-ink);font:400 14px/1.35 var(--ui-font)}" +
     "@media (max-width:640px){.ph-cap{min-height:6em;font-size:13px!important}}");
