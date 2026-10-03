@@ -1,0 +1,1518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.108-929c0d9", "date": "2026-10-03"};</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nick Crosses Riverside</title>
+<!-- Nick's prequel: Friday 16:30, the far side of Riverside Drive, setup at 17:00. Built by prequels/nick/build.py from src/
+     (edit the sources, not this file). Plain ES5, three.js r128. -->
+<style>
+/* Nick's prequel: the paper card and the amber readouts, as in the main game. */
+:root { --paper: #fbf8ee; --paper-2: #f1ead4; --ink: #25211a; --mute: #6b6352; --line: #cbbf9f; --amber: #ffb53b; --amber-bg: #170d02;
+  --led-ok: #3fe063; --led-bad: #ff3d2e; --key-top: #f5efe1; --key: #e7e0cc; --key-side: #b3a78c; --key-p: #4d483f; --key-p-ink: #f8f1de;
+  --focus: #1d55c4; --font: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --disp: "Archivo", "Arial Narrow", "Roboto Condensed", "Helvetica Neue", Arial, sans-serif; color-scheme: light; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #e8e2d0; --paper-2: #dcd4bd; --ink: #211d16; --mute: #5a5243; } }
+:root[data-theme="dark"] { --paper: #e8e2d0; --paper-2: #dcd4bd; --ink: #211d16; --mute: #5a5243; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #2a3140; font: 15px/1.38 var(--font); color: var(--ink); }
+#c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+#hud { position: fixed; inset: 0; pointer-events: none; }
+#hud button { pointer-events: auto; }
+kbd { font: 11px/1 ui-monospace, Menlo, monospace; border: 1px solid currentColor; border-bottom-width: 2px; border-radius: 4px; padding: 1px 4px; opacity: .8; }
+.led { position: absolute; background: var(--amber-bg); color: var(--amber); border: 1px solid #3b2a10; border-radius: 6px; padding: 5px 9px;
+  font: 600 12px/1.2 ui-monospace, Menlo, monospace; box-shadow: 0 2px 8px rgba(0,0,0,.35); text-shadow: 0 0 6px rgba(255,181,59,.45); }
+#clock { left: 12px; top: 12px; display: flex; flex-direction: column; } #clock b { font-size: 24px; letter-spacing: .04em; } #clock span { opacity: .75; }
+#cup { left: 12px; top: 72px; width: 150px; } #cup .lbl { display: block; opacity: .75; } #cup i { display: block; height: 7px; background: #3b2a10; margin: 3px 0; border-radius: 2px; overflow: hidden; }
+#cup s { display: block; height: 100%; width: 100%; background: var(--amber); }
+#cup.low s { background: var(--led-bad); }
+#obj { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); max-width: min(560px, calc(100% - 360px)); background: linear-gradient(#2a2a2a, #151515);
+  color: #f4f4f2; font: 800 15px/1.3 var(--disp); font-stretch: 90%; padding: 8px 14px; border-radius: 6px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.4); }
+#obj:empty { display: none; }
+#sig { position: absolute; left: 12px; top: 128px; background: #0c0c0a; border: 1px solid #333; border-radius: 6px; padding: 3px; display: none; }
+#sig.on { display: block; } #sig canvas { display: block; width: 72px; height: 36px; }
+#radio { position: absolute; right: 12px; top: 12px; width: 300px; background: linear-gradient(#4a4740, #37352f); color: #f1ead8; border-radius: 10px;
+  padding: 8px 12px 10px; box-shadow: 0 3px 12px rgba(0,0,0,.45); border: 1px solid #24221e; }
+#radio .rh { font: 700 11px/1 var(--disp); letter-spacing: .12em; text-transform: uppercase; color: #cdc5b1; display: flex; gap: 6px; align-items: center; }
+#radio .rh::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #5b5141; }
+#radio.live .rh::before { background: var(--led-ok); box-shadow: 0 0 6px var(--led-ok); }
+#radio.said .rh::before { background: var(--amber); }
+#radio em { font-style: normal; margin-left: auto; color: #9e9682; letter-spacing: 0; text-transform: none; }
+#radio p { margin: 6px 0 8px; min-height: 2.6em; font-size: 14px; }
+#radio p .who { color: var(--amber); font-weight: 700; }
+#radio.off p { color: #9e9682; }
+#radio.idle { display: none; }
+#radio button { min-height: 44px; padding: 6px 12px; border-radius: 7px; border: 1px solid var(--key-side); background: linear-gradient(var(--key-top), var(--key));
+  color: var(--ink); font: 700 14px var(--font); cursor: pointer; }
+#radio button[disabled] { opacity: .45; cursor: default; }
+#radio i { display: block; height: 3px; background: #24221e; margin-top: 8px; border-radius: 2px; overflow: hidden; } #radio i s { display: block; height: 100%; background: var(--led-ok); width: 0; }
+#toasts { position: absolute; left: 50%; bottom: 74px; transform: translateX(-50%); display: flex; flex-direction: column; gap: 6px; align-items: center; width: min(520px, calc(100% - 24px)); }
+.toast { background: rgba(20,18,14,.86); color: #f6f1e4; padding: 8px 14px; border-radius: 8px; font-size: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.35);
+  animation: tin .2s ease-out; } .toast.bad { border-left: 4px solid var(--led-bad); } .toast.good { border-left: 4px solid var(--led-ok); }
+@keyframes tin { from { opacity: 0; transform: translateY(6px); } }
+#keys { position: absolute; left: 12px; bottom: 10px; color: #f6f1e4; font-size: 12.5px; background: rgba(20,18,14,.86); padding: 5px 10px; border-radius: 8px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.still .toast { animation: none; }
+@media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+#touch { display: none; }
+.touch #touch { display: block; } .touch #keys, .touch #rbtn kbd { display: none; }
+#pad { position: absolute; left: 12px; bottom: 14px; width: 186px; height: 186px; }
+#pad button { position: absolute; width: 62px; height: 62px; border-radius: 12px; border: 1px solid var(--key-side); background: linear-gradient(var(--key-top), var(--key));
+  font-size: 22px; color: var(--ink); touch-action: none; -webkit-user-select: none; user-select: none; opacity: .92; }
+#pad [data-d=up] { left: 62px; top: 0; } #pad [data-d=down] { left: 62px; top: 124px; } #pad [data-d=left] { left: 0; top: 62px; } #pad [data-d=right] { left: 124px; top: 62px; }
+#pad button.on, #acts button.on { background: linear-gradient(#fffaf0, #e2d6b5); transform: translateY(1px); }
+#acts { position: absolute; right: 12px; bottom: 14px; display: grid; grid-template-columns: 76px 76px; gap: 10px; }
+#acts button { min-height: 62px; border-radius: 12px; border: 1px solid #2f2c26; background: linear-gradient(#6b665b, var(--key-p)); color: var(--key-p-ink);
+  font: 700 14px var(--font); touch-action: none; -webkit-user-select: none; user-select: none; }
+#acts #tRadio { background: linear-gradient(#5f7a52, #3f5a35); }
+#acts button.ready { box-shadow: 0 0 0 3px var(--amber); }
+.touch #toasts { bottom: 214px; }
+@media (max-width: 760px) {
+  #obj { left: 12px; right: 104px; top: 66px; transform: none; max-width: none; font-size: 14px; padding: 7px 10px; }
+  #radio { left: 12px; right: 12px; width: auto; top: 124px; padding: 5px 10px 6px; }
+  #radio p { min-height: 0; margin: 3px 0 0; font-size: 13.5px; } #radio button { display: none; } #radio i { margin-top: 5px; }
+  #radio.off { display: none; }
+  #cup { left: auto; right: 12px; top: 12px; width: 140px; }
+  #sig { left: auto; right: 12px; top: 66px; }
+  .touch #toasts { top: 196px; bottom: auto; }
+}
+.ov { position: fixed; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center; background: rgba(8,10,14,.45); padding: 16px; }
+.ov.on { display: flex; }
+.cd { background: linear-gradient(var(--paper), var(--paper-2)); color: var(--ink); border: 1px solid #a99d82; border-radius: 10px; max-width: 500px; width: 100%;
+  padding: 16px 20px; box-shadow: 0 12px 40px rgba(0,0,0,.45); max-height: calc(100% - 8px); overflow: auto; }
+.cd .kick { font: 700 11.5px/1 var(--disp); letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+.cd h2 { font: 800 24px/1.15 var(--disp); font-stretch: 90%; margin: 6px 0 8px; }
+.cd p { margin: 7px 0; } .cd ul { margin: 6px 0; padding-left: 20px; } .cd li { margin: 3px 0; }
+.cd .note { color: var(--mute); font-size: 13px; }
+.cd .note button.lnk { appearance: none; border: 0; background: none; padding: 0; font: inherit; color: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+@media (pointer: coarse), (max-width: 760px) {                     /* the text link back to the game: a 44 px target with a finger */
+  .cd .note button.lnk { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; margin-left: -8px; }
+}
+.cd .row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; justify-content: flex-end;
+  position: sticky; bottom: -16px; background: var(--paper-2); padding: 8px 0 6px; margin-bottom: -6px; }   /* (a long card: its keys stay in reach) */
+.cd .row button { min-height: 46px; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--key-side); background: linear-gradient(var(--key-top), var(--key));
+  color: var(--ink); font: 700 15px var(--font); cursor: pointer; }
+.cd .row button.pri { order: 9; background: linear-gradient(#6b665b, var(--key-p)); color: var(--key-p-ink); border-color: #2f2c26; }
+.cd button:focus-visible, #hud button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.rows { margin: 10px 0; }
+.rows > div { display: flex; align-items: baseline; gap: 6px; padding: 4px 0; }
+.rows dt { font-weight: 700; white-space: nowrap; } .rows .dots { flex: 1; border-bottom: 2px dotted var(--line); transform: translateY(-4px); min-width: 12px; }
+.rows dd { margin: 0; font-variant-numeric: tabular-nums; white-space: nowrap; } .rows dd b { font-size: 17px; } .rows dd small { color: var(--mute); }
+.rows .sub { display: block; color: var(--mute); font-size: 13px; padding: 0 0 4px; border-bottom: 1px dashed var(--line); }
+.total { display: flex; align-items: baseline; gap: 12px; margin: 10px 0 4px; } .total b { font: 800 34px/1 var(--disp); font-variant-numeric: tabular-nums; }
+.stars { color: #b07a10; font-size: 22px; letter-spacing: 2px; }
+.trip { list-style: none; padding: 8px 10px; margin: 4px 0 8px; background: rgba(255,255,255,.45); border: 1px solid var(--line); border-radius: 8px; }
+.trip li { margin: 2px 0; }
+.feats { list-style: none; padding: 0; margin: 8px 0; font-size: 13.5px; }
+.feats li { margin: 3px 0; color: var(--mute); }
+.feats li span { display: inline-block; min-width: 86px; font: 700 11px/1.6 var(--disp); letter-spacing: .08em; text-transform: uppercase; }
+.feats li.got { color: var(--ink); } .feats li.got span { color: #2f7a3a; }
+
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud">
+  <div id="clock" class="led"><b id="clk">16:30</b><span>setup 17:00</span></div>
+  <div id="cup" class="led"><span class="lbl">Coffee</span><i><s id="cupbar"></s></i><span id="cuptxt">100% · 68 °C</span></div>
+  <div id="obj"></div>
+  <div id="sr" class="sr" role="status" aria-live="polite"></div>
+  <div id="sig" aria-hidden="true"><canvas id="sigc" width="96" height="48"></canvas></div>
+  <div id="radio" class="off" aria-live="polite"><div class="rh">Radio <em id="rq"></em></div><p id="rtext"></p>
+    <button id="rbtn" type="button">Answer <kbd>R</kbd></button><i id="rbar"><s></s></i></div>
+  <div id="toasts" role="log" aria-live="polite" aria-relevant="additions"></div>
+  <div id="keys">Arrows / WASD walk · <kbd>Shift</kbd> hurry (spills) · <kbd>E</kbd> button · <kbd>R</kbd> radio · <kbd>Esc</kbd> pause</div>
+  <div id="touch">
+    <div id="pad"><button data-d="up" aria-label="Walk forward">▲</button><button data-d="left" aria-label="Walk left">◀</button>
+      <button data-d="right" aria-label="Walk right">▶</button><button data-d="down" aria-label="Walk back">▼</button></div>
+    <div id="acts"><button id="tHurry" type="button">Hurry</button><button id="tBtn" type="button">Button</button><button id="tRadio" type="button">Radio</button><button id="tPause" type="button">Pause</button></div>
+  </div>
+</div>
+<div id="ov" class="ov"><div class="cd" role="dialog" aria-modal="true" aria-labelledby="ovh"><div class="kick" id="ovk"></div><h2 id="ovh"></h2><div id="ovb"></div><div class="row" id="ovr"></div></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ---------------------------------------------------------------- Nick's prequel: core.js
+// The namespace (window.NX), the street's layout in metres, a seeded random, and the vertex-coloured geometry builder.
+// Axes: x runs along Riverside Drive (+x = east), z runs across it (+z = south, toward the college), y is up.
+// Everything static is merged into one mesh per material at load (draw-call budget: 40). A vertex colour above 1
+// reads as a light at dusk (Lambert multiplies it by the dim light and it still saturates): headlights, windows.
+(function () {
+  "use strict";
+  var NX = window.NX = { v: "1.0", errors: [] };
+  window.addEventListener("error", function (e) { NX.errors.push(String(e.message)); });   // (the test reads these)
+  // the game's pick card ("Continue to Friday", "Back to VCF Tycoon"): tools/publish-public.sh sets VCF_GAME_URL (index.html#pick,
+  // next to this page as nick.html); here in the repo, the local game build
+  NX.GAME = window.VCF_GAME_URL || "../../vcf-tycoon.html#pick";
+  NX.leave = function () { location.href = NX.GAME; };             // (the test replaces it)
+  // prefers-reduced-motion: no blinking Nick, the flurries fall straight, the opening shot holds still, no toast slide
+  NX.reduced = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+  // A card in place of the game when it can't run (three.js didn't load from cdnjs, or no WebGL); the rest of the script stops here.
+  NX.fail = function (why) {
+    var hud = document.getElementById("hud"); if (hud) hud.style.display = "none";
+    var ov = document.getElementById("ov"); if (!ov) { document.body.textContent = why; return; }
+    document.getElementById("ovk").textContent = "Nick crosses Riverside";
+    document.getElementById("ovh").textContent = "The street didn't load";
+    document.getElementById("ovb").innerHTML = "<p>" + NX.esc(why) + "</p>";
+    var row = document.getElementById("ovr"); row.innerHTML = "";
+    [["Reload", function () { location.reload(); }, false], ["Back to VCF Tycoon", function () { NX.leave(); }, true]].forEach(function (b) {
+      var el = document.createElement("button"); el.type = "button"; el.textContent = b[0]; if (b[2]) el.className = "pri";
+      el.addEventListener("click", b[1]); row.appendChild(el);
+    });
+    ov.className = "ov on"; setTimeout(function () { row.lastChild.focus(); }, 0);
+  };
+
+  // ---- the street, north to south (z of each edge)
+  NX.L = {
+    nSide: [-16, -10.5],             // north sidewalk: the bus stop (the river side)
+    lanes: [                         // [centre z, direction (+1 east / -1 west), name]
+      { z: -8.75, dir: -1, id: "w2", curb: true }, { z: -5.25, dir: -1, id: "w1" },
+      { z: 0.25, dir: 1, id: "e1" }, { z: 3.75, dir: 1, id: "e2", curb: true }],
+    laneHalf: 1.75,
+    median: [-3.5, -1.5],
+    curbS: 5.5,
+    bike: [6.1, 9.1],                // the protected two-way bike lane in front of the college
+    sSide: [9.1, 12.5],
+    drive: [15, 19],                 // the drive in front of the doors (drop-off; the cube van backs along it)
+    door: { x: 0, z: 24.2, half: 1.6 },
+    wall: 25,
+    cross: 2.2,                      // the crosswalk's half-width (x)
+    stopW: 5.2, stopE: -5.2,         // stop lines: westbound traffic stops at x = +5.2, eastbound at -5.2
+    btnN: { x: -2.9, z: -11.0 }, btnS: { x: -2.9, z: -2.5 },
+    puddles: [{ x: 0.9, z: -9.8, lane: 0 }, { x: -0.6, z: -3.95, lane: 1 }, { x: 0.7, z: -1.05, lane: 2 }, { x: -0.4, z: 4.95, lane: 3 }],
+    splashR: 2.2
+  };
+  NX.T0 = 16 * 3600 + 30 * 60;       // 16:30:00
+  NX.CLOCK = 10;                     // game seconds per real second (16:30 -> 17:00 in 3 minutes)
+  NX.SETUP = 17 * 3600;
+
+  NX.clamp = function (v, a, b) { return v < a ? a : v > b ? b : v; };
+  NX.hhmm = function (s) { var m = Math.floor(s / 60); return Math.floor(m / 60) + ":" + ("0" + (m % 60)).slice(-2); };
+  NX.esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); };
+  if (!window.THREE) {
+    NX.dead = true;
+    NX.fail("The 3D library (three.js, from cdnjs.cloudflare.com) didn't load. Check the connection and reload, or go on to the game.");
+    throw new Error("three.js did not load");
+  }
+
+  // ---- a seeded random (mulberry32): the same run every time for the tests
+  NX.seed = function (s) { NX._s = s >>> 0; };
+  NX.rnd = function () {
+    var t = NX._s = (NX._s + 0x6D2B79F5) >>> 0;
+    t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  NX.seed(1107);
+
+  // ---- events (tiny bus)
+  var EV = {};
+  NX.on = function (n, f) { (EV[n] = EV[n] || []).push(f); };
+  NX.emit = function (n, a, b) { var l = EV[n]; if (l) for (var i = 0; i < l.length; i++) l[i](a, b); };
+
+  // ---- the builder: append transformed, vertex-coloured copies of three.js geometries; .geo() -> one BufferGeometry
+  function B() { this.p = []; this.n = []; this.c = []; }
+  var M = null, Q = null, E = null, S = null, V = null, NM = null;
+  B.prototype.add = function (g, col, x, y, z, ry, rx, rz, sx, sy, sz) {
+    if (!M) { M = new THREE.Matrix4(); Q = new THREE.Quaternion(); E = new THREE.Euler(); S = new THREE.Vector3(); V = new THREE.Vector3(); NM = new THREE.Matrix3(); }
+    var gi = g.index ? g.toNonIndexed() : g, pa = gi.attributes.position, na = gi.attributes.normal;
+    E.set(rx || 0, ry || 0, rz || 0); Q.setFromEuler(E); S.set(sx || 1, sy || sx || 1, sz || sx || 1); V.set(x || 0, y || 0, z || 0);
+    M.compose(V, Q, S); NM.getNormalMatrix(M);
+    var a = new THREE.Vector3(), nn = new THREE.Vector3();
+    for (var i = 0; i < pa.count; i++) {
+      a.fromBufferAttribute(pa, i).applyMatrix4(M); nn.fromBufferAttribute(na, i).applyMatrix3(NM).normalize();
+      this.p.push(a.x, a.y, a.z); this.n.push(nn.x, nn.y, nn.z); this.c.push(col[0], col[1], col[2]);
+    }
+    return this;
+  };
+  // a box by its size, its centre, a turn about y
+  B.prototype.box = function (w, h, d, x, y, z, col, ry, rx, rz) { return this.add(NX.G.box(w, h, d), col, x, y, z, ry, rx, rz); };
+  B.prototype.cyl = function (r, h, x, y, z, col, seg, rx, rz, ry) { return this.add(NX.G.cyl(r, h, seg || 8), col, x, y, z, ry, rx, rz); };
+  B.prototype.geo = function () {
+    var g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute(this.p, 3));
+    g.setAttribute("normal", new THREE.Float32BufferAttribute(this.n, 3));
+    g.setAttribute("color", new THREE.Float32BufferAttribute(this.c, 3));
+    g.computeBoundingSphere(); g.computeBoundingBox();
+    return g;
+  };
+  NX.B = function () { return new B(); };
+  // cached primitives (unit sizes are scaled by the builder's matrix)
+  var GC = {};
+  NX.G = {
+    box: function (w, h, d) { var k = "b" + w + "," + h + "," + d; return GC[k] || (GC[k] = new THREE.BoxGeometry(w, h, d)); },
+    cyl: function (r, h, s) { var k = "c" + r + "," + h + "," + s; return GC[k] || (GC[k] = new THREE.CylinderGeometry(r, r, h, s)); },
+    cone: function (r1, r2, h, s) { var k = "k" + r1 + "," + r2 + "," + h + "," + s; return GC[k] || (GC[k] = new THREE.CylinderGeometry(r1, r2, h, s)); },
+    sph: function (r, s) { var k = "s" + r + "," + s; return GC[k] || (GC[k] = new THREE.SphereGeometry(r, s, Math.max(3, s >> 1))); },
+    plane: function (w, d) { var k = "p" + w + "," + d; return GC[k] || (GC[k] = new THREE.PlaneGeometry(w, d).rotateX(-Math.PI / 2)); }
+  };
+  NX.rgb = function (hex, k) { k = k || 1; return [((hex >> 16) & 255) / 255 * k, ((hex >> 8) & 255) / 255 * k, (hex & 255) / 255 * k]; };
+})();
+
+// ---------------------------------------------------------------- Nick's prequel: world.js
+// The scene, built once at load: Riverside Drive in front of Champlain College Saint-Lambert at 16:30 on a November Friday.
+// One merged mesh for everything that never moves (Lambert, vertex colours), one for the lamps (Basic: they glow), one for
+// the far shore (no fog), the light pools under the lamps (additive), the two pedestrian signal heads (canvas textures),
+// the vehicles (one mesh each, from a fixed pool), Nick (four meshes: he swings his legs and lifts the radio) and one
+// Points object for the flurries, the slush splashes and Route 132's headlights.
+//   NX.W.scene, .camera, .renderer (boot.js), .mat { lam, legs, glow, sky, pool }, .heads [N, S], .drawHead(i, st, n)
+//   NX.W.vehicleMesh(kind, colour) -> Mesh (facing +x, origin on the ground at its centre); NX.W.nick { g, body, legL, legR, armR }
+//   NX.W.pts { geo, n, snow, splash, lights } (the shared Points buffer: ranges)
+(function () {
+  "use strict";
+  var L = NX.L, W = NX.W = { mat: {}, heads: [] };
+  var C = {
+    asphalt: NX.rgb(0x2b2c2f), asphaltW: NX.rgb(0x222326), conc: NX.rgb(0x8d8c88), curb: NX.rgb(0xa3a29c), grass: NX.rgb(0x4b5236),
+    grassD: NX.rgb(0x3c4230), white: NX.rgb(0xd8d8d2), yellow: NX.rgb(0xd2a628), slush: NX.rgb(0xb9bcc0), puddle: NX.rgb(0x4b4843),
+    brick: NX.rgb(0x7a4d3a), brickD: NX.rgb(0x5e3a2c), trim: NX.rgb(0x9a958c), glassD: NX.rgb(0x1d2a33), win: [2.4, 2.0, 1.25],
+    winCool: [1.5, 1.7, 1.8], pole: NX.rgb(0x5d6064), dark: NX.rgb(0x1a1b1d), bark: NX.rgb(0x3b2f27), conifer: NX.rgb(0x26392c),
+    water: NX.rgb(0x0f1822), btn: NX.rgb(0xd6b22a), rail: NX.rgb(0x8f9296), bollard: NX.rgb(0xd9dbd5)
+  };
+  W.C = C;
+
+  W.build = function (scene) {
+    W.scene = scene;
+    var lam = W.mat.lam = new THREE.MeshLambertMaterial({ vertexColors: true });
+    W.mat.legs = new THREE.MeshLambertMaterial({ vertexColors: true });              // its colour darkens with each splash
+    W.mat.glow = new THREE.MeshBasicMaterial({ vertexColors: true });
+    W.mat.sky = new THREE.MeshBasicMaterial({ vertexColors: true, fog: false });
+    W.mat.pool = new THREE.MeshBasicMaterial({ color: 0xffc77a, transparent: true, opacity: 0.0, blending: THREE.AdditiveBlending, depthWrite: false });
+    W.mat.van = new THREE.MeshLambertMaterial({ vertexColors: true });               // (the reversing van: its own, for the reverse lamps)
+
+    var s = NX.B(), g = NX.B(), k = NX.B(), pools = NX.B();
+    var x, i;
+    // ---- the ground: river, Route 132, the grass, the north sidewalk, the road, the median, the bike lane, the college
+    s.add(NX.G.plane(3000, 1400), C.water, 0, -0.4, -760);
+    s.add(NX.G.plane(400, 22), C.grass, 0, 0, -38);                                    // the strip between 132 and the water
+    s.add(NX.G.plane(400, 16), C.asphalt, 0, 0.01, -37.5);                             // Route 132
+    s.add(NX.G.plane(400, 0.15), C.white, 0, 0.02, -37.5);
+    s.box(400, 0.6, 0.25, 0, 0.3, -29.2, C.rail);                                       // the guardrail
+    s.add(NX.G.plane(400, 13), C.grass, 0, 0, -22.5);
+    s.add(NX.G.plane(400, 5.5), C.conc, 0, 0.12, -13.25);                               // north sidewalk
+    s.box(400, 0.15, 0.25, 0, 0.075, -10.62, C.curb);
+    s.add(NX.G.plane(400, 16), C.asphalt, 0, 0.0, -2.5);                                 // the four lanes and the median under them
+    s.box(400, 0.15, 2.0, 0, 0.075, -2.5, C.curb);                                       // the median
+    s.add(NX.G.plane(400, 1.7), C.grassD, 0, 0.16, -2.5);
+    s.box(4.4, 0.16, 2.02, 0, 0.081, -2.5, C.asphaltW);                                   // the median's cut at the crosswalk (flush)
+    s.add(NX.G.plane(400, 3.6), C.asphaltW, 0, 0.012, 7.6);                              // the bike lane
+    s.box(400, 0.17, 0.6, 0, 0.085, 5.8, C.curb);                                         // its buffer
+    s.add(NX.G.plane(400, 3.4), C.conc, 0, 0.12, 10.8);                                   // south sidewalk
+    s.box(400, 0.15, 0.2, 0, 0.075, 9.15, C.curb);
+    s.add(NX.G.plane(400, 13), C.grass, 0, 0.02, 18.5);                                    // the college's lawn
+    s.add(NX.G.plane(120, 4), C.asphalt, 0, 0.05, 17);                                     // the drive in front of the doors
+    s.add(NX.G.plane(4.5, 12.6), C.conc, 0, 0.07, 18.8);                                   // the walk to the doors
+    for (x = -60; x <= 60; x += 2.2) s.add(NX.G.plane(1.0, 0.12), C.white, x, 0.06, 17);   // the drive's centre dashes
+    // ---- markings
+    for (x = -200; x < 200; x += 9) { s.add(NX.G.plane(3, 0.13), C.white, x, 0.02, -7); s.add(NX.G.plane(3, 0.13), C.white, x, 0.02, 2); }
+    for (x = -200; x < 200; x += 4) s.add(NX.G.plane(2, 0.11), C.yellow, x, 0.025, 7.6);   // the bike lane's centre line
+    for (i = 0; i < 9; i++) {                                                              // the crosswalk: bars across both halves
+      s.add(NX.G.plane(4.2, 0.45), C.white, 0, 0.03, -10.2 + i * 0.85);
+      s.add(NX.G.plane(4.2, 0.45), C.white, 0, 0.03, -1.3 + i * 0.85);
+    }
+    s.add(NX.G.plane(0.4, 7), C.white, L.stopW, 0.03, -7);                                 // stop lines
+    s.add(NX.G.plane(0.4, 7), C.white, L.stopE, 0.03, 2);
+    for (x = -60; x <= 60; x += 30) { bike(s, x + 7, 6.85, 1); bike(s, x - 7, 8.35, -1); }
+    // ---- slush: banks along the curbs, puddles at the crosswalk's ramps (where it always collects)
+    for (x = -120; x < 120; x += 3.1) {
+      if (Math.abs(x) < 3) continue;
+      var r = Math.sin(x * 12.9898) * 43758.5453; r -= Math.floor(r);
+      s.box(1.6 + r, 0.18 + r * 0.12, 0.5, x, 0.09, -10.3, C.slush, r);
+      if (r > 0.4) s.box(1.2 + r, 0.15, 0.45, x + 1, 0.09, 5.25, C.slush, -r);
+    }
+    L.puddles.forEach(function (p) { s.add(NX.G.cyl(1, 0.03, 16), C.puddle, p.x, 0.045, p.z, 0.3, 0, 0, 1.0, 1, 0.55); s.add(NX.G.cyl(1, 0.03, 12), C.slush, p.x + 0.7, 0.05, p.z + 0.1, 0.2, 0, 0, 0.35, 1, 0.2); });
+    // ---- the bus shelter and the stop
+    s.box(4.2, 0.12, 1.6, -9, 2.5, -14.4, C.dark);
+    s.box(4.2, 2.3, 0.05, -9, 1.3, -15.15, [0.35, 0.42, 0.46]);
+    s.box(0.05, 2.3, 1.5, -11.05, 1.3, -14.4, [0.35, 0.42, 0.46]); s.box(0.05, 2.3, 1.5, -6.95, 1.3, -14.4, [0.35, 0.42, 0.46]);
+    s.box(2.4, 0.08, 0.4, -9, 0.5, -14.85, C.trim);
+    s.box(0.7, 1.4, 0.05, -10.6, 1.3, -15.1, [1.6, 1.7, 1.75]);                             // the ad box, lit
+    s.cyl(0.04, 2.6, -5.8, 1.4, -11.3, C.pole); s.box(0.5, 0.6, 0.04, -5.8, 2.5, -11.3, [0.9, 0.9, 0.88]);   // the stop's sign
+    // ---- poles: the pedestrian buttons and heads, the traffic signal masts
+    s.cyl(0.06, 3.0, L.btnN.x, 1.5, L.btnN.z, C.pole); s.box(0.14, 0.2, 0.1, L.btnN.x, 1.05, L.btnN.z + 0.08, C.btn);
+    s.cyl(0.06, 3.0, L.btnS.x, 1.5, L.btnS.z, C.pole); s.box(0.14, 0.2, 0.1, L.btnS.x, 1.05, L.btnS.z + 0.08, C.btn);
+    s.cyl(0.06, 3.0, 2.9, 1.5, -3.2, C.pole); s.cyl(0.06, 3.0, 2.9, 1.5, 5.8, C.pole);
+    [[-12.0, 8, -1], [6.4, 8, 1]].forEach(function (m) {                                   // mast arms over each direction
+      s.cyl(0.12, 6.2, m[1] * m[2], 3.1, m[0], C.pole);
+      s.box(0.18, 0.18, 8.5, m[1] * m[2], 5.9, m[0] + 4.1 * (m[0] < 0 ? 1 : -1), C.pole);
+      for (var j = 0; j < 2; j++) s.box(0.35, 1.0, 0.35, m[1] * m[2], 5.3, m[0] + (m[0] < 0 ? 3.5 + j * 3.5 : -2.6 - j * 3.5), C.dark);
+    });
+    // ---- streetlights (cobra heads glow; pools of light on the road once they're on)
+    for (x = -90; x <= 90; x += 30) {
+      [[-11.2, 1], [9.8, -1]].forEach(function (p) {
+        var px = x + (p[0] > 0 ? 15 : 0);
+        if (Math.abs(px) < 4) px = 7;                                                     // not in the crosswalk's landing: east of it
+        s.cyl(0.09, 8, px, 4, p[0], C.pole); s.box(0.12, 0.12, 2.2, px, 7.9, p[0] + p[1] * 1.1, C.pole);
+        g.box(0.5, 0.16, 0.8, px, 7.85, p[0] + p[1] * 2.2, [1, 1, 1]);
+        pools.add(NX.G.cyl(4.2, 0.02, 18), [1, 1, 1], px, 0.05, p[0] + p[1] * 3.4);
+      });
+    }
+    // ---- trees (bare in November) and a few spruces
+    for (x = -100; x <= 100; x += 13) {
+      if (Math.abs(x - 0) < 6) continue;
+      tree(s, x + 3, 13.6); if (Math.abs(x) > 20) tree(s, x, -19);
+    }
+    [[-30, 21], [30, 21.5], [-46, 20], [44, 13.8]].forEach(function (p) { spruce(s, p[0], p[1]); });
+    // ---- the college: brick, three storeys, lit windows, the entrance canopy and glass doors
+    s.box(110, 11.5, 22, 0, 5.75, L.wall + 11, C.brick);
+    s.box(110.4, 0.6, 22.4, 0, 11.6, L.wall + 11, C.trim);
+    for (var fl = 0; fl < 3; fl++) for (x = -52; x <= 52; x += 3.3) {
+      if (fl === 0 && Math.abs(x) < 5) continue;
+      var lit = ((x * 7 + fl * 13) % 5 + 5) % 5 < 3;
+      s.box(2.2, 1.6, 0.05, x, 1.8 + fl * 3.4, L.wall - 0.03, lit ? (fl === 0 ? C.win : C.winCool) : C.glassD);
+    }
+    s.box(9, 0.35, 3.2, 0, 3.6, L.wall - 1.5, C.trim);                                         // the canopy
+    s.cyl(0.12, 3.5, -4.2, 1.75, L.wall - 2.9, C.trim); s.cyl(0.12, 3.5, 4.2, 1.75, L.wall - 2.9, C.trim);
+    s.box(3.4, 2.5, 0.06, 0, 1.25, L.wall - 0.04, [1.9, 2.0, 2.0]);                              // the doors, lit from inside
+    s.box(0.08, 2.5, 0.08, 0, 1.25, L.wall - 0.09, C.dark);
+    s.box(0.5, 0.25, 0.05, 2.5, 2.2, L.wall - 0.05, [2.6, 0.5, 0.4]);                          // the EXIT/SORTIE sign over the side door
+    // ---- Route 132's lamps, the far shore: Montréal at dusk, the river
+    for (x = -180; x <= 180; x += 45) { s.cyl(0.1, 10, x, 5, -30.5, C.pole); g.box(0.5, 0.16, 0.8, x, 9.9, -31.6, [1, 1, 1]); }
+    var sky = NX.B();
+    for (i = 0; i < 46; i++) {
+      var rr = Math.sin(i * 78.233) * 43758.5453; rr -= Math.floor(rr);
+      var bx = -1500 + i * 52 + rr * 20, bh = 25 + rr * rr * 210 * (Math.abs(bx + 300) < 450 ? 1 : 0.35), bw = 30 + rr * 30;
+      sky.box(bw, bh, 30, bx, bh / 2 - 2, -2350 - rr * 120, [0.08, 0.09, 0.12]);
+      for (var wy = 6; wy < bh - 4; wy += 9) if ((i + wy) % 3) sky.box(bw * 0.8, 1.6, 0.5, bx, wy, -2334 - rr * 120, [0.9, 0.78, 0.55]);
+    }
+    sky.box(3000, 6, 40, 0, 1, -2280, [0.05, 0.06, 0.08]);                                        // the far bank
+    sky.cyl(2, 260, -320, 130, -2420, [0.12, 0.12, 0.14], 6); sky.box(4, 4, 4, -320, 262, -2420, [3, 0.4, 0.3]);   // a mast with its red light
+    var skym = new THREE.Mesh(sky.geo(), W.mat.sky); skym.name = "shore"; scene.add(skym);
+
+    var stat = new THREE.Mesh(s.geo(), lam); stat.name = "street"; scene.add(stat);
+    W.lamps = new THREE.Mesh(g.geo(), W.mat.glow); W.lamps.name = "lamps"; scene.add(W.lamps);
+    W.mat.glow.color.setRGB(0.35, 0.33, 0.3);
+    W.pools = new THREE.Mesh(pools.geo(), W.mat.pool); W.pools.name = "pools"; W.pools.renderOrder = 1; scene.add(W.pools);
+
+    // ---- the laker heading upriver for the Saint-Lambert lock (seen in the opening shot)
+    var lk = NX.B();
+    lk.box(220, 9, 23, 0, 3, 0, NX.rgb(0x3a1f1c)); lk.box(220, 1, 23.2, 0, 7.6, 0, NX.rgb(0x1c1c1e));
+    lk.box(18, 14, 20, -95, 14, 0, NX.rgb(0xe3e1da)); lk.box(16, 1.4, 20.4, -95, 16, 0, [2.2, 2.0, 1.5]);
+    lk.box(2, 2, 2, 108, 10, 0, [3, 3, 2.6]); lk.box(2, 2, 2, -103, 23, 0, [3, 3, 2.6]);
+    W.laker = new THREE.Mesh(lk.geo(), lam); W.laker.position.set(200, 0, -520); scene.add(W.laker);
+
+    // ---- the pedestrian heads: a hand / a walker on the left, the countdown on the right
+    [[2.9, -3.2], [2.9, 5.8]].forEach(function (p, idx) {
+      var hb = NX.B(); hb.box(0.75, 0.42, 0.22, 0, 0, 0, NX.rgb(0x2a2a22)); hb.box(0.8, 0.06, 0.3, 0, 0.24, -0.03, NX.rgb(0x2a2a22));
+      var house = new THREE.Mesh(hb.geo(), lam); house.position.set(p[0], 3.0, p[1]); scene.add(house);
+      var cv = document.createElement("canvas"); cv.width = 256; cv.height = 128;
+      var tex = new THREE.CanvasTexture(cv); tex.minFilter = THREE.LinearFilter;
+      var face = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.35), new THREE.MeshBasicMaterial({ map: tex }));
+      face.rotation.y = Math.PI; face.position.set(p[0], 3.0, p[1] - 0.115); face.name = "head" + idx; scene.add(face);
+      W.heads.push({ cv: cv, ctx: cv.getContext("2d"), tex: tex, st: "", n: -1 });
+      W.drawHead(idx, "dont", 0);
+    });
+    // ---- the sheet taped to the door
+    var dc = document.createElement("canvas"); dc.width = 128; dc.height = 160; var d = dc.getContext("2d");
+    d.fillStyle = "#f6f4ee"; d.fillRect(0, 0, 128, 160); d.fillStyle = "#1b1b1b"; d.font = "bold 34px 'Comic Sans MS', 'Marker Felt', sans-serif";
+    d.textAlign = "center"; d.fillText("VCF", 64, 52); d.font = "bold 46px sans-serif"; d.fillText("→", 64, 100);
+    d.font = "bold 28px 'Comic Sans MS', 'Marker Felt', sans-serif"; d.fillText("D 121", 64, 142);
+    var sign = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.52), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(dc) }));
+    sign.rotation.y = Math.PI; sign.position.set(-0.85, 1.55, L.wall - 0.1); sign.name = "sign"; scene.add(sign);
+
+    buildPoints(scene);
+    buildNick(scene);
+    buildLocal(scene);
+    // a ring on the ground at the button pole that still needs a press (boot.js moves it; Basic: it reads at dusk)
+    var rb = NX.B();
+    for (i = 0; i < 16; i++) { var an = i / 16 * Math.PI * 2; rb.box(0.2, 0.02, 0.07, Math.cos(an) * 0.7, 0, Math.sin(an) * 0.7, [1.25, 0.72, 0.18], -an + Math.PI / 2); }
+    W.ring = new THREE.Mesh(rb.geo(), new THREE.MeshBasicMaterial({ vertexColors: true })); W.ring.name = "ring"; W.ring.visible = false; scene.add(W.ring);
+  };
+
+  function bike(s, x, z, dir) {                                                           // a painted bike symbol
+    s.add(NX.G.cyl(0.32, 0.01, 12), NX.rgb(0xd0d0cc), x - 0.5 * dir, 0.025, z, 0, 0, 0, 1, 1, 1);
+    s.add(NX.G.cyl(0.32, 0.01, 12), NX.rgb(0xd0d0cc), x + 0.5 * dir, 0.025, z, 0, 0, 0, 1, 1, 1);
+    s.add(NX.G.cyl(0.26, 0.012, 12), C.asphaltW, x - 0.5 * dir, 0.027, z); s.add(NX.G.cyl(0.26, 0.012, 12), C.asphaltW, x + 0.5 * dir, 0.027, z);
+    s.box(0.9, 0.012, 0.07, x, 0.027, z, NX.rgb(0xd0d0cc));
+  }
+  function tree(s, x, z) {
+    s.cyl(0.16, 3.6, x, 1.8, z, C.bark, 6);
+    for (var i = 0; i < 5; i++) { var a = i * 1.3 + x; s.add(NX.G.cone(0.03, 0.09, 2.4, 4), C.bark, x + Math.cos(a) * 0.6, 4.1, z + Math.sin(a) * 0.6, 0, Math.sin(a) * 0.6, Math.cos(a) * 0.6); }
+  }
+  function spruce(s, x, z) { s.cyl(0.15, 1.2, x, 0.6, z, C.bark, 5); s.add(NX.G.cone(0.1, 1.8, 5.5, 7), C.conifer, x, 3.8, z); }
+
+  // ---------------------------------------------------------------- vehicles (one merged mesh each, facing +x)
+  var TYRE = NX.rgb(0x151517), GLASS = NX.rgb(0x1a232b), HEAD = [5, 4.8, 4.2], TAIL = [3.4, 0.25, 0.15], AMB = [3.5, 1.8, 0.3];
+  function wheels(b, L2, W2, r, xs) { xs.forEach(function (x) { [-1, 1].forEach(function (sd) { b.cyl(r, 0.24, x, r, sd * (W2 - 0.1), TYRE, 10, Math.PI / 2); }); }); }
+  function lights(b, len, wid, y, hy) {
+    [-1, 1].forEach(function (sd) {
+      b.box(0.06, hy || 0.14, 0.32, len / 2 + 0.01, y, sd * (wid / 2 - 0.3), HEAD);
+      b.box(0.06, hy || 0.14, 0.3, -len / 2 - 0.01, y, sd * (wid / 2 - 0.28), TAIL);
+    });
+  }
+  var KIND = {
+    sedan: function (b, c) {
+      b.box(4.5, 0.62, 1.78, 0, 0.62, 0, c); b.box(2.3, 0.52, 1.6, -0.2, 1.18, 0, c);
+      b.box(2.32, 0.4, 1.62, -0.2, 1.17, 0, GLASS); b.box(2.0, 0.08, 1.5, -0.2, 1.46, 0, c);
+      wheels(b, 4.5, 0.89, 0.33, [1.4, -1.4]); lights(b, 4.5, 1.78, 0.72); return { len: 4.5, wid: 1.8 };
+    },
+    hatch: function (b, c) {
+      b.box(4.0, 0.62, 1.74, 0, 0.62, 0, c); b.box(2.4, 0.55, 1.6, -0.45, 1.2, 0, c);
+      b.box(2.42, 0.4, 1.62, -0.45, 1.2, 0, GLASS); wheels(b, 4, 0.87, 0.31, [1.25, -1.25]); lights(b, 4, 1.74, 0.72); return { len: 4.0, wid: 1.75 };
+    },
+    suv: function (b, c) {
+      b.box(4.8, 0.85, 1.9, 0, 0.8, 0, c); b.box(3.2, 0.62, 1.8, -0.4, 1.52, 0, c); b.box(3.22, 0.44, 1.82, -0.4, 1.5, 0, GLASS);
+      wheels(b, 4.8, 0.95, 0.38, [1.45, -1.45]); lights(b, 4.8, 1.9, 0.95); return { len: 4.8, wid: 1.92 };
+    },
+    v70: function (b, c) {                                                               // the long roof to the tailgate, roof rails
+      b.box(4.73, 0.62, 1.86, 0, 0.66, 0, c); b.box(3.3, 0.55, 1.7, -0.55, 1.24, 0, c); b.box(3.32, 0.4, 1.72, -0.55, 1.24, 0, GLASS);
+      b.box(3.1, 0.06, 0.05, -0.55, 1.56, 0.78, NX.rgb(0x1c1e21)); b.box(3.1, 0.06, 0.05, -0.55, 1.56, -0.78, NX.rgb(0x1c1e21));
+      wheels(b, 4.73, 0.93, 0.33, [1.38, -1.38]); lights(b, 4.73, 1.86, 0.78, 0.2); return { len: 4.73, wid: 1.86 };
+    },
+    pickup: function (b, c) {
+      b.box(5.6, 0.9, 1.95, 0, 0.85, 0, c); b.box(1.9, 0.7, 1.85, 0.75, 1.65, 0, c); b.box(1.92, 0.48, 1.87, 0.75, 1.62, 0, GLASS);
+      b.box(2.4, 0.3, 1.8, -1.5, 1.33, 0, NX.rgb(0x111214)); wheels(b, 5.6, 0.98, 0.4, [1.8, -1.7]); lights(b, 5.6, 1.95, 1.0); return { len: 5.6, wid: 1.96 };
+    },
+    minivan: function (b, c) {
+      b.box(5.1, 0.8, 1.95, 0, 0.75, 0, c); b.box(3.9, 0.75, 1.88, -0.4, 1.5, 0, c); b.box(3.92, 0.5, 1.9, -0.4, 1.5, 0, GLASS);
+      wheels(b, 5.1, 0.98, 0.34, [1.6, -1.6]); lights(b, 5.1, 1.95, 0.9); return { len: 5.1, wid: 1.96 };
+    },
+    bus: function (b) {                                                                  // a generic South Shore city bus: no logos
+      var body = NX.rgb(0xe4e5e2);
+      b.box(12, 2.6, 2.55, 0, 1.65, 0, body); b.box(10.6, 1.05, 2.57, -0.3, 2.05, 0, GLASS);
+      b.box(12.02, 0.32, 2.57, 0, 0.75, 0, NX.rgb(0x2f6d8f)); b.box(0.06, 1.3, 2.2, 6.01, 1.9, 0, GLASS);
+      b.box(0.06, 0.3, 1.6, 6.02, 2.75, 0, AMB);                                          // the destination sign
+      b.box(11.6, 0.25, 2.3, 0, 3.05, 0, NX.rgb(0xb7b9b6));
+      wheels(b, 12, 1.28, 0.5, [4.1, -3.0]); lights(b, 12, 2.55, 0.75); return { len: 12, wid: 2.55 };
+    },
+    cube: function (b, c) {                                                              // a rented cube van: the box, the cab
+      b.box(2.0, 1.25, 2.1, 2.45, 1.05, 0, c); b.box(1.2, 0.6, 2.0, 2.55, 1.95, 0, GLASS); b.box(1.25, 0.12, 2.05, 2.5, 2.3, 0, c);
+      b.box(5.2, 2.6, 2.4, -1.15, 1.85, 0, NX.rgb(0xf1f1ee)); b.box(0.04, 2.3, 2.1, -3.77, 1.8, 0, NX.rgb(0xbfc2c4));
+      for (var i = 0; i < 6; i++) b.box(0.05, 0.03, 2.1, -3.78, 0.85 + i * 0.4, 0, NX.rgb(0x8d9093));
+      b.box(0.3, 0.1, 2.4, -3.9, 0.45, 0, NX.rgb(0x2b2c2e));
+      wheels(b, 7.4, 1.15, 0.4, [2.4, -2.3]); lights(b, 7.4, 2.4, 0.6); return { len: 7.4, wid: 2.4 };
+    },
+    bikeR: function (b) {                                                                // a cyclist: November, shorts, a blinking light
+      b.cyl(0.34, 0.05, 0.55, 0.34, 0, TYRE, 12, Math.PI / 2); b.cyl(0.34, 0.05, -0.55, 0.34, 0, TYRE, 12, Math.PI / 2);
+      b.box(1.1, 0.05, 0.05, 0, 0.62, 0, NX.rgb(0x2a7d4f)); b.box(0.05, 0.4, 0.05, -0.2, 0.75, 0, NX.rgb(0x2a7d4f));
+      b.box(0.3, 0.55, 0.4, -0.15, 1.3, 0, NX.rgb(0xc93b28)); b.box(0.25, 0.22, 0.42, -0.05, 0.98, 0, NX.rgb(0x1f2329));
+      b.box(0.12, 0.42, 0.12, 0.05, 0.75, 0.13, NX.rgb(0xc9a487)); b.box(0.12, 0.42, 0.12, 0.05, 0.75, -0.13, NX.rgb(0xc9a487));   // bare knees
+      b.add(NX.G.sph(0.14, 8), NX.rgb(0xc9a487), 0.1, 1.72, 0); b.add(NX.G.sph(0.17, 8), NX.rgb(0x2b2b2b), 0.05, 1.78, 0, 0, 0, 0, 1, 0.7, 1);
+      b.box(0.45, 0.06, 0.06, 0.25, 1.4, 0.15, NX.rgb(0xc93b28), 0, 0, -0.6); b.box(0.45, 0.06, 0.06, 0.25, 1.4, -0.15, NX.rgb(0xc93b28), 0, 0, -0.6);
+      b.box(0.05, 0.08, 0.08, -0.85, 0.85, 0, TAIL); b.box(0.05, 0.08, 0.1, 0.62, 0.95, 0, HEAD);
+      return { len: 1.8, wid: 0.6 };
+    }
+  };
+  W.vehicleMesh = function (kind, col, mat) {
+    var b = NX.B(), dim = KIND[kind](b, NX.rgb(col || 0x888888));
+    var m = new THREE.Mesh(b.geo(), mat || W.mat.lam); m.userData.dim = dim; m.name = kind; W.scene.add(m); m.visible = false;
+    return m;
+  };
+
+  // ---------------------------------------------------------------- Nick: navy parka, grey toque, the lanyard, the coffee, the radio
+  function buildNick(scene) {
+    var PARKA = NX.rgb(0x1f2c45), SKIN = NX.rgb(0xd2a57f), JEANS = NX.rgb(0x2f3b52), SHOE = NX.rgb(0x2a211b);
+    var b = NX.B();
+    b.box(0.5, 0.66, 0.3, 0, 1.22, 0, PARKA); b.box(0.52, 0.12, 0.32, 0, 0.9, 0, PARKA);
+    b.box(0.3, 0.12, 0.26, 0, 1.58, -0.02, NX.rgb(0x6e5a3e));                                  // the hood's fur, rolled
+    b.add(NX.G.sph(0.14, 10), SKIN, 0, 1.72, 0.01);
+    b.add(NX.G.sph(0.15, 10), NX.rgb(0x5b5f66), 0, 1.79, 0, 0, 0, 0, 1, 0.75, 1);              // the toque
+    b.add(NX.G.sph(0.05, 6), NX.rgb(0x5b5f66), 0, 1.92, 0);
+    b.box(0.03, 0.4, 0.02, -0.09, 1.38, 0.16, NX.rgb(0xc8302a), 0, 0, 0.25); b.box(0.03, 0.4, 0.02, 0.09, 1.38, 0.16, NX.rgb(0xc8302a), 0, 0, -0.25);
+    b.box(0.13, 0.17, 0.02, 0, 1.12, 0.165, [1.3, 1.3, 1.25]);                                // the badge
+    b.box(0.13, 0.04, 0.021, 0, 1.18, 0.166, NX.rgb(0x1d55c4));
+    b.box(0.13, 0.5, 0.14, -0.31, 1.25, 0.12, PARKA, 0, -0.9, 0);                              // the left arm, forward, the cup in hand
+    b.cyl(0.05, 0.16, -0.31, 1.13, 0.43, NX.rgb(0xece8de), 10); b.cyl(0.052, 0.025, -0.31, 1.22, 0.43, NX.rgb(0x5b3a24), 10);
+    b.box(0.08, 0.06, 0.08, -0.31, 1.06, 0.38, SKIN);
+    var body = new THREE.Mesh(b.geo(), W.mat.lam);
+    function leg(sd) {
+      var lb = NX.B(); lb.box(0.17, 0.82, 0.19, 0, -0.42, 0, JEANS); lb.box(0.18, 0.1, 0.3, 0, -0.84, 0.05, SHOE);
+      var m = new THREE.Mesh(lb.geo(), W.mat.legs); m.position.set(sd * 0.12, 0.89, 0); return m;
+    }
+    var ab = NX.B(); ab.box(0.13, 0.55, 0.14, 0, -0.27, 0, PARKA); ab.box(0.07, 0.17, 0.04, 0, -0.6, 0.02, NX.rgb(0x18191b));
+    ab.cyl(0.008, 0.12, 0.02, -0.46, 0.02, NX.rgb(0x18191b), 4); ab.box(0.025, 0.03, 0.02, -0.025, -0.54, 0.045, [3, 0.4, 0.2]);   // the radio, its TX lamp
+    var armR = new THREE.Mesh(ab.geo(), W.mat.lam); armR.position.set(0.31, 1.5, 0);
+    var g = new THREE.Group(); g.add(body); var lL = leg(-1), lR = leg(1); g.add(lL); g.add(lR); g.add(armR);
+    g.name = "nick"; scene.add(g);
+    W.nick = { g: g, body: body, legL: lL, legR: lR, armR: armR };
+  }
+
+  // ---------------------------------------------------------------- the local: a grey parka, a black backpack, earbuds, no coffee (one mesh, facing +z)
+  function buildLocal(scene) {
+    var b = NX.B(), COAT = NX.rgb(0x5a5f57), PANTS = NX.rgb(0x26282c), SKIN = NX.rgb(0xc89a78);
+    b.box(0.16, 0.86, 0.18, -0.11, 0.43, 0, PANTS); b.box(0.16, 0.86, 0.18, 0.11, 0.43, 0, PANTS);
+    b.box(0.5, 0.7, 0.3, 0, 1.2, 0, COAT); b.box(0.12, 0.62, 0.14, -0.31, 1.2, 0, COAT); b.box(0.12, 0.62, 0.14, 0.31, 1.2, 0, COAT);
+    b.box(0.42, 0.5, 0.2, 0, 1.25, -0.25, NX.rgb(0x16171a));                                  // the backpack
+    b.add(NX.G.sph(0.14, 10), SKIN, 0, 1.7, 0); b.add(NX.G.sph(0.15, 10), NX.rgb(0x2b2f3a), 0, 1.77, -0.01, 0, 0, 0, 1, 0.7, 1);
+    var m = new THREE.Mesh(b.geo(), W.mat.lam); m.name = "local"; m.visible = false; scene.add(m);
+    W.local = m;
+  }
+
+  // ---------------------------------------------------------------- one Points object: flurries, splashes, Route 132's headlights
+  function buildPoints(scene) {
+    var NS = 420, NP = 70, NL = 28, n = NS + NP + NL, pos = new Float32Array(n * 3), col = new Float32Array(n * 3), i;
+    for (i = 0; i < NS; i++) { pos[i * 3] = (NX.rnd() - 0.5) * 60; pos[i * 3 + 1] = NX.rnd() * 14; pos[i * 3 + 2] = (NX.rnd() - 0.5) * 50; col[i * 3] = col[i * 3 + 1] = 0.9; col[i * 3 + 2] = 0.95; }
+    for (i = NS; i < NS + NP; i++) { pos[i * 3 + 1] = -50; col[i * 3] = 0.55; col[i * 3 + 1] = 0.52; col[i * 3 + 2] = 0.48; }
+    for (i = NS + NP; i < n; i++) {
+      var w = (i - NS - NP) % 2; pos[i * 3] = (NX.rnd() - 0.5) * 400; pos[i * 3 + 1] = 0.8; pos[i * 3 + 2] = w ? -34.5 : -40.5;
+      col[i * 3] = w ? 2.5 : 2.6; col[i * 3 + 1] = w ? 0.3 : 2.5; col[i * 3 + 2] = w ? 0.2 : 2.2;
+    }
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3)); geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+    geo.attributes.position.setUsage(THREE.DynamicDrawUsage);
+    var p = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.12, vertexColors: true, sizeAttenuation: true }));
+    p.frustumCulled = false; p.name = "points"; scene.add(p);
+    W.pts = { geo: geo, pos: pos, n: n, snow: [0, NS], splash: [NS, NS + NP], lights: [NS + NP, n] };
+  }
+
+  // ---------------------------------------------------------------- the pedestrian head's face (drawn only when it changes)
+  W.drawHead = function (i, st, n) {
+    var h = W.heads[i]; if (h.st === st && h.n === n) return; h.st = st; h.n = n;
+    var c = h.ctx; c.fillStyle = "#0c0c0a"; c.fillRect(0, 0, 256, 128);
+    if (st === "walk") walker(c, 64, 64);
+    else if (st === "dont" || st === "flashOn") hand(c, 64, 64);
+    if (st === "flashOn" || st === "flashOff") {
+      c.fillStyle = "#ff8a1e"; c.font = "bold 92px monospace"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(String(n), 190, 68);
+    }
+    h.tex.needsUpdate = true;
+  };
+  W.headChip = function (c, st, n, blink) {                                             // the HUD's copy of the head (96 x 48)
+    c.save(); c.fillStyle = "#0c0c0a"; c.fillRect(0, 0, 96, 48); c.scale(0.375, 0.375);
+    if (st === "walk") walker(c, 64, 64); else if (st === "dont" || (st === "flash" && blink === 0)) hand(c, 64, 64);
+    if (st === "flash") { c.fillStyle = "#ff8a1e"; c.font = "bold 92px monospace"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(String(n), 190, 68); }
+    c.restore();
+  };
+  function hand(c, x, y) {
+    c.fillStyle = "#ff8a1e"; c.fillRect(x - 22, y - 6, 44, 42);
+    for (var i = 0; i < 4; i++) c.fillRect(x - 22 + i * 11.5, y - 40, 9, 38);
+    c.save(); c.translate(x + 22, y + 10); c.rotate(-0.7); c.fillRect(0, -6, 26, 11); c.restore();
+  }
+  function walker(c, x, y) {
+    c.fillStyle = "#f4f3ea"; c.strokeStyle = "#f4f3ea"; c.lineCap = "round";
+    c.beginPath(); c.arc(x + 2, y - 40, 10, 0, 7); c.fill();
+    c.lineWidth = 12; c.beginPath(); c.moveTo(x, y - 26); c.lineTo(x - 2, y + 8); c.stroke();
+    c.lineWidth = 9; c.beginPath(); c.moveTo(x - 2, y + 6); c.lineTo(x - 18, y + 46); c.moveTo(x - 2, y + 6); c.lineTo(x + 16, y + 46);
+    c.moveTo(x, y - 20); c.lineTo(x - 20, y); c.moveTo(x, y - 20); c.lineTo(x + 20, y - 2); c.stroke();
+  }
+})();
+
+// ---------------------------------------------------------------- Nick's prequel: sim.js
+// The crossing itself, stepped at a fixed 1/60 s (NX.sim.step): the two-stage pedestrian signal, the traffic, the cyclist,
+// the cube van in the drive, the local with the backpack, Nick, the coffee, the radio, the slush, the 17:00 ending, and the
+// score. Nothing here draws or plays sound:
+// it emits events (NX.emit) that ui.js and sound.js listen to, and boot.js copies positions to the meshes.
+//   NX.sim.reset(), .step(dt), .S (the state), .input { x, z, hurry } (set by ui.js or a test), .press() (E), .answer() (R)
+//   NX.sim.score() -> { total, stars, parts [[label, text, pts, max]], inside, ... }, .feats() -> { cuckoo, early, calls }
+//   NX.sim.reset(seed): the seed is 1107 unless boot.js passes a new one (each real run)
+// The signal: a 90 s cycle; the walk for the north half (the westbound lanes) at 22 s, for the south half at 58 s.
+// A walk comes only if its button was pressed before the cars' yellow (5 s ahead); pressing again changes nothing.
+(function () {
+  "use strict";
+  var L = NX.L, clamp = NX.clamp, CYC = 90, BASE = [22, 58], WALK = 7, FLASH = 13;
+  // The radio: timed calls (at: play seconds) and two tied to places (when: the first time Nick stands there), so a run by the
+  // book (in at about 77 s) hears six of them, the power bar and "Are you close?" included. A call due while one is open waits;
+  // a place call goes to the front of the queue.
+  var CALLS = [   // { who, text (the call), answer (Nick's), at | when }
+    { at: 6, who: "Élise", text: "Nick, exhibitors at the loading door already. Do I let them in before five?", answer: "Let them unload. Check-in opens at five." },
+    { at: 21, who: "Priya", text: "The badge printer wants a driver.", answer: "It's on the USB stick on my lanyard. Ten minutes." },
+    { when: "median", who: "Marc-André", text: "Can you grab a power bar on your way in?", answer: "I'm bringing a coffee." },
+    { at: 37, who: "Élise", text: "What's the Wi-Fi password?", answer: "It's going on the badges. Once Priya prints the badges." },
+    { at: 53, who: "Sophie", text: "Someone's here with a 26-inch console TV. Where does it go?", answer: "Booth 29. Get a cart, not a person." },
+    { when: "south", who: "Priya", text: "Are you close?", answer: "I can see the door." },
+    { at: 86, who: "Jonah", text: "A cube van just pulled into the drive. One of ours?", answer: "Probably. Ask for the booth number before they unload." },
+    { at: 104, who: "Marc-André", text: "Where are the extension cords?", answer: "Grey bin in Storage, under the table skirts." },
+    { at: 122, who: "Sophie", text: "Exhibitors are asking about parking.", answer: "The lot off chemin Tiffin. Ten dollars, card only." },
+    { at: 140, who: "Élise", text: "Did you bring coffee for the volunteers?", answer: "I brought a coffee." },
+    { at: 158, who: "Jonah", text: "Facilities wants to know when the tables go out.", answer: "After check-in. Tell them 17:30." }
+  ];
+  var CALL_TTL = 11, TALK = 2.6, PAR = 6;   // PAR: the calls a run by the book hears (the radio score's floor, so a 26-s dash can't score 1 of 1)
+  var LATE = 180;                           // 17:00: setup starts, with or without Nick
+  var NEAR = ["A horn, brakes, and a hand out the window. Back to the curb.", "The driver stops a metre short and points at the signal. Back to the curb.",
+    "Brakes. Horn. Back to the curb, with coffee on your glove."];
+  var SPLASH = ["Slush, from the knees down.", "The puddle at the ramp, again. Stand back a step.", "Another splash. Both shoes now."];
+
+  var sim = NX.sim = { input: { x: 0, z: 0, hurry: false }, S: null, pool: [], CALLS: CALLS };
+  var P = sim.pool, cyc = null, van = null;
+  // a local with a backpack gets off the 15 with Nick and crosses at the first gap in each half, against the hand or not.
+  // He walks the crosswalk's east edge; the drivers brake for him as they would for Nick. Legs: [x, z, speed, the half
+  // (0 north, 1 south) whose lanes must be clear before he starts it, or -1]
+  var loc = { mesh: null, x: 0, z: 0, st: 0, go: false, ph: 0, face: Math.PI, moving: false, road: false };
+  var ROUTE = [[1.4, -11.0, 1.5, -1], [1.4, -2.5, 1.9, 0], [1.4, 5.85, 1.9, 1], [1.4, 12.5, 1.5, -1], [2.2, 23.6, 1.5, -1]];
+
+  // ---------------------------------------------------------------- the vehicle pool (meshes from world.js)
+  sim.build = function () {
+    var cols = [0xb3261e, 0xe8e8e4, 0x2f5c9e, 0x1d1f22, 0x6b6f75, 0x3f6b4a, 0x8e1c1c, 0xb8bcc2];
+    var spec = [["sedan", 0], ["sedan", 1], ["sedan", 2], ["sedan", 3], ["sedan", 4], ["sedan", 5], ["sedan", 7], ["sedan", 1],
+      ["hatch", 6], ["hatch", 2], ["suv", 7], ["suv", 3], ["suv", 4], ["pickup", 6], ["minivan", 1], ["minivan", 4]];
+    spec.forEach(function (s) { add(s[0], cols[s[1]], false); });
+    add("cube", 0xf1f1ee, false);
+    add("bus", 0, "bus");
+    add("v70", 0x8c9196, "v70"); add("suv", 0x3f4b5e, "hl");
+    cyc = mk("bikeR", 0, "bike"); cyc.lane = -1;
+    van = mk("cube", 0xf1f1ee, "van", NX.W.mat.van); van.lane = -1;
+    sim.parked = [NX.W.vehicleMesh("v70", 0x8c9196), NX.W.vehicleMesh("suv", 0x3f4b5e)];
+    loc.mesh = NX.W.local;
+  };
+  function mk(kind, col, special, mat) {
+    var m = NX.W.vehicleMesh(kind, col, mat), d = m.userData.dim;
+    return { mesh: m, kind: kind, len: d.len, wid: d.wid, lane: -1, x: 0, z: 0, v: 0, v0: 12, on: false, special: special || false,
+      honked: false, wait: 0, hold: 0, spl: 0, seen: false, dir: 1 };
+  }
+  function add(kind, col, special) { var o = mk(kind, col, special); P.push(o); return o; }
+
+  // ---------------------------------------------------------------- reset
+  sim.reset = function (seed) {
+    seed = seed || 1107; NX.seed(seed);
+    sim.S = {
+      t: 0, playing: false, done: false, late: false, arriveT: 0, seed: seed, walked: 0,
+      nick: { x: -6.3, z: -12.4, face: Math.PI, talk: 0, resp: 0, safeZ: -11.7, wet: 0, ph: 0, moving: false, hold: 0, spd: 0, splT: 0, still: 0 },
+      coffee: 1, temp: 68,
+      sig: { called: [false, false], serve: [false, false], presses: [0, 0], audible: [false, false], cuckoo: [false, false], ped: ["dont", "dont"], n: [0, 0], car: ["g", "g"] },
+      ev: { near: 0, honk: 0, splash: 0, bell: 0, jay: 0 },
+      radio: { due: CALLS.map(function () { return false; }), q: [], cur: null, until: 0, said: null, saidUntil: 0, answered: 0, offered: 0, missed: 0, heard: [] },
+      spawnT: [0, 0.8, 0.3, 1.4], cycT: 4, cycN: 0, van: "wait", cameo: [false, false], lit: false, zone: "north", been: { north: true },
+      lane: -1, laker: false
+    };
+    P.forEach(function (o) { o.on = false; o.mesh.visible = false; });
+    sim.parked.forEach(function (m) { m.visible = false; });
+    cyc.on = false; cyc.mesh.visible = false;
+    van.x = -34; van.z = 17; van.v = 0; van.dir = -1; van.on = true; van.mesh.visible = true; van.mesh.rotation.y = Math.PI;
+    loc.x = -8.4; loc.z = -12.7; loc.st = 0; loc.go = false; loc.road = false; loc.moving = false; loc.ph = 0; loc.face = Math.PI; loc.mesh.visible = true;
+    // traffic already flowing: two minutes of it before the bus pulls in
+    var S = sim.S; S.warm = true;
+    for (var i = 0; i < 60 * 40; i++) traffic(1 / 60);
+    S.warm = false;
+    P.forEach(function (o) { if (o.on && o.lane === 0 && Math.abs(o.x + 9) < 14) despawn(o); });   // the bus stop is clear for the bus
+    var bus = special("bus"); spawn(bus, 0, 1); bus.x = -9; bus.v = 0; bus.hold = 99; bus.atStop = true;
+    S.t = 0;
+  };
+  function special(k) { for (var i = 0; i < P.length; i++) if (P[i].special === k) return P[i]; return null; }
+  function despawn(o) { o.on = false; o.mesh.visible = false; }
+  function spawn(o, lane, v) {
+    var ln = L.lanes[lane]; o.lane = lane; o.dir = ln.dir; o.z = ln.z; o.x = -ln.dir * 88; o.v0 = 11.5 + NX.rnd() * 2.6;
+    o.v = v === undefined ? o.v0 : v; o.on = true; o.honked = false; o.wait = 0; o.hold = 0; o.spl = 0; o.seen = false; o.atStop = false;
+    o.mesh.visible = true; o.mesh.rotation.y = ln.dir > 0 ? 0 : Math.PI;
+  }
+  sim.start = function () { sim.S.playing = true; var b = special("bus"); b.hold = 1.2; NX.emit("start"); };
+
+  // ---------------------------------------------------------------- the signal
+  function signal(dt) {
+    var S = sim.S, g = S.sig, t0 = S.t - dt, tc0 = ((t0 % CYC) + CYC) % CYC, tc = S.t % CYC;
+    for (var k = 0; k < 2; k++) {
+      var dec = BASE[k] - 5;
+      if (S.playing && ((tc0 < dec && tc >= dec) || (tc0 > tc && tc >= dec))) { g.serve[k] = g.called[k]; g.called[k] = false; if (g.serve[k]) NX.emit("serve", k); }
+      var ped = "dont", car = "g", n = 0;
+      if (g.serve[k]) {
+        if (tc >= BASE[k] && tc < BASE[k] + WALK) ped = "walk";
+        else if (tc >= BASE[k] + WALK && tc < BASE[k] + WALK + FLASH) { n = Math.ceil(BASE[k] + WALK + FLASH - tc); ped = "flash"; }
+        if (tc >= dec && tc < BASE[k] - 2) car = "y"; else if (tc >= BASE[k] - 2 && tc < BASE[k] + WALK + FLASH + 2) car = "r";
+        if (tc >= BASE[k] + WALK + FLASH + 2) g.serve[k] = false;
+      }
+      if (ped !== g.ped[k]) { if (ped === "walk" && g.audible[k]) g.cuckoo[k] = true; NX.emit("ped", k, ped); }
+      g.ped[k] = ped; g.n[k] = n; g.car[k] = car;
+    }
+  }
+  // seconds until stage k's walk (if it's called now): for the toasts and the bot
+  sim.nextWalk = function (k) {
+    var S = sim.S, tc = S.t % CYC, dec = BASE[k] - 5;
+    if (S.sig.serve[k] && tc < BASE[k]) return BASE[k] - tc;
+    return tc < dec ? BASE[k] - tc : CYC - tc + BASE[k];
+  };
+
+  // ---------------------------------------------------------------- the buttons (E), the radio (R)
+  sim.nearBtn = function () {
+    var n = sim.S.nick, b = [L.btnN, L.btnS];
+    for (var k = 0; k < 2; k++) { var dx = n.x - b[k].x, dz = n.z - b[k].z; if (dx * dx + dz * dz < 1.6 * 1.6) return k; }
+    return -1;
+  };
+  sim.press = function () {
+    var S = sim.S, k = sim.nearBtn(); if (!S.playing || S.done || k < 0 || S.nick.resp > 0) return false;
+    var g = S.sig; g.presses[k]++;
+    var first = !g.called[k] && !g.serve[k];
+    if (first) g.called[k] = true;
+    var tc = S.t % CYC;
+    NX.emit("press", k, { first: first, n: g.presses[k], wait: Math.round(sim.nextWalk(k)), serving: g.serve[k], late: tc >= BASE[k] - 5 && tc < BASE[k] + WALK + FLASH });
+    return true;
+  };
+  // the nearest pole within r metres (the locator tone carries about 4 m) -> [k, dx (pole minus Nick, along x), distance], or null
+  sim.pole = function (r) {
+    var n = sim.S.nick, b = [L.btnN, L.btnS], best = null;
+    for (var k = 0; k < 2; k++) { var dx = b[k].x - n.x, dz = b[k].z - n.z, d = Math.sqrt(dx * dx + dz * dz); if (d < r && (!best || d < best[2])) best = [k, dx, d]; }
+    return best;
+  };
+  sim.holdBtn = function (dt) {                                     // holding E at a pole for 3 s: the audible signal, for that pole's walk only
+    var S = sim.S, n = S.nick, k = sim.nearBtn(); if (k < 0) { n.hold = 0; return; }
+    n.hold += dt; if (n.hold >= 3 && !S.sig.audible[k]) { S.sig.audible[k] = true; NX.emit("audible", k); }
+  };
+  sim.releaseBtn = function () { sim.S.nick.hold = 0; };
+  sim.answer = function () {
+    var S = sim.S, r = S.radio; if (!S.playing || S.done || !r.cur || S.nick.talk > 0 || S.nick.resp > 0) return false;
+    S.nick.talk = TALK; r.talking = r.cur; NX.emit("talk", r.cur); return true;
+  };
+  function radio(dt) {
+    var S = sim.S, r = S.radio, i;
+    for (i = 0; i < CALLS.length; i++) if (!r.due[i]) {
+      var c = CALLS[i];
+      if (c.when ? S.been[c.when] : S.t >= c.at) { r.due[i] = true; if (c.when) r.q.unshift(i); else r.q.push(i); }
+    }
+    if (r.q.length && !r.cur && !r.talking) {
+      i = r.q.shift(); r.cur = { i: i, who: CALLS[i].who, text: CALLS[i].text, answer: CALLS[i].answer }; r.until = S.t + CALL_TTL; r.heard.push(i);
+      NX.emit("call", r.cur);
+    }
+    if (r.cur && !r.talking && S.t >= r.until) { r.offered++; r.missed++; NX.emit("callGone", r.cur); r.cur = null; }
+    if (r.talking && S.nick.talk <= 0) {
+      r.offered++; r.answered++; r.said = r.talking; r.saidUntil = S.t + 3.2; NX.emit("said", r.talking); r.talking = null; r.cur = null;
+    }
+    if (r.said && S.t >= r.saidUntil) r.said = null;
+  }
+
+  // ---------------------------------------------------------------- traffic
+  function light(o) { var S = sim.S; return S.warm ? "g" : S.sig.car[o.lane < 2 ? 0 : 1]; }
+  function constrain(a, v, g, vl) {                                                    // brake for something g metres ahead going vl
+    if (g <= 0.05) return Math.min(a, v > 0.01 ? -30 : 0);
+    var dv2 = v * v - (vl > 0 ? vl * vl : 0); if (dv2 <= 0) return a;
+    var b = dv2 / (2 * g); return b > 0.4 ? Math.min(a, -b * 1.2) : a;
+  }
+  function traffic(dt) {
+    var S = sim.S, i, j, o, n = S.nick, play = S.playing && !S.warm;
+    // spawns
+    for (var l = 0; l < 4; l++) {
+      S.spawnT[l] -= dt; if (S.spawnT[l] > 0) continue;
+      var dir = L.lanes[l].dir, clear = true;
+      for (i = 0; i < P.length; i++) { o = P[i]; if (o.on && o.lane === l && (o.x + dir * 88) * dir < 16 + o.len) clear = false; }
+      if (!clear) { S.spawnT[l] = 0.5; continue; }
+      var want = null;
+      if (play && S.t > 33 && !S.cameo[0] && l === 3) { want = special("v70"); S.cameo[0] = true; }
+      else if (play && S.t > 34 && !S.cameo[1] && l === 2) { want = special("hl"); S.cameo[1] = true; }
+      else if (play && S.t > 64 && S.t < 66 && l === 3 && !special("bus").on) want = special("bus");
+      else {
+        var pick = Math.floor(NX.rnd() * P.length);
+        for (j = 0; j < P.length && !want; j++) { o = P[(pick + j) % P.length]; if (!o.on && !o.special) want = o; }
+        if (want && want.kind === "cube" && l < 2 && NX.rnd() < 0.5) want = null;
+      }
+      if (want && !want.on) spawn(want, l);
+      S.spawnT[l] = 2.4 + NX.rnd() * 4.6 + (l === 0 || l === 3 ? 0.8 : 0);
+    }
+    // motion
+    for (i = 0; i < P.length; i++) {
+      o = P[i]; if (!o.on) continue;
+      var d = o.dir, front = o.x + d * o.len / 2, a = Math.min(2.2, (o.v0 - o.v) * 0.9);
+      if (o.hold > 0) { o.hold -= dt; o.v = 0; if (o.hold <= 0 && o.atStop) { o.atStop = false; NX.emit("busGo", o); } continue; }
+      for (j = 0; j < P.length; j++) {                                                    // the car ahead
+        var q = P[j]; if (q === o || !q.on || q.lane !== o.lane) continue;
+        var gap = ((q.x - d * q.len / 2) - front) * d; if (gap < -0.5 || gap > 60) continue;
+        a = constrain(a, o.v, gap - 2.2, q.v);
+      }
+      var lt = light(o), stop = d < 0 ? L.stopW : L.stopE, ds = (stop - front) * d;           // the light
+      if (lt !== "g" && ds > -0.3) {
+        if (lt === "y" && o.v * o.v / 8 > ds + 0.5) { /* too close to stop: go */ } else a = constrain(a, o.v, Math.max(0, ds), 0);
+      }
+      if (play && n.resp <= 0) a = person(o, a, front, dt);
+      if (loc.road && Math.abs(loc.z - o.z) < o.wid / 2 + 0.35) {
+        var dl = (loc.x - front) * d; if (dl > -o.len && dl < 30) a = constrain(a, o.v, dl - 1.4, 0);
+      }
+      o.v = Math.max(0, o.v + a * dt); o.x += d * o.v * dt;
+      if ((o.x * d) > 92) despawn(o);
+      if (play) slush(o);
+    }
+  }
+  // Nick in a lane: the driver brakes; too close is a near-miss; waiting on a green behind him is a honk
+  function person(o, a, front, dt) {
+    var S = sim.S, n = S.nick, band = o.wid / 2 + 0.35;
+    if (Math.abs(n.z - o.z) > band) { o.wait = 0; return a; }
+    var d = (n.x - front) * o.dir;
+    if (d < -o.len - 0.35 || d > Math.max(30, o.v * 3)) { o.wait = 0; return a; }
+    if (d < 0) { if (o.v > 1.2) nearMiss(o); return constrain(a, o.v, 0, 0); }
+    if (o.v > 3 && d < 1.0 + o.v * 0.22) { nearMiss(o); return a; }
+    var na = constrain(a, o.v, d - 1.4, 0);
+    if (na < -4.5 && o.v > 4 && !o.honked) { o.honked = true; S.ev.honk++; NX.emit("honk", o, "brake"); }
+    if (o.v < 0.3 && light(o) === "g" && d < 6) { o.wait += dt; if (o.wait > 2 && !o.honked) { o.honked = true; S.ev.honk++; NX.emit("honk", o, "wait"); } }
+    return na;
+  }
+  function nearMiss(o) {
+    var S = sim.S, n = S.nick; if (n.resp > 0) return;
+    S.ev.near++; o.v = 0; o.hold = 1.4; o.honked = true;
+    var spill = Math.min(S.coffee, 0.3); S.coffee -= spill;
+    n.resp = 1.0; n.talk = 0; if (S.radio.talking) { S.radio.cur = S.radio.talking; S.radio.talking = null; }
+    NX.emit("near", o, { text: NEAR[(S.ev.near - 1) % NEAR.length], spill: spill });
+  }
+  function slush(o) {
+    var S = sim.S, n = S.nick;
+    for (var k = 0; k < L.puddles.length; k++) {
+      var p = L.puddles[k]; if (p.lane !== o.lane || (o.spl & (1 << k)) || o.v < 6 || Math.abs(o.x - p.x) > o.len / 2) continue;
+      o.spl |= 1 << k;
+      var dx = n.x - p.x, dz = n.z - p.z, onRoad = zoneOf(n.z) === "lane";
+      NX.emit("spray", p, o);
+      if (!onRoad && n.resp <= 0 && S.t >= n.splT && dx * dx + dz * dz < L.splashR * L.splashR) {
+        n.splT = S.t + 3; S.ev.splash++; n.wet = Math.min(3, n.wet + 1); S.coffee = Math.max(0, S.coffee - 0.04);
+        NX.emit("splash", p, { text: SPLASH[(S.ev.splash - 1) % SPLASH.length] });
+      }
+    }
+  }
+  function zoneOf(z) {
+    if (z < L.nSide[1]) return "north";
+    if (z > L.median[0] && z < L.median[1]) return "median";
+    if (z < L.curbS) return "lane";
+    if (z < L.bike[0]) return "buffer";
+    if (z < L.bike[1]) return "bike";
+    return "south";
+  }
+  sim.zoneOf = zoneOf;
+
+  // ---------------------------------------------------------------- the cyclist (two-way bike lane; November, shorts) and the van
+  function cyclist(dt) {
+    var S = sim.S, n = S.nick;
+    S.cycT -= dt;
+    if (!cyc.on && S.cycT <= 0) {
+      S.cycN++; var d = S.cycN % 2 ? -1 : 1; cyc.dir = d; cyc.z = d > 0 ? 6.85 : 8.35; cyc.x = -d * 75; cyc.v = 5.6; cyc.on = true; cyc.hit = false; cyc.rang = false;
+      cyc.mesh.visible = true; cyc.mesh.rotation.y = d > 0 ? 0 : Math.PI; S.cycT = 9 + NX.rnd() * 10;
+    }
+    if (!cyc.on) return;
+    cyc.x += cyc.dir * cyc.v * dt;
+    if (S.playing && n.resp <= 0 && Math.abs(n.z - cyc.z) < 0.7) {
+      var dd = (n.x - (cyc.x + cyc.dir * 0.9)) * cyc.dir;
+      if (dd > 0 && dd < 9 && !cyc.rang) { cyc.rang = true; NX.emit("bell"); }
+      if (dd > -1.9 && dd < 0.5 && !cyc.hit) {
+        cyc.hit = true; S.ev.bell++; var sp = Math.min(S.coffee, 0.12); S.coffee -= sp; NX.emit("bellHit", cyc, { spill: sp });
+      }
+    }
+    if (cyc.x * cyc.dir > 80) { cyc.on = false; cyc.mesh.visible = false; }
+  }
+  // is the van backing toward Nick, close enough to see? (the objective only mentions it then)
+  sim.vanNear = function () {
+    var S = sim.S, n = S.nick, rear = van.x + van.len / 2;
+    return S.van === "back" && n.z > 12 && n.z < 19.5 && rear > n.x - 10 && rear < n.x + 1;
+  };
+  // the local: walk the legs; wait at a curb until the half's lanes are clear (a stopped car at a red doesn't count)
+  function gap(h) {
+    for (var i = 0; i < P.length; i++) {
+      var o = P[i]; if (!o.on || (o.lane < 2 ? 0 : 1) !== h) continue;
+      if (o.v < 0.5 && sim.S.sig.car[h] !== "g") continue;
+      var ahead = (loc.x - o.x) * o.dir - o.len / 2;
+      if (ahead > -o.len - 1 && ahead < 6 + o.v * 4.5) return false;
+    }
+    return true;
+  }
+  function local(dt) {
+    var S = sim.S; loc.moving = false; loc.road = false;
+    if (!S.playing || S.t < 1.5 || loc.st >= ROUTE.length) { if (loc.st >= ROUTE.length) loc.face = Math.PI; return; }
+    var w = ROUTE[loc.st];
+    if (!loc.go) { if (w[3] >= 0 && !gap(w[3])) return; loc.go = true; }
+    var dx = w[0] - loc.x, dz = w[1] - loc.z, d = Math.sqrt(dx * dx + dz * dz), st = w[2] * dt;
+    if (d <= st) { loc.x = w[0]; loc.z = w[1]; loc.st++; loc.go = false; }
+    else { loc.x += dx / d * st; loc.z += dz / d * st; loc.face = Math.atan2(dx, dz); loc.ph += st * 4.2; loc.moving = true; }
+    loc.road = zoneOf(loc.z) === "lane";
+  }
+  sim.loc = function () { return loc; };
+  function cubeVan(dt) {                                                                   // an exhibitor backs a cube van along the drive
+    var S = sim.S, n = S.nick;
+    if (S.van === "wait" && (n.z > 5 || S.t > 95)) { S.van = "back"; NX.emit("vanBack"); }
+    if (S.van !== "back") { van.v = 0; return; }
+    var rear = van.x + van.len / 2, blocked = Math.abs(n.z - van.z) < van.wid / 2 + 0.6 && n.x > rear - 0.3 && n.x < rear + 2.8;
+    van.v = blocked ? 0 : 1.7; van.x += van.v * dt;
+    if (van.x >= 7.5) { van.x = 7.5; van.v = 0; S.van = "parked"; NX.emit("vanParked"); }
+  }
+
+  // ---------------------------------------------------------------- Nick
+  function hitBox(o, n, x, z, push) {                                                    // push Nick out of a vehicle's footprint
+    var hx = o.len / 2 + 0.33, hz = o.wid / 2 + 0.33, dx = n.x - x, dz = n.z - z;
+    if (Math.abs(dx) >= hx || Math.abs(dz) >= hz) return false;
+    if (push) { if (hx - Math.abs(dx) < hz - Math.abs(dz)) n.x = x + (dx < 0 ? -hx : hx); else n.z = z + (dz < 0 ? -hz : hz); }
+    return true;
+  }
+  function nick(dt) {
+    var S = sim.S, n = S.nick, inp = sim.input, i;
+    if (n.resp > 0) {
+      n.resp -= dt; n.moving = false;
+      if (n.resp <= 0) { n.z = n.safeZ; n.x = clamp(n.x, -30, 30); NX.emit("respawn"); }
+      return;
+    }
+    if (n.talk > 0) { n.talk -= dt; n.moving = false; return; }
+    var ix = inp.x, iz = inp.z, len = Math.sqrt(ix * ix + iz * iz);
+    n.moving = len > 0.1;
+    if (!n.moving) {
+      n.spd = 0; n.still += dt;
+      if (S.zone === "median" && n.still >= 6 && !S.laker) { S.laker = true; NX.emit("laker"); }
+      return;
+    }
+    n.still = 0;
+    var sp = inp.hurry ? 2.7 : 1.5; n.spd = sp; ix /= len; iz /= len;
+    if (inp.hurry && S.coffee > 0) { var sl = Math.min(S.coffee, 0.022 * dt); S.coffee -= sl; S.slosh = (S.slosh || 0) + sl; }
+    n.x += ix * sp * dt; n.z += iz * sp * dt; n.face = Math.atan2(ix, iz); n.ph += dt * sp * 4.2; S.walked += sp * dt;
+    n.x = clamp(n.x, -34, 34); n.z = clamp(n.z, -15.6, L.wall - 0.4);
+    if (n.z > L.wall - 1.2 && Math.abs(n.x - L.door.x) > L.door.half) n.z = L.wall - 1.2;      // the wall, but for the doors
+    for (i = 0; i < P.length; i++) if (P[i].on) hitBox(P[i], n, P[i].x, P[i].z, P[i].v < 1.2);
+    hitBox(van, n, van.x, van.z, true);
+    for (i = 0; i < 2; i++) if (sim.parked[i].visible) hitBox({ len: 4.9, wid: 1.95 }, n, sim.parked[i].position.x, sim.parked[i].position.z, true);
+    var zn = zoneOf(n.z);
+    if (zn !== S.zone) {
+      if (zn === "lane") {                                                             // stepping off a curb: the crosswalk, on the walk?
+        var h = n.z < -2.5 ? 0 : 1, mid = Math.abs(n.x) > L.cross + 0.6, against = S.sig.ped[h] === "dont";
+        if (mid || against) { S.ev.jay++; NX.emit("jay", mid ? "mid" : "hand"); }
+      }
+      S.zone = zn; S.been[zn] = true; NX.emit("zone", zn);
+    }
+    if (zn === "north") n.safeZ = -11.7; else if (zn === "median") n.safeZ = -2.5; else if (zn === "buffer" || zn === "bike" || zn === "south") n.safeZ = 5.85;
+    if (n.z >= L.door.z && Math.abs(n.x - L.door.x) < L.door.half) arrive();
+  }
+  function closeRadio() {                                                                 // a call still open at the end counts as missed
+    var r = sim.S.radio; if (r.cur || r.talking) { r.offered++; r.missed++; } r.cur = null; r.talking = null;
+  }
+  function arrive() {
+    var S = sim.S; if (S.done) return; S.done = true; S.arriveT = S.t; closeRadio();
+    NX.emit("arrive", sim.score());
+  }
+  function late() {                                                                        // 17:00: setup starts without him
+    var S = sim.S; if (S.done) return; S.done = true; S.late = true; S.arriveT = LATE; closeRadio();
+    NX.emit("late", sim.score());
+  }
+
+  // ---------------------------------------------------------------- one step
+  sim.step = function (dt) {
+    var S = sim.S; if (!S) return;
+    if (S.playing && !S.done) S.t += dt;
+    signal(dt);
+    traffic(dt); cyclist(dt);
+    if (S.playing && !S.done) { cubeVan(dt); local(dt); nick(dt); radio(dt); if (S.t >= LATE) late(); }
+    else if (S.done && !S.late) cubeVan(dt);                                            // (the van finishes parking behind the final card)
+    var m = S.t * NX.CLOCK / 60; S.temp = 4 + 64 * Math.exp(-m / 40);
+    if (!S.lit && NX.T0 + S.t * NX.CLOCK >= 16 * 3600 + 36 * 60) { S.lit = true; NX.emit("lamps"); }
+    for (var k = 0; k < 2; k++) {                     // a cameo passes the crosswalk (the toast), then leaves east: it's in the drive now, east of the doors
+      var o = special(k ? "hl" : "v70");
+      if (o.on && !o.seen && o.x > 0 && o.x < 30) { o.seen = true; NX.emit("cameo", k); }
+      if (S.cameo[k] && !o.on && !sim.parked[k].visible && o.seen) {
+        sim.parked[k].visible = true; sim.parked[k].position.set(k ? 27 : 20, 0, 17); sim.parked[k].rotation.y = 0; NX.emit("parked", k);
+      }
+    }
+  };
+  sim.cyc = function () { return cyc; };
+  sim.van = function () { return van; };
+
+  // ---------------------------------------------------------------- the score: 1000 points, five stars (the road trip's thresholds)
+  // Coffee and Crossing count only once Nick is in the door; at 17:00 on the street they're 0. Radio is out of the calls that
+  // came in (open ones included), but never out of fewer than PAR.
+  sim.score = function () {
+    var S = sim.S, e = S.ev, r = S.radio, t = S.done ? S.arriveT : S.t, clock = NX.T0 + t * NX.CLOCK, inside = S.done && !S.late;
+    var time = inside ? clamp((LATE - t) / (LATE - 70), 0, 1) : 0, cof = S.coffee, warm = clamp((S.temp - 20) / 30, 0, 1);
+    var rad = r.answered / Math.max(r.offered, PAR), clean = Math.max(0, 200 - 60 * e.near - 20 * e.honk - 25 * e.splash - 15 * e.bell - 40 * e.jay);
+    function pl(v, one, many) { return v + " " + (v === 1 ? one : many); }
+    var parts = [
+      ["Time", inside ? "In the door at " + NX.hhmm(clock) + "; setup at 17:00" : "Still outside at 17:00", Math.round(300 * time), 300],
+      ["Coffee", !inside ? "Not in the door" : cof <= 0.005 ? "Gone" : Math.round(cof * 100) + "% left, " + Math.round(S.temp) + " °C",
+        inside ? Math.round(200 * cof + 50 * warm * (cof > 0.005 ? 1 : 0)) : 0, 250],
+      ["Radio", r.answered + " of " + r.offered + " calls answered" + (r.offered < PAR ? " (scored out of " + PAR + ")" : ""), Math.round(250 * rad), 250],
+      ["Crossing", !inside ? "Not across" : [pl(e.near, "near-miss", "near-misses"), pl(e.honk, "honk", "honks"), pl(e.splash, "splash", "splashes"),
+        pl(e.bell, "bike bell", "bike bells"), pl(e.jay, "jaywalk", "jaywalks")].join(", "), inside ? clean : 0, 200]
+    ];
+    var total = 0; parts.forEach(function (p) { total += p[2]; });
+    var stars = 0; [250, 450, 650, 800, 920].forEach(function (th, i) { if (total >= th) stars = i + 1; });
+    return { total: total, stars: stars, parts: parts, clock: clock, t: t, inside: inside };
+  };
+  // the three feats on the final card (kept across runs in localStorage by ui.js)
+  sim.feats = function () {
+    var S = sim.S, inside = S.done && !S.late;
+    return { cuckoo: S.sig.cuckoo[0] && S.sig.cuckoo[1], early: inside && S.arriveT * NX.CLOCK < 6 * 60, calls: S.radio.answered === CALLS.length };
+  };
+  sim.PAR = PAR; sim.LATE = LATE;
+})();
+
+// ---------------------------------------------------------------- Nick's prequel: sound.js
+// Everything is synthesized with Web Audio (no files). The context opens on the first key or tap.
+// The crossing: a locator tick from each button pole, once a second, heard up to about 4 m away, louder as you get close and
+// panned toward the pole; the cuckoo for the walk (a Canadian accessible signal's north-south sound), only at a pole whose
+// button someone has held 3 s. The street: a bed of
+// tyre hiss on wet asphalt that rises with nearby traffic, horns, a screech, the bus's air brakes, the slush, the bike bell,
+// the van's reversing beeper, the radio's squelch and talk-permit chirp.
+//   NX.snd.unlock(), .play(name), .tick(dt) (from boot.js, ~10 Hz is enough), .mute(on)
+(function () {
+  "use strict";
+  var ctx = null, master = null, noiseBuf = null, bed = null, bedGain = null, muted = false, tickT = 0, beepT = 0;
+  var snd = NX.snd = { on: false };
+  snd.unlock = function () {
+    if (ctx) { if (ctx.state !== "running" && ctx.resume) { try { ctx.resume(); } catch (e) { /* refused: the next gesture tries again */ } } return; }
+    var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    try { ctx = new AC(); } catch (e) { return; }
+    master = ctx.createGain(); master.gain.value = muted ? 0 : 0.7; master.connect(ctx.destination);
+    noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+    var d = noiseBuf.getChannelData(0), last = 0;
+    for (var i = 0; i < d.length; i++) { var w = Math.random() * 2 - 1; last = (last + 0.04 * w) / 1.04; d[i] = w * 0.6 + last * 3; }
+    bed = ctx.createBufferSource(); bed.buffer = noiseBuf; bed.loop = true;
+    var f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 900;
+    bedGain = ctx.createGain(); bedGain.gain.value = 0.02; bed.connect(f); f.connect(bedGain); bedGain.connect(master); bed.start();
+    snd.on = true;
+    if (ctx.state !== "running" && ctx.resume) { try { ctx.resume(); } catch (e) { /* the next gesture tries again */ } }
+  };
+  // iOS WebKit starts Web Audio only from touchend or click (not pointerdown): listen for all of them, in the capture phase
+  ["touchend", "click", "pointerdown", "keydown"].forEach(function (ev) { addEventListener(ev, function () { snd.unlock(); }, true); });
+  snd.mute = function (m) { muted = m; if (master) master.gain.value = m ? 0 : 0.7; };
+
+  function tone(type, f0, f1, t0, dur, vol, dest) {
+    var o = ctx.createOscillator(), g = ctx.createGain(); o.type = type;
+    o.frequency.setValueAtTime(f0, t0); if (f1) o.frequency.exponentialRampToValueAtTime(f1, t0 + dur);
+    g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(dest || master); o.start(t0); o.stop(t0 + dur + 0.02);
+  }
+  function noise(t0, dur, vol, type, freq, q, attack) {
+    var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = noiseBuf; f.type = type || "bandpass"; f.frequency.value = freq || 1000; f.Q.value = q || 1;
+    g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + (attack || 0.01)); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    s.connect(f); f.connect(g); g.connect(master); s.start(t0, Math.random()); s.stop(t0 + dur + 0.05);
+  }
+  var LIB = {
+    tick: function (t, vol, pan) {
+      var dest = master;
+      if (ctx.createStereoPanner) { dest = ctx.createStereoPanner(); dest.pan.value = pan || 0; dest.connect(master); }
+      tone("square", 880, 0, t, 0.025, vol || 0.05, dest);
+    },
+    cuckoo: function (t) { tone("sine", 1100, 0, t, 0.16, 0.18); tone("sine", 880, 0, t + 0.2, 0.3, 0.18); },
+    press: function (t) { noise(t, 0.04, 0.2, "highpass", 2000, 1); tone("square", 1200, 0, t, 0.03, 0.04); },
+    honk: function (t) { var f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 1800; f.connect(master);
+      tone("sawtooth", 415, 0, t, 0.45, 0.09, f); tone("sawtooth", 520, 0, t, 0.45, 0.07, f); },
+    honk2: function (t) { var f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 1600; f.connect(master);
+      tone("sawtooth", 400, 0, t, 0.14, 0.08, f); tone("sawtooth", 400, 0, t + 0.2, 0.14, 0.08, f); },
+    screech: function (t) { tone("sawtooth", 1900, 1500, t, 0.5, 0.03); noise(t, 0.55, 0.12, "bandpass", 2600, 6); },
+    air: function (t) { noise(t, 0.7, 0.25, "highpass", 3000, 0.7, 0.02); },
+    splash: function (t) { noise(t, 0.5, 0.35, "lowpass", 900, 0.8, 0.02); noise(t + 0.05, 0.35, 0.12, "bandpass", 2500, 1); },
+    spray: function (t) { noise(t, 0.35, 0.05, "lowpass", 1200, 0.7, 0.05); },
+    spill: function (t) { noise(t, 0.25, 0.15, "lowpass", 600, 1); },
+    bell: function (t) { tone("sine", 2400, 0, t, 0.5, 0.12); tone("sine", 2400, 0, t + 0.18, 0.6, 0.12); tone("sine", 3600, 0, t, 0.3, 0.03); },
+    beep: function (t) { tone("square", 1050, 0, t, 0.35, 0.05); },
+    squelch: function (t) { noise(t, 0.18, 0.12, "bandpass", 1800, 0.6); tone("sine", 1500, 0, t + 0.2, 0.07, 0.08); tone("sine", 1900, 0, t + 0.28, 0.07, 0.08); },
+    chirp: function (t) { tone("sine", 1900, 0, t, 0.06, 0.08); noise(t + 0.07, 0.1, 0.05, "bandpass", 1800, 0.6); },
+    door: function (t) { noise(t, 0.6, 0.1, "lowpass", 400, 0.7, 0.05); [523, 659, 784].forEach(function (f, i) { tone("triangle", f, 0, t + 0.3 + i * 0.12, 0.6, 0.08); }); }
+  };
+  snd.play = function (n) { if (!ctx || !LIB[n]) return; try { LIB[n](ctx.currentTime + 0.01); } catch (e) { /* a node we can't make: skip it */ } };
+
+  // ~10 Hz from boot.js: the bed's level, the locator and the walk's sounds, the van's beeper
+  snd.tick = function (dt) {
+    if (!ctx || !NX.sim.S) return;
+    var S = NX.sim.S, n = S.nick, P = NX.sim.pool, near = 0, i;
+    for (i = 0; i < P.length; i++) { var o = P[i]; if (o.on) { var dx = Math.abs(o.x - n.x), dz = Math.abs(o.z - n.z); if (dx < 30) near += o.v / 14 * (1 - dx / 30) / (1 + dz * 0.15); } }
+    bedGain.gain.setTargetAtTime(0.015 + Math.min(0.12, near * 0.035), ctx.currentTime, 0.3);
+    tickT -= dt; beepT -= dt;
+    var pole = NX.sim.pole(4), stage = S.zone === "median" || n.z > -3.6 ? 1 : 0, ped = S.sig.ped[stage];
+    if (tickT <= 0 && S.playing && !S.done) {
+      if (ped === "walk" && S.sig.audible[stage]) { LIB.cuckoo(ctx.currentTime + 0.01); tickT = 1.5; }
+      else if (pole) {                                      // the camera looks south: a pole east of Nick (+x) is on screen-left
+        LIB.tick(ctx.currentTime + 0.01, 0.015 + 0.04 * (1 - pole[2] / 4), NX.clamp(-pole[1] / 3, -1, 1)); tickT = 1.0;
+      }
+      else tickT = 0.3;
+    }
+    if (S.van === "back" && beepT <= 0) { LIB.beep(ctx.currentTime + 0.01); beepT = 0.9; }
+  };
+
+  NX.on("honk", function (o, why) { snd.play(why === "wait" ? "honk2" : "honk"); });
+  NX.on("near", function () { snd.play("screech"); snd.play("honk"); snd.play("spill"); });
+  NX.on("busGo", function () { snd.play("air"); });
+  NX.on("splash", function () { snd.play("splash"); });
+  NX.on("spray", function (p, o) { var n = NX.sim.S.nick; if (Math.abs(n.x - p.x) < 20 && Math.abs(n.z - p.z) < 12) snd.play("spray"); });
+  NX.on("bell", function () { snd.play("bell"); });
+  NX.on("bellHit", function () { snd.play("bell"); snd.play("spill"); });
+  NX.on("press", function () { snd.play("press"); });
+  NX.on("call", function () { snd.play("squelch"); });
+  NX.on("talk", function () { snd.play("chirp"); });
+  NX.on("said", function () { snd.play("chirp"); });
+  NX.on("arrive", function () { snd.play("door"); });
+})();
+
+// ---------------------------------------------------------------- Nick's prequel: ui.js
+// The HUD (the clock, the coffee, the one objective line, the signal chip, the radio), the toasts, the cards (the opening,
+// pause, the final card, "Continue to Friday") and the input: keyboard, and on a phone a d-pad and three keys.
+//   NX.ui.frame(dt) (from boot.js), .card(kick, title, html, buttons [[label, fn, primary, id]], esc), .closeCard(), .cardOpen()
+//   NX.ui.keys {up, down, left, right, hurry, e} (held), .paused, .press(id) (tests: a card button by id)
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); }, esc = NX.esc, sim = NX.sim;
+  var ui = NX.ui = { keys: { up: 0, down: 0, left: 0, right: 0, hurry: 0, e: 0, tup: 0, tdown: 0, tleft: 0, tright: 0, thurry: 0, te: 0 }, paused: false };
+  var E = {}, last = {}, cardOn = false, cardEsc = null, hudT = 0, sigKey = "", toasts = [];
+
+  ui.init = function () {
+    ["clk", "cupbar", "cuptxt", "cup", "obj", "sr", "sig", "sigc", "radio", "rq", "rtext", "rbtn", "rbar", "toasts", "ov", "ovk", "ovh", "ovb", "ovr", "tRadio", "tBtn", "tPause"]
+      .forEach(function (k) { E[k] = $(k); });
+    E.rbarS = E.rbar.firstChild; E.sctx = E.sigc.getContext("2d");
+    ui.setTouch(("ontouchstart" in window) || (window.matchMedia && matchMedia("(pointer: coarse)").matches) || innerWidth < 760);
+    if (NX.reduced) document.body.classList.add("still");
+    addEventListener("pointerdown", function (e) { if (e.pointerType === "touch") ui.setTouch(true); }, true);
+    keyboard(); touchKeys();
+    E.rbtn.addEventListener("click", function () { NX.snd.unlock(); sim.answer(); });
+  };
+
+  // every hint names the control in use: "E" on a keyboard, "Button" on the touch keys (the last input used decides)
+  ui.setTouch = function (on) {
+    if (ui.touch === on) return; ui.touch = on;
+    document.body.classList.toggle("touch", on); last.obj = null;
+  };
+  // ---------------------------------------------------------------- input
+  var MAP = { ArrowUp: "up", KeyW: "up", ArrowDown: "down", KeyS: "down", ArrowLeft: "left", KeyA: "left", ArrowRight: "right", KeyD: "right",
+    ShiftLeft: "hurry", ShiftRight: "hurry" };
+  function keyboard() {
+    addEventListener("keydown", function (e) {
+      NX.snd.unlock();
+      if (cardOn) { cardKey(e); return; }
+      var k = MAP[e.code];
+      if (k || e.code === "KeyE" || e.code === "Space" || e.code === "KeyR") ui.setTouch(false);
+      if (k) { ui.keys[k] = 1; e.preventDefault(); return; }
+      if (e.code === "KeyE" || e.code === "Space") { e.preventDefault(); if (!e.repeat) sim.press(); ui.keys.e = 1; return; }
+      if (e.code === "KeyR") { sim.answer(); return; }
+      if (e.code === "Escape" || e.code === "KeyP") { e.preventDefault(); ui.pause(); }
+    });
+    addEventListener("keyup", function (e) {
+      var k = MAP[e.code]; if (k) ui.keys[k] = 0;
+      if (e.code === "KeyE" || e.code === "Space") { ui.keys.e = 0; sim.releaseBtn(); }
+    });
+    addEventListener("blur", function () { for (var k in ui.keys) ui.keys[k] = 0; if (sim.S && sim.S.playing && !sim.S.done && !cardOn) ui.pause(); });
+  }
+  function hold(el, on, off) {
+    el.addEventListener("pointerdown", function (e) { e.preventDefault(); NX.snd.unlock(); try { el.setPointerCapture(e.pointerId); } catch (x) { /* fine */ } el.classList.add("on"); on(); });
+    var up = function () { el.classList.remove("on"); off(); };
+    el.addEventListener("pointerup", up); el.addEventListener("pointercancel", up); el.addEventListener("lostpointercapture", up);
+    el.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+  }
+  function touchKeys() {
+    Array.prototype.forEach.call(document.querySelectorAll("#pad button"), function (b) {
+      var d = "t" + b.getAttribute("data-d"); hold(b, function () { ui.keys[d] = 1; }, function () { ui.keys[d] = 0; });
+    });
+    hold($("tHurry"), function () { ui.keys.thurry = 1; }, function () { ui.keys.thurry = 0; });
+    hold(E.tBtn, function () { sim.press(); ui.keys.te = 1; }, function () { ui.keys.te = 0; sim.releaseBtn(); });
+    hold(E.tRadio, function () { sim.answer(); }, function () { });
+    E.tPause.addEventListener("click", function () { NX.snd.unlock(); ui.pause(); });
+  }
+  ui.input = function (inp) {                                       // the camera looks south: screen-left is east (+x)
+    var K = ui.keys;
+    inp.x = (K.left || K.tleft ? 1 : 0) - (K.right || K.tright ? 1 : 0);
+    inp.z = (K.up || K.tup ? 1 : 0) - (K.down || K.tdown ? 1 : 0);
+    inp.hurry = !!(K.hurry || K.thurry);
+    return K.e || K.te;
+  };
+
+  // ---------------------------------------------------------------- cards
+  ui.card = function (kick, title, html, buttons, escFn) {
+    E.ovk.textContent = kick || ""; E.ovh.textContent = title; E.ovb.innerHTML = html; E.ovr.innerHTML = "";
+    var pri = null;
+    buttons.forEach(function (b) {
+      var el = document.createElement("button"); el.type = "button"; el.textContent = b[0]; if (b[3]) el.id = b[3];
+      if (b[2]) { el.className = "pri"; pri = el; }
+      el.addEventListener("click", function () { NX.snd.unlock(); b[1](); });
+      E.ovr.appendChild(el);
+    });
+    cardOn = true; cardEsc = escFn || null; E.ov.className = "ov on"; ui.primary = pri;
+    for (var k in ui.keys) ui.keys[k] = 0;
+    var cd = E.ov.firstChild; cd.scrollTop = 0;                     // (a phone: the card opens on its title, not scrolled to the focused key)
+    setTimeout(function () { (pri || E.ovr.querySelector("button")).focus({ preventScroll: true }); cd.scrollTop = 0; }, 0);
+  };
+  ui.closeCard = function () { cardOn = false; E.ov.className = "ov"; ui.primary = null; };
+  ui.cardOpen = function () { return cardOn; };
+  ui.cardTitle = function () { return cardOn ? E.ovh.textContent : ""; };
+  ui.press = function (id) { var b = id ? $(id) : ui.primary; if (b && cardOn) { b.click(); return true; } return false; };
+  function cardKey(e) {
+    if (e.code === "Enter" && ui.primary && document.activeElement && document.activeElement.tagName !== "BUTTON") { e.preventDefault(); ui.primary.click(); }
+    else if (e.code === "Escape" && cardEsc) { e.preventDefault(); cardEsc(); }
+    else if (e.code === "Tab") {
+      var bs = E.ov.querySelectorAll("button"), i = Array.prototype.indexOf.call(bs, document.activeElement);
+      e.preventDefault(); bs[(i + (e.shiftKey ? bs.length - 1 : 1)) % bs.length].focus();
+    }
+  }
+  var HELP = "<ul><li>Arrows or WASD walk; <kbd>Shift</kbd> hurries, and spills.</li><li><kbd>E</kbd> (or Space) presses the crossing button; hold it 3 s for the audible signal.</li>" +
+    "<li><kbd>R</kbd> answers the radio. Nick stops to talk.</li><li><kbd>Esc</kbd> pauses.</li>" +
+    "<li>With the audible signal on, the cuckoo means walk. The locator tick says where the pole is.</li></ul>";
+  var HELPT = "<ul><li>The arrows walk; <b>Hurry</b> hurries, and spills.</li><li><b>Button</b> presses the crossing button (hold it 3 s for the audible signal).</li>" +
+    "<li><b>Radio</b> answers a call. Nick stops to talk.</li><li><b>Pause</b> pauses, and has Start over.</li>" +
+    "<li>With the audible signal on, the cuckoo means walk. The locator tick says where the pole is.</li></ul>";
+  ui.intro = function () {
+    ui.card("VCF Montréal · Friday 6 November 2026", "16:30, the wrong side of Riverside Drive",
+      "<p>Booth 29 loaded a grey V70R in a driveway near Ashton, 265 km away. Curtis loaded his Highlander in Ottawa. " +
+      "Nick has a lanyard, a radio and a medium double-double, and the 15 has just let him off across from Champlain College. Setup starts at 17:00.</p>" +
+      "<ul><li>Press the button on the pole, then wait for the walking man. The median has its own button.</li>" +
+      "<li>Answer the radio while you wait, not in a lane.</li><li>Stand back from the curb: the slush collects at the ramps.</li></ul>" +
+      (ui.touch ? HELPT : HELP) + "<p class=\"note\"><button type=\"button\" class=\"lnk\" id=\"bHome\">Back to VCF Tycoon</button></p>",
+      [["Cross", function () { ui.closeCard(); NX.go(); }, true, "bGo"]]);
+    var h = $("bHome"); if (h) h.addEventListener("click", function () { NX.leave(); });   // (a button in the card: Tab reaches it)
+  };
+  ui.pause = function () {
+    if (!sim.S.playing || sim.S.done) return;
+    ui.paused = true;
+    ui.card("Paused", NX.hhmm(NX.T0 + sim.S.t * NX.CLOCK) + ", Riverside Drive", ui.touch ? HELPT : HELP,
+      [["Back to VCF Tycoon", function () { NX.leave(); }, false, "bHomeP"],
+       ["Start over", function () { ui.closeCard(); ui.paused = false; NX.restart(); }, false, "bRestart"],
+       ["Resume", function () { ui.closeCard(); ui.paused = false; }, true, "bResume"]], function () { ui.closeCard(); ui.paused = false; });
+  };
+  // the three feats: done this run, done before (kept in localStorage), or not yet
+  var FEATS = [["cuckoo", "The cuckoo on both halves: hold each button 3 s"], ["early", "In the door before the streetlights (16:36)"],
+    ["calls", "All " + sim.CALLS.length + " radio calls answered"]];
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { /* private window: no memory */ } return null; }
+  ui.final = function (sc) {
+    var S = sim.S, rows = sc.parts.map(function (p) {
+      return "<div><dt>" + esc(p[0]) + "</dt><span class=\"dots\"></span><dd><b>" + p[2] + "</b> <small>/ " + p[3] + "</small></dd></div><span class=\"sub\">" + esc(p[1]) + "</span>";
+    }).join("");
+    var best = +(store("nx.best") || 0); if (sc.total > best) store("nx.best", String(sc.total));
+    var bestTxt = best <= 0 ? "" : sc.total > best ? "New best. The last one was " + best + "." : sc.total < best ? "Best so far: " + best + "." : "Equals your best.";
+    var had = {}; try { had = JSON.parse(store("nx.feats") || "{}") || {}; } catch (e) { had = {}; }
+    var now = sim.feats(), keep = {}, feats = FEATS.map(function (f) {
+      keep[f[0]] = !!(had[f[0]] || now[f[0]]);
+      var st = now[f[0]] ? "This run" : had[f[0]] ? "Done before" : "Not yet";
+      return "<li class=\"" + (keep[f[0]] ? "got" : "") + "\"><span>" + st + "</span> " + esc(f[1]) + "</li>";
+    }).join("");
+    store("nx.feats", JSON.stringify(keep));
+    // the premise, in numbers: the others hauled gear across a province; Nick walked across a street
+    var m = Math.round(S.walked), min = Math.round(sc.t * NX.CLOCK / 60), kmh = sc.t > 0 ? S.walked / (sc.t * NX.CLOCK) * 3.6 : 0;
+    var trip = "<ul class=\"trip\"><li><b>Booth 29's V70R:</b> 265 km, from a driveway near Ashton.</li><li><b>Curtis's Highlander:</b> from Ottawa.</li>" +
+      "<li><b>TDK:</b> a Beaver on floats, from Lynn Lake, Manitoba.</li><li><b>Nick:</b> " + m + " m from the bus stop, " +
+      (sc.inside ? "in " + min + " min (" + kmh.toFixed(kmh < 1 ? 2 : 1) + " km/h)." : "in 30 min, and not in the door.") + "</li></ul>";
+    var cof = S.coffee <= 0.005 ? "an empty cup" : S.coffee > 0.85 ? "a medium double-double at " + Math.round(S.temp) + " °C" : "about " + Math.round(S.coffee * 100) + "% of a coffee";
+    var cars = sc.inside && (sim.parked[0].visible || sim.parked[1].visible) ? "<p>Booth 29's V70R and Curtis's Highlander are already in the drive.</p>" : "";
+    var last = sc.inside ? "<p>Nick brought a lanyard, a radio and " + cof + ".</p>"
+      : "<p>Élise, on the radio: “We've started check-in. Your badge is on the table.”</p>";
+    ui.card("Champlain College · 900 Riverside Drive", sc.inside ? "In the door at " + NX.hhmm(sc.clock) : "Still on Riverside at 17:00",
+      trip + "<dl class=\"rows\">" + rows + "</dl><div class=\"total\"><b>" + sc.total + "</b><span>/ 1000</span><span class=\"stars\" aria-label=\"" + sc.stars + " of 5 stars\">" +
+      "★★★★★".slice(0, sc.stars) + "☆☆☆☆☆".slice(0, 5 - sc.stars) + "</span></div>" +
+      (bestTxt ? "<p class=\"note\">" + bestTxt + "</p>" : "") + "<ul class=\"feats\">" + feats + "</ul>" + cars + last,
+      [["Cross again", function () { ui.closeCard(); NX.restart(); }, false, "bAgain"], ["Continue to Friday", ui.friday, true, "bFriday"]]);
+  };
+  ui.friday = function () {                                        // the game's pick card (Nick is one of the four there)
+    try { if (window.parent !== window) window.parent.postMessage({ nick: "done", score: sim.score().total }, "*"); } catch (e) { /* not framed */ }
+    NX.leave();
+  };
+
+  // ---------------------------------------------------------------- toasts (they state what changed)
+  ui.toast = function (text, kind) {
+    var el = document.createElement("div"); el.className = "toast " + (kind || ""); el.textContent = text;
+    E.toasts.appendChild(el); toasts.push({ el: el, t: 3.6 });
+    while (toasts.length > 3) { var o = toasts.shift(); if (o.el.parentNode) o.el.parentNode.removeChild(o.el); }
+  };
+  NX.on("press", function (k, o) {
+    if (o.first) ui.toast(o.late ? "Pressed. Too late for this walk; the next is in " + o.wait + " s." : "Pressed. No light comes on. The walk is in " + o.wait + " s.");
+    else if (o.serving) ui.toast("The walk is already coming.");
+    else if (o.n === 3) ui.toast("Pressed again. The walk is still in " + o.wait + " s.");
+    else if (o.n === 6) ui.toast("Six presses. Still one walk.");
+  });
+  NX.on("audible", function (k) { ui.toast("Held for 3 seconds: this pole will cuckoo for the walk " + (k ? "to the college side." : "to the median."), "good"); });
+  NX.on("near", function (o, x) { ui.toast(x.text + (x.spill > 0.01 ? " −" + Math.round(x.spill * 100) + "% coffee" : ""), "bad"); });
+  NX.on("splash", function (p, x) { ui.toast(x.text, "bad"); });
+  NX.on("bellHit", function (c, x) { ui.toast("A bell, a swerve, \"Pardon!\" The cyclist is in shorts." + (x.spill > 0.01 ? " −" + Math.round(x.spill * 100) + "% coffee" : ""), "bad"); });
+  NX.on("honk", function (o, why) { ui.toast(why === "wait" ? "Honk: the light is green and you're in the lane." : "Honk: a driver had to brake for you.", "bad"); });
+  NX.on("callGone", function (c) { ui.toast(c.who + " stops waiting and works it out.", ""); });
+  NX.on("lamps", function () { ui.toast("16:36: sunset, and the streetlights come on. Last Friday it was 17:45."); });
+  NX.on("cameo", function (k) { ui.toast(k ? "A dark Highlander, eastbound: Curtis, from Ottawa." : "A grey 2004 V70R with roof rails, eastbound: booth 29."); });
+  NX.on("laker", function () { ui.toast("The laker heading for the Saint-Lambert lock is doing 2.3 knots. Nick is doing 0."); });
+  NX.on("jay", function (why) { ui.toast(why === "mid" ? "Mid-block, away from the crosswalk: −40 crossing points." : "Against the hand: −40 crossing points.", "bad"); });
+  NX.on("vanBack", function () { ui.toast("A cube van backs along the drive, beeping."); });
+  NX.on("arrive", function (sc) { if (NX.manual) ui.final(sc); else setTimeout(function () { ui.final(sc); }, 700); });
+  NX.on("late", function (sc) { ui.final(sc); });
+
+  // ---------------------------------------------------------------- the HUD (written only when a value changes)
+  function set(k, v, html) { if (last[k] === v) return; last[k] = v; if (html) E[k].innerHTML = v; else E[k].textContent = v; }
+  function objective(S) {
+    var n = S.nick, g = S.sig, z = S.zone, k = z === "north" ? 0 : 1;
+    if (!S.playing) return "";
+    if (S.done) return S.late ? "17:00." : "Inside. Room D 121.";
+    if (n.resp > 0) return "Back to the curb.";
+    if (n.talk > 0) return "On the radio.";
+    if (z === "north" || z === "median") {
+      if (g.ped[k] === "walk") return "Walk.";
+      if (g.ped[k] === "flash") return "Don't start: " + g.n[k] + " s.";
+      if (!g.called[k] && !g.serve[k]) return k ? (ui.touch ? "The median has its own button." : "The median has its own button (E).") : sim.nearBtn() === 0 ? (ui.touch ? "Tap Button." : "Press the crossing button (E).") : ui.touch ? "Walk to the crossing button on the pole, then tap Button." : "Walk to the crossing button on the pole, then press E.";
+      return k ? "Wait on the median. Stand back from the edges." : "Wait for the walking man. Stand back from the curb.";
+    }
+    if (z === "lane") { var h = n.z < L.median[0] ? 0 : 1; return g.ped[h] === "dont" ? "The cars have the green. Get across." : g.ped[h] === "flash" ? "Finish crossing: " + g.n[h] + " s." : "Keep going."; }
+    if (z === "buffer" || z === "bike") return "The bike lane: look both ways.";
+    if (sim.vanNear()) return "Let the van back in.";
+    return "The doors, straight ahead.";
+  }
+  var L = NX.L;
+  ui.frame = function (dt) {
+    var S = sim.S; if (!S) return;
+    for (var i = toasts.length - 1; i >= 0; i--) { toasts[i].t -= dt; if (toasts[i].t <= 0) { var o = toasts.splice(i, 1)[0]; if (o.el.parentNode) o.el.parentNode.removeChild(o.el); } }
+    hudT -= dt; if (hudT > 0) return; hudT = 0.1;
+    set("clk", NX.hhmm(NX.T0 + S.t * NX.CLOCK));
+    var c = Math.round(S.coffee * 100);
+    set("cuptxt", c > 0 ? c + "% · " + Math.round(S.temp) + " °C" : "Gone");
+    if (last.cupw !== c) { last.cupw = c; E.cupbar.style.width = c + "%"; E.cup.className = "led" + (c < 40 ? " low" : ""); }
+    var ob = objective(S); set("obj", ob);
+    // for screen readers: the objective when it changes kind, not each second of a countdown (#obj itself isn't live)
+    var kind = ob.replace(/\d+/g, "#"); if (kind !== last.objKind) { last.objKind = kind; E.sr.textContent = ob; }
+    // the signal chip: the head that matters to you right now
+    var st = S.zone === "north" ? 0 : S.zone === "median" || (S.zone === "lane" && S.nick.z > L.median[0]) ? 1 : -1;
+    var key = !S.playing || S.done || st < 0 ? "off" : S.sig.ped[st] + S.sig.n[st] + (S.sig.ped[st] === "flash" ? Math.floor(S.t * 2) % 2 : "");
+    if (key !== sigKey) {
+      sigKey = key; E.sig.className = key === "off" ? "" : "on";
+      if (key !== "off") NX.W.headChip(E.sctx, S.sig.ped[st], S.sig.n[st], Math.floor(S.t * 2) % 2);
+    }
+    // the radio
+    var r = S.radio, rk, txt;
+    if (r.talking) { rk = "talk" + r.talking.i; txt = "<span class=\"who\">You:</span> “" + esc(r.talking.answer) + "”"; }
+    else if (r.cur) { rk = "call" + r.cur.i; txt = "<span class=\"who\">" + esc(r.cur.who) + ":</span> “" + esc(r.cur.text) + "”"; }
+    else if (r.said) { rk = "said" + r.said.i; txt = "<span class=\"who\">" + esc(r.said.who) + ":</span> “OK.”"; }
+    else { rk = S.playing ? "off" : "idle"; txt = S.playing ? "Quiet." : ""; }
+    if (last.rk !== rk) {
+      last.rk = rk; E.rtext.innerHTML = txt;
+      E.radio.className = r.cur && !r.talking ? "live" : r.talking || r.said ? "said" : rk === "idle" ? "off idle" : "off";
+      E.rbtn.disabled = !(r.cur && !r.talking); E.tRadio.className = r.cur && !r.talking ? "ready" : "";
+    }
+    set("rq", r.offered || r.answered ? r.answered + " of " + r.offered + " answered" : "");
+    var frac = r.cur && !r.talking ? NX.clamp((r.until - S.t) / 11, 0, 1) : 0, fw = Math.round(frac * 50);
+    if (last.rbar !== fw) { last.rbar = fw; E.rbarS.style.width = fw * 2 + "%"; }
+    E.tBtn.className = sim.nearBtn() >= 0 && S.playing && !S.done ? "ready" : "";
+  };
+  ui.objective = function () { return objective(sim.S); };
+  ui.reset = function () { last = {}; sigKey = ""; toasts.forEach(function (o) { if (o.el.parentNode) o.el.parentNode.removeChild(o.el); }); toasts = []; };
+})();
+
+// ---------------------------------------------------------------- Nick's prequel: boot.js
+// The renderer, the lights and the sky (dusk, darkening as the clock runs), the camera (the opening shot from the college
+// side, then over Nick's shoulder), the frame loop (fixed 1/60 s steps), and copying the sim onto the meshes.
+// Every material exists before the first frame and is compiled at load (renderer.compile with everything shown once).
+//   NX.go() (the opening card's Cross), NX.restart(), NX.render(), NX.info() -> { calls, tris, programs, programsAtLoad }
+//   NX.manual = true: the loop stops stepping and drawing (tests step with NX.advance(sec) and draw with NX.render()).
+(function () {
+  "use strict";
+  var W = NX.W, sim = NX.sim, renderer, scene, camera, hemi, sun, fog, programsAtLoad = 0;
+  var camPos = new THREE.Vector3(), camLook = new THREE.Vector3(), tPos = new THREE.Vector3(), tLook = new THREE.Vector3();
+  var DUSK0 = new THREE.Color(0x5d6784), DUSK1 = new THREE.Color(0x161b2c), skyC = new THREE.Color();
+  var vel = null, spN = 0, sndT = 0, introT = 0, mode = "intro";
+
+  function boot() {
+    var cv = document.getElementById("c");
+    try { renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true, powerPreference: "high-performance" }); }
+    catch (e) { NX.fail("This needs WebGL, and this browser didn't start it. Try another browser, or go on to the game."); return; }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    scene = new THREE.Scene(); scene.background = DUSK0.clone();
+    fog = scene.fog = new THREE.Fog(DUSK0.getHex(), 40, 230);
+    hemi = new THREE.HemisphereLight(0x9aa6c8, 0x3a3428, 0.85); scene.add(hemi);
+    sun = new THREE.DirectionalLight(0xffc89a, 0.45); sun.position.set(-60, 18, 40); scene.add(sun);
+    camera = new THREE.PerspectiveCamera(55, 1, 0.1, 4000);
+    W.build(scene); sim.build(); sim.reset();
+    vel = new Float32Array(W.pts.n * 3);
+    NX.ui.init(); resize(); addEventListener("resize", resize);
+    // compile every program now: show everything once
+    var hidden = [];
+    scene.traverse(function (o) { if (o.isMesh && !o.visible) { hidden.push(o); o.visible = true; } });
+    renderer.compile(scene, camera); renderer.render(scene, camera);
+    hidden.forEach(function (o) { o.visible = false; });
+    sim.reset(seed()); sync(0);
+    renderer.render(scene, camera);
+    programsAtLoad = renderer.info.programs.length;
+    NX.ui.intro();
+    requestAnimationFrame(loop);
+  }
+  function resize() {
+    var w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h;
+    camera.fov = w / h < 0.8 ? 66 : 55; camera.updateProjectionMatrix();
+  }
+
+  // a new seed for each run (different gaps in the traffic); the tests (NX.manual) keep 1107
+  function seed() { return NX.manual ? 1107 : ((Date.now() ^ (Math.random() * 0x7fffffff)) & 0x7fffffff) + 1; }
+  NX.go = function () { NX.snd.unlock(); sim.start(); mode = "play"; introT = 0; };
+  NX.restart = function () { NX.ui.reset(); sim.reset(seed()); for (var i = 0; i < vel.length; i++) vel[i] = 0; mode = "play"; sim.start(); sync(0); };
+
+  // ---------------------------------------------------------------- the loop
+  var lastT = 0, acc = 0, STEP = 1 / 60;
+  function loop(ts) {
+    requestAnimationFrame(loop);
+    if (NX.manual) { lastT = 0; return; }
+    var dt = lastT ? Math.min(0.1, (ts - lastT) / 1000) : STEP; lastT = ts;
+    if (!NX.ui.paused) {
+      acc += dt; var n = 0;
+      while (acc >= STEP && n < 6) { stepOnce(); acc -= STEP; n++; }
+      if (n === 6) acc = 0;
+    }
+    sync(dt); NX.ui.frame(dt); NX.render();
+    sndT -= dt; if (sndT <= 0) { NX.snd.tick(0.1 - sndT); sndT = 0.1; }
+  }
+  function stepOnce() {
+    var S = sim.S;
+    var holding = NX.ui.input(sim.input);
+    if (holding && S.playing) sim.holdBtn(STEP);
+    sim.step(STEP);
+  }
+  NX.advance = function (sec, each) {                       // tests: step the sim (each(t) is called every step; true stops)
+    var n = Math.round(sec / STEP);
+    for (var i = 0; i < n; i++) { if (each && each(sim.S.t)) break; stepOnce(); if (sim.S.done && !each) break; }
+    sync(sec); NX.ui.frame(1);
+  };
+  NX.render = function () { renderer.render(scene, camera); };
+  NX.info = function () {
+    var r = renderer.info.render;
+    return { calls: r.calls, tris: r.triangles, programs: renderer.info.programs.length, programsAtLoad: programsAtLoad };
+  };
+  NX.camera = function () { return camera; };
+
+  // ---------------------------------------------------------------- sim -> meshes
+  function sync(dt) {
+    var S = sim.S, P = sim.pool, i, o;
+    for (i = 0; i < P.length; i++) { o = P[i]; if (o.on) o.mesh.position.set(o.x, 0, o.z); }
+    var c = sim.cyc(); if (c.on) c.mesh.position.set(c.x, 0, c.z);
+    var v = sim.van(); v.mesh.position.set(v.x, 0, v.z);
+    var lc = sim.loc(); lc.mesh.position.set(lc.x, lc.moving && !NX.reduced ? Math.abs(Math.sin(lc.ph)) * 0.04 : 0, lc.z); lc.mesh.rotation.y = lc.face;
+    // Nick
+    var n = S.nick, N = W.nick, sw = n.moving ? Math.sin(n.ph) * (n.spd > 2 ? 0.75 : 0.5) : 0;
+    N.g.position.set(n.x, n.moving && n.spd > 2 ? Math.abs(Math.sin(n.ph)) * 0.05 : 0, n.z);
+    N.g.rotation.y = n.face; N.legL.rotation.x = sw; N.legR.rotation.x = -sw;
+    N.armR.rotation.x = n.talk > 0 ? -2.5 : -sw * 0.6; N.armR.rotation.z = n.talk > 0 ? 0.35 : 0;
+    N.g.visible = NX.reduced || !(n.resp > 0 && Math.floor(n.resp * 10) % 2);
+    var wet = 1 - 0.17 * n.wet; W.mat.legs.color.setRGB(wet, wet, wet * 1.02);
+    // the amber ring at the pole whose button still needs a press (the north one first, then the median's)
+    var rk = S.done || !S.playing ? -1 : S.zone === "north" ? 0 : S.zone === "median" ? 1 : -1;
+    if (rk >= 0 && (S.sig.called[rk] || S.sig.serve[rk])) rk = -1;
+    W.ring.visible = rk >= 0;
+    if (rk >= 0) { var bp = rk ? NX.L.btnS : NX.L.btnN; W.ring.position.set(bp.x, 0.14, bp.z); W.ring.scale.setScalar(NX.reduced ? 1 : 1 + 0.12 * Math.sin(S.t * 4)); }
+    // the signal heads
+    for (i = 0; i < 2; i++) {
+      var ped = S.sig.ped[i];
+      W.drawHead(i, ped === "flash" ? (Math.floor(S.t * 2) % 2 ? "flashOff" : "flashOn") : ped, S.sig.n[i]);
+    }
+    // dusk: the sky and the light follow the clock
+    var k = NX.clamp(S.t / 170, 0, 1);
+    skyC.copy(DUSK0).lerp(DUSK1, k); scene.background.copy(skyC); fog.color.copy(skyC);
+    hemi.intensity = 0.85 - 0.4 * k; sun.intensity = 0.45 * (1 - k);
+    if (S.lit) { W.mat.glow.color.setRGB(1, 0.86, 0.62); W.mat.pool.opacity = 0.16; } else { W.mat.glow.color.setRGB(0.35, 0.33, 0.3); W.mat.pool.opacity = 0; }
+    W.laker.position.x = 200 - (S.t + introT) * 1.2;
+    points(Math.min(dt, 0.1));
+    cam(dt);
+  }
+  // flurries around Nick, the splashes (a pooled burst), Route 132's headlights
+  NX.on("spray", function (p, o) { burst(p.x, p.z, 10, o.dir, 0.6); });
+  NX.on("splash", function (p) { var n = sim.S.nick; burst(p.x, p.z, 26, 0, 1.0, n.x, n.z); });
+  function burst(x, z, cnt, dir, k, tx, tz) {                // (Math.random: the spray is looks only, and NX.rnd is the sim's seeded stream)
+    var a = W.pts.splash, pos = W.pts.pos;
+    for (var j = 0; j < cnt; j++) {
+      var i = a[0] + (spN++ % (a[1] - a[0])), b = i * 3;
+      pos[b] = x + (Math.random() - 0.5) * 1.6; pos[b + 1] = 0.1; pos[b + 2] = z + (Math.random() - 0.5) * 1.0;
+      var aimX = tx !== undefined ? (tx - x) * 1.2 : dir * 2, aimZ = tx !== undefined ? (tz - z) * 1.2 : (Math.random() - 0.5) * 2;
+      vel[b] = aimX + (Math.random() - 0.5) * 2; vel[b + 1] = (2.4 + Math.random() * 2.6) * k; vel[b + 2] = aimZ + (Math.random() - 0.5) * 2;
+    }
+  }
+  function points(dt) {
+    if (!dt) return;
+    var pos = W.pts.pos, n = sim.S.nick, a = W.pts.snow, i, b;
+    for (i = a[0]; i < a[1]; i++) {
+      b = i * 3; pos[b + 1] -= dt * (0.7 + (i % 5) * 0.08); if (!NX.reduced) pos[b] += Math.sin(pos[b + 1] + i) * dt * 0.3;
+      if (pos[b + 1] < 0) pos[b + 1] += 14;
+      if (pos[b] - n.x > 30) pos[b] -= 60; else if (pos[b] - n.x < -30) pos[b] += 60;
+      if (pos[b + 2] - n.z > 25) pos[b + 2] -= 50; else if (pos[b + 2] - n.z < -25) pos[b + 2] += 50;
+    }
+    a = W.pts.splash;
+    for (i = a[0]; i < a[1]; i++) {
+      b = i * 3; if (pos[b + 1] < -1) continue;
+      vel[b + 1] -= 9.8 * dt; pos[b] += vel[b] * dt; pos[b + 1] += vel[b + 1] * dt; pos[b + 2] += vel[b + 2] * dt;
+      if (pos[b + 1] < 0) pos[b + 1] = -50;
+    }
+    a = W.pts.lights;
+    for (i = a[0]; i < a[1]; i++) {
+      b = i * 3; var d = pos[b + 2] > -37.5 ? -1 : 1; pos[b] += d * 24 * dt;
+      if (pos[b] > 200) pos[b] -= 400; else if (pos[b] < -200) pos[b] += 400;
+    }
+    W.pts.geo.attributes.position.needsUpdate = true;
+  }
+  // the camera: the opening shot looks north over the road to the river; play follows Nick from behind
+  function cam(dt) {
+    var S = sim.S, n = S.nick, port = camera.aspect < 0.8;
+    if (mode === "intro" && !S.playing) {
+      introT += dt;
+      tPos.set(9 + (NX.reduced ? 0 : Math.sin(introT * 0.1) * 2), 6.5, 16); tLook.set(-6, 3.5, -30);
+      camPos.copy(tPos); camLook.copy(tLook);
+    } else {
+      var fx = n.x * 0.55;
+      if (S.done && !S.late) { tPos.set(-7, 4.4, 8.5); tLook.set(7, 1.2, 20); }                // the doors, the van, the two cameos parked east of them
+      else if (port) { tPos.set(fx, 9.2, n.z - 10.5); tLook.set(fx, 0.5, n.z + 5.5); }
+      else { tPos.set(fx, 6.4, n.z - 8.8); tLook.set(fx, 0.8, n.z + 7); }
+      var kk = 1 - Math.exp(-(dt || 0.016) * 3.2);
+      camPos.lerp(tPos, kk); camLook.lerp(tLook, kk);
+    }
+    camera.position.copy(camPos); camera.lookAt(camLook);
+  }
+  var L = NX.L;
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+})();
+
+</script>
+</body>
+</html>
