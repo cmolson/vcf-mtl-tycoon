@@ -1241,7 +1241,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 </script>
 <script>if (!window.THREE) (function () { var fr = /^fr/.test((new URLSearchParams(location.search).get("lang")) || localStorage.getItem("hall-lang") || navigator.language || ""), d = document.createElement("div"); d.setAttribute("role", "alert"); d.style.cssText = "position:fixed;inset:0;z-index:99;display:grid;place-items:center;padding:24px;background:#1b1a17;color:#f3ecda;font:600 17px/1.5 Archivo,system-ui,sans-serif;text-align:center"; d.innerHTML = fr ? "<p>Le moteur 3D (three.js) n'a pas pu être chargé. Un bloqueur de contenu ou un réseau qui bloque cdnjs.cloudflare.com et cdn.jsdelivr.net l'empêche peut-être.<br><br><button onclick=\"location.reload()\" style=\"font:inherit;padding:8px 18px\">Réessayer</button></p>" : "<p>Couldn't load the 3D engine (three.js). A content blocker, or a network that blocks cdnjs.cloudflare.com and cdn.jsdelivr.net, may be stopping it.<br><br><button onclick=\"location.reload()\" style=\"font:inherit;padding:8px 18px\">Try again</button></p>"; document.body.appendChild(d); })();</script>
 <script>window.GAME_ONLY = true; window.VCF_PREQUELS = {"drive": "roadtrip.html", "flight": "flight.html", "nick": "nick.html"};</script>
-<script>window.VCF_BUILD = {"v": "v0.127-1d22dd4", "date": "2026-10-04"};</script>
+<script>window.VCF_BUILD = {"v": "v0.128-8c2b566", "date": "2026-10-04"};</script>
 <script>window.VCF_MUSEUM_AUDIO = "audio/museum/";</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
@@ -18186,6 +18186,15 @@ var G = (function () {
     this.blur();
   });
   setInterval(function () { var h = !!(G.hud && G.hud.isOpen && G.hud.isOpen()); if (el.hidden !== h) el.hidden = h; }, 400);   // (under a card it can't be clicked: hidden while one is up)
+  // the pick card is a card (the corner label hides under cards), so it carries the version itself: the landing page shows it
+  G.on("who", function () { setTimeout(function () {    // (after the card is drawn: a small line in the title panel's corner)
+    var logo = document.querySelector(".pick .ui-logo"); if (!logo || logo.querySelector(".g-ver-pick")) return;
+    var p = document.createElement("button"); p.type = "button"; p.className = "g-ver-pick"; p.textContent = b.v; p.title = G.t("{text} (click to copy, for bug reports)", { text: text });
+    logo.appendChild(p); }, 0); });
+  G.ui.css("g-ver-pick-css", ".pick .ui-logo{position:relative;padding-bottom:30px}.g-ver-pick{position:absolute;right:10px;bottom:12px;font:600 10px/1 ui-monospace,'IBM Plex Mono',monospace;color:#5a5242;" +
+    "background:none;border:0;padding:2px 4px;cursor:pointer;opacity:.75}.g-ver-pick:hover{opacity:1;text-decoration:underline}" +
+    "@media (max-width:760px){.pick .ui-logo{padding-bottom:revert}.g-ver-pick{position:static;display:block;margin:6px auto 0}}");
+  document.addEventListener("click", function (e) { var t = e.target; if (t && t.classList && t.classList.contains("g-ver-pick")) el.click(); });
   if (window.G) G.version = b.v;
 })();
 
