@@ -1241,7 +1241,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 </script>
 <script>if (!window.THREE) (function () { var fr = /^fr/.test((new URLSearchParams(location.search).get("lang")) || localStorage.getItem("hall-lang") || navigator.language || ""), d = document.createElement("div"); d.setAttribute("role", "alert"); d.style.cssText = "position:fixed;inset:0;z-index:99;display:grid;place-items:center;padding:24px;background:#1b1a17;color:#f3ecda;font:600 17px/1.5 Archivo,system-ui,sans-serif;text-align:center"; d.innerHTML = fr ? "<p>Le moteur 3D (three.js) n'a pas pu être chargé. Un bloqueur de contenu ou un réseau qui bloque cdnjs.cloudflare.com et cdn.jsdelivr.net l'empêche peut-être.<br><br><button onclick=\"location.reload()\" style=\"font:inherit;padding:8px 18px\">Réessayer</button></p>" : "<p>Couldn't load the 3D engine (three.js). A content blocker, or a network that blocks cdnjs.cloudflare.com and cdn.jsdelivr.net, may be stopping it.<br><br><button onclick=\"location.reload()\" style=\"font:inherit;padding:8px 18px\">Try again</button></p>"; document.body.appendChild(d); })();</script>
 <script>window.GAME_ONLY = true; window.VCF_PREQUELS = {"drive": "roadtrip.html", "flight": "flight.html", "nick": "nick.html"};</script>
-<script>window.VCF_BUILD = {"v": "v0.119-fb572b5", "date": "2026-10-03"};</script>
+<script>window.VCF_BUILD = {"v": "v0.126-aaf48ac", "date": "2026-10-04"};</script>
 <script>window.VCF_MUSEUM_AUDIO = "audio/museum/";</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
@@ -6072,6 +6072,7 @@ var RAGS = [{"t": "Maple Leaf Rag", "y": 1899, "b": "TVRoZAAAAAYAAQADAYBNVHJrAAA
   "PARTIAL": "À MOITIÉ",
   "Quick fix · {n} min": "Réparation rapide · {n} min",
   "Quick fix": "Réparation rapide",
+  "Show me": "Montre-moi",
   "Keys: Tab and the arrows pick, Enter or Space uses. P pauses, Esc goes back to the quick choice.": "Touches : Tab et les flèches choisissent, Entrée ou Espace utilise. P met en pause, Échap revient au choix rapide.",
   "key|Enter": "Entrée",
   "key|Ctrl+Enter": "Ctrl+Entrée",
@@ -6155,103 +6156,89 @@ var RAGS = [{"t": "Maple Leaf Rag", "y": 1899, "b": "TVRoZAAAAAYAAQADAYBNVHJrAAA
   "Over 1.8 A for a while: the traces are warming too. Everything on the rail feels warm now. Back it off.": "Plus de 1,8 A depuis un boutte : les pistes chauffent aussi. Tout le rail est tiède astheure. Baisse ça.",
   "Time's up, but you get there in the end the slow way.": "Le temps est écoulé, mais tu finis par y arriver, à la dure.",
 
-  // ---- Feed the ImageWriter (mini-printer.js)
+  // ---- Feed the ImageWriter (mini-printer.js; owner round 2026-10: four steps, the part to use glows)
+  "Clearing a jam and loading paper on an Apple ImageWriter": "Débloquer un bourrage pis charger du papier dans une Apple ImageWriter",
+  "Four steps, one at a time: the step is written at the top and the part to use glows yellow. Tap it (or Tab to it and press Enter). A wrong part tells you what to do instead and costs a few seconds. Opening the lid turns SELECT off, so the print queue waits and nothing is lost. Show me does the rest for you, a little slower.":
+    "Quatre étapes, une à la fois : l'étape est écrite en haut pis la pièce à toucher brille en jaune. Touche-la (ou Tab jusqu'à elle pis Entrée). Une mauvaise pièce te dit quoi faire à la place pis te coûte quelques secondes. Ouvrir le couvercle éteint SELECT : la file d'impression attend, rien se perd. « Montre-moi » fait le reste pour toi, un peu plus lentement.",
+  "Watch it done step by step (the fix takes a little longer)": "Regarde-le faire étape par étape (la réparation prend un peu plus de temps)",
+  "Open the lid": "Ouvre le couvercle",
+  "Pull the jammed sheet out": "Sors la feuille coincée",
+  "Line the paper up on the sprockets": "Aligne le papier sur les picots",
+  "Close the lid and press SELECT": "Ferme le couvercle pis pèse sur SELECT",
+  "Line the new paper up on the sprockets": "Aligne le papier neuf sur les picots",
+  "Wind it to the top-of-form mark": "Roule-le jusqu'à la marque du haut de page",
+  "Lift the old ribbon out": "Sors le vieux ruban",
+  "Drop the new ribbon in": "Mets le ruban neuf",
+  "lid": "couvercle",
+  "the lid (the clear cover over the print head)": "le couvercle (le capot transparent par-dessus la tête d'impression)",
+  "platen knob": "bouton du cylindre",
+  "torn corner": "coin déchiré",
+  "the torn corner by the print head": "le coin déchiré proche de la tête d'impression",
+  "sprocket": "picots",
+  "the left sprocket": "la roue à picots de gauche",
+  "the right sprocket": "la roue à picots de droite",
+  "paper bail": "barre presse-papier",
+  "the paper bail": "la barre presse-papier",
+  "the SELECT button": "le bouton SELECT",
+  "ribbon": "ruban",
+  "ribbon knob": "bouton du ruban",
+  "the cassette's knob": "le bouton de la cassette",
+  "top of form": "haut de page",
+  "fresh box": "boîte neuve",
+  "lid (open)": "couvercle (ouvert)",
+  "Tap the lid to close it.": "Touche le couvercle pour le fermer.",
+  "Tap the lid: the clear cover over the print head. Opening it turns SELECT off, so the print queue waits.": "Touche le couvercle : le capot transparent par-dessus la tête d'impression. L'ouvrir éteint SELECT, fait que la file d'impression attend.",
+  "Tap the platen knob (or drag it down) to wind the jammed sheet back out.": "Touche le bouton du cylindre (ou glisse-le vers le bas) pour faire ressortir la feuille coincée.",
+  "Tap the platen knob (or drag it down) to roll the paper until the dashed perforation sits on the red top-of-form mark.": "Touche le bouton du cylindre (ou glisse-le vers le bas) pour rouler le papier jusqu'à ce que la perforation pointillée arrive sur la marque rouge du haut de page.",
+  "A torn corner is stuck by the print head. Tap it to pick it out.": "Un coin déchiré est resté pris proche de la tête d'impression. Touche-le pour l'enlever.",
+  "Now the left sprocket: its holes go on the same row as the other side.": "Astheure, les picots de gauche : les trous vont sur la même rangée que l'autre bord.",
+  "Now the right sprocket: its holes go on the same row as the other side.": "Astheure, les picots de droite : les trous vont sur la même rangée que l'autre bord.",
+  "A fresh box sits under the printer. Tap each sprocket, left and right, to lay the paper's holes on its pins.": "Une boîte neuve attend sous l'imprimante. Touche chaque roue à picots, gauche pis droite, pour placer les trous du papier sur les picots.",
+  "Tap each sprocket, left and right, to lay the paper's holes back on its pins.": "Touche chaque roue à picots, gauche pis droite, pour remettre les trous du papier sur les picots.",
+  "Tap the paper bail to lower it: its rollers hold the paper flat on the platen.": "Touche la barre presse-papier pour la baisser : ses rouleaux tiennent le papier à plat sur le cylindre.",
+  "Press SELECT: the light comes on and the waiting souvenirs print.": "Pèse sur SELECT : le voyant s'allume pis les souvenirs en attente s'impriment.",
+  "Tap the ribbon cassette to lift the old one off its two supporters.": "Touche la cassette de ruban pour sortir la vieille de ses deux supports.",
+  "Tap the empty spot to drop the new cassette in, its ribbon in front of the print head.": "Touche la place vide pour poser la cassette neuve, le ruban devant la tête d'impression.",
+  "Tap the cassette's knob to take up the slack.": "Touche le bouton de la cassette pour tendre le ruban.",
+  "Not that one yet. Tap the glowing part: {part}.": "Pas celle-là tout de suite. Touche la pièce qui brille : {part}.",
+  "Tap the glowing part: {part}.": "Touche la pièce qui brille : {part}.",
+  "That way feeds it deeper. Turn it back: drag down, or just tap the knob.": "Par là, ça la rentre plus creux. Tourne-le à reculons : glisse vers le bas, ou touche juste le bouton.",
+  "Wrong way: the perforation moved away from the red mark. Drag down, or just tap the knob.": "Mauvais bord : la perforation s'est éloignée de la marque rouge. Glisse vers le bas, ou touche juste le bouton.",
+  "SELECT won't stay on with the lid open. Close the lid first.": "SELECT reste pas allumé avec le couvercle ouvert. Ferme le couvercle d'abord.",
+  "Not yet: SELECT comes last, once the paper is in and the lid is closed.": "Pas tout de suite : SELECT vient en dernier, une fois le papier en place pis le couvercle fermé.",
+  "Leave the lid open for now: you're still working inside.": "Laisse le couvercle ouvert pour l'instant : t'es encore en train de travailler dedans.",
+  "Open the lid first, so you can see what you're doing.": "Ouvre le couvercle d'abord, pour voir ce que tu fais.",
+  "Get the jammed sheet out first: turn the platen knob.": "Sors la feuille coincée d'abord : tourne le bouton du cylindre.",
+  "Sprockets first: the holes go on the pins, then the bail holds the paper down.": "Les picots d'abord : les trous vont sur les picots, pis ensuite la barre tient le papier.",
+  "That side is on its pins already.": "Ce bord-là est déjà sur ses picots.",
+  "Lid open. SELECT is off, so the print queue waits: nothing is lost.": "Couvercle ouvert. SELECT est éteint, fait que la file d'impression attend : rien se perd.",
+  "Lid closed.": "Couvercle fermé.",
+  "The sheet backs out a notch. Again.": "La feuille recule d'un cran. Encore.",
+  "Out it comes, crumpled but in one piece.": "La voilà sortie, toute froissée mais d'un seul morceau.",
+  "Down a line. {n} more to the red mark.": ["Une ligne de moins. Encore {n} jusqu'à la marque rouge.", "Une ligne de moins. Encore {n} jusqu'à la marque rouge."],
+  "The perforation sits on the red mark: top-of-form is set.": "La perforation est sur la marque rouge : le haut de page est réglé.",
+  "Got it. That corner would have jammed it again.": "Pogné. Ce coin-là l'aurait rebloquée.",
+  "Both sides on the pins, same row: the paper is square. Clamps shut.": "Les deux bords sur les picots, même rangée : le papier est droit. Pinces fermées.",
+  "Left side on the pins. Clamp shut.": "Bord gauche sur les picots. Pince fermée.",
+  "Right side on the pins. Clamp shut.": "Bord droit sur les picots. Pince fermée.",
+  "Bail down. The paper sits flat on the platen.": "Barre baissée. Le papier est à plat sur le cylindre.",
+  "SELECT on: the printer is back online and the waiting souvenirs print.": "SELECT allumé : l'imprimante est de retour en ligne pis les souvenirs en attente s'impriment.",
+  "Watch: each step plays itself, the glowing part first.": "Regarde : chaque étape se fait toute seule, la pièce qui brille en premier.",
+  "Done for you this time. Next time you know the steps.": "Fait pour toi cette fois-ci. La prochaine fois, tu connais les étapes.",
   "Feed the ImageWriter": "Nourris l'ImageWriter",
-  "Clearing a jam and setting top-of-form on an Apple ImageWriter": "Débloquer un bourrage et régler le haut de page sur une Apple ImageWriter",
-  "platen knob / paper row": "bouton du cylindre / rangée",
-  "on/off": "marche/arrêt",
-  "Pause the print queue first (queued souvenirs wait; nothing is lost). The paper runs on two pin-feed sprockets at the back, each with a hinged clamp: the holes go on the same row both sides. Top-of-form is set with the power off: turn the platen knob until the perforation is level with the top of the print head, then switch on and press SELECT.":
-    "Mets la file d'impression en pause d'abord (les souvenirs attendent; rien se perd). Le papier roule sur deux roues à picots en arrière, chacune avec sa pince à charnière : les trous vont sur la même rangée des deux bords. Le haut de page se règle l'imprimante éteinte : tourne le bouton du cylindre jusqu'à ce que la perforation arrive à la hauteur du haut de la tête d'impression, puis allume et appuie sur SELECT.",
-  "Pause queue": "File en pause",
-  "Open cover": "Ouvrir le capot",
-  "Back sheet out": "Reculer la feuille",
-  "Pick scraps": "Ramasser les bouts",
-  "Thread paper": "Enfiler le papier",
-  "Top-of-form": "Haut de page",
-  "Resume queue": "Relancer la file",
-  "Thread new box": "Enfiler la boîte",
-  "Lift old one": "Sortir l'ancienne",
-  "Drop new one": "Poser la neuve",
-  "Guide ribbon": "Guider le ruban",
-  "Take up slack": "Tendre le ruban",
-  "Close, SELECT": "Fermer, SELECT",
   "Done.": "Fini.",
-  "Type it first: printer {p} pause (the chip under the printer). Queued jobs wait; nothing is lost.": "Tape-le en premier : printer {p} pause (le bouton sous l'imprimante). Les impressions en attente attendent; rien se perd.",
-  "Open the carrier cover (the clear lid over the print head). SELECT goes off.": "Ouvre le capot (le couvercle transparent par-dessus la tête d'impression). SELECT s'éteint.",
-  "Turn the platen knob backwards (drag it down, or the left arrow) to back the crumpled sheet out.": "Tourne le bouton du cylindre à reculons (glisse-le vers le bas, ou la flèche de gauche) pour sortir la feuille froissée.",
-  "Pick out the torn pieces. One scrap is hiding near the print head.": "Ramasse les bouts déchirés. Il y en a un qui se cache proche de la tête d'impression.",
-  "Flip both paper clamps open, lay the holes on the pins on the same row each side (drag a side, or arrows), then close them.": "Ouvre les deux pinces, place les trous sur les picots à la même rangée des deux bords (glisse un bord, ou les flèches), puis referme-les.",
-  "Top-of-form: power OFF, turn the knob until the perforation is level with the top of the print head (the red mark), power ON.": "Haut de page : éteins, tourne le bouton jusqu'à ce que la perforation soit à la hauteur du haut de la tête (la marque rouge), rallume.",
-  "Close the cover and press SELECT: the light comes on.": "Ferme le capot et appuie sur SELECT : le voyant s'allume.",
-  "printer {p} resume: the waiting souvenirs come out.": "printer {p} resume : les souvenirs en attente sortent.",
-  "A fresh box of fanfold. Flip the clamps open, lay the holes on the pins (same row both sides), close the clamps.": "Une boîte neuve de papier en accordéon. Ouvre les pinces, place les trous sur les picots (même rangée des deux bords), referme les pinces.",
-  "Top-of-form: power OFF, turn the knob until the perforation meets the red mark, power ON.": "Haut de page : éteins, tourne le bouton jusqu'à ce que la perforation arrive à la marque rouge, rallume.",
-  "Press SELECT: the light comes on.": "Appuie sur SELECT : le voyant s'allume.",
-  "printer {p} resume.": "printer {p} resume.",
-  "Open the carrier cover.": "Ouvre le capot.",
-  "Lift the old ribbon cassette out.": "Sors la vieille cassette de ruban.",
-  "Drop the new cassette onto its two supporters.": "Pose la cassette neuve sur ses deux supports.",
-  "Guide the ribbon between the black ribbon guide and the metal plate, past the head.": "Glisse le ruban entre le guide noir et la plaque de métal, devant la tête.",
-  "Turn the cassette's knob the way the arrow points to take up the slack.": "Tourne le bouton de la cassette dans le sens de la flèche pour tendre le ruban.",
-  "Close the cover and press SELECT.": "Ferme le capot et appuie sur SELECT.",
-  "Forward just feeds it deeper. Backwards.": "Par en avant, ça le rentre juste plus creux. À reculons.",
-  "Open the carrier cover first.": "Ouvre le capot d'abord.",
-  "The crumpled sheet backs out of the platen in one piece. Mostly.": "La feuille froissée ressort du cylindre en un morceau. Presque.",
-  "No paper on the platen yet.": "Pas encore de papier sur le cylindre.",
-  "Power off. Now the knob sets top-of-form.": "Éteinte. Astheure, le bouton règle le haut de page.",
-  "Power on: PAPER ERROR.": "Allumée : PAPER ERROR.",
-  "Power on. Top-of-form set dead level with the head.": "Allumée. Haut de page réglé pile à la hauteur de la tête.",
-  "Power on. Top-of-form set {n} line low.": ["Allumée. Haut de page réglé {n} ligne trop bas.", "Allumée. Haut de page réglé {n} lignes trop bas."],
-  "Power on. Top-of-form set {n} line high.": ["Allumée. Haut de page réglé {n} ligne trop haut.", "Allumée. Haut de page réglé {n} lignes trop haut."],
-  "It's off.": "Elle est éteinte.",
-  "SELECT won't stay on with the carrier cover open.": "SELECT reste pas allumé avec le capot ouvert.",
-  "PAPER ERROR: no paper on the pins.": "PAPER ERROR : pas de papier sur les picots.",
-  "The new cassette isn't in yet.": "La cassette neuve est pas encore en place.",
-  "LINE FEED and FORM FEED only work with SELECT off.": "LINE FEED et FORM FEED marchent juste avec SELECT éteint.",
-  "No paper.": "Pas de papier.",
-  "FORM FEED: to the top of the next page.": "FORM FEED : au haut de la page suivante.",
-  "admin> printer {p} pause: already paused.": "admin> printer {p} pause : déjà en pause.",
-  "admin> printer {p} pause. Paused: {n} jobs waiting.": "admin> printer {p} pause. En pause : {n} impressions en attente.",
-  "admin> printer {p} resume: it isn't selected yet (the SELECT light).": "admin> printer {p} resume : elle est pas encore sélectionnée (le voyant SELECT).",
-  "Not yet: {step} first.": "Pas encore : d'abord, {step}.",
   "The next souvenir comes out crisp and black.": "Le prochain souvenir sort bien noir et net.",
-  "The next souvenir: darker than ghost grey, at least.": "Le prochain souvenir : plus foncé que gris fantôme, au moins.",
   "The {m} jams again: the paper went on a hole skew.": "{m|uc} bourre encore : le papier était croche d'un trou.",
-  "Somebody's banner went out half on the platen.": "La bannière de quelqu'un est sortie à moitié sur le cylindre.",
   "The souvenir lands dead centre. The visitor frames it.": "Le souvenir tombe pile au centre. Le visiteur va le faire encadrer.",
-  "the carrier cover (clear lid)": "le capot (couvercle transparent)",
   "the platen knob": "le bouton du cylindre",
-  "something near the print head": "quelque chose proche de la tête d'impression",
-  "a torn piece of paper": "un bout de papier déchiré",
-  "left sprocket and its paper clamp": "la roue à picots de gauche et sa pince",
-  "right sprocket and its paper clamp": "la roue à picots de droite et sa pince",
   "the ribbon cassette": "la cassette de ruban",
-  "the ribbon guide": "le guide du ruban",
-  "top of head": "haut de la tête",
-  "clamp|open": "ouverte",
-  "clamp": "pince",
-  "platen": "cylindre",
-  "cover open": "capot ouvert",
   "Ribbon": "Ruban",
   "New box": "Boîte neuve",
   "Paper jam": "Bourrage",
-  "queue: {n} (paused)": "file : {n} (en pause)",
-  "queue: {n}": "file : {n}",
-  "Carrier cover open. SELECT is off.": "Capot ouvert. SELECT est éteint.",
-  "Cover closed.": "Capot fermé.",
-  "Back the sheet out first.": "Sors la feuille d'abord.",
-  "Tweezers: a confetti scrap from under the print head. That would have jammed it again.": "Les pinces : un bout de confetti sous la tête d'impression. Ça l'aurait rebloquée.",
-  "A torn piece out.": "Un bout déchiré de moins.",
   "The paper's fine. It's the ribbon.": "Le papier est correct. C'est le ruban.",
-  "Clear the old paper out first.": "Enlève le vieux papier d'abord.",
-  "Clamp open. Lay the holes on the pins: drag this side up or down, or the arrows.": "Pince ouverte. Place les trous sur les picots : glisse ce bord-là en haut ou en bas, ou les flèches.",
-  "Clamp shut. Both sides on the same row.": "Pince fermée. Les deux bords sur la même rangée.",
-  "Clamp shut. (The two sides are on different rows.)": "Pince fermée. (Les deux bords sont pas sur la même rangée.)",
   "The old cassette lifts off its supporters. The ribbon is worn to lace.": "La vieille cassette sort de ses supports. Le ruban est usé à la corde.",
   "New cassette pressed down: its notches snap onto the two black supporters.": "Cassette neuve enfoncée : ses encoches s'enclenchent sur les deux supports noirs.",
   "A turn of the cassette knob: the slack is gone.": "Un tour du bouton de la cassette : le ruban est tendu.",
-  "Ribbon slipped between the black guide and the thin metal plate, in front of the head.": "Ruban glissé entre le guide noir et la mince plaque de métal, devant la tête.",
-  "Open the clamp first (Enter).": "Ouvre la pince d'abord (Entrée).",
 
   // ---- Restart Later (mini-lan.js; the XP dialog and the Command Prompt stay English, as on the laptop)
   "Restart Later": "Restart Later",
@@ -6321,13 +6308,10 @@ var RAGS = [{"t": "Maple Leaf Rag", "y": 1899, "b": "TVRoZAAAAAYAAQADAYBNVHJrAAA
   "run dhcpd -t and read what it says": "lance dhcpd -t et lis ce qu'il dit",
   "DHCP won't start, and the clients are waiting for addresses. Test the config: dhcpd -t.": "Le DHCP veut pas partir, pis les clients attendent leurs adresses. Teste la config : dhcpd -t.",
   "Free hint: {text}": "Indice gratuit : {text}",
-  // ---- touch wording, the ImageWriter's SELECT and resume
+  // ---- touch wording
   "Ring... ring. The display: {name} {num}. Pick up: tap the handset.": "Dring... dring. L'afficheur : {name} {num}. Décroche : touche le combiné.",
   "A Meridian M9216 on extension {ext}. Tap the handset to lift it, or just dial: 1019 is Dial-a-Museum.":
-    "Un Meridian M9216, poste {ext}. Touche le combiné pour décrocher, ou compose direct : le 1019, c'est le Musée au bout du fil.",
-  "SELECT on: the printer is online.": "SELECT allumé : l'imprimante est en ligne.",
-  "SELECT off: the printer is offline.": "SELECT éteint : l'imprimante est hors ligne.",
-  "admin> printer {p} resume. The waiting jobs start printing.": "admin> printer {p} resume. Les impressions en attente partent."
+    "Un Meridian M9216, poste {ext}. Touche le combiné pour décrocher, ou compose direct : le 1019, c'est le Musée au bout du fil."
 } });
 
 // ---------------------------------------------------------------- VCF Tycoon in French: data records
@@ -7311,6 +7295,8 @@ var RAGS = [{"t": "Maple Leaf Rag", "y": 1899, "b": "TVRoZAAAAAYAAQADAYBNVHJrAAA
   "read their badge": "lire son badge",
   "PA: {name} just came in the main entrance. Say hi!": "Annonce : {name} vient d'arriver par l'entrée principale. Venez dire bonjour!",
   "PA: someone who looks a lot like {name} just came in the main entrance.": "Annonce : une personne qui ressemble beaucoup à {name} vient d'arriver par l'entrée principale.",
+  "{name} is in the hall too: follow the gold star.": "{name} est aussi dans la salle : suis l'étoile dorée.",
+  "Also in the hall: {who}. Follow the gold star.": "Aussi dans la salle : {who}. Suis l'étoile dorée.",
   "{who} heads for the exit. Missed them? They'll be in your badge collection as a silhouette.":
     "{who} s'en va vers la sortie. Trop tard? Son badge va être dans ta collection, en silhouette.",
   "{who} stops at the {m} and looks at it very closely.": "{who} s'arrête devant {m|le} et l'examine de très, très près.",
@@ -9945,13 +9931,20 @@ var G = (function () {
       loads: { "29": ["osborne1"], "10": ["lansrv"] }, rifaAt: 855, rifaOn: "compaq1",
       checkins: 3, idleBack: 90, idle: 180,               // idle: nobody touched the demo for 180 real s: back to the menu
       text: G.t.k("A compressed weekend: the last 25 minutes of Friday's setup, the busiest stretch of Sunday with Best in Show at 15:00, and a quick teardown. No save, about 6 minutes.") },
-    // ---- cameos (cameos.js, CAMEOS-PLAN.md 2.1-2.4): per show day n lookalikes (+ a chance of one more), arrivals between
-    // from and to (game min), gap apart; at most max out at once. stay / linger / downLinger in game minutes; speed in in/s
-    // (the crowd walks 40-55); fol: followers per stop; bump: buzz where they stand; label / fade: the name label's range and
-    // where the sparkle fades out (inches). Rewards: kudos; the score: one crowd part, weight w. demo: one on the demo's Sunday.
-    cameos: { sat: { n: 1, extra: 0.35, max: 1 }, sun: { n: 2, extra: 0, max: 2 }, from: 645, to: 900, gap: 90,
-      stay: [60, 100], linger: [6, 12], downLinger: [2, 4], wait: 10, speed: 32, fol: { sat: 3, sun: 5 }, bump: 0.3, machineBump: 0.5,
-      label: 360, fade: 96, hold: 30, kudos: { hello: 2, photo: 1, sig: 2, fix: 5 }, rep: 0.05, w: 1, demo: { at: 845, stay: 45 },
+    // ---- cameos (cameos.js, CAMEOS-PLAN.md 2.1-2.4): every one on the roster comes once a weekend. Saturday draws about share
+    // of them (the rest of a fraction: a coin toss), Sunday everyone left (and anyone Saturday's queue didn't get to); the day's
+    // arrivals are spread evenly over at [from, to] (game min; each in its own stretch, jit of it random). At most max out at
+    // once (the sparkle and label pool): an arrival waits for a free place, and one that waited more than late min stays only
+    // stay[0]. stay / linger / downLinger in game minutes; speed in in/s (the crowd walks 40-55); fol: followers per stop;
+    // bump: buzz where they stand; label / fade: the name label's range and where the sparkle fades out (inches).
+    // Announcing: the day's first arrival gets the PA toast and chime (Nick: the VIP radio call), the others a quiet line;
+    // Nick's radio calls the arrivals vip (by index in the day). Rewards: the first full met in a game pay kudos / rep / the
+    // question's full rewards, later ones kudos.hello2 / photo2, rep2 and pay2 x the question's. The score: one crowd part,
+    // weight w, full marks for meeting metK of those who came. demo: one on the demo's Sunday.
+    cameos: { sat: { share: 0.5, at: [610, 980] }, sun: { at: [610, 920] }, jit: 0.7, max: 2, late: 15, vip: [0, 4],
+      stay: [35, 60], linger: [6, 12], downLinger: [2, 4], wait: 10, speed: 32, fol: { sat: 2, sun: 3 }, bump: 0.2, machineBump: 0.5,
+      label: 360, fade: 96, hold: 30, kudos: { hello: 2, photo: 1, sig: 2, fix: 5, hello2: 1, photo2: 0 }, full: 3, rep: 0.05, rep2: 0.02, pay2: 0.34,
+      metK: 0.5, w: 1, demo: { at: 845, stay: 45 },
       // walking around on the game page (no game on), in real seconds: the first one after first, the next gap later (and at least
       // after once one leaves), at most max out; each stays stay, lingers linger at a booth; a guest is drawn with weight guestW
       walk: { first: [15, 40], gap: [120, 240], after: [30, 90], stay: [240, 420], linger: [10, 24], max: 2, guestW: 0.4, stuck: 90 } },
@@ -10533,7 +10526,8 @@ var G = (function () {
 //   G.mini.def(kind, { title, skill (English: G.t.k("...") keys, shown through G.t when the game opens; so are help,
 //       keys[i][1], skip, escLabel, coverEsc, keysHelp; a key cap "key|Enter" goes through G.t too), time (real s, 0 = none; x2 with Relaxed timers), clock (game clock x while
 //       open: 0 frozen, the default; 0.25 the phone), dom: "" | "over" | "below" | "only", h (logical height, 300),
-//       keys: [[key, what]], help, skip (the Skip button's label; "" hides it),
+//       keys: [[key, what]], help, skip (the Skip button's label; "" hides it), demo(m) (a "Show me" button: the game plays
+//       its own steps where the player can watch them, and ends at a small cost; demoTitle its tooltip),
 //       init(m, opts), tick(m, dt), draw(m, g), key(m, e) -> true when used, ptr(m, type "down"|"move"|"up", x, y, e)
 //       -> true when used, press(m, id, how "key"|"ptr"), timeout(m) (else it ends "timeout" at q 0),
 //       auto(q, opts) -> data (headless results), after(m, r) (side effects once it closed, before onDone),
@@ -10561,7 +10555,7 @@ var G = (function () {
 //       m.tx, m.ty (the tool tip with the tremor), rnd() (seeded), say(t) (the caption, aria-live), sfx(name),
 //       end(q, outcome, data) (the stamp, then close), quit(q, outcome, data) (close now), dom (the DOM layer), pause()
 //       (the cover), h (init may change it: the canvas takes the new height),
-//       calm, k / refault / note (passed on in r)
+//       calm, k / refault / note (passed on in r), demoBtn (the Show me button: a game may disable it once used)
 // Core: G.modal (Enter / E / P are the game's) and G.clockK (the clock multiplier) while open; the hall never
 // sees a key (captured on window), the pointer lock is released. ui.js: the card's Tab trap stands aside.
 // Input: pointer (tap targets, drag in ptr), Tab / arrows walk the targets, Enter / Space press; P / blur /
@@ -10580,8 +10574,9 @@ var G = (function () {
   var BTNS = G.ui.el("div", "mg-btns", FOOT);
   var bPause = G.ui.button(G.t("Pause"), { kind: "sm", key: "P", on: function () { pause(true); } });
   var bSkip = G.ui.button(G.t("Skip"), { kind: "sm", on: function () { if (M && !M.done) finish("skip", 0); } });
+  var bDemo = G.ui.button(G.t("Show me"), { kind: "sm", on: function () { if (M && !M.done && M.def.demo && !cover) { try { M.def.demo(M); } catch (err) { oops(M.kind + " demo", err); } } } });
   var bEsc = G.ui.button(G.t("Quick choice"), { kind: "sm", key: "Esc", title: G.t("Back to the quick fixes"), on: function () { if (M && !M.done && !(M.def.esc && M.def.esc(M))) finish("abort", 0); } });
-  BTNS.appendChild(bPause); BTNS.appendChild(bEsc); BTNS.appendChild(bSkip);
+  BTNS.appendChild(bPause); BTNS.appendChild(bEsc); BTNS.appendChild(bDemo); BTNS.appendChild(bSkip);
   var STAMP = G.ui.el("div", "stamp", F.el); STAMP.hidden = true;
   // the cover: paused, the help, the assists, Ask / Always / Never
   COVER.innerHTML = '<div class="mg-cv"><h4></h4><p class="mg-help"></p><div class="mg-as"></div><div class="mg-pl"><span></span></div>' +
@@ -10598,7 +10593,7 @@ var G = (function () {
   var cEsc = G.ui.button(G.t("Quick choice"), { kind: "sm", on: function () { if (M) finish("abort", 0); } }); CB.appendChild(cEsc);
   function labels() {                                      // (built once at load; again after a language switch in place)
     function lb(b, t) { b.firstChild.textContent = t; }
-    lb(bPause, G.t("Pause")); lb(bSkip, G.t("Skip")); lb(bEsc, G.t("Quick choice")); bEsc.title = G.t("Back to the quick fixes");
+    lb(bPause, G.t("Pause")); lb(bSkip, G.t("Skip")); lb(bDemo, G.t("Show me")); lb(bEsc, G.t("Quick choice")); bEsc.title = G.t("Back to the quick fixes");
     COVER.querySelector("h4").textContent = G.t("Paused"); PL.firstChild.textContent = G.t("Fix-it mini-games:");
     lb(swS, G.t("Steady hands")); lb(swR, G.t("Relaxed timers")); lb(swC, G.t("Reduced motion"));
     lb(seg.buttons[0], G.t("Ask")); lb(seg.buttons[1], G.t("Always")); lb(seg.buttons[2], G.t("Never")); lb(bRes, G.t("Resume")); lb(cEsc, G.t("Quick choice"));
@@ -10770,7 +10765,7 @@ var G = (function () {
     var seed = opts.seed ? opts.seed | 1 : (G.rnd() * 2147483647) | 1;
     M = { kind: kind, def: def, opts: opts, onDone: onDone, s: {}, w: W, h: def.h || H, t: 0, targets: [], focus: -1, ptr: { x: -99, y: -99, down: false, sx: 0, sy: 0, id: -1, used: false },
       tx: 0, ty: 0, fatigue: fat, shake: G.mini.assist("steady") ? 0 : MINI.shake * fat, level: opts.level !== undefined ? opts.level : G.mini.level(opts.booth || G.mine()),
-      calm: !!G.mini.assist("calm"), dom: DOM, cap: "", done: null, doneT: 0, k: 1, refault: null, note: "",
+      calm: !!G.mini.assist("calm"), dom: DOM, demoBtn: bDemo, cap: "", done: null, doneT: 0, k: 1, refault: null, note: "",
       add: add, tgt: tgt, say: say, sfx: sfx, tip: tip, end: end, quit: function (q, outcome, data) { finish(outcome || "win", q, data); }, pause: function () { pause(true); },
       rnd: function () { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x80000000; } };
     var lim = def.time || 0; if (lim && G.mini.assist("relaxed")) lim *= 2;
@@ -10781,6 +10776,7 @@ var G = (function () {
     var sk = opts.skip !== undefined ? opts.skip : def.skip === "" ? "" : def.skip ? G.t(def.skip) :
       opts.minutes ? G.t("Quick fix · {n} min", { n: Math.round(opts.minutes * MINI.skipK) }) : G.t("Quick fix");
     bSkip.hidden = !sk; if (sk) bSkip.firstChild.textContent = sk;
+    bDemo.hidden = !def.demo; bDemo.disabled = false; bDemo.title = def.demoTitle ? G.t(def.demoTitle) : "";
     bEsc.hidden = opts.noEsc === true; bEsc.firstChild.textContent = G.t(def.escLabel || "Quick choice");
     HELP.textContent = G.t(def.help || "") + "\n" + (def.keysHelp ? G.t(def.keysHelp) : G.t("Keys: Tab and the arrows pick, Enter or Space uses. P pauses, Esc goes back to the quick choice."));
     var asl = def.assists || ["steady", "relaxed", "calm"]; swS.hidden = asl.indexOf("steady") < 0; swR.hidden = asl.indexOf("relaxed") < 0; swC.hidden = asl.indexOf("calm") < 0;
@@ -10805,6 +10801,7 @@ var G = (function () {
     M = null; WRAP.style.display = "none"; STAMP.hidden = true; cover = false; COVER.classList.remove("on"); DOM.innerHTML = "";
     G.modal = ""; G.clockK = 1; G.mini.k = 1; G.mini.active = null;
     if (m.def.close) { try { m.def.close(m); } catch (err) { oops(m.kind + " close", err); } }
+    if (G.sound && G.sound.duck) { try { G.sound.duck(false); } catch (err) {} }   // (the phone's duck: never left on)
     if (prevFocus && prevFocus.blur) try { prevFocus.blur(); } catch (err) {}
     if (outcome === "external") return;
     var r = { q: q, quality: q, outcome: outcome, secs: Math.round(m.t * 10) / 10, data: data || {}, ok: outcome !== "skip" && outcome !== "abort" && q >= MINI.fail,
@@ -11175,306 +11172,346 @@ var G = (function () {
   });
 })();
 
-// ---------------------------------------------------------------- VCF Tycoon: mini-game "Feed the ImageWriter" (jam, paper)
-// MINIGAMES-PORTABLES.md 3.7, corrected against Apple's ImageWriter User's Manual (the original A9M0303):
-// the RUNBOOK's jam procedure (`printer souvenir pause`; clear the paper and realign; `printer souvenir resume`:
-// queued jobs wait, nothing is lost); pin-feed sprockets at the rear with hinged paper clamps (not a tractor with
-// covers); top-of-form is set with the power OFF: turn the platen knob until the perforation is level with the
-// top of the print head, then switch on; the control cluster: ON/OFF, SELECT, LINE FEED, FORM FEED, and the
-// POWER, SELECT and PAPER ERROR lights (LINE FEED / FORM FEED only work while SELECT is off; opening the carrier
-// cover turns SELECT off). The ribbon is a cassette (the paper fault's "ribbon" cause): lift it out, drop the
-// new one on, guide the ribbon past the head, turn its knob to take up the slack. Light colours are a guess.
-// Variants: opts.kind "jam" | "paper" (the paper fault: a new box; f.cause "ribbon": the cassette). Plain ES5.
+// ---------------------------------------------------------------- VCF Tycoon: mini-game "Feed the ImageWriter" (jam, paper, ribbon)
+// MINIGAMES-PORTABLES.md 3.7, after Apple's ImageWriter User's Manual (the original A9M0303; the exhibit's printers are
+// the original ImageWriter): the clear carrier cover ("the lid") over the print head (opening it turns SELECT off, so the
+// print queue waits and nothing is lost: the RUNBOOK's `printer souvenir pause`); pin-feed sprockets at the back with
+// hinged paper clamps; the paper bail and its rollers; the platen knob; top-of-form (the perforation level with the top
+// of the print head); the ribbon cassette. Owner round (2026-10): "a bit difficult and hard to understand". Now four
+// steps a first-time booth visitor can follow, one instruction at a time:
+//   jam:    1 Open the lid · 2 Pull the jammed sheet out (the knob, then a torn corner) · 3 Line the paper up on the
+//           sprockets (both, then the bail) · 4 Close the lid and press SELECT
+//   paper:  1 Open the lid · 2 Line the new paper up on the sprockets · 3 Wind it to the top-of-form mark · 4 Close, SELECT
+//   ribbon: 1 Open the lid · 2 Lift the old ribbon out · 3 Drop the new ribbon in (and take up the slack) · 4 Close, SELECT
+// The part to use glows (an arrow and its label in yellow); every part is labelled; a tap within 44 CSS px of a part
+// counts (the glowing one first). A wrong part says how to fix it and costs a little (s.fum: q -0.05 each); only a
+// mangled job (6+ mistakes) jams again later. Show me (mini.js's demo button) plays the rest at 1 step a second and
+// ends GOOD (q 0.6): a little longer than playing it well, much shorter than the quick fix (x1.25).
+// Variants: opts.kind "jam" | "paper" (the paper fault: a new box; f.cause / opts.cause "ribbon": the cassette). Plain ES5.
 (function () {
   if (!G.mini) return;
   var P = G.mini.paint;
-  var PX = 14, PY = 8, REF = 104, PL = 74, PR = 346, PLY = 116;
-  function txt(g, s, x, y, px, col, al, b, w) {        // (w: the room it has; French runs longer)
+  // the drawing (480 x 300 logical): the step banner, the printer, the console strip
+  var BAN = 36, PXL = 64, PXR = 416, PTOP = 48, PLY = 140, REF = 134, HL = 74, HR = 406, LINE = 8;
+  var LID_C = [128, 154, 224, 44], LID_O = [64, 204, 228, 28];
+  // the plan: per mode, steps of sub-steps; a sub-step is the parts it needs (any order)
+  var PLAN = {
+    jam: [{ t: G.t.k("Open the lid"), s: [["lid"]] }, { t: G.t.k("Pull the jammed sheet out"), s: [["knob"], ["scrap"]] },
+      { t: G.t.k("Line the paper up on the sprockets"), s: [["sprL", "sprR"], ["bail"]] }, { t: G.t.k("Close the lid and press SELECT"), s: [["lid"], ["select"]] }],
+    paper: [{ t: G.t.k("Open the lid"), s: [["lid"]] }, { t: G.t.k("Line the new paper up on the sprockets"), s: [["sprL", "sprR"], ["bail"]] },
+      { t: G.t.k("Wind it to the top-of-form mark"), s: [["knob"]] }, { t: G.t.k("Close the lid and press SELECT"), s: [["lid"], ["select"]] }],
+    ribbon: [{ t: G.t.k("Open the lid"), s: [["lid"]] }, { t: G.t.k("Lift the old ribbon out"), s: [["cas"]] },
+      { t: G.t.k("Drop the new ribbon in"), s: [["cas"], ["casknob"]] }, { t: G.t.k("Close the lid and press SELECT"), s: [["lid"], ["select"]] }]
+  };
+  var DASH = [4, 3], NODASH = [], KEY_UP = { down: false, tone: "grey", px: 10 }, KEY_DN = { down: true, tone: "grey", px: 10 };
+  var JAM_TURNS = 3, HOLD_OK = 1.6, HOLD_BAD = 3.2, DEMO_STEP = 1, DEMO_Q = 0.6, MANGLED = 6;
+  // the parts: [canvas label, the name a hint uses]
+  var PART = { lid: [G.t.k("lid"), G.t.k("the lid (the clear cover over the print head)")], knob: [G.t.k("platen knob"), G.t.k("the platen knob")],
+    scrap: [G.t.k("torn corner"), G.t.k("the torn corner by the print head")], sprL: [G.t.k("sprocket"), G.t.k("the left sprocket")],
+    sprR: [G.t.k("sprocket"), G.t.k("the right sprocket")], bail: [G.t.k("paper bail"), G.t.k("the paper bail")], select: ["SELECT", G.t.k("the SELECT button")],
+    cas: [G.t.k("ribbon"), G.t.k("the ribbon cassette")], casknob: [G.t.k("ribbon knob"), G.t.k("the cassette's knob")] };
+
+  function name(m) { return m.opts.id === "logprinter" ? "log" : "souvenir"; }
+  function txt(g, s, x, y, px, col, al, b, w) {
     g.font = (b ? "bold " : "") + (px || 10) + "px 'Atkinson Hyperlegible', Arial, sans-serif"; g.fillStyle = col || "#2b271f"; g.textAlign = al || "left"; g.textBaseline = "top";
     if (w) g.fillText(P.fit(g, s, w), x, y, w); else g.fillText(s, x, y);
   }
-  var STEPS = { jam: [G.t.k("Pause queue"), G.t.k("Open cover"), G.t.k("Back sheet out"), G.t.k("Pick scraps"),
-    G.t.k("Thread paper"), G.t.k("Top-of-form"), "SELECT", G.t.k("Resume queue")],
-    paper: [G.t.k("Thread new box"), G.t.k("Top-of-form"), "SELECT", G.t.k("Resume queue")], ribbon:
-    [G.t.k("Open cover"), G.t.k("Lift old one"), G.t.k("Drop new one"), G.t.k("Guide ribbon"), G.t.k("Take up slack"), G.t.k("Close, SELECT")] };
-  function step(i, mode) { var t = STEPS[mode][i]; return t === "SELECT" ? t : G.t(t); }   // (SELECT: the key's name, as printed)
-
-  function name(m) { return m.opts.id === "logprinter" ? "log" : "souvenir"; }
-  function say(m, t) { m.s.holdT = m.t + HOLD; if (m.s.said !== t) { m.s.said = t; m.say(t); } }   // feedback: held HOLD s before the hint comes back
-  var HOLD = 2;
-  function next(m) {                                    // the first step not done yet, and its caption
-    var s = m.s, l = STEPS[s.mode];
-    for (var i = 0; i < l.length; i++) if (!s.done[i]) return i;
-    return l.length;
+  var TAGPX = 9;                                         // the labels' size: bigger on a small canvas (a phone: 480 logical px in ~300)
+  function tag(g, s, x, y, hot) {                         // a part's label: a small dark pill, yellow when it's the one to use
+    var px = hot ? TAGPX + 3 : TAGPX;
+    g.font = "bold " + px + "px 'Atkinson Hyperlegible', Arial, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle";
+    var w = Math.min(150, g.measureText(s).width + 10), h = px + 6;
+    P.box(g, x - w / 2, y - h / 2, w, h, h / 2, hot ? "#ffd75a" : "rgba(20,18,15,.78)");
+    g.fillStyle = hot ? "#1d1b17" : "#efe7d2"; g.fillText(P.fit(g, s, w - 6), x, y + 0.5, w - 6);
   }
-  function hint(m) {
-    var s = m.s, i = next(m), l = STEPS[s.mode];
-    if (i >= l.length) return G.t("Done.");
-    var v = { p: name(m) };
-    if (s.mode === "jam") return [G.t("Type it first: printer {p} pause (the chip under the printer). Queued jobs wait; nothing is lost.", v),
-      G.t("Open the carrier cover (the clear lid over the print head). SELECT goes off."), G.t("Turn the platen knob backwards (drag it down, or the left arrow) to back the crumpled sheet out."),
-      G.t("Pick out the torn pieces. One scrap is hiding near the print head."), G.t("Flip both paper clamps open, lay the holes on the pins on the same row each side (drag a side, or arrows), then close them."),
-      G.t("Top-of-form: power OFF, turn the knob until the perforation is level with the top of the print head (the red mark), power ON."),
-      G.t("Close the cover and press SELECT: the light comes on."), G.t("printer {p} resume: the waiting souvenirs come out.", v)][i];
-    if (s.mode === "paper") return [G.t("A fresh box of fanfold. Flip the clamps open, lay the holes on the pins (same row both sides), close the clamps."),
-      G.t("Top-of-form: power OFF, turn the knob until the perforation meets the red mark, power ON."), G.t("Press SELECT: the light comes on."), G.t("printer {p} resume.", v)][i];
-    return [G.t("Open the carrier cover."), G.t("Lift the old ribbon cassette out."), G.t("Drop the new cassette onto its two supporters."),
-      G.t("Guide the ribbon between the black ribbon guide and the metal plate, past the head."), G.t("Turn the cassette's knob the way the arrow points to take up the slack."),
-      G.t("Close the cover and press SELECT.")][i];
-  }
-  function mark(m, i) { var s = m.s; if (next(m) === i) { s.done[i] = true; return true; } return false; }
 
+  // ---- the flow
+  function cur(m) { var s = m.s, st = s.plan[s.step]; return st ? st.s[s.sub] : null; }
+  function want(m, id) { var c = cur(m); return !!c && c.indexOf(id) >= 0 && !m.s.got[id]; }
+  function glowId(m) { var c = cur(m); if (!c) return ""; for (var i = 0; i < c.length; i++) if (!m.s.got[c[i]]) return c[i]; return ""; }
+  function say(m, t, hold) { var s = m.s; s.holdT = m.t + (hold || HOLD_OK); if (s.said !== t) { s.said = t; m.say(t); } }
+  function instr(m) {                                     // the caption for what to do now (cached: built when the step moves)
+    var s = m.s, id = glowId(m);
+    if (!id) return G.t("Done.");
+    if (id === "lid") return s.lid ? G.t("Tap the lid to close it.") : G.t("Tap the lid: the clear cover over the print head. Opening it turns SELECT off, so the print queue waits.");
+    if (id === "knob") return s.mode === "jam" ? G.t("Tap the platen knob (or drag it down) to wind the jammed sheet back out.") :
+      G.t("Tap the platen knob (or drag it down) to roll the paper until the dashed perforation sits on the red top-of-form mark.");
+    if (id === "scrap") return G.t("A torn corner is stuck by the print head. Tap it to pick it out.");
+    if (id === "sprL" || id === "sprR") {
+      if (s.got.sprL || s.got.sprR) return id === "sprL" ? G.t("Now the left sprocket: its holes go on the same row as the other side.") : G.t("Now the right sprocket: its holes go on the same row as the other side.");
+      return s.mode === "paper" ? G.t("A fresh box sits under the printer. Tap each sprocket, left and right, to lay the paper's holes on its pins.") :
+        G.t("Tap each sprocket, left and right, to lay the paper's holes back on its pins.");
+    }
+    if (id === "bail") return G.t("Tap the paper bail to lower it: its rollers hold the paper flat on the platen.");
+    if (id === "select") return G.t("Press SELECT: the light comes on and the waiting souvenirs print.");
+    if (id === "cas") return s.cas === 0 ? G.t("Tap the ribbon cassette to lift the old one off its two supporters.") : G.t("Tap the empty spot to drop the new cassette in, its ribbon in front of the print head.");
+    if (id === "casknob") return G.t("Tap the cassette's knob to take up the slack.");
+    return "";
+  }
+  function moved(m) {                                     // the step or sub-step changed: new caption, the focus on the glowing part
+    var s = m.s, id = glowId(m), l = m.targets;
+    s.instr = instr(m); s.banner = s.step < s.plan.length ? (s.step + 1) + "/" + s.plan.length : "";
+    s.title = s.step < s.plan.length ? G.t(s.plan[s.step].t) : G.t("Done.");
+    if (m.tgt("scrap")) m.tgt("scrap").off = !(s.mode === "jam" && !s.crumple && s.scrap);
+    for (var i = 0; i < l.length; i++) if (l[i].id === id) { m.focus = i; break; }
+  }
+  function advance(m) {                                   // a part of the current sub-step is done: move on when it's complete
+    var s = m.s, c = cur(m), i;
+    for (i = 0; i < c.length; i++) if (!s.got[c[i]]) { moved(m); return; }
+    s.got = {}; s.sub++;
+    if (s.sub >= s.plan[s.step].s.length) { s.sub = 0; s.step++; s.advT = m.t; }
+    moved(m);
+    if (s.step >= s.plan.length) finish(m);
+  }
+  function wrong(m, id, txt2) { var s = m.s; s.fum++; m.sfx("click"); say(m, txt2 || G.t("Not that one yet. Tap the glowing part: {part}.", { part: G.t(PART[glowId(m)][1]) }), HOLD_BAD); }
+
+  // ---- one action on a part (a tap, Enter, a knob drag, or Show me)
+  function act(m, id, dir) {
+    var s = m.s, n;
+    if (s.done || !PART[id]) return;
+    if (id === "knob" && dir < 0) {                        // dragged the wrong way (up)
+      if (s.mode === "jam" && want(m, "knob")) { wrong(m, id, G.t("That way feeds it deeper. Turn it back: drag down, or just tap the knob.")); return; }
+      if (s.mode === "paper" && want(m, "knob")) { s.perf--; wrong(m, id, G.t("Wrong way: the perforation moved away from the red mark. Drag down, or just tap the knob.")); return; }
+    }
+    if (!want(m, id)) {
+      if (id === "select") wrong(m, id, s.lid && s.step === s.plan.length - 1 ? G.t("SELECT won't stay on with the lid open. Close the lid first.") : G.t("Not yet: SELECT comes last, once the paper is in and the lid is closed."));
+      else if (id === "lid" && s.lid) wrong(m, id, G.t("Leave the lid open for now: you're still working inside."));
+      else if (id === "knob" && !s.lid && s.step === 0) wrong(m, id, G.t("Open the lid first, so you can see what you're doing."));
+      else if ((id === "sprL" || id === "sprR") && s.mode === "ribbon") wrong(m, id, G.t("The paper's fine. It's the ribbon."));
+      else if ((id === "sprL" || id === "sprR") && s.crumple) wrong(m, id, G.t("Get the jammed sheet out first: turn the platen knob."));
+      else if (id === "bail" && cur(m) && cur(m).indexOf("sprL") >= 0) wrong(m, id, G.t("Sprockets first: the holes go on the pins, then the bail holds the paper down."));
+      else if ((id === "sprL" || id === "sprR") && s[id === "sprL" ? "pinL" : "pinR"] && s.step >= 1) wrong(m, id, G.t("That side is on its pins already."));
+      else wrong(m, id);
+      return;
+    }
+    m.sfx("click");
+    if (id === "lid") {
+      s.lid = !s.lid; if (s.lid) s.select = false;
+      say(m, s.lid ? G.t("Lid open. SELECT is off, so the print queue waits: nothing is lost.") : G.t("Lid closed."));
+      s.got.lid = true;
+    } else if (id === "knob") {
+      if (s.mode === "jam") {
+        s.back++;
+        if (s.back < JAM_TURNS) { say(m, G.t("The sheet backs out a notch. Again.")); return; }
+        s.crumple = false; s.scrap = true; s.paperErr = true; s.got.knob = true; say(m, G.t("Out it comes, crumpled but in one piece."));
+      } else {
+        s.perf++;
+        if (s.perf < 0) { n = -s.perf; say(m, G.tn(n, "Down a line. {n} more to the red mark.", "Down a line. {n} more to the red mark.")); return; }
+        s.got.knob = true; say(m, G.t("The perforation sits on the red mark: top-of-form is set."));
+      }
+    } else if (id === "scrap") { s.scrap = false; s.got.scrap = true; say(m, G.t("Got it. That corner would have jammed it again.")); }
+    else if (id === "sprL" || id === "sprR") {
+      s[id === "sprL" ? "pinL" : "pinR"] = true; s.got[id] = true; s.loaded = s.pinL && s.pinR; s.paperErr = !s.loaded;
+      say(m, s.loaded ? G.t("Both sides on the pins, same row: the paper is square. Clamps shut.") : id === "sprL" ? G.t("Left side on the pins. Clamp shut.") : G.t("Right side on the pins. Clamp shut."));
+    } else if (id === "bail") { s.bail = true; s.got.bail = true; say(m, G.t("Bail down. The paper sits flat on the platen.")); }
+    else if (id === "cas") {
+      s.cas++; s.got.cas = true;
+      say(m, s.cas === 1 ? G.t("The old cassette lifts off its supporters. The ribbon is worn to lace.") : G.t("New cassette pressed down: its notches snap onto the two black supporters."));
+    } else if (id === "casknob") { s.cas = 3; s.got.casknob = true; say(m, G.t("A turn of the cassette knob: the slack is gone.")); }
+    else if (id === "select") { s.select = true; s.paperErr = false; s.got.select = true; say(m, G.t("SELECT on: the printer is back online and the waiting souvenirs print."), 9); }
+    advance(m);
+  }
+
+  function finish(m) {
+    var s = m.s, q, par = s.mode === "ribbon" ? 30 : 40;
+    s.done = true; s.printing = true;
+    q = 1 - Math.min(0.3, 0.05 * s.fum) - G.clamp((m.t - par) / 150, 0, 0.15);
+    if (s.demoed) q = Math.min(q, DEMO_Q);
+    q = G.clamp(q, 0.5, 1);
+    if (s.fum >= MANGLED && s.mode !== "ribbon") m.refault = { kind: "jam", after: 35, text: G.t("The {m} jams again: the paper went on a hole skew.", { m: G.itemName(m.opts.id || "souvenir") }) };
+    m.note = s.demoed ? G.t("Done for you this time. Next time you know the steps.") : s.mode === "ribbon" ? G.t("The next souvenir comes out crisp and black.") :
+      q >= 0.85 ? G.t("The souvenir lands dead centre. The visitor frames it.") : "";
+    if (m.demoBtn) m.demoBtn.disabled = true;
+    m.end(q, null, { mode: s.mode, steps: s.plan.length, fumbles: s.fum, demo: !!s.demoed, paused: true, square: s.fum < MANGLED, tof: 0 });
+  }
+
+  // ---- the build
   function build(m, opts) {
     var s = m.s, f = G.faultOf && opts.id ? G.faultOf(opts.id) : null, cause = opts.cause || (f && f.cause);
     s.mode = opts.kind === "paper" ? (cause === "ribbon" ? "ribbon" : "paper") : "jam";
-    s.done = []; s.power = true; s.select = s.mode !== "paper"; s.cover = s.mode === "paper"; s.opened = {};
-    s.paperErr = s.mode === "paper"; s.paused = false; s.lost = false; s.queue = 2 + Math.floor(m.rnd() * 3);
-    s.back = s.mode === "jam" ? 0 : 6; s.crumple = s.mode === "jam";
-    s.scraps = s.mode === "jam" ? [{ x: 120, y: 128, on: true, hid: false }, { x: 268, y: 106, on: true, hid: false }, { x: 196, y: 150, on: true, hid: true }] : [];
-    s.clampL = s.clampR = s.mode === "ribbon" ? "closed" : "closed"; s.loaded = s.mode === "ribbon";
-    var easy = G.has && G.has("paper");                 // the refill pack: fanned and squared, the holes snap within half a hole
-    s.rowL = s.mode === "ribbon" ? 0 : easy ? 0 : Math.floor(m.rnd() * 5) - 2; s.rowR = s.mode === "ribbon" ? 0 : easy ? (m.rnd() < 0.5 ? 0 : 1) : Math.floor(m.rnd() * 5) - 2;
-    if (s.rowL === s.rowR && !easy && s.mode !== "ribbon") s.rowR = s.rowL + (s.rowL < 2 ? 1 : -1);
-    s.perf = s.mode === "ribbon" ? 0 : (m.rnd() < 0.5 ? -1 : 1) * (2 + Math.floor(m.rnd() * 4)); s.tof = s.mode === "ribbon" ? 0 : s.perf; s.tofSet = s.mode === "ribbon";
-    s.cas = 0; s.out = 0; s.said = ""; s.lines = 0; s.spin = 0;
-    if (s.mode === "jam") s.done = [];
+    s.plan = PLAN[s.mode]; s.step = 0; s.sub = 0; s.got = {}; s.fum = 0; s.done = false; s.demoed = false; s.advT = -9;
+    s.lid = false; s.select = s.mode !== "paper"; s.crumple = s.mode === "jam"; s.back = 0; s.scrap = false;
+    s.pinL = s.pinR = s.mode === "ribbon"; s.loaded = s.mode === "ribbon"; s.paperErr = s.mode === "paper"; s.bail = s.mode === "ribbon";
+    s.perf = s.mode === "paper" ? -(3 + Math.floor(m.rnd() * 2)) : 0; s.cas = 0;
+    s.queue = 2 + Math.floor(m.rnd() * 3); s.said = ""; s.holdT = 0; s.dk = null;
+    var L = s.L = {}, k;
+    for (k in PART) L[k] = PART[k][0] === "SELECT" ? "SELECT" : G.t(PART[k][0]);
+    L.tof = G.t("top of form"); L.box = G.t("fresh box"); L.open = G.t("lid (open)");
+    L.title = s.mode === "ribbon" ? G.t("Ribbon") : s.mode === "paper" ? G.t("New box") : G.t("Paper jam");
   }
-  function knob(m, d) {                                  // the platen knob: -1 back, +1 forward (one line)
-    var s = m.s;
-    if (s.crumple) {
-      if (d > 0) { say(m, G.t("Forward just feeds it deeper. Backwards.")); return; }
-      if (!s.cover) { say(m, G.t("Open the carrier cover first.")); return; }
-      if (next(m) < 2) { if (!s.paused) s.lost = true; s.done[0] = true; s.done[1] = true; }
-      s.back++; m.sfx("click");
-      if (s.back >= 6) { s.crumple = false; mark(m, 2); say(m, G.t("The crumpled sheet backs out of the platen in one piece. Mostly.")); }
-      return;
+  function console1(m) {                                  // the admin console's line (English, as typed; cached by state)
+    var s = m.s, k = (s.done ? "d" : "") + (s.select ? "s" : "") + (s.lid ? "l" : "");
+    if (s.cK === k) return s.cL;
+    s.cK = k;
+    s.cL = "admin> printer " + name(m) + ": " + (s.done ? "PRINTING, " + s.queue + " to go" : s.lid || !s.select ? "PAUSED (SELECT off), " + s.queue + " waiting" :
+      s.mode === "jam" ? "PAPER JAM, " + s.queue + " waiting" : s.mode === "ribbon" ? "RIBBON WORN, printing grey" : "OUT OF PAPER, " + s.queue + " waiting");
+    return s.cL;
+  }
+  function lidRect(m) { var t = m.tgt("lid"), r = m.s.lid ? LID_O : LID_C; t.x = r[0]; t.y = r[1]; t.w = r[2]; t.h = r[3]; }
+
+  // ---- the pointer: forgiving taps (44 CSS px, the glowing part first), the knob's drag
+  function pick(m, x, y, k) {
+    var l = m.targets, half = 22 / (k || 1), best = null, bd = 1e9, g = glowId(m), i, t, dx, dy, d, pad;
+    for (i = 0; i < l.length; i++) {
+      t = l[i]; if (t.off) continue;
+      pad = t.id === g ? 6 / (k || 1) : 0;                 // (the glowing part reaches a little further)
+      dx = Math.max(t.x - x, 0, x - t.x - t.w); dy = Math.max(t.y - y, 0, y - t.y - t.h);
+      if (Math.max(0, half - t.w / 2) + pad < dx || Math.max(0, half - t.h / 2) + pad < dy) continue;
+      d = dx + dy - (t.id === g ? 1000 : 0);
+      if (d < bd) { bd = d; best = t.id; }
     }
-    if (!s.loaded) { say(m, G.t("No paper on the platen yet.")); return; }
-    s.perf -= d; s.spin += d; m.sfx("click");
-  }
-  function power(m) {
-    var s = m.s; s.power = !s.power; s.select = false; m.sfx("click");
-    if (!s.power) { say(m, G.t("Power off. Now the knob sets top-of-form.")); return; }
-    if (s.loaded) { s.tof = s.perf; s.tofSet = true; if (next(m) === (s.mode === "jam" ? 5 : 1)) mark(m, s.mode === "jam" ? 5 : 1); }
-    s.paperErr = !s.loaded;
-    var n = Math.abs(s.perf);
-    say(m, !s.loaded ? G.t("Power on: PAPER ERROR.") : s.perf === 0 ? G.t("Power on. Top-of-form set dead level with the head.") :
-      s.perf > 0 ? G.tn(n, "Power on. Top-of-form set {n} line low.", "Power on. Top-of-form set {n} lines low.") : G.tn(n, "Power on. Top-of-form set {n} line high.", "Power on. Top-of-form set {n} lines high."));
-  }
-  function select(m) {
-    var s = m.s;
-    if (!s.power) { say(m, G.t("It's off.")); return; }
-    if (s.cover) { say(m, G.t("SELECT won't stay on with the carrier cover open.")); return; }
-    if (!s.loaded || s.crumple) { say(m, G.t("PAPER ERROR: no paper on the pins.")); return; }
-    if (s.mode === "ribbon" && s.cas < 4) { say(m, G.t("The new cassette isn't in yet.")); return; }
-    s.select = !s.select; m.sfx("click");
-    say(m, s.select ? G.t("SELECT on: the printer is online.") : G.t("SELECT off: the printer is offline."));
-    if (s.select) {
-      var i = next(m), want = s.mode === "jam" ? 6 : s.mode === "paper" ? 2 : 5;
-      if (i === want - 1 && s.mode === "jam") s.done[5] = true;   // (you can skip setting TOF: it stays where it was)
-      if (i === want - 1 && s.mode === "paper") s.done[1] = true;
-      mark(m, want);
-      if (s.mode === "ribbon" && next(m) >= STEPS.ribbon.length) finish(m);
-    }
-  }
-  function feed(m, ff) {
-    var s = m.s;
-    if (!s.power || s.select) { say(m, s.select ? G.t("LINE FEED and FORM FEED only work with SELECT off.") : G.t("It's off.")); return; }
-    if (!s.loaded) { say(m, G.t("No paper.")); return; }
-    if (ff) { s.perf = s.tof; say(m, G.t("FORM FEED: to the top of the next page.")); } else { s.perf -= 1; }
-    m.sfx("click");
-  }
-  function chip(m, which) {
-    var s = m.s, i = next(m);
-    if (which === "pause") {
-      if (s.paused) { say(m, G.t("admin> printer {p} pause: already paused.", { p: name(m) })); return; }
-      s.paused = true; if (s.mode === "jam" && i === 0) s.done[0] = true;
-      say(m, G.t("admin> printer {p} pause. Paused: {n} jobs waiting.", { p: name(m), n: s.queue })); return;
-    }
-    if (s.mode === "jam" && !s.paused) s.paused = true;
-    if (!s.select) { say(m, G.t("admin> printer {p} resume: it isn't selected yet (the SELECT light).", { p: name(m) })); return; }
-    var last = STEPS[s.mode].length - 1;
-    if (i < last) { say(m, G.t("Not yet: {step} first.", { step: step(i, s.mode).toLowerCase() })); return; }
-    s.done[last] = true; s.paused = false; say(m, G.t("admin> printer {p} resume. The waiting jobs start printing.", { p: name(m) })); finish(m);
-  }
-  function finish(m) {
-    var s = m.s, sq = s.rowL === s.rowR, err = Math.abs(s.tof), q;
-    if (s.mode === "ribbon") { q = 1 - G.clamp((m.t - 25) / 80, 0, 0.3); m.note = q >= 0.8 ? G.t("The next souvenir comes out crisp and black.") : G.t("The next souvenir: darker than ghost grey, at least.");
-      m.end(q, null, { mode: "ribbon", dark: q }); return; }
-    q = (sq ? 1 : 0.6) * G.clamp(1 - 0.15 * err, 0.4, 1) * (s.lost ? 0.85 : 1) - G.clamp((m.t - 40) / 120, 0, 0.2);
-    if (!sq) m.refault = { kind: "jam", after: 35, text: G.t("The {m} jams again: the paper went on a hole skew.", { m: G.itemName(m.opts.id || "souvenir") }) };
-    m.note = s.lost ? G.t("Somebody's banner went out half on the platen.") : err === 0 ? G.t("The souvenir lands dead centre. The visitor frames it.") : "";
-    s.printing = true; s.lines = 0;
-    m.end(G.clamp(q, 0.25, 1), null, { mode: s.mode, paused: !s.lost, square: sq, tof: err, lost: s.lost });
+    return best;
   }
 
   G.mini.def("imagewriter", {
-    title: G.t.k("Feed the ImageWriter"), skill: G.t.k("Clearing a jam and setting top-of-form on an Apple ImageWriter"), time: G.TUNE.mini.time.imagewriter,
-    keys: [["Tab", G.t.k("pick")], [G.t.k("key|Enter"), G.t.k("press")], ["← →", G.t.k("platen knob / paper row")], ["O", G.t.k("on/off")], ["S", G.t.k("SELECT")]],
-    help: G.t.k("Pause the print queue first (queued souvenirs wait; nothing is lost). The paper runs on two pin-feed sprockets at the back, each with a hinged clamp: the holes go on the same row both sides. Top-of-form is set with the power off: turn the platen knob until the perforation is level with the top of the print head, then switch on and press SELECT."),
+    title: G.t.k("Feed the ImageWriter"), skill: G.t.k("Clearing a jam and loading paper on an Apple ImageWriter"), time: G.TUNE.mini.time.imagewriter,
+    keys: [["Tab", G.t.k("pick")], [G.t.k("key|Enter"), G.t.k("press")], ["S", G.t.k("SELECT")]],
+    help: G.t.k("Four steps, one at a time: the step is written at the top and the part to use glows yellow. Tap it (or Tab to it and press Enter). A wrong part tells you what to do instead and costs a few seconds. Opening the lid turns SELECT off, so the print queue waits and nothing is lost. Show me does the rest for you, a little slower."),
+    demoTitle: G.t.k("Watch it done step by step (the fix takes a little longer)"),
     init: function (m, opts) {
       build(m, opts); var s = m.s;
-      m.add("pause", 70, 262, 150, 30, "admin> printer " + name(m) + " pause");
-      m.add("resume", 228, 262, 160, 30, "admin> printer " + name(m) + " resume");
-      m.add("cover", 100, 138, 200, 40, G.t("the carrier cover (clear lid)"));
-      m.add("knob", 362, 100, 36, 40, G.t("the platen knob"));
-      s.scraps.forEach(function (c, i) { m.add("scrap" + i, c.x - 12, c.y - 10, 24, 20, c.hid ? G.t("something near the print head") : G.t("a torn piece of paper")); });
-      m.add("sprL", 50, 22, 50, 64, G.t("left sprocket and its paper clamp")); m.add("sprR", 320, 22, 50, 64, G.t("right sprocket and its paper clamp"));
-      m.add("onoff", 258, 220, 30, 22, "ON/OFF"); m.add("select", 292, 220, 30, 22, "SELECT"); m.add("lf", 326, 220, 30, 22, "LINE FEED"); m.add("ff", 360, 220, 30, 22, "FORM FEED");
-      if (s.mode === "ribbon") { m.add("cas", 150, 136, 70, 34, G.t("the ribbon cassette")); m.add("guide", 222, 146, 40, 20, G.t("the ribbon guide")); }
-      s.L = { head: G.t("top of head"), open: G.t("clamp|open"), clamp: G.t("clamp"), platen: G.t("platen"), cover: G.t("cover open"),
-        title: s.mode === "ribbon" ? G.t("Ribbon") : s.mode === "paper" ? G.t("New box") : G.t("Paper jam"), steps: STEPS[s.mode].map(function (t, i) { return step(i, s.mode); }) };
-      say(m, hint(m));
+      m.add("lid", LID_C[0], LID_C[1], LID_C[2], LID_C[3], G.t(PART.lid[1]));
+      if (s.mode === "ribbon") { m.add("cas", 178, 164, 104, 28, G.t(PART.cas[1])); m.add("casknob", 284, 166, 24, 24, G.t(PART.casknob[1])); }
+      if (s.mode === "jam") m.add("scrap", 292, 156, 30, 24, G.t(PART.scrap[1]));
+      m.add("sprL", 44, 54, 62, 74, G.t(PART.sprL[1])); m.add("sprR", 374, 54, 62, 74, G.t(PART.sprR[1]));
+      m.add("bail", 112, 96, 256, 40, G.t(PART.bail[1]));
+      m.add("knob", 424, 126, 44, 44, G.t(PART.knob[1]));
+      m.add("select", 332, 224, 64, 24, G.t(PART.select[1]));
+      moved(m); say(m, s.instr, 0.01);
     },
-    press: function (m, id) {
-      var s = m.s, i = next(m);
-      if (s.printing) return;
-      if (id === "pause" || id === "resume") { chip(m, id); return; }
-      if (id === "cover") {
-        s.cover = !s.cover; if (s.cover) s.select = false; m.sfx("click");
-        if (s.cover && s.mode === "jam" && i <= 1) { if (!s.paused) s.lost = true; s.done[0] = true; s.done[1] = true; }
-        if (s.cover && s.mode === "ribbon") mark(m, 0);
-        say(m, s.cover ? G.t("Carrier cover open. SELECT is off.") : G.t("Cover closed.")); return;
-      }
-      if (id === "knob") { knob(m, s.mode === "jam" && s.crumple ? -1 : 1); return; }
-      if (id.indexOf("scrap") === 0) {
-        if (!s.cover) { this.press(m, "cover"); return; }    // (a scrap under the closed lid: the tap meant the lid)
-        var c = s.scraps[+id.slice(5)]; if (!c.on) return;
-        if (s.crumple) { say(m, G.t("Back the sheet out first.")); return; }
-        c.on = false; m.tgt(id).off = true; m.sfx("click");
-        say(m, c.hid ? G.t("Tweezers: a confetti scrap from under the print head. That would have jammed it again.") : G.t("A torn piece out."));
-        if (!s.scraps.some(function (x) { return x.on; })) mark(m, 3);
-        return;
-      }
-      if (id === "sprL" || id === "sprR") {
-        if (s.mode === "ribbon") { say(m, G.t("The paper's fine. It's the ribbon.")); return; }
-        if (s.crumple || s.scraps.some(function (x) { return x.on; })) { say(m, G.t("Clear the old paper out first.")); return; }
-        var k = id === "sprL" ? "clampL" : "clampR";
-        s[k] = s[k] === "open" ? "closed" : "open"; s.loaded = true; s.opened[k] = true; m.sfx("click");
-        if (s.clampL === "closed" && s.clampR === "closed" && s.opened.clampL && s.opened.clampR) mark(m, s.mode === "jam" ? 4 : 0);
-        say(m, s[k] === "open" ? G.t("Clamp open. Lay the holes on the pins: drag this side up or down, or the arrows.") : s.rowL === s.rowR ? G.t("Clamp shut. Both sides on the same row.") :
-          G.t("Clamp shut. (The two sides are on different rows.)"));
-        return;
-      }
-      if (id === "onoff") { power(m); return; }
-      if (id === "select") { select(m); return; }
-      if (id === "lf" || id === "ff") { feed(m, id === "ff"); return; }
-      if (id === "cas") {
-        if (!s.cover) { say(m, G.t("Open the carrier cover first.")); return; }
-        if (s.cas === 0) { s.cas = 1; mark(m, 1); say(m, G.t("The old cassette lifts off its supporters. The ribbon is worn to lace.")); }
-        else if (s.cas === 1) { s.cas = 2; mark(m, 2); say(m, G.t("New cassette pressed down: its notches snap onto the two black supporters.")); }
-        else if (s.cas === 3) { s.cas = 4; mark(m, 4); say(m, G.t("A turn of the cassette knob: the slack is gone.")); }
-        return;
-      }
-      if (id === "guide" && s.cas === 2) { s.cas = 3; mark(m, 3); say(m, G.t("Ribbon slipped between the black guide and the thin metal plate, in front of the head.")); }
+    press: function (m, id) { var s = m.s; if (s.done || s.demo) return; act(m, id, 1); lidRect(m); },
+    demo: function (m) {
+      var s = m.s; if (s.done || s.demo) return;
+      s.demo = true; s.demoed = true; s.demoT = m.t + 0.4; if (m.demoBtn) m.demoBtn.disabled = true;
+      say(m, G.t("Watch: each step plays itself, the glowing part first."), DEMO_STEP);
     },
     key: function (m, e) {
-      var s = m.s, k = e.key, f = m.targets[m.focus], fid = f ? f.id : "";
-      if (k === "o" || k === "O") { this.press(m, "onoff"); return true; }
+      var k = e.key;
       if (k === "s" || k === "S") { this.press(m, "select"); return true; }
-      if ((fid === "sprL" || fid === "sprR") && (k === "ArrowUp" || k === "ArrowDown")) {
-        var side = fid === "sprL" ? "L" : "R";
-        if (s["clamp" + side] !== "open") { say(m, G.t("Open the clamp first (Enter).")); return true; }
-        s["row" + side] += k === "ArrowUp" ? -1 : 1; return true;
-      }
-      if (fid === "knob" && (k === "ArrowLeft" || k === "ArrowDown" || k === "ArrowRight" || k === "ArrowUp")) { knob(m, k === "ArrowLeft" || k === "ArrowDown" ? -1 : 1); return true; }
-      if (k === "[" || k === "]") { knob(m, k === "[" ? -1 : 1); return true; }
       return false;
     },
-    ptr: function (m, type, x, y) {
-      var s = m.s;
+    ptr: function (m, type, x, y, e) {
+      var s = m.s, el = e && e.target, k = el && el.clientWidth ? el.clientWidth / 480 : 1, id;
+      if (s.done || s.demo) return true;
       if (type === "down") {
-        if (Math.hypot(x - 380, y - 120) < 22) { s.dk = y; s.dk0 = y; return true; }
-        var side = x < 210 && x > 40 && y < 90 ? "L" : x > 300 && x < 380 && y < 90 ? "R" : "";
-        if (side && s["clamp" + side] === "open") { s.dr = side; s.dy = y; s.dRow = s["row" + side]; s.dMv = false; return true; }
-        return false;
+        id = pick(m, x, y, k); s.pid = id; s.px = x; s.py = y; s.dk = id === "knob" ? y : null; s.turned = false;
+        return true;                                       // (ours: a tap resolves on "up", with the forgiving pick)
       }
-      if (s.dk !== undefined && s.dk !== null) {
-        if (type === "move") { var n = Math.round((y - s.dk) / 12); while (n > 0) { knob(m, -1); s.dk += 12; n--; } while (n < 0) { knob(m, 1); s.dk -= 12; n++; } }
-        if (type === "up" && Math.abs(y - s.dk0) < 6 && s.dk === s.dk0) this.press(m, "knob");   // (a tap turns it one click, like Enter)
-        if (type === "up" || type === "cancel") s.dk = null;
+      if (type === "move" && s.dk !== null && s.dk !== undefined) {
+        var dy = y - s.dk;
+        if (Math.abs(dy) >= 14) { s.dk = y; s.turned = true; act(m, "knob", dy > 0 ? 1 : -1); lidRect(m); }
         return true;
       }
-      if (s.dr) {                                         // an open clamp: a drag moves its row, a tap shuts it
-        if (type === "move") { m.tip(x, y); if (Math.abs(y - s.dy) >= 6) s.dMv = true; if (s.dMv) s["row" + s.dr] = s.dRow + Math.round((m.ty - s.dy) / 8); }
-        if (type === "up" && !s.dMv) { var sd = s.dr; s.dr = ""; this.press(m, "spr" + sd); return true; }
-        if (type === "up" || type === "cancel") s.dr = "";
+      if (type === "up") {
+        var was = s.pid, tap = Math.abs(x - s.px) + Math.abs(y - s.py) < Math.max(14, 18 / k);
+        s.dk = null; s.pid = null;
+        if (s.turned) return true;
+        if (tap) {
+          id = pick(m, x, y, k);
+          if (id && (id === was || !was)) { act(m, id, 1); lidRect(m); }
+          else if (!id && !s.done) say(m, G.t("Tap the glowing part: {part}.", { part: G.t(PART[glowId(m)][1]) }), HOLD_BAD);
+        }
         return true;
       }
+      if (type === "cancel") { s.dk = null; s.pid = null; return true; }
       return false;
     },
-    tick: function (m) { if (!m.done && m.t >= (m.s.holdT || 0)) { var h = hint(m); if (m.s.said !== h) { m.s.said = h; m.say(h); } } },
-    draw: function (m, g) {
-      var s = m.s, i;
-      g.fillStyle = "#3a352d"; g.fillRect(0, 0, 480, 300);
-      P.box(g, PX, PY, 380, 244, 14, "#e6dfcc", "#a99d82", 2);            // the case, lid open: the inside
-      P.box(g, PX + 18, PY + 10, 344, 172, 8, "#2d2a26");
-      // the paper: fanfold from the back, holes down both sides, the perforation (slanted if the rows differ)
-      if (s.loaded && !s.crumple) {
-        var skew = (s.rowR - s.rowL) * 8, py = REF + s.perf * 3;
-        g.fillStyle = "#fbf8ee"; g.beginPath(); g.moveTo(PL, PY + 10 + s.rowL * 8); g.lineTo(PR, PY + 10 + s.rowR * 8); g.lineTo(PR, PLY + 8); g.lineTo(PL, PLY + 8); g.closePath(); g.fill();
-        g.fillStyle = "#59544a"; for (i = 0; i < 12; i++) { g.beginPath(); g.arc(PL + 6, PY + 18 + s.rowL * 8 + i * 8 - s.spin * 2 % 8, 2, 0, 6.283); g.arc(PR - 6, PY + 18 + s.rowR * 8 + i * 8 - s.spin * 2 % 8, 2, 0, 6.283); g.fill(); }
-        g.strokeStyle = "rgba(0,0,0,.35)"; g.setLineDash([3, 3]); g.lineWidth = 1; g.beginPath(); g.moveTo(PL, py - skew / 2); g.lineTo(PR, py + skew / 2); g.stroke(); g.setLineDash([]);
-        if (s.mode === "jam" && s.printing) { g.fillStyle = "#2b2b2b"; for (i = 0; i < 3; i++) g.fillRect(PL + 30, PLY - 14 - i * 6, 120 + i * 20, 2); }
-      }
-      // the top-of-form mark: the top of the print head
-      g.strokeStyle = "#e3402f"; g.lineWidth = 2; g.beginPath(); g.moveTo(PL - 10, REF); g.lineTo(PL + 4, REF); g.moveTo(PR - 4, REF); g.lineTo(PR + 10, REF); g.stroke();
-      txt(g, s.L.head, 34, REF + 3, 7, "#ffd75a", "left", false, 52);
-      // the sprockets and their clamps
-      [["L", 52], ["R", 322]].forEach(function (sp) {
-        var x = sp[1], op = s["clamp" + sp[0]] === "open";
-        P.box(g, x, 24, 46, 60, 6, "#151412"); g.fillStyle = "#888"; for (var j = 0; j < 6; j++) { g.beginPath(); g.arc(x + (sp[0] === "L" ? 28 : 18), 32 + j * 9, 2.2, 0, 6.283); g.fill(); }
-        if (op) P.box(g, x + (sp[0] === "L" ? -20 : 40), 26, 26, 56, 4, "#2a2a28", "#555"); else P.box(g, x + 4, 26, 38, 56, 4, "rgba(30,30,28,.85)", "#555");
-        g.fillStyle = "#f2efe6"; g.fillRect(x + 18, 86, 10, 6);               // the white sprocket release lever
-        txt(g, op ? s.L.open : s.L.clamp, x + 23, 66, 8, "#f1ead8", "center", false, 40);
-      });
-      // the platen, its knob, the white roller shaft with its two red rings
-      P.box(g, 54, PLY, 312, 16, 7, "#111", "#000"); g.fillStyle = "#e8e4da"; g.fillRect(70, PLY + 18, 280, 4);
-      g.fillStyle = "#c8302a"; g.fillRect(118, PLY + 17, 4, 6); g.fillRect(298, PLY + 17, 4, 6);
-      P.knob(g, 380, 120, 16, ((s.spin % 8) + 8) % 8 / 8, "");
-      txt(g, s.L.platen, 378, 140, 7, "#2b271f", "center", false, 40);
-      if (s.crumple) {                                  // the crumpled sheet, round the platen
-        g.fillStyle = "#f6f1e3"; g.beginPath(); g.moveTo(90, PLY - 30 + s.back * 4); for (i = 0; i < 9; i++) g.lineTo(100 + i * 28, PLY - 18 + (i % 2 ? -14 : 8) + s.back * 5); g.lineTo(330, PLY + 26); g.lineTo(90, PLY + 26); g.closePath(); g.fill();
-        g.strokeStyle = "rgba(0,0,0,.2)"; g.stroke();
-      }
-      // the print head carriage, the ribbon cassette, the carrier cover
-      P.box(g, 176, 140, 34, 26, 4, "#55524a", "#222");
-      {
-        var cc = s.mode === "ribbon" && s.cas === 1 ? null : s.mode === "ribbon" && s.cas === 0 ? "#6b6860" : "#1d1c1a";
-        if (cc) { P.box(g, 150, 152, 86, 18, 4, cc, "#000"); P.knob(g, 228, 161, 6, 0.3, ""); }
-        if (s.mode === "ribbon" && s.cas >= 3) { g.strokeStyle = "#111"; g.lineWidth = 2; g.beginPath(); g.moveTo(156, 152); g.lineTo(193, 138); g.lineTo(230, 152); g.stroke(); }
-        if (s.mode === "ribbon") P.box(g, 222, 146, 40, 6, 2, "#0d0d0c");
-      }
-      s.scraps.forEach(function (c, k) {
-        if (!c.on) return; var fx = m.targets[m.focus], glint = c.hid && ((fx && fx.id === "scrap" + k) || Math.hypot(m.ptr.x - c.x, m.ptr.y - c.y) < 26);
-        if (c.hid && !glint && !m.calm) { g.fillStyle = "rgba(255,255,240," + (0.15 + 0.1 * Math.sin(m.t * 3)).toFixed(2) + ")"; g.fillRect(c.x - 3, c.y - 2, 5, 4); return; }
-        g.fillStyle = "#f6f1e3"; g.beginPath(); g.moveTo(c.x - 9, c.y - 6); g.lineTo(c.x + 8, c.y - 4); g.lineTo(c.x + 6, c.y + 6); g.lineTo(c.x - 7, c.y + 5); g.fill();
-        if (glint) { g.strokeStyle = "#ffe680"; g.lineWidth = 1.5; g.stroke(); }
-      });
-      if (!s.cover) P.box(g, 100, 132, 200, 50, 6, "rgba(200,225,235,.28)", "rgba(220,240,250,.7)", 1.5);
-      else { g.strokeStyle = "rgba(220,240,250,.5)"; g.setLineDash([4, 4]); P.rr(g, 100, 182, 200, 14, 4); g.stroke(); g.setLineDash([]); txt(g, s.L.cover, 200, 184, 8, "#f1ead8", "center", false, 190); }
-      // the control cluster, front right
-      P.box(g, 250, 194, 146, 54, 6, "#d8cfb8", "#a99d82");
-      P.led(g, 268, 206, 4, "#3fe063", s.power); P.led(g, 306, 206, 4, "#3fe063", s.power && s.select); P.led(g, 352, 206, 4, "#ff8a1e", s.power && (s.paperErr || s.crumple));
-      txt(g, "POWER", 274, 202, 7); txt(g, "SELECT", 312, 202, 7); txt(g, "PAPER ERROR", 358, 202, 6);
-      [["onoff", "ON/OFF", s.power], ["select", "SELECT", s.select], ["lf", "LINE FEED", false], ["ff", "FORM FEED", false]].forEach(function (b, j) {
-        P.key(g, 258 + j * 34, 220, 30, 18, "", { down: b[2], tone: "grey" }); txt(g, b[1], 273 + j * 34, 240, 6, "#2b271f", "center");
-      });
-      // the checklist (right)
-      var l = STEPS[s.mode], nx = next(m);
-      txt(g, s.L.title, 402, 12, 11, "#f1ead8", "left", true, 74);
-      for (i = 0; i < l.length; i++) txt(g, (s.done[i] ? "✓ " : i === nx ? "▸ " : "  ") + s.L.steps[i], 402, 30 + i * 26, 9, s.done[i] ? "#9be3a8" : i === nx ? "#ffd75a" : "#cfc6ae", "left", false, 74);
-      if (s.qK !== s.queue + "" + s.paused) { s.qK = s.queue + "" + s.paused; s.qT = s.paused ? G.t("queue: {n} (paused)", { n: s.queue }) : G.t("queue: {n}", { n: s.queue }); }   // (cached: not per frame)
-      txt(g, s.qT, 402, 236, 9, "#cfc6ae", "left", false, 74);
-      // the admin console strip
-      P.screen(g, 4, 258, 472, 38, "green", 6); P.stext(g, "admin>", 12, 270, "green", 18);
-      [["pause", "printer " + name(m) + " pause", 70, 150], ["resume", "printer " + name(m) + " resume", 228, 160]].forEach(function (c) {
-        var on = c[0] === "pause" ? s.paused : !s.paused && next(m) >= l.length;
-        g.strokeStyle = on ? "#74ff95" : "rgba(116,255,149,.5)"; g.lineWidth = 1.5; P.rr(g, c[2], 264, c[3], 26, 5); g.stroke();
-        P.stext(g, c[1], c[2] + c[3] / 2, 269, "green", 16, "center");
-      });
+    tick: function (m) {
+      var s = m.s;
+      if (m.t >= (s.kT || 0)) { s.kT = m.t + 0.5; var cv = document.querySelector("#mg canvas"), cw = cv && cv.clientWidth; s.small = !!cw && cw < 420; }   // (twice a second, not per frame)
+      if (s.demo && !s.done && m.t >= s.demoT) { s.demoT = m.t + DEMO_STEP; act(m, glowId(m), 1); lidRect(m); }
+      if (!m.done && !s.done && m.t >= (s.holdT || 0) && s.said !== s.instr) { s.said = s.instr; m.say(s.instr); }
     },
-    auto: function (q, opts) { return { mode: opts.kind === "paper" ? "paper" : "jam", paused: true, square: q >= 0.6, tof: q >= 0.9 ? 0 : 2 }; }
+    draw: function (m, g) {
+      var s = m.s, i, gid = glowId(m), pulse = m.calm ? 1 : 0.6 + 0.4 * Math.sin(m.t * 5), bob = m.calm ? 0 : 3 * Math.sin(m.t * 4);
+      g.fillStyle = "#3a352d"; g.fillRect(0, 0, 480, 300); TAGPX = s.small ? 12 : 9;
+      // the banner: the step, its words, the pips
+      g.fillStyle = m.t - s.advT < 0.7 ? "#24432c" : "#1d1b17"; g.fillRect(0, 0, 480, BAN);
+      if (s.banner) { P.box(g, 8, 8, 40, 21, 10, "#ffd75a"); txt(g, s.banner, 28, 11, 14, "#1d1b17", "center", true); }
+      txt(g, s.title, 56, s.small ? 7 : 9, s.small ? 20 : 17, "#f6efdc", "left", true, 336);
+      for (i = 0; i < s.plan.length; i++) { g.fillStyle = i < s.step ? "#74e08e" : i === s.step ? "#ffd75a" : "#5b564b"; g.beginPath(); g.arc(412 + i * 18, 13, 5, 0, 6.283); g.fill(); }
+      txt(g, s.L.title, 439, 22, 9, "#cfc6ae", "center", false, 80);
+      // the case and the paper well
+      P.box(g, 12, 40, 456, 212, 14, "#e6dfcc", "#a99d82", 2);
+      P.box(g, 28, 46, 424, 156, 8, "#2d2a26");
+      // the sprockets: pins, the clamp (shut over the paper, or flipped open)
+      for (i = 0; i < 2; i++) {
+        var sx = i ? 384 : 52, hx = i ? HR : HL;
+        P.box(g, sx, 58, 44, 62, 6, "#151412", "#3d3a34");
+        g.fillStyle = "#9a978e"; for (var j = 0; j < 6; j++) { g.beginPath(); g.arc(hx, 66 + j * 9, 2.2, 0, 6.283); g.fill(); }
+      }
+      // the paper: fanfold from the back; loose until its holes are on the pins, then square; the perforation
+      if (!s.crumple && (s.mode !== "paper" || s.pinL || s.pinR)) {
+        var lo = s.pinL ? 0 : 18, ro = s.pinR ? 0 : 18, ld = s.pinL ? 0 : 26, rd = s.pinR ? 0 : 10, off = ((s.perf * LINE) % 9 + 9) % 9;
+        g.fillStyle = s.loaded ? "#fbf8ee" : "#efe9da"; g.beginPath(); g.moveTo(PXL + lo, PTOP + ld); g.lineTo(PXR - ro, PTOP + rd); g.lineTo(PXR - ro + (s.pinR ? 0 : 6), PLY); g.lineTo(PXL + lo - (s.pinL ? 0 : 6), PLY); g.closePath(); g.fill();
+        g.fillStyle = "#59544a";
+        for (i = 0; i < 10; i++) { var hy = PTOP + 4 + i * 9 + off; if (hy > PLY - 3) break; if (hy > PTOP + ld) { g.beginPath(); g.arc(HL + lo, hy, 2, 0, 6.283); g.fill(); } if (hy > PTOP + rd) { g.beginPath(); g.arc(HR - ro, hy, 2, 0, 6.283); g.fill(); } }
+        if (s.loaded) { var py = REF + s.perf * LINE; if (py > PTOP && py < PLY) { g.strokeStyle = "rgba(0,0,0,.55)"; g.setLineDash(DASH); g.lineWidth = 1.5; g.beginPath(); g.moveTo(PXL, py); g.lineTo(PXR, py); g.stroke(); g.setLineDash(NODASH); } }
+        if (s.printing && s.mode !== "ribbon") { g.fillStyle = "#2b2b2b"; for (i = 0; i < 3; i++) g.fillRect(PXL + 60, PLY - 12 - i * 7, 140 + i * 24, 2); }
+      }
+      for (i = 0; i < 2; i++) {                            // the clamps (drawn over the paper's edge)
+        var cx = i ? HR : HL, shut = i ? s.pinR : s.pinL;
+        if (shut) P.box(g, cx - 8, 60, 16, 56, 4, "rgba(40,38,34,.88)", "#6d6a62");
+        else P.box(g, i ? 430 : 32, 60, 16, 56, 4, "#2a2a28", "#6d6a62");
+      }
+      // the top-of-form mark (the top of the print head)
+      g.strokeStyle = "#e3402f"; g.lineWidth = 2.5; g.beginPath(); g.moveTo(PXL - 8, REF); g.lineTo(PXL + 6, REF); g.moveTo(PXR - 6, REF); g.lineTo(PXR + 8, REF); g.stroke();
+      // the paper bail: down on the paper, or up
+      var by = s.bail ? 128 : 106;
+      g.globalAlpha = s.bail ? 1 : 0.75; g.fillStyle = "#c9c4b6"; g.fillRect(118, by, 244, 4);
+      g.fillStyle = "#2d2b28"; g.fillRect(166, by - 2, 16, 8); g.fillRect(298, by - 2, 16, 8); g.globalAlpha = 1;
+      // the platen and its knob
+      P.box(g, 56, PLY, 368, 16, 7, "#111", "#000"); g.fillStyle = "#e8e4da"; g.fillRect(72, PLY + 18, 336, 3);
+      P.knob(g, 446, 148, 17, ((s.back + s.perf) % 8 + 8) % 8 / 8, "");
+      if (s.crumple) {                                     // the crumpled sheet round the platen, backing out
+        var cy = PLY - 16 - s.back * 9;
+        g.fillStyle = "#f6f1e3"; g.beginPath(); g.moveTo(96, cy); for (i = 0; i < 9; i++) g.lineTo(108 + i * 32, cy - 10 + (i % 2 ? -14 : 10)); g.lineTo(390, PLY + 20); g.lineTo(96, PLY + 20); g.closePath(); g.fill();
+        g.strokeStyle = "rgba(0,0,0,.25)"; g.lineWidth = 1; g.stroke();
+      }
+      // the print head carriage and the ribbon cassette
+      if (!(s.mode === "ribbon" && s.cas === 1)) {
+        P.box(g, 178, 168, 104, 22, 4, s.mode === "ribbon" && s.cas === 0 ? "#77736a" : "#1d1c1a", "#000");
+        P.knob(g, 296, 178, 7, s.cas === 3 ? 0.8 : 0.3, "");
+        if (s.mode === "ribbon" && s.cas === 2) { g.strokeStyle = "#111"; g.lineWidth = 2; g.beginPath(); g.moveTo(190, 190); g.quadraticCurveTo(230, 206, 270, 190); g.stroke(); }
+      } else { g.fillStyle = "#0d0d0c"; g.fillRect(190, 184, 10, 6); g.fillRect(260, 184, 10, 6); }
+      P.box(g, 222, 160, 36, 24, 4, "#55524a", "#222");
+      if (s.mode === "jam" && s.scrap) { g.fillStyle = "#f6f1e3"; g.beginPath(); g.moveTo(296, 160); g.lineTo(318, 163); g.lineTo(314, 176); g.lineTo(298, 174); g.fill(); }
+      // the lid: closed over the head (clear), or open, tipped forward
+      if (!s.lid) P.box(g, LID_C[0], LID_C[1], LID_C[2], LID_C[3], 6, "rgba(200,225,235,.30)", "rgba(220,240,250,.8)", 1.5);
+      else { g.fillStyle = "rgba(200,225,235,.42)"; g.beginPath(); g.moveTo(LID_O[0] + 10, LID_O[1]); g.lineTo(LID_O[0] + LID_O[2] - 10, LID_O[1]); g.lineTo(LID_O[0] + LID_O[2], LID_O[1] + LID_O[3]); g.lineTo(LID_O[0], LID_O[1] + LID_O[3]); g.closePath(); g.fill(); g.strokeStyle = "rgba(90,110,120,.8)"; g.lineWidth = 1.5; g.stroke(); }
+      // the control panel: POWER, SELECT, PAPER ERROR, the SELECT key
+      P.box(g, 300, 204, 160, 44, 6, "#d8cfb8", "#a99d82");
+      P.led(g, 316, 213, 4, "#3fe063", true); P.led(g, 364, 213, 4, "#3fe063", s.select); P.led(g, 412, 213, 4, "#ff8a1e", s.paperErr || s.crumple);
+      txt(g, "POWER", 316, 219, 7, "#2b271f", "center"); txt(g, "SELECT", 364, 219, 7, "#2b271f", "center"); txt(g, "PAPER ERROR", 412, 219, 7, "#2b271f", "center");
+      P.key(g, 336, 228, 56, 16, "SELECT", s.select ? KEY_DN : KEY_UP);
+      // the fresh box under the printer, and the admin console
+      P.box(g, 14, 258, 136, 38, 4, "#b58b55", "#7d5d33"); g.fillStyle = "#fbf8ee"; for (i = 0; i < 3; i++) g.fillRect(24, 262 + i * 4, 116, 3);
+      txt(g, s.L.box, 82, 278, 10, "#2b1d0c", "center", true, 120);
+      P.screen(g, 156, 258, 320, 38, "green", 6); P.stext(g, console1(m), 164, 268, "green", 15, "left", 304);
+      // the labels on the parts, the glowing part, its arrow
+      tag(g, s.lid ? s.L.open : s.L.lid, s.lid ? 178 : 160, s.lid ? 218 : 190, gid === "lid");
+      tag(g, s.L.sprL, 74, 52, gid === "sprL"); tag(g, s.L.sprR, 406, 52, gid === "sprR");
+      tag(g, s.L.bail, 240, by - 10, gid === "bail"); tag(g, s.L.knob, 440, 176, gid === "knob");
+      if (s.mode === "paper") tag(g, s.L.tof, 64, 125, false);
+      if (s.mode === "ribbon") { if (s.cas !== 1 || gid === "cas") tag(g, s.L.cas, 214, 196, gid === "cas"); tag(g, s.L.casknob, 300, 160, gid === "casknob"); }
+      if (s.mode === "jam" && s.scrap) tag(g, s.L.scrap, 330, 188, gid === "scrap");
+      if (gid === "select") tag(g, "SELECT", 364, 200, true);
+      if (gid && !s.done) {
+        var c = cur(m);
+        for (i = 0; i < c.length; i++) {
+          var t = m.tgt(c[i]); if (!t || s.got[c[i]]) continue;
+          g.globalAlpha = pulse; g.strokeStyle = "#ffd75a"; g.lineWidth = 3; P.rr(g, t.x - 3, t.y - 3, t.w + 6, t.h + 6, 7); g.stroke(); g.globalAlpha = 1;
+          if (c[i] === gid) {                              // the arrow: above the part (below it, for the sprockets at the top)
+            var ax = t.x + t.w / 2, up = t.y < 70, ay = up ? t.y + t.h + 6 - bob : t.y - 6 + bob;
+            g.fillStyle = "#ffd75a"; g.beginPath();
+            if (up) { g.moveTo(ax, ay); g.lineTo(ax - 8, ay + 12); g.lineTo(ax + 8, ay + 12); } else { g.moveTo(ax, ay); g.lineTo(ax - 8, ay - 12); g.lineTo(ax + 8, ay - 12); }
+            g.closePath(); g.fill(); g.strokeStyle = "#1d1b17"; g.lineWidth = 1; g.stroke();
+          }
+        }
+      }
+    },
+    glow: function (m) { return glowId(m); },             // (tests: the part that glows now)
+    auto: function (q, opts) { return { mode: opts.kind === "paper" ? "paper" : "jam", steps: 4, fumbles: q >= 0.85 ? 0 : 3, demo: false, paused: true, square: q >= 0.5, tof: 0 }; }
   });
 })();
 
@@ -11651,6 +11688,7 @@ var G = (function () {
 
   // ---------------------------------------------------------------- the line
   function S(m) { return m.s; }
+  function duck(on) { try { if (G.sound && G.sound.duck) G.sound.duck(on); } catch (err) {} }   // the hall far down while the phone is up
   function cap(m, who, t) {                              // a caption line (the panel keeps the last four; the live line reads it)
     var s = m.s; s.caps.push([who, t]); if (s.caps.length > 4) s.caps.shift(); s.capDirty = true; m.say((who ? who + ": " : "") + t);
   }
@@ -11841,6 +11879,7 @@ var G = (function () {
   }
 
   G.mini.phoneAudio = { decode: voxDecode, state: VA, on: vOn, key: vKey, clips: VCLIP,
+    gain: function () { return vG; },                    // (tests: the voice's own gain, outside the duck)
     reset: function () { vRaw = {}; vBuf = {}; vWait = {}; vBun = {}; VA.dead = false; VA.log.length = 0; } };
   var PH = G.TUNE.mini.phone;
   G.mini.def("phone", {
@@ -11849,6 +11888,7 @@ var G = (function () {
     keys: [["0-9 * #", G.t.k("dial")], [G.t.k("key|Space"), G.t.k("handset")], ["F1-F5", G.t.k("memory keys")], ["L", G.t.k("LINK")]],
     help: G.t.k("The real dial plan: 1019 Dial-a-Museum (1020 its second line), 1021 the voice guest book, 1022 the front door, 1024 a modem, 1007-1009 the tables. No outside line. The memory keys under the clear caps dial for you. LINK is the hook flash."),
     init: function (m, opts) {
+      duck(true);
       var s = m.s; s.ext = EXT[opts.id] || "1008"; s.hook = false; s.line = "idle"; s.digits = ""; s.caps = []; s.keys = 0; s.mem = 0; s.fr = false;
       s.data = { answered: false, bonus: 0, caller: "", transfer: false, museum: null, modem: false, table: false, gb: false, telnet: "", op: false };
       s.busy19 = !!opts.busy19; s.last = ""; s.idle = 0; s.closeT = 0; s.light = 0; s.vol = 4; s.ringer = true; s.l1 = ""; s.l2 = ""; s.vSrc = []; s.vTok = 0;
@@ -11933,7 +11973,7 @@ var G = (function () {
       }
       if (s.capDirty && s.capEl) { s.capDirty = false; s.capEl.innerHTML = s.caps.map(function (c) { return "<p>" + (c[0] ? "<b>" + G.esc(G.t("{who}:", { who: c[0] })) + "</b> " : "") + G.esc(c[1]) + "</p>"; }).join(""); }
     },
-    close: function (m) { quiet(); vStop(m); ringOff(m); },
+    close: function (m) { quiet(); vStop(m); ringOff(m); duck(false); },
     draw: function (m, g) {
       var s = m.s, i, x, y;
       g.fillStyle = "#3d3a33"; g.fillRect(0, 0, 480, 330);
@@ -15613,9 +15653,10 @@ var G = (function () {
 // Visitor questions about booth 29's machines, built from INFO.items (the info cards, from
 // config.example.toml) plus a few hand-copied MACHINES.md facts. Multiple choice; the wrong
 // answers are other machines' real values. Right = rep + kudos + a fact; wrong = the real fact.
-//   G.trivia(done, { id, energy }) -> true when a question card opened; done(right) afterwards
+//   G.trivia(done, { id, energy, q, kick, pay }) -> true when a question card opened; done(right) afterwards
 //       (right: true / false / null for "let's look it up"). id: a machine to ask about if it
 //       has an unasked question; energy >= 50 gives 3 choices, below that 4 (tired = harder).
+//       q / kick: a ready question and its heading (cameos.js); pay: x a right answer's rep and kudos (default 1).
 //   G.trivia.auto(energy) -> true / false: a question answered off-screen (a volunteer, a booth
 //       that runs itself); counts in the stats.
 (function () {
@@ -15624,16 +15665,16 @@ var G = (function () {
   var FACTS = [
     { id: "osborne1", q: "Which machine came with about $1,500 of bundled software?", fact: "The Osborne 1 (1981, US$1,795) came with about $1,500 of bundled software." },
     { id: "osborne1", q: "How big is the Osborne 1's screen?", a: "5 inches", wrong: ["7 inches", "9 inches", "12 inches"], fact: "A 5-inch CRT showing 52 × 24 characters." },
-    { id: "hyperion", q: "Which MS-DOS portable shipped about two months before the Compaq Portable?", fact: "The Dynalogic Hyperion, built in Ottawa, shipped in January 1983, about two months before the Compaq Portable." },
+    { id: "hyperion", q: "Which MS-DOS portable shipped about two months before the Compaq Portable?", wrong: ["IBM Portable PC", "Compaq Portable III", "Commodore C286-LT"], fact: "The Dynalogic Hyperion, built in Ottawa, shipped in January 1983, about two months before the Compaq Portable." },
     { id: "ibm5155", q: "What did the IBM Portable 5155 cost at launch, with one drive?", a: "US$2,795", wrong: ["US$4,225", "US$1,795", "US$3,395"], fact: "US$2,795 with one drive, US$3,220 with two. The often-quoted $4,225 is wrong." },
-    { id: "kaypro2", q: "Which machine was Kaypro's best seller of 1984?", fact: "The 1984 Kaypro 2 (US$1,295) was Kaypro's best seller that year." },
+    { id: "kaypro2", q: "Which machine was Kaypro's best seller of 1984?", wrong: ["Kaypro 4", "Kaypro 10", "Kaypro 2X"], fact: "The 1984 Kaypro 2 (US$1,295) was Kaypro's best seller that year." },
     { id: "kaypro1", q: "When did the Kaypro 1 come out?", a: "1985", wrong: ["1986", "1983", "1981"], fact: "1985 (often misdated 1986). The last CP/M Kaypro; it was dropped in February 1986." },
     { id: "compaq3", q: "Which machine did InfoWorld call \"20 pounds of power with a handle\"?", fact: "The Compaq Portable III (1987): a 12 MHz 286 with an amber gas-plasma screen." },
     { id: "compaq3", q: "What kind of screen does the Compaq Portable III have?", a: "Amber gas plasma", wrong: ["Green CRT", "Backlit colour LCD", "Amber CRT"], fact: "A 10-inch amber gas-plasma screen, 640 × 400." },
-    { id: "bondwell200", q: "Which laptop was a Hong Kong-built budget rival to the Toshiba T1000?", fact: "The Bondwell B200 (US$1,295): an XT-class laptop with an unlit LCD." },
+    { id: "bondwell200", q: "Which laptop was a Hong Kong-built budget rival to the Toshiba T1000?", wrong: ["Zenith MinisPort", "Commodore C286-LT", "Macintosh Portable"], fact: "The Bondwell B200 (US$1,295): an XT-class laptop with an unlit LCD." },
     { id: "macport", q: "What powers the Macintosh Portable away from the wall?", a: "A lead-acid battery", wrong: ["Four AA cells", "A NiCd pack", "Nothing: it must stay plugged in"], fact: "A lead-acid battery, good for up to 10 hours. Launched 20 September 1989 at US$5,799." },
     { id: "minisport", q: "What size floppy disks does the Zenith MinisPort use?", a: "2-inch", wrong: ["3-inch", "3½-inch", "5¼-inch"], fact: "2-inch 720K disks, about $80 for a box of ten. MS-DOS 3.3 Plus is in ROM." },
-    { id: "bondwell310", q: "Which laptop has a built-in anti-theft alarm?", fact: "The Bondwell B310SX (1991), a 386SX laptop with a built-in alarm." },
+    { id: "bondwell310", q: "Which laptop has a built-in anti-theft alarm?", wrong: ["Bondwell B200", "Zenith MinisPort", "Commodore C286-LT", "Macintosh Portable"], fact: "The Bondwell B310SX (1991), a 386SX laptop with a built-in alarm." },
     { id: "superpet", q: "Which machine has two CPUs, a 6502 and a 6809?", fact: "The Commodore SuperPET (1981), designed with the University of Waterloo." }
   ];
   var nth = {};                                       // French (fr-content.js, domain "trivia"): keyed "<machine id>.<n>", n = 0, 1 per machine
@@ -15721,7 +15762,7 @@ var G = (function () {
     if (!G.state.on || !S() || G.hud.isOpen()) return false;
     var q = o.q || choose(o.id); if (!q) return false;
     unlook();   // o.q: a ready question { q, a, wrong, fact } (cameos.js), o.kick its heading:
-    var s = S(), e = o.energy === undefined ? ("energy" in G.state.stats ? G.stat("energy") : 100) : o.energy, n = e >= 50 ? 3 : 4;   // (not one of the booth's visitor questions)
+    var pay = o.pay === undefined ? 1 : o.pay, s = S(), e = o.energy === undefined ? ("energy" in G.state.stats ? G.stat("energy") : 100) : o.energy, n = e >= 50 ? 3 : 4;   // (not one of the booth's visitor questions)
     var own = o.q ? { asked: 0, right: 0 } : null; if (own) s = { asked: 0, right: 0, seen: [] };
     var dd = own || day();
     s.seen.push(q.k);
@@ -15743,7 +15784,7 @@ var G = (function () {
         G.hud.close();
         var right = opts[+b.dataset.i] === q.a;
         s.asked++; dd.asked++;
-        if (right) { s.right++; dd.right++; G.rep(e < 25 ? 0.1 : 0.15); G.add("kudos", e < 25 ? 2 : 3); G.hud.toast(G.t("Right! {fact}", { fact: q.fact }), "good"); }
+        if (right) { s.right++; dd.right++; G.rep((e < 25 ? 0.1 : 0.15) * pay); G.add("kudos", Math.round((e < 25 ? 2 : 3) * pay)); G.hud.toast(G.t("Right! {fact}", { fact: q.fact }), "good"); }
         else { G.rep(0.01); G.hud.toast(G.t("Not quite. {fact}", { fact: q.fact }), ""); }
         if (done) done(right);
       });
@@ -17197,13 +17238,14 @@ var G = (function () {
 // Roberta Williams, Jay Miner, Clive Sinclair, Chuck Peddle, Wes Graham and Gary Kildall, and one guest (CelGen Studios). Every line of copy says "lookalike": nobody claims the real person is at the show,
 // nobody is quoted, and every fact is from the plan's sourced table (section 7, with its links on the card).
 // Plain ES5.
-//   1-2 per show day (G.TUNE.cameos), drawn with G.rnd() when the day starts (state.sys.cameos.plan, so a
-//   reload brings the same visitor at the same time). A lookalike takes over one crowd visitor (no new meshes:
+//   Every one on the roster comes once a weekend (G.TUNE.cameos): about half on Saturday, everyone left on Sunday, spread
+//   evenly over show hours, in an order drawn with G.rnd() and the plan's weights when the day starts (state.sys.cameos.plan,
+//   so a reload brings the same visitor at the same time); at most 2 out at once, a later one waits for a free place. A lookalike takes over one crowd visitor (no new meshes:
 //   crowd.restyle with their style, height and build, a gold badge and a prop), walks a clean line (no lane
 //   wobble, p.vip: the crowd steps aside, the hall's separation leaves them be) from booth to booth with the
 //   plan's weights, draws a few followers and bumps the buzz where they stand, then leaves by the entrance and
 //   the visitor gets their own clothes back. A gold sparkle (a pooled sprite: 1 draw call per lookalike out, 2 at most), a
-//   name label within 30 ft (DOM), a gold star on the minimap, a PA toast and chime on arrival.
+//   name label within 30 ft (DOM), a gold star on the minimap, a PA toast and chime for the day's first arrival (a quiet line for the others).
 //   E / click on them: the badge card (a cartoon portrait drawn here from the same style object as the 3D
 //   figure, the LOOKALIKE · SOSIE ribbon, the flavour line, the facts and their sources) with Photo, the guest
 //   book (booth 29, at booth 29: events.js's G.signature), a question (trivia.js's G.trivia with { q }) and Bye.
@@ -17221,7 +17263,8 @@ var G = (function () {
 //   picks answer outside a game). Any start, load, quit or the pick card strips them (strip()).
 //   Emits "cameo" (id, "arrive" | "hello" | "booth" | "leave", booth).
 //   State: G.state.sys.cameos = { plan { sat [{ id, at, done, stay? }], sun }, out [{ id, k, until, at, stops, last,
-//   leaving, tgt, pend, vis [], w, wm, guest, force, folK }], met { id: { at, where, photo, sig, quiz } }, came { id: { d: "sat", m: 680 } } }
+//   leaving, tgt, pend, vis [], w, wm, guest, force, folK }], met { id: { at, where, photo, sig, quiz, n } }, came { id: { d: "sat", m: 680 } },
+//   ann { sat, sun }: arrivals announced that day, left { sat, sun }: a missed one's exit line said that day }
 //   (moments are G.when() objects, shown with G.fmtWhen: never a formatted string in a save; core's migrations 6 / keep 2)
 (function () {
   var TU = G.TUNE.cameos, GOLD = 0xe8c25a, RIB = "LOOKALIKE · SOSIE", INK = "#2a2420";
@@ -17466,32 +17509,36 @@ var G = (function () {
       if (id === "sun" && (who = draw(s, picked))) list.push({ id: who, at: TU.demo.at, done: 0, stay: TU.demo.stay });
       s.plan[id] = list; return;
     }
-    var n = d.n + (G.rnd() < d.extra ? 1 : 0), t = TU.from + G.rnd() * Math.max(0, TU.to - TU.from - (n - 1) * TU.gap);
-    for (var i = 0; i < n; i++) {
+    var left = 0; ROSTER.forEach(function (cam) { if (!s.came[cam.id]) left++; });
+    var n = d.share ? Math.floor(left * d.share + G.rnd()) : left, step = (d.at[1] - d.at[0]) / Math.max(1, n);   // Saturday: about half; Sunday: the rest
+    for (var i = 0; i < n; i++) {                    // in the weights' order, one in each stretch of the day
       if (!(who = draw(s, picked))) break;
-      picked.push(who); list.push({ id: who, at: Math.round(t), done: 0 });
-      t += TU.gap + G.rnd() * Math.max(0, (TU.to - t - TU.gap) / 2);
+      picked.push(who); list.push({ id: who, at: Math.round(d.at[0] + step * (i + (1 - TU.jit) / 2 + G.rnd() * TU.jit)), done: 0 });
     }
     s.plan[id] = list;
   }
 
   // ---- arrival: take over a walking visitor far from the player
-  function slot(n) {
-    var vs = crowd.visitors, best = -1, bd = -1; n = Math.min(vs.length, Math.max(0, n));
+  function slot(n) {                                 // a walker far from you; nobody walking (a stalled crowd): anyone free at a booth
+    var vs = crowd.visitors, best = -1, bd = -1, any = -1, ad = -1; n = Math.min(vs.length, Math.max(0, n));
     for (var j = 0; j < n; j++) {
-      var v = vs[j]; if (v.st !== 1 || v.cameo || v.fol || v.lanq || v.lans !== undefined || v.seat || v.crew || v.clq >= 0) continue;
-      var dx = v.x - pos.x, dz = v.z - pos.z, d = dx * dx + dz * dz; if (d > bd) { bd = d; best = j; }
+      var v = vs[j]; if (v.cameo || v.fol || v.lanq || v.lans !== undefined || v.seat || v.crew || v.crewWait || v.clq >= 0) continue;
+      var dx = v.x - pos.x, dz = v.z - pos.z, d = dx * dx + dz * dz;
+      if (v.st === 1) { if (d > bd) { bd = d; best = j; } } else if (d > ad) { ad = d; any = j; }
     }
-    return best;
+    return best >= 0 ? best : any;
   }
   function arrive(e) {
     var s = S(), cam = BY[e.id], k = slot(HOOK.visitors()); if (!cam || k < 0) return false;
-    var stay = e.stay || TU.stay[0] + G.rnd() * (TU.stay[1] - TU.stay[0]);
+    var stay = e.stay || (G.state.min - e.at > TU.late ? TU.stay[0] : TU.stay[0] + G.rnd() * (TU.stay[1] - TU.stay[0]));   // (waited for a place: a short visit)
+    var day = G.phase().id, nth = s.ann[day] || 0; s.ann[day] = nth + 1;
     var c = { id: e.id, k: k, until: Math.round(G.state.min + stay), at: null, stops: 0, last: null, leaving: 0, tgt: null, pend: 0, vis: [], w: 0, wm: null, guest: 0, force: null, folK: 1 };
     s.out.push(c); dress(c, true);
     s.came[e.id] = G.when(); note(e.id, { seen: G.when() });
-    if (G.state.who === "nick" && G.radio && G.radio.cards.vip && G.radio.call("vip", { data: { id: e.id } })) {}   // (the radio's own toast and chime)
-    else { say(cam.guest ? G.t("PA: {name} just came in the main entrance. Say hi!", { name: cam.name }) : G.t("PA: someone who looks a lot like {name} just came in the main entrance.", { name: cam.name }), "good"); if (G.sound && G.sound.play && !G.skipping) G.sound.play("chime"); }
+    // the day's first: the PA and its chime (Nick: the radio, for TU.vip's arrivals); later ones: a quiet line, no chime
+    if (G.state.who === "nick" && TU.vip.indexOf(nth) >= 0 && G.radio && G.radio.cards.vip && G.radio.call("vip", { data: { id: e.id } })) {}   // (the radio's own toast and chime)
+    else if (!nth) { say(cam.guest ? G.t("PA: {name} just came in the main entrance. Say hi!", { name: cam.name }) : G.t("PA: someone who looks a lot like {name} just came in the main entrance.", { name: cam.name }), "good"); if (G.sound && G.sound.play && !G.skipping) G.sound.play("chime"); }
+    else say(cam.guest ? G.t("{name} is in the hall too: follow the gold star.", { name: cam.name }) : G.t("Also in the hall: {who}. Follow the gold star.", { who: cam.tag }), "");
     G.emit("cameo", e.id, "arrive");
     return true;
   }
@@ -17501,7 +17548,8 @@ var G = (function () {
     var vs = crowd.visitors; for (var j = 0; j < vs.length; j++) if (vs[j].fol === c.id) vs[j].fol = null;
     var L = live[c.id]; if (L.pick) { G.unpick(L.pick); L.pick = null; } L.hold = 0;
     if (i >= 0) s.out.splice(i, 1);
-    if (!s.met[c.id]) say(G.t("{who} heads for the exit. Missed them? They'll be in your badge collection as a silhouette.", { who: BY[c.id].The }), "");
+    var day = G.phase().id;                          // (a missed one's exit line: once a day, not for each)
+    if (!s.met[c.id] && !s.left[day]) { s.left[day] = 1; say(G.t("{who} heads for the exit. Missed them? They'll be in your badge collection as a silhouette.", { who: BY[c.id].The }), ""); }
     G.emit("cameo", c.id, "leave");
   }
 
@@ -17677,8 +17725,9 @@ var G = (function () {
     var s = S(), cam = BY[id], c = outOf(id); if (!s || !cam || G.hud.isOpen()) return;
     var m = s.met[id];
     if (!m) {
-      m = s.met[id] = { at: G.when(), where: c && c.at || "", photo: 0, sig: 0, quiz: 0 };
-      G.add("kudos", TU.kudos.hello); G.rep(TU.rep);
+      var nMet = Object.keys(s.met).length, full = nMet < TU.full;   // (the first few pay in full; every one is met for the album)
+      m = s.met[id] = { at: G.when(), where: c && c.at || "", photo: 0, sig: 0, quiz: 0, n: nMet };
+      G.add("kudos", full ? TU.kudos.hello : TU.kudos.hello2); G.rep(full ? TU.rep : TU.rep2);
       note(id, { met: G.when() });
       A("cm-" + id);
       var v0 = c && crowd.visitors[c.k];
@@ -17734,7 +17783,7 @@ var G = (function () {
   function again(id) { setTimeout(function () { if (on() && !G.hud.isOpen() && outOf(id)) card(id, true); }, 450); }
   function photo(id) {
     var s = S(), cam = BY[id], c = outOf(id), m = s.met[id], me = G.state.who; if (!m) return;
-    m.photo = 1; note(id, { photo: 1 }); G.add("kudos", TU.kudos.photo);
+    m.photo = 1; note(id, { photo: 1 }); G.add("kudos", (m.n || 0) < TU.full ? TU.kudos.photo : TU.kudos.photo2);
     var fl = G.ui.el("div", "cm-flash", document.body); setTimeout(function () { if (fl.parentNode) fl.parentNode.removeChild(fl); }, 700);
     if (G.sound && G.sound.play) G.sound.play("click");
     var at = c && c.at;
@@ -17758,7 +17807,7 @@ var G = (function () {
     var ok = G.trivia(function (right) {
       m.quiz = right ? 1 : -1; if (right) note(id, { quiz: 1 });
       albumAch(); again(id);
-    }, { q: cam.quiz, kick: G.t("A question about {name}", { name: cam.name }) });
+    }, { q: cam.quiz, kick: G.t("A question about {name}", { name: cam.name }), pay: (m.n || 0) < TU.full ? 1 : TU.pay2 });
     if (!ok) again(id);
   }
 
@@ -18014,11 +18063,13 @@ var G = (function () {
   // ---- the game minute: arrivals, the machine they came for, a stuck lookalike
   G.on("minute", function (m) {
     var s = S(); if (!on() || !show()) return;
-    var list = s.plan[G.phase().id] || [], max = (TU[G.phase().id] || {}).max || 1, i;
-    for (i = 0; i < list.length; i++) {
+    var list = s.plan[G.phase().id] || [], max = G.state.demo ? 1 : TU.max, i;
+    for (i = 0; i < list.length; i++) {                // in order: a later one waits while max are out
       var e = list[i]; if (e.done || e.at > m) continue;
+      if (s.came[e.id]) { e.done = 1; continue; }     // (called in already: the preview build's button)
       if (G.skipping) { e.done = 1; s.came[e.id] = G.when(); note(e.id, { seen: G.when() }); continue; }   // (came while you skipped: missed)
-      if (s.out.length < (G.state.demo ? 1 : max) && arrive(e)) e.done = 1;
+      if (s.out.length >= max) break;
+      if (arrive(e)) e.done = 1;
     }
     for (i = s.out.length - 1; i >= 0; i--) {
       var c = s.out[i], cam = BY[c.id];
@@ -18078,12 +18129,12 @@ var G = (function () {
     spawn: function (id) { var s = S(); if (!on() || !BY[id] || outOf(id)) return false; return arrive({ id: id, at: G.state.min }); } };   // (tests, the screenshots)
 
   G.register("cameos", {
-    reset: function (st) { strip(); st.sys.cameos = { plan: { sat: [], sun: [] }, out: [], met: {}, came: {} }; },
+    reset: function (st) { strip(); st.sys.cameos = { plan: { sat: [], sun: [] }, out: [], met: {}, came: {}, ann: {}, left: {} }; },
     restore: function (st) {
       strip();
       var s = st.sys.cameos;
-      if (!s) s = st.sys.cameos = { plan: { sat: [], sun: [] }, out: [], met: {}, came: {} };
-      s.plan = s.plan || { sat: [], sun: [] }; s.met = s.met || {}; s.came = s.came || {}; s.out = s.out || [];
+      if (!s) s = st.sys.cameos = { plan: { sat: [], sun: [] }, out: [], met: {}, came: {}, ann: {}, left: {} };
+      s.plan = s.plan || { sat: [], sun: [] }; s.met = s.met || {}; s.came = s.came || {}; s.out = s.out || []; s.ann = s.ann || {}; s.left = s.left || {};
       s.out = s.out.filter(function (c) { return BY[c.id] && c.k >= 0 && c.k < crowd.visitors.length; });
       s.out.forEach(function (c) { c.pend = 0; dress(c, false); });
     },
@@ -18098,10 +18149,10 @@ var G = (function () {
       for (var k in s.came) if ((G.parseWhen(s.came[k]) || {}).d === day) l.push(s.met[k] ? G.t("{name} (met)", { name: BY[k].name }) : BY[k].name);
       if (l.length) rows.push([G.t("Lookalikes in the hall"), l.join(", ")]);
     },
-    score: function (P) {                              // the crowd pillar: the lookalikes who came, and how many you met (0 when you met none)
-      var s = S(); if (!s) return;
+    score: function (P) {                              // the crowd pillar: the lookalikes who came, and how many you met (0 when you met none;
+      var s = S(); if (!s) return;                     // full marks at TU.metK of them: nobody meets all fifteen and runs a booth)
       var came = 0, met = 0; for (var k in s.came) { came++; if (s.met[k]) met++; }
-      if (came) P.part("crowd", G.t("Lookalikes met"), G.t("{n} of {of}", { n: met, of: came }), met / came, TU.w);
+      if (came) P.part("crowd", G.t("Lookalikes met"), G.t("{n} of {of}", { n: met, of: came }), met / Math.max(1, Math.ceil(came * TU.metK)), TU.w);
     }
   });
 })();
@@ -20868,11 +20919,15 @@ var G = (function () {
 //   G.sound.keep(fn)           a level of its own (no weekend on) asks for sound: fn() -> true while it runs (as on the menu)
 //   G.sound.def(name, fn(dst, t, kit) -> secs)   a one-shot of its own for play(); kit: tone, noise, shot, chop, click (buffer)
 //   G.sound.bus()              the master gain (a level's own continuous voice connects here; null before the first gesture)
+//   G.sound.duck(on, level)    the phone (mini-phone.js): the bed (everything but the phone's own voice and tones, which go
+//                              straight to master) down to level (0.12, about -18 dB) in 0.25 s, back up in 0.6 s. Released
+//                              by itself when no phone is open (mini.js's close, a quit, a hidden page). duck() -> its state
 // Listens to: "gear" (a new fault: rifa / power / tantalum / floppy / jam; a machine boots),
 // the "souvenirs" stat rising (the ImageWriter prints), toasts (good = up blip, bad = down blip).
 (function () {
   var A = null, master, send, dry, noiseB, clickB, crackB, voices = [], vi = 0, mur = null, ring = null, mus = null;
   var TALKERS = 8, talkers = [], soft = null, room = null, murT = 0, cv = null, wet = true, wetT = 0;
+  var bed = null, duckOn = false, duckLvl = 0.12;          // the bed: all but the phone path, one gain the phone ducks
   function sOn() { return G.prefs.sound !== false; }      // the options live in core's G.prefs (kept across games)
   function mOn() { return G.prefs.music !== false; }
   var log = [], ringWant = null, upT = 0, typeT = 0, cartT = 8, doomT = 3, souv = 0, faults = {}, works = {}, powerAt = -9;
@@ -20895,12 +20950,13 @@ var G = (function () {
     });
     crackB = buf(0.25, 1, function (t) { return (R() * 2 - 1) * Math.exp(-t * 60) + Math.sin(t * 700) * Math.exp(-t * 40) * 0.5; });
     master = A.createGain(); master.gain.value = 0.8; master.connect(A.destination);
-    dry = A.createGain(); dry.connect(master);
+    bed = A.createGain(); bed.gain.value = duckOn ? duckLvl : 1; bed.connect(master);
+    dry = A.createGain(); dry.connect(bed);
     // the hall: 1 s of decaying noise (down 40 dB), a few early reflections. (It was 1.8 s: the convolver is the audio thread's
     // biggest steady cost, so it is also unplugged while nothing feeds it: wetCheck.)
     cv = A.createConvolver();
     cv.buffer = buf(1, 2, function (t) { return (R() * 2 - 1) * Math.exp(-t * 4.6) * (t < 0.004 ? 0 : 1) + (Math.abs(t - 0.045) < 0.0005 || Math.abs(t - 0.09) < 0.0005 ? 0.6 : 0); });
-    send = A.createGain(); send.gain.value = 0.3; send.connect(cv); cv.connect(master);
+    send = A.createGain(); send.gain.value = 0.3; send.connect(cv); cv.connect(bed);
     var i;
     for (i = 0; i < 6; i++) {                               // positional voices, reused round robin
       var v = { g: A.createGain(), p: A.createStereoPanner ? A.createStereoPanner() : A.createGain(), x: 0, z: 0, pos: false, until: 0 };
@@ -20910,7 +20966,7 @@ var G = (function () {
     mur = A.createGain(); mur.gain.value = 0; mur.connect(dry); mur.connect(send);
     soft = A.createBiquadFilter(); soft.type = "lowpass"; soft.frequency.value = 1900; soft.Q.value = 0.5; soft.connect(mur);
     // music: its own bus, a touch of the hall on it
-    mus = A.createGain(); mus.gain.value = 0; mus.connect(master);
+    mus = A.createGain(); mus.gain.value = 0; mus.connect(bed);
     var ms = A.createGain(); ms.gain.value = 0.15; mus.connect(ms); ms.connect(send);
     // the phone ringer: 440 + 480 Hz into a gated gain on its own voice
     ring = { v: { g: A.createGain(), p: A.createStereoPanner ? A.createStereoPanner() : A.createGain(), x: 0, z: 0, pos: true, until: 1e9 }, gate: A.createGain(), on: false, next: 0 };
@@ -20951,7 +21007,7 @@ var G = (function () {
     else if (!on) { ring.o.forEach(function (o) { o.stop(A.currentTime + 0.05); }); ring.o.length = 0; }
   }
   function wetCheck(t, need) {                              // the reverb: plugged in while something feeds it, unplugged after its tail
-    if (need) { wetT = Math.max(wetT, t); if (!wet) { cv.connect(master); wet = true; } }
+    if (need) { wetT = Math.max(wetT, t); if (!wet) { cv.connect(bed); wet = true; } }
     else if (wet && t > wetT + 1.5) { cv.disconnect(); wet = false; }
   }
 
@@ -21057,7 +21113,7 @@ var G = (function () {
     var now = A.currentTime;
     if (kind === "hover" && now - uiT < 0.06) return;
     uiT = now;
-    if (!uiG) { uiG = A.createGain(); uiG.gain.value = 1; uiG.connect(master); }
+    if (!uiG) { uiG = A.createGain(); uiG.gain.value = 1; uiG.connect(bed); }
     UI[kind](now + 0.005);
   }
   function play(name, x, z) {
@@ -21295,8 +21351,25 @@ var G = (function () {
   G.on("quit", function () { ringWant = null; if (ring) { ring.on = false; ring.gate.gain.cancelScheduledValues(0); ring.gate.gain.value = 0; ringOsc(false); } if (A) live(); });
   G.on("toast", function (t, kind) { if (A && (kind === "good" || kind === "bad")) play(kind === "good" ? "up" : "down"); });   // (core: when one shows, not per merged repeat)
 
+  // ---- ducking: the phone open, the rest of the hall far down (one gain; the phone's path skips it)
+  function phoneOpen() { return !!(G.mini && G.mini.active === "phone"); }
+  function duck(on, level) {
+    if (on === undefined) return { on: duckOn, level: duckLvl, target: duckOn ? duckLvl : 1, gain: bed ? bed.gain.value : null };
+    on = !!on; if (on && typeof level === "number") duckLvl = G.clamp(level, 0, 1);
+    if (on === duckOn && level === undefined) return duckOn;
+    duckOn = on; note(on ? "duck" : "unduck");
+    if (!A || !bed) return duckOn;                          // (no context yet: init() starts the bed where it should be)
+    var t = A.currentTime, gg = bed.gain;
+    gg.cancelScheduledValues(t); gg.setValueAtTime(gg.value, t); gg.linearRampToValueAtTime(on ? duckLvl : 1, t + (on ? 0.25 : 0.6));
+    return duckOn;
+  }
+  function duckSafe() { if (duckOn && !phoneOpen()) duck(false); }   // a duck nobody released: let go
+  document.addEventListener("visibilitychange", duckSafe);
+  G.on("quit", duckSafe);
+
   // the menu: no game ticks run, so a small timer plays the music (and keeps the hall quiet)
   setInterval(function () {
+    duckSafe();
     if (!A || G.state.on) return;
     if (!live()) return;
     var t = A.currentTime; listener(); mur.gain.setTargetAtTime(0, t, 0.3); if (t > murT + 3) talk(false);
@@ -21320,8 +21393,10 @@ var G = (function () {
     keep: function (fn) { keeps.push(fn); },
     def: function (name, fn) { SND[name] = function (d, t) { return fn(d, t, KIT); }; },
     bus: function () { return A ? master : null; },
+    _bed: function () { return bed; },                      // (tests: the ducked bed)
     on: function () { return !!A && want(); },
     ctx: function () { return A; },
+    duck: duck,                                             // the phone: duck(true) / duck(false); duck() -> { on, level, target, gain }
     tone: toneSet,                                          // mini.js's phone: tone(f1, f2, onMs, offMs, reps) / tone(0) stops
     noise: noiseK,                                          // mini.js: noise("modem" | "beep", ms)
     _log: log,
@@ -21342,6 +21417,7 @@ var G = (function () {
     restore: function () { btn.set(sOn()); mbtn.set(mOn()); sync(); },
     phase: function () { if (ring && ring.on) G.sound.ring(false); },
     tick: function (dt) {
+      if (duckOn && !phoneOpen()) duck(false);
       if (!A) return;
       if (!live()) return;
       if ((upT += dt) < 0.1) return;
