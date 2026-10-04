@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.131-206bc81", "date": "2026-10-04"};</script>
+<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.132-73cc7fc", "date": "2026-10-04"};</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Road Trip 3D</title>
@@ -5242,12 +5242,15 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
 //             G / Q / the PULL OVER key or slowing below 25 km/h gives up: the Autopilot eases you onto the shoulder (it can't be
 //             taken back mid-pull-over) and it's the "Pulled over. Eventually." card: a ticket, minutes, no loss.
 //   spikes    at SPIKE on the meter (after the second cruiser, before the roadblock) a trooper parked on the shoulder lays a spike
-//             strip across YOUR lane, SPIKE_AHEAD m out (only on a plain two-lane stretch with room before the leg's end: no ramp,
-//             no work zone, no toll). The HUD and a toast name the lane; traffic in that lane stops short of it (or merges out).
+//             strip across YOUR lane, SPIKE_AHEAD m out (on a plain stretch with room before the leg's end: no lanes added or dropped
+//             on the way, no ramp or fork, no work zone, no toll). No such spot: it tries again further on; from SPIKE_RELAX on (or
+//             when the strict spot would be too near the leg's end) the rules relax (near a ramp but not on its taper, as close as
+//             SPIKE_NEAR m, SPIKE_END m+ before the leg's end). The meter holds at HOLD until the strip is behind you: the roadblock
+//             never comes first. The HUD and a toast name the lane; traffic in that lane stops short of it (or merges out).
 //             Run over it (a wheel track over the strip): two flats, a jolt, busted (the lighter kind: C.busted "spikes", the
 //             Autopilot limps you onto the shoulder, SPIKE_MIN minutes for the tyres, the trip goes on). Change lanes in time: you
 //             dodge it, the trooper pulls it back and they radio ahead: the roadblock goes up at once.
-//   roadblock at 1 on the meter (or 420 m from the leg's end) a roadblock goes up ahead: ROADBLOCK m out, or just past an exit
+//   roadblock once you've dodged the strip (the meter at 1) a roadblock goes up ahead: ROADBLOCK m out, or just past an exit
 //             that comes up first (EXIT_FAR m at most; never past the leg's end). Cones across the median side and both lanes, two
 //             cruisers nose-in with flashing bars, flares down the lanes, a guardrail on the right; the HUD's banner counts the
 //             metres and a ROADBLOCK marker sits over it. Nothing stops you for it: you drive up to it. Then:
@@ -5263,6 +5266,9 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
 //             them: no stop now, but the plate goes on the radio (C.wanted). The next radar trap on the trip stops you at WANTED_P
 //             whatever your speed: "Pulled over: the plate was on the radio", the chase's minutes plus SPOTTED. A ramp with a
 //             cruiser closer than LOSE: it follows you up, and you stop.
+//   the leg's end  the chase still on and no room left for the strip (caught late on a leg): the chase carries into the next leg
+//             (C.carry: the leg's card says they're still behind you; the next leg starts with both cruisers on your tail and the
+//             meter where it was). On the last leg they lose you at the exit (as an exit, below: the plate goes on the radio).
 //   the card  flow.js's cards read RT.chase.fled / .rb / .n / .dist / .busted / .gapMiss / .minutes().
 // Cruiser 1 is traffic.js's trap cruiser (T.ex[0] steered from here); cruiser 2 is T.ex[1], drawn here. Both are pseudo-vehicles
 // traffic yields to (see traffic.js). Meshes: the second cruiser (2 draw calls), the roadblock (4: the props, the left and right
@@ -5275,6 +5281,8 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
   var clamp = RT.clamp, PI = Math.PI;
   var GRACE = 6, JOIN = 0.35, ROADBLOCK = 650, LOSE = 150, WANTED_P = 0.6, SPOTTED = 15;
   var SPIKE = 0.6, SPIKE_AHEAD = 380, SPIKE_MIN = 15, SPIKE_W = 4.05;   // the meter that brings the strip, how far out, the tyres' minutes, its length
+  var SPIKE_RELAX = 0.85, SPIKE_NEAR = 250, SPIKE_END = 380, HOLD = 0.99;   // relaxed spots from SPIKE_RELAX on (SPIKE_NEAR m out at the least,
+  // SPIKE_END m+ before the leg's end: room for the roadblock after it); the meter holds at HOLD until the strip is behind you
   var EXIT_FAR = 1100, GAP0 = 20.45, GAP1 = 23.05, GAP_KMH = 60, STOP_T = 1.2, FRONT = 2.36;   // the roadblock: an exit up to EXIT_FAR out; the gap
   // across the road (the last cone's edge to the guardrail's face); its speed; a stop that counts; the front bumper ahead of P.s
   var C = RT.chase = { state: 0, meter: 0, n: 0, dist: 0, t: 0, fled: false, rb: false, rbS: 0, rbExit: -1, top: 0, graceT: 0, gaveUp: false, why: "",
@@ -5282,10 +5290,11 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     GRACE: GRACE, JOIN: JOIN, ROADBLOCK: ROADBLOCK, LOSE: LOSE, WANTED_P: WANTED_P, SPOTTED: SPOTTED, wanted: null, spotted: false,
     SPIKE: SPIKE, SPIKE_AHEAD: SPIKE_AHEAD, SPIKE_MIN: SPIKE_MIN, EXIT_FAR: EXIT_FAR, GAP0: GAP0, GAP1: GAP1, GAP_KMH: GAP_KMH, STOP_T: STOP_T,
     // the strip: st 0 none, 1 out ahead, 2 you ran over it, 3 you dodged it; s along the road, lane (0 passing, 1 right), d0..d1 across
-    spike: { st: 0, s: 0, lane: 1, d0: 0, d1: 0, td: 0, at: 0 } };
+    spike: { st: 0, s: 0, lane: 1, d0: 0, d1: 0, td: 0, at: 0, relaxed: false },
+    SPIKE_RELAX: SPIKE_RELAX, SPIKE_NEAR: SPIKE_NEAR, HOLD: HOLD, carry: null };
   // state: 0 none, 1 caught (pull over now), 2 the chase, 3 giving up (pulling over), 4 stopped (the card is up), 5 in the clear
   var cop2 = null, bar2 = null, barMat2 = null, block = null, blockBars = null, blockBars2 = null, flares = null, matA = null, matB = null, matF = null;
-  var _f = { x: 0, y: 0, z: 0, h: 0 }, flash = 0, strip = null, trooper = null, trooperBar = null, prevFront = 0, prevBlk = 0, stopT = 0;
+  var _f = { x: 0, y: 0, z: 0, h: 0 }, flash = 0, strip = null, trooper = null, trooperBar = null, prevFront = 0, prevBlk = 0, stopT = 0, tryT = 0;
 
   function turned(P0, cx, cz, rot, dy, k) {                          // a part list turned by rot, moved to (cx, cz) and dy down, scaled by k (the bars)
     var out = [], c = Math.cos(rot), s = Math.sin(rot);
@@ -5339,7 +5348,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     C.state = 0; C.meter = 0; C.n = 0; C.dist = 0; C.t = 0; C.fled = false; C.rb = false; C.rbExit = -1; C.top = 0; C.graceT = 0; C.gaveUp = false; C.why = ""; C.spotted = false;
     C.busted = ""; C.gapMiss = ""; C.gapKmh = 0; C.escaped = ""; stopT = 0;
     if (cop2) cop2.visible = false; hideBlock();
-    var K = C.spike; K.st = 0; K.s = 0; K.at = 0; if (strip) strip.visible = trooper.visible = false;
+    var K = C.spike; K.st = 0; K.s = 0; K.at = 0; K.relaxed = false; tryT = 0; if (strip) strip.visible = trooper.visible = false;
     if (RT.traffic && RT.traffic.spike) RT.traffic.spike.on = false;
     if (RT.traffic && RT.traffic.block) { RT.traffic.block.keep = false; }
     if (RT.P) RT.P.flat = false;
@@ -5373,8 +5382,8 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     var T = RT.traffic, P = RT.P, g = 1e9; for (var k = 0; k < 2; k++) if (T.ex[k].on) g = Math.min(g, P.s - T.ex[k].s); return g;
   }
   function roadName() { var L = RT.road.leg; return ((L.road || L.name || "highway").split(" · ")[0]).replace(/ (East|Est|West|Ouest)$/, ""); }
-  function lose() {                                                 // off at an exit with the cruisers held up in traffic: gone, for now
-    var P = RT.P; C.wanted = { exit: RT.road.nameAt(P.br, P.bu) || "an exit", leg: RT.road.leg.road || RT.road.leg.name, dist: Math.round(C.dist), n: C.n };
+  function lose(atEnd) {                                            // off at an exit with the cruisers held up in traffic: gone, for now
+    var P = RT.P; C.wanted = { exit: atEnd ? "the exit" : RT.road.nameAt(P.br, P.bu) || "an exit", leg: RT.road.leg.road || RT.road.leg.name, dist: Math.round(C.dist), n: C.n };
     C.reset(); P.pullover = false; RT.traffic.endChase(); RT.emit("lostThem", C.wanted);
     RT.emit("toast", "Lost them at " + C.wanted.exit + ". The plate is on the police radio now.");
   }
@@ -5389,21 +5398,41 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     RT.emit("escaped", C.clear);
   }
   // the spike strip: across your lane SPIKE_AHEAD m out, a trooper's car on that side's shoulder (only where it makes sense)
-  function spikeRoomAt(s) {
-    var R = RT.road, k, B = R.branches;
-    if (s > R.end - 520 || R.lanesAt(s) !== 2 || R.lanesAt(s - 200) !== 2) return false;   // (passed well before the leg's end)
-    if (R.zoneAt(s, "work") || R.zoneAt(s, "toll") || R.zoneAt(s - 250, "work") || R.zoneAt(s - 250, "toll")) return false;
-    for (k = 0; k < B.length; k++) if (B[k].s0 !== undefined && B[k].s0 > s - 300 && B[k].s0 < s + 80) return false;   // (no ramp or fork there)
+  // where the strip may go. Strict (the first tries, SPIKE_AHEAD m out): a plain stretch (no lanes added or dropped on the way to it), no
+  // ramp or fork within 300 m before it, no work or toll zone there or 250 m before, 520 m+ before the leg's end. Relaxed (the meter at
+  // SPIKE_RELAX, or the strict spot would be past the leg's end): near a ramp but not on its taper or gore, no work or toll zone right there,
+  // SPIKE_END m+ before the leg's end, and as close as SPIKE_NEAR m.
+  function laneOf(d) { return d >= 15.95 ? 1 : d >= 12.2 ? 0 : -1 - Math.floor((12.2 - d) / 3.75); }   // 1 right, 0 passing, -1, -2 the extra lanes on the left
+  function spikeRoomAt(s, relaxed) {
+    var R = RT.road, P = RT.P, k, B = R.branches, n = R.lanesAt(s), l = laneOf(P.d);
+    if (s > R.end - (relaxed ? SPIKE_END : 520) || n < 2 || R.lanesAt(s - 200) !== n || R.lanesAt(P.s) !== n || l < 2 - n) return false;   // (your lane goes on to it)
+    if (R.zoneAt(s, "work") || R.zoneAt(s, "toll") || R.zoneAt(s - 60, "work") || R.zoneAt(s - 60, "toll")) return false;
+    if (!relaxed && (R.zoneAt(s - 250, "work") || R.zoneAt(s - 250, "toll"))) return false;
+    if (R.inGore && (R.inGore(s, P.d) >= 0 || R.inGore(s - 30, P.d) >= 0)) return false;
+    for (k = 0; k < B.length; k++) {
+      var b = B[k], d = b.def; if (b.s0 === undefined) continue;
+      if (!relaxed) { if (b.s0 > s - 300 && b.s0 < s + 80) return false; continue; }   // (no ramp or fork there)
+      if (d.kind !== "ramp" && d.kind !== "spur") continue;          // (a road on an overpass isn't in the way)
+      if (s > b.s0 - 40 && s < b.s0 + (d.decel || 160) + 80) return false;   // (near it, not on its taper)
+    }
     return true;
   }
+  function spikeSpot() {                                            // the strict spot, else (late) the nearest relaxed one; -1: none here
+    var P = RT.P, R = RT.road, a;
+    if (spikeRoomAt(P.s + SPIKE_AHEAD, false)) return P.s + SPIKE_AHEAD;
+    if (C.meter < SPIKE_RELAX && P.s + SPIKE_AHEAD <= R.end - 520) return -1;   // (it tries again further on)
+    for (a = SPIKE_AHEAD; a >= SPIKE_NEAR; a -= 10) if (spikeRoomAt(P.s + a, true)) return P.s + a;
+    return -1;
+  }
   function placeSpike() {
-    var P = RT.P, K = C.spike, s = P.s + SPIKE_AHEAD;
-    if (!spikeRoomAt(s)) return false;
-    K.st = 1; K.s = s; K.lane = P.d < 15.95 ? 0 : 1; K.at = C.t; prevFront = P.s + 1.38;
-    K.d0 = K.lane ? 15.95 : 15.95 - SPIKE_W; K.d1 = K.d0 + SPIKE_W; K.td = K.lane ? 21.7 : 11.0;
+    var P = RT.P, K = C.spike, s = spikeSpot(), l = laneOf(P.d);
+    if (s < 0) return false;
+    K.st = 1; K.s = s; K.lane = l > 0 ? 1 : 0; K.at = C.t; K.relaxed = s - P.s < SPIKE_AHEAD - 1; prevFront = P.s + 1.38;
+    if (l < 0) { K.d1 = 12.2 + 3.75 * l + 3.75 / 2 + SPIKE_W / 2; K.d0 = K.d1 - SPIKE_W; K.td = K.d0 - 0.9; }   // (an extra lane on the left: across it)
+    else { K.d0 = K.lane ? 15.95 : 15.95 - SPIKE_W; K.d1 = K.d0 + SPIKE_W; K.td = K.lane ? 21.7 : 11.0; }
     RT.road.frame(s, (K.d0 + K.d1) / 2, _f); strip.position.set(_f.x, _f.y, _f.z); strip.rotation.set(0, -_f.h, 0); strip.visible = true;
     RT.road.frame(s + 6, K.td, _f); trooper.position.set(_f.x, _f.y, _f.z); trooper.rotation.set(0, -_f.h + (K.lane ? 0.35 : -0.35), 0); trooper.visible = true;
-    var TS = RT.traffic.spike; if (TS) { TS.on = true; TS.s = s; TS.lane = K.lane; }
+    var TS = RT.traffic.spike; if (TS) { TS.on = l >= 0; TS.s = s; TS.lane = K.lane; }   // (traffic in the two right lanes holds back)
     RT.emit("toast", "Spike strip " + Math.round(s - P.s) + " m ahead in the " + (K.lane ? "right" : "left") + " lane: change lanes!");
     return true;
   }
@@ -5459,6 +5488,25 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     C.giveUp("block");
   }
 
+  // the leg's end with the chase on and the spike strip still to come: the chase carries into the next leg (the leg's card first; the
+  // cruisers come back behind you once it starts, the meter where it was). No next leg (the college): they lose you at the exit.
+  function handOff() {
+    var F = RT.flow, R = F && F.run, more = false, i;
+    if (R && R.seq && !F.sim) for (i = R.si + 1; i < R.seq.length; i++) if (R.seq[i].kind === "drive") { more = true; break; }
+    if (!more) { lose(true); return; }                              // (the last leg: they lose you at the exit)
+    C.carry = { si: R.si, leg: RT.road.leg.id, meter: C.meter, n: C.n, dist: C.dist, top: C.top, spotted: C.spotted, road: roadName() };
+    C.reset(); RT.P.pullover = false; RT.traffic.endChase();
+  }
+  function resume() {
+    var Q = C.carry, F = RT.flow, R = F && F.run, P = RT.P, T = RT.traffic, t = T.trap, c0 = T.ex[0], c1 = T.ex[1];
+    C.carry = null; if (!Q || !R || R.si <= Q.si || RT.road.leg.id === Q.leg) return;   // (a retry of the same leg: no chase)
+    C.state = 2; C.fled = true; C.meter = Math.min(Q.meter, HOLD); C.n = Q.n; C.dist = Q.dist; C.top = Q.top; C.spotted = Q.spotted; C.t = 0; P.pullover = false;
+    c0.on = true; c0.s = P.s - 70; c0.d = RT.road.LANES[1]; c0.v = P.vs; c0.ts = c0.s; c0.td = c0.d;
+    if (Q.n > 1) { c1.on = true; c1.s = P.s - 130; c1.d = RT.road.LANES[0]; c1.v = P.vs; }
+    if (t) { t.passed = true; t.chase = 1; t.flash = 0; t.rest = false; t.s = c0.s; t.d = c0.d; }   // (this leg's radar cruiser is the one on your tail)
+    RT.emit("siren", 1); RT.emit("toast", "They followed you off the " + Q.road + ": the chase goes on. G pulls over.");
+  }
+  RT.on("legStart", resume);
   C.update = function (dt) {
     var P = RT.P, T = RT.traffic, c0 = T.ex[0], c1 = T.ex[1];
     if (RT.hit("KeyG") && (C.state === 1 || C.state === 2)) C.giveUp("key");
@@ -5473,19 +5521,21 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
         if (P.br >= 0) C.giveUp("ramp");
         else if (C.graceT > GRACE || (C.t > 25 && P.kmh > 30)) startChase();   // (dawdling along without stopping counts too)
       }
-      if (C.state === 1 && R.end - P.s < 420 && !C.rb) placeBlock();
-      if (C.state === 1 && C.rb && C.rbS - P.s < 300 && P.kmh > 30) startChase();   // (still going, the roadblock ahead: a chase now)
+      if (C.state === 1 && P.br < 0 && P.s > R.end - 3 && P.kmh > 4) startChase();   // (still going at the leg's end: they come after you)
     }
     if (C.state === 2) {
       C.t += dt; C.dist += Math.max(0, P.vs) * dt;
-      C.meter = Math.min(1, C.meter + dt * (0.022 + 0.02 * clamp((P.kmh - 100) / 40, 0, 1)));
+      // (the meter holds just short of 1 until the spike strip is behind you: the roadblock only after a dodge)
+      C.meter = Math.min(C.spike.st >= 2 || C.rb ? 1 : HOLD, C.meter + dt * (0.022 + 0.02 * clamp((P.kmh - 100) / 40, 0, 1)));
       if (C.meter >= JOIN && !c1.on) {                               // the second cruiser comes up from behind in the other lane
         c1.on = true; c1.s = P.s - 140; c1.d = P.d < 15.95 ? RT.road.LANES[1] : RT.road.LANES[0]; c1.v = P.vs + 8; C.n = 2;
         RT.emit("toast", "A second cruiser, 140 m back.");
       }
-      if (!C.spike.st && !C.rb && C.t > 4 && C.meter >= SPIKE) placeSpike();   // (no room here: it tries again further on)
+      if (!C.spike.st && !C.rb && C.t > 4 && C.meter >= SPIKE && P.br < 0 && (tryT -= dt) <= 0) { tryT = 0.2; placeSpike(); }   // (no room here: it tries
+      // again further on, from SPIKE_RELAX with relaxed rules)
       spikeStep();
-      if (C.state === 2 && (C.meter >= 1 || R.end - P.s < 420) && !C.rb && C.spike.st !== 1 && P.br < 0) placeBlock();   // (not while the strip's out ahead)
+      if (C.state === 2 && C.meter >= 1 && !C.rb && C.spike.st === 3 && P.br < 0) placeBlock();   // (only once you've dodged the strip)
+      if (C.state === 2 && !C.rb && !C.spike.st && P.br < 0 && P.s > R.end - 3) handOff();   // (no room left on this leg: on to the next)
       if (C.state === 2) {                                           // (the spikes may have ended it just now)
         if (C.rb) { if (P.br >= 0) escape("exit"); else blockStep(dt); }   // (the roadblock up: an exit is a way out; the cone line)
         else if (P.br >= 0) { if (copGap() >= LOSE) lose(); else C.giveUp("ramp"); }
@@ -7191,7 +7241,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     if (pullCls) {
       var spk = pullCls === "chase" && CH.spike && CH.spike.st === 1 ? CH.spike : null;   // the spike strip out ahead: which lane, how far
       var rbx = pullCls === "chase" && CH.rb && !spk, rbm = rbx ? Math.max(0, Math.round((CH.rbS - P.s) / 10) * 10) : 0;   // the roadblock ahead: the metres
-      setText(E.pullb, pullCls === "ask" ? "PULL OVER" : spk ? "SPIKE STRIP · " + (spk.lane ? "RIGHT" : "LEFT") + " LANE" : rbx ? "ROADBLOCK · " + rbm + " m ahead" :
+      setText(E.pullb, pullCls === "ask" ? "PULL OVER" : spk ? "SPIKE STRIP · " + (spk.lane ? "RIGHT" : "LEFT") + " LANE · " + Math.max(0, Math.round((spk.s - P.s) / 10) * 10) + " m" : rbx ? "ROADBLOCK · " + rbm + " m ahead" :
         pullCls === "chase" ? "PULL OVER!" : CH.busted ? "BUSTED" : "PULLING OVER");
       setText(E.pullt, pullCls === "ask" ? "brake to a stop on the shoulder · " + RT.kt("G", "PULL OVER") + ": the Autopilot does it" : spk ?
         Math.max(0, Math.round(spk.s - P.s)) + " m ahead · change lanes to miss it, or " + RT.kt("G", "PULL OVER") + ": give up" : rbx ?
@@ -8245,7 +8295,8 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     if (F.tickets) extra.push(F.tickets + (F.tickets > 1 ? " tickets" : " ticket"));
     if (F.tows) extra.push(F.tows + (F.tows > 1 ? " tows" : " tow") + " back to the road");
     if (P.offT > 2) extra.push(Math.round(P.offT) + " s off the pavement");
-    var h = "<p>" + esc(c.text || "") + "</p>" + '<dl class="rows">' +
+    var h = "<p>" + esc(c.text || "") + "</p>" + (RT.chase.carry ? "<p class='bad'>Lights in the mirror: the cruisers are still behind you. The chase goes on.</p>" : "") +
+      '<dl class="rows">' +
       row("This leg", R.legOk + " of " + R.legHz + " hazards handled" + (R.legKn ? ", <b class='bad'>" + R.legKn + " knock" + (R.legKn > 1 ? "s" : "") +
           "</b>" : ", smooth") +
         ", average " + Math.round(avg) + " km/h, top " + Math.round(P.top)) +
