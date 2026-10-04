@@ -30,6 +30,7 @@ body { background: var(--bg); color: var(--ink); font: 14px/1.4 var(--display); 
   width: min(340px, calc(100vw - 24px)); display: grid; gap: 10px; }
 .card h1 { margin: 0; font-size: 17px; font-weight: 800; letter-spacing: -.01em; text-wrap: balance; }
 .card .sub { font: 11px/1.35 var(--mono); color: var(--muted); }
+.card .where { font-weight: 600; margin-top: 1px; }
 .row { display: flex; flex-wrap: wrap; gap: 6px; }
 button { font: 600 12px/1 var(--display); color: var(--ink); background: var(--bg); border: 1px solid var(--line);
   border-radius: 5px; padding: 7px 9px; cursor: pointer; }
@@ -122,7 +123,7 @@ button.tour.on { background: var(--accent); color: #fff; }
   #mini { width: 120px; height: 120px; }
   #where { max-width: calc(100vw - 24px); bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
   .touch #where { left: 12px; max-width: calc(100vw - 24px); }
-  .card .help, .card .sub { display: none; }
+  .card .help, .card .sub:not(.where) { display: none; }
   .card { padding: 9px 10px; gap: 8px; }
   .card h1 { font-size: 15px; }
   .menu-t { display: inline-block; }
@@ -142,6 +143,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 <div class="card" id="menu">
   <div class="head"><div>
     <h1 data-i18n="title">VCF Montréal 2026 · Room D 121</h1>
+    <div class="sub where" data-i18n="where">Champlain College Saint‑Lambert</div>
     <div class="sub" id="sub">Booth floor plan V22 (Variant C) · 40 booths · 67 tables 60×30 in · usable 100×100 ft</div>
     <div class="prelim" id="prelim" data-i18n="prelim" hidden></div>
     <div class="prelim" id="swnote" data-i18n="swNote" hidden></div>
@@ -187,7 +189,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>if (!window.THREE) (function () { var fr = /^fr/.test((new URLSearchParams(location.search).get("lang")) || localStorage.getItem("hall-lang") || navigator.language || ""), d = document.createElement("div"); d.setAttribute("role", "alert"); d.style.cssText = "position:fixed;inset:0;z-index:99;display:grid;place-items:center;padding:24px;background:#1b1a17;color:#f3ecda;font:600 17px/1.5 Archivo,system-ui,sans-serif;text-align:center"; d.innerHTML = fr ? "<p>Le moteur 3D (three.js) n'a pas pu être chargé. Un bloqueur de contenu ou un réseau qui bloque cdnjs.cloudflare.com et cdn.jsdelivr.net l'empêche peut-être.<br><br><button onclick=\"location.reload()\" style=\"font:inherit;padding:8px 18px\">Réessayer</button></p>" : "<p>Couldn't load the 3D engine (three.js). A content blocker, or a network that blocks cdnjs.cloudflare.com and cdn.jsdelivr.net, may be stopping it.<br><br><button onclick=\"location.reload()\" style=\"font:inherit;padding:8px 18px\">Try again</button></p>"; document.body.appendChild(d); })();</script>
-<script>window.VCF_BUILD = {"v": "v0.128-8c2b566", "date": "2026-10-04"};</script>
+<script>window.VCF_BUILD = {"v": "v0.131-206bc81", "date": "2026-10-04"};</script>
 <script>window.SITE_BUILD = true;</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
@@ -204,7 +206,7 @@ var LANG = (function () {
 })();
 var NB = " ", LANG_HOOKS = [];                  // LANG_HOOKS: redraw what a language switch changes
 var I18N = {
-  en: { title: "VCF Montréal 2026 · Room D 121", ft: "ft", page: "VCF Montréal Hall Walk-through",
+  en: { title: "VCF Montréal 2026 · Room D 121", where: "Champlain College Saint‑Lambert", ft: "ft", page: "VCF Montréal Hall Walk-through",
     sub: "Booth floor plan V{v} (Variant {k}) · {b} booths · {t} tables 60×30 in · usable 100×100 ft",
     modes: "Camera mode", walk: "Walk", third: "3rd person", fly: "Fly around", mouse: "Mouse look",
     mouseT: "Mouse look (M): the mouse turns you, a click uses what the crosshair is on; Esc gives the pointer back",
@@ -218,7 +220,7 @@ var I18N = {
     doomBig: "Big screen", doomLeave: "Leave ( ` )", map: "Map of the hall; click to jump", joy: "Move: push up to walk, sideways to turn",
     menu: "Menu", close: "Close", hide: "Hide", show: "Show", langT: "Français / English",
     table: "table", tables: "tables", us: " · that's us", corner: "Speakers' corner", inCorner: " · beside the speakers' corner",
-    cross: "Cross-aisle", crossSub: "{w} wide, the full width of the room", room: "Room D 121", roomSub: "VCF Montréal 2026",
+    cross: "Cross-aisle", crossSub: "{w} wide, the full width of the room", room: "Room D 121", roomSub: "VCF Montréal 2026 · Champlain College Saint-Lambert",
     westWall: "west wall", storage: "Storage", storageSub: "equipment · sales desk", jam: "Code Jam", entrance: "Public entrance",
     tourWhere: "Tour · {i} of {n}: {t}", tourSub: "Any key, a tap or Stop tour ends it",
     doomNear: "LAN party PC: DOOM: the VCF hall map", doomNearSub: "Click its screen or press P to play",
@@ -229,9 +231,9 @@ var I18N = {
     place_start: "Booths 10 and 29", place_entrance: "Public entrance", place_corner: "Speakers' corner",
     known29: "Our booth: 1981-1991 luggables and laptops that sign a live guest book over phone lines, three phones that call the museum, and a network rack behind. Click a machine for its card.",
     known10: "Four LAN PCs, a server and gamepads.", known10doom: " The screens run DOOM on a map of this hall: press P or click a screen to play.",
-    east: "East wall", entranceText: "Room D 121, VCF Montréal 2026. The three islands are ahead and to the right; booth 29 is on the far side.",
+    east: "East wall", entranceText: "Room D 121 at Champlain College Saint-Lambert, VCF Montréal 2026. The three islands are ahead and to the right; booth 29 is on the far side.",
     west: "West wall", cornerText: "The guests' tables against the west wall, where the pinball machines used to be: {s}. Booth 33 ({n}) is beside them." },
-  fr: { title: "VCF Montréal 2026 · Salle D 121", ft: "pi", page: "VCF Montréal : visite de la salle",
+  fr: { title: "VCF Montréal 2026 · Salle D 121", where: "Collège Champlain Saint‑Lambert", ft: "pi", page: "VCF Montréal : visite de la salle",
     sub: "Plan des kiosques V{v} (variante {k}) · {b} kiosques · {t} tables de 60 × 30 po · espace utile de 100 × 100 pi",
     modes: "Mode de caméra", walk: "Marcher", third: "3e personne", fly: "Survol", mouse: "Vue souris",
     mouseT: "Vue à la souris (M)" + NB + ": la souris vous fait tourner, un clic utilise ce que vise le réticule; Échap rend le pointeur",
@@ -247,7 +249,7 @@ var I18N = {
     joy: "Se déplacer" + NB + ": poussez vers le haut pour marcher, sur le côté pour tourner",
     menu: "Menu", close: "Fermer", hide: "Masquer", show: "Afficher", langT: "English / Français",
     table: "table", tables: "tables", us: " · c'est nous", corner: "Coin des conférenciers", inCorner: " · à côté du coin des conférenciers",
-    cross: "Allée transversale", crossSub: "{w} de large, toute la largeur de la salle", room: "Salle D 121", roomSub: "VCF Montréal 2026",
+    cross: "Allée transversale", crossSub: "{w} de large, toute la largeur de la salle", room: "Salle D 121", roomSub: "VCF Montréal 2026 · Collège Champlain Saint-Lambert",
     westWall: "mur ouest", storage: "Entreposage", storageSub: "équipement · caisse", jam: "Code Jam", entrance: "Entrée publique",
     tourWhere: "Visite · {i} sur {n}" + NB + ": {t}", tourSub: "Une touche, un toucher ou «" + NB + "Arrêter la visite" + NB + "» l'arrête",
     doomNear: "PC du LAN party" + NB + ": DOOM sur la carte de la salle", doomNearSub: "Cliquez sur l'écran ou appuyez sur P pour jouer",
@@ -258,7 +260,7 @@ var I18N = {
     place_start: "Kiosques 10 et 29", place_entrance: "Entrée publique", place_corner: "Coin des conférenciers",
     known29: "Notre kiosque" + NB + ": des transportables et des portables de 1981 à 1991 qui signent un livre d'or en direct par ligne téléphonique, trois téléphones qui appellent le musée, et une baie réseau derrière. Cliquez sur une machine pour sa fiche.",
     known10: "Quatre PC en réseau, un serveur et des manettes.", known10doom: " Les écrans font tourner DOOM sur une carte de cette salle" + NB + ": appuyez sur P ou cliquez sur un écran pour jouer.",
-    east: "Mur est", entranceText: "Salle D 121, VCF Montréal 2026. Les trois îlots sont devant et à droite; le kiosque 29 est de l'autre côté.",
+    east: "Mur est", entranceText: "Salle D 121 du Collège Champlain Saint-Lambert, VCF Montréal 2026. Les trois îlots sont devant et à droite; le kiosque 29 est de l'autre côté.",
     west: "Mur ouest", cornerText: "Les tables des invités, contre le mur ouest, là où étaient les machines à boules" + NB + ": {s}. Le kiosque 33 ({n}) est juste à côté." }
 };
 // SITE_BUILD (build-hall.py --site): the walk-through for the show's website, like the organisers' copy:
