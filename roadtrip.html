@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.132-73cc7fc", "date": "2026-10-04"};</script>
+<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.134-6519958", "date": "2026-10-04"};</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Road Trip 3D</title>
@@ -3087,7 +3087,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
 // he does the music). Both are hollow behind the seats: the cargo bay shows through the glass and the see-through roof
 // (the solid roof only in the "Chase (roof)" camera). Brake lights are a second material on the lamps (made at load:
 // the same program as the body), the wheels spin (spokes as the cue). Also the traffic kit (a sedan, an SUV, an 18 m rig,
-// a generic police cruiser with no agency markings). Every model faces -z, its origin on the ground at the centre of
+// the police cruisers: OPP and SQ liveries in flat colours and plain lettering, no crests or logos). Every model faces -z, its origin on the ground at the centre of
 // its wheelbase. The player's group follows RT.P (rotation.y = -yaw). RT.cars.use(id) picks the car ("v70" | "hl");
 // RT.cars.spec is its numbers (the drive's physics, the cargo bay's place in the car).
 (function () {
@@ -3252,9 +3252,73 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     B.push([G.BOX, -0.7, 0.95, 2.47, 0.4, 0.14, 0.04, 0xb01818], [G.BOX, 0.7, 0.95, 2.47, 0.4, 0.14, 0.04, 0xb01818]);
     wheels(B, 0.88, -1.43, 1.43, 0.38, 0.26); return B;
   };
-  C.geo.cruiser = function () {                                      // a generic patrol car: white with a dark band, no agency markings
-    var B = C.geo.sedan(); B[0][7] = 0xf2f2f0; B[2][7] = 0xf2f2f0;
-    B.push([G.BOX, 0, 0.7, 0, 1.8, 0.12, 4.52, 0x1d2a44]); return B;
+  // the police: the sedan in the livery of the province it patrols (flat colours and plain blocky lettering; no crest, badge or
+  // logo). f "opp" (Ontario): black nose and tail, white doors, a blue and a red stripe, POLICE on the doors and OPP on the rear
+  // quarters. f "sq" (Québec, the current car): black, white doors with POLICE in black, a yellow stripe over them and
+  // SÛRETÉ DU QUÉBEC on a dark band above it, a thin white line along the front fender. Both: POLICE across the nose (what you see in the mirror). The letters are vertex-coloured planes merged
+  // into the body: the cars' material, the same one draw call, no texture.
+  var FONT = { O: ["111", "101", "101", "101", "111"], P: ["111", "101", "111", "100", "100"], L: ["100", "100", "100", "100", "111"], I: ["1", "1", "1", "1", "1"],
+    C: ["111", "100", "100", "100", "111"], E: ["111", "100", "110", "100", "111"], S: ["111", "100", "111", "001", "111"], U: ["101", "101", "101", "101", "111"],
+    R: ["110", "101", "110", "101", "101"], T: ["111", "010", "010", "010", "010"], D: ["110", "101", "101", "101", "110"], Q: ["111", "101", "101", "110", "011"],
+    B: ["110", "101", "110", "101", "110"] };
+  var ACC = { "É": ["E", "acute"], "Û": ["U", "circ"] };
+  // letters(B, text, side, mid, y0, px, col): side 1 the right flank, -1 the left, 0 the nose; mid the text's centre along the car (z on a
+  // flank, x on the nose), y0 its baseline, px one pixel (m). Reads left to right from wherever you stand.
+  function letters(B, text, side, mid, y0, px, col) {
+    var i, w = 0, ch, gl;
+    for (i = 0; i < text.length; i++) { ch = text.charAt(i); gl = FONT[ACC[ch] ? ACC[ch][0] : ch]; w += (gl ? gl[0].length : 2) + (i ? 1 : 0); }
+    var a = -w / 2, ry = side > 0 ? PI / 2 : side < 0 ? -PI / 2 : PI, out = side ? 0.897 : 2.262;
+    function plane(u, v, sw, sh, tilt) {                              // u along the reading direction, v up (m, from the text's start and baseline)
+      var o = a * px + u, x, z;                                        // (o: from the text's centre, in the reading direction)
+      if (side > 0) { x = out; z = mid - o; } else if (side < 0) { x = -out; z = mid + o; } else { x = mid - o; z = -out; }
+      B.push([G.PLANE, x, y0 + v, z, sw, sh, 1, col, 0, ry, tilt || 0]);
+    }
+    for (i = 0; i < text.length; i++) {
+      ch = text.charAt(i); var acc = ACC[ch]; gl = FONT[acc ? acc[0] : ch];
+      if (!gl) { a += 3; continue; }                                  // (a space: two pixels and the gap)
+      for (var r = 0; r < 5; r++) {
+        var row = gl[r], c = 0;
+        while (c < row.length) {
+          if (row.charAt(c) !== "1") { c++; continue; }
+          var c1 = c; while (c1 < row.length && row.charAt(c1) === "1") c1++;
+          plane((c + c1) / 2 * px, (4.5 - r) * px, (c1 - c) * px, px); c = c1;
+        }
+      }
+      if (acc && acc[1] === "acute") plane(1.9 * px, 5.75 * px, 1.3 * px, 0.45 * px, 0.6);
+      if (acc && acc[1] === "circ") { plane(1.05 * px, 5.75 * px, 1.1 * px, 0.45 * px, 0.6); plane(1.95 * px, 5.75 * px, 1.1 * px, 0.45 * px, -0.6); }
+      a += gl[0].length + 1;
+    }
+  }
+  C.geo.cruiser = function (f) {
+    var B = C.geo.sedan(), s, BLK = 0x16181b, WH = 0xf2f2f0;
+    if (f === "sq") {                                                  // Québec (the current SQ car): black, white doors, a yellow stripe
+      var DK = 0x34352b, YE = 0xf2c21a;                                // (DK: the dark band over the stripe, where SÛRETÉ DU QUÉBEC sits)
+      B[0] = [G.BOX, 0, 0.62, 0, 1.78, 0.62, 4.5, BLK]; B[2][7] = BLK;
+      B.push([G.BOX, 0, 0.485, 0.45, 1.785, 0.35, 2.0, WH],           // the white door panel
+        [G.BOX, 0, 0.675, 0.45, 1.79, 0.034, 2.0, YE],                 // the yellow stripe over it
+        [G.BOX, 0, 0.80, 0.45, 1.787, 0.22, 2.0, DK],                  // the dark band above the stripe
+        [G.BOX, 0, 0.45, -1.62, 1.786, 0.035, 0.85, WH]);              // the thin white line along the front fender
+      for (s = -1; s <= 1; s += 2) {
+        letters(B, "POLICE", s, 0.55, 0.38, 0.045, BLK);
+        letters(B, "SÛRETÉ DU QUÉBEC", s, 0.45, 0.735, 0.021, WH);
+      }
+      letters(B, "POLICE", 0, 0, 0.6, 0.026, WH);
+    } else {                                                           // Ontario: black and white, a blue and a red stripe
+      B[0] = [G.BOX, 0, 0.62, 0.1, 1.78, 0.62, 2.5, WH];
+      B.push([G.BOX, 0, 0.62, -1.7, 1.78, 0.62, 1.1, BLK], [G.BOX, 0, 0.62, 1.8, 1.78, 0.62, 0.9, BLK]);
+      B[2][7] = BLK;
+      B.push([G.BOX, 0, 0.5, 0, 1.79, 0.05, 4.51, 0x1f4fb4], [G.BOX, 0, 0.455, 0, 1.79, 0.03, 4.51, 0xc8202a]);
+      for (s = -1; s <= 1; s += 2) {
+        letters(B, "POLICE", s, 0.05, 0.63, 0.05, BLK);
+        letters(B, "OPP", s, 1.8, 0.63, 0.05, WH);
+      }
+      letters(B, "POLICE", 0, 0, 0.6, 0.026, WH);
+    }
+    return B;
+  };
+  var cgeo = {};
+  C.cruiserGeo = function (f) {                                       // one merged geometry per force, shared by every cruiser mesh
+    f = f === "sq" ? "sq" : "opp"; return cgeo[f] || (cgeo[f] = RT.merge(C.geo.cruiser(f)));
   };
   // a 1982 AMC Eagle wagon (traffic.js: one appearance per leg on a leg with def.eagle): copper-brown, the black flares and
   // sills, chrome bumpers, four square headlamps, a roof box on the rack, and a CRT monitor belted into the back seat
@@ -5122,6 +5186,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     }
     return g;
   };
+  function PO(k) { return RT.chase && RT.chase.po ? RT.chase.po(k) : k === "A" ? "A cruiser" : "cruiser"; }   // (the force where you are: chase.js)
   function radar(dt) {
     var P = RT.P, t = T.trap; if (!t) return;
     var limit = RT.road.limitAt ? RT.road.limitAt(t.s) : RT.road.leg.limit || 110;
@@ -5130,7 +5195,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
       t.passed = true; if (P.s > t.s + 40) return;                  // (put past it: a tow, a detour, a test; not a radar pass)
       var wanted = RT.chase && RT.chase.wanted;                       // (you lost them earlier: the plate is on the radio, any speed)
       if (RT.chase && RT.chase.clear) {                               // (you got past a roadblock: they don't come after you again this trip)
-        if (P.kmh > limit + 15) RT.emit("toast", "A cruiser in the median, radar out. It stays put: they're all still busy at that roadblock.");
+        if (P.kmh > limit + 15) RT.emit("toast", PO("A") + " in the median, radar out. It stays put: they're all still busy at that roadblock.");
       } else if (P.kmh > limit + 15 || wanted) {
         var catchP = wanted && P.kmh <= limit + 15 ? RT.chase.WANTED_P : 0.75 + 0.2 * clamp((P.kmh - limit - 15) / 35, 0, 1);   // 3 in 4 at limit
         // + 15, nearly always at 160 in a 100 zone
@@ -5139,8 +5204,8 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
           T.tickets++; t.chase = 1; var c0 = T.ex[0]; c0.on = true; c0.s = t.s; c0.d = t.d; c0.v = 0; c0.ts = t.s; c0.td = t.d; exLanes(c0);
           RT.emit("ticket", Math.round(P.kmh));
         }
-        else RT.emit("toast", "A cruiser in the median, radar out. It didn't move. Lucky.");
-      } else if (T.maxBefore > limit + 15) RT.emit("toast", "Spotted the cruiser in time.");
+        else RT.emit("toast", PO("A") + " in the median, radar out. It didn't move. Lucky.");
+      } else if (T.maxBefore > limit + 15) RT.emit("toast", "Spotted the " + PO("car") + " in time.");
     }
     if (t.chase) {                                                  // it pulls out behind you, lights on (chase.js steers T.ex[0])
       t.flash += dt; var c = T.ex[0]; if (c.on) { t.s = c.s; t.d = c.d; }
@@ -5157,7 +5222,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     cars = RT.inst(RT.merge(G.sedan()), RT.mat.VC, 24); trucks = RT.inst(RT.merge(G.truck()), RT.mat.VC, 10);
     shadows = new THREE.InstancedMesh(new THREE.CircleGeometry(1, 16).rotateX(-PI / 2), RT.mat.SHADOWI, 40);
     shadows.frustumCulled = false; shadows.renderOrder = 1; shadows.instanceMatrix.setUsage(THREE.DynamicDrawUsage); shadows.count = 0;
-    cruiser = new THREE.Mesh(RT.merge(G.cruiser()), RT.mat.VC); cruiser.matrixAutoUpdate = true;
+    cruiser = new THREE.Mesh(RT.cars.cruiserGeo(RT.road.leg && RT.road.leg.qc ? "sq" : "opp"), RT.mat.VC); cruiser.matrixAutoUpdate = true; T.cruiserMesh = cruiser;   // (chase.js swaps its livery per leg)
     lightMat = new THREE.MeshBasicMaterial({ color: 0x30343a });
     lightbar = new THREE.Mesh(RT.merge(G.lightbar()), lightMat); cruiser.add(lightbar);
     // the tail lamps of every vehicle: a pair of small boxes (white vertex colour x the instance's red), a car's at its rear
@@ -5241,7 +5306,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
 //   chase     the siren, the meter fills (faster the faster you go), a second cruiser joins at JOIN. Until the roadblock is up,
 //             G / Q / the PULL OVER key or slowing below 25 km/h gives up: the Autopilot eases you onto the shoulder (it can't be
 //             taken back mid-pull-over) and it's the "Pulled over. Eventually." card: a ticket, minutes, no loss.
-//   spikes    at SPIKE on the meter (after the second cruiser, before the roadblock) a trooper parked on the shoulder lays a spike
+//   spikes    at SPIKE on the meter (after the second cruiser, before the roadblock) an officer parked on the shoulder lays a spike
 //             strip across YOUR lane, SPIKE_AHEAD m out (on a plain stretch with room before the leg's end: no lanes added or dropped
 //             on the way, no ramp or fork, no work zone, no toll). No such spot: it tries again further on; from SPIKE_RELAX on (or
 //             when the strict spot would be too near the leg's end) the rules relax (near a ramp but not on its taper, as close as
@@ -5249,7 +5314,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
 //             never comes first. The HUD and a toast name the lane; traffic in that lane stops short of it (or merges out).
 //             Run over it (a wheel track over the strip): two flats, a jolt, busted (the lighter kind: C.busted "spikes", the
 //             Autopilot limps you onto the shoulder, SPIKE_MIN minutes for the tyres, the trip goes on). Change lanes in time: you
-//             dodge it, the trooper pulls it back and they radio ahead: the roadblock goes up at once.
+//             dodge it, the officer pulls it back and they radio ahead: the roadblock goes up at once.
 //   roadblock once you've dodged the strip (the meter at 1) a roadblock goes up ahead: ROADBLOCK m out, or just past an exit
 //             that comes up first (EXIT_FAR m at most; never past the leg's end). Cones across the median side and both lanes, two
 //             cruisers nose-in with flashing bars, flares down the lanes, a guardrail on the right; the HUD's banner counts the
@@ -5269,10 +5334,15 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
 //   the leg's end  the chase still on and no room left for the strip (caught late on a leg): the chase carries into the next leg
 //             (C.carry: the leg's card says they're still behind you; the next leg starts with both cruisers on your tail and the
 //             meter where it was). On the last leg they lose you at the exit (as an exit, below: the plate goes on the radio).
-//   the card  flow.js's cards read RT.chase.fled / .rb / .n / .dist / .busted / .gapMiss / .minutes().
+//   the card  flow.js's cards read RT.chase.fled / .rb / .n / .dist / .busted / .gapMiss / .crossed / .minutes().
+//   the force the OPP in Ontario, the Sûreté du Québec (SQ) in Québec: the leg's qc says which (the border is the seam between the
+//             417's last leg and the A-40's first). C.po(key) names it for every toast, banner and card; C.setLivery() dresses every
+//             cruiser mesh (the radar's, the second, the spike strip's, the roadblock's three) in that force's livery at each legStart:
+//             a geometry swap (cars.js: RT.cars.cruiserGeo), the same material, the same draw calls. A chase carried over the border:
+//             the OPP radios ahead and the SQ takes over on the A-40 (one toast; C.crossed for the card).
 // Cruiser 1 is traffic.js's trap cruiser (T.ex[0] steered from here); cruiser 2 is T.ex[1], drawn here. Both are pseudo-vehicles
 // traffic yields to (see traffic.js). Meshes: the second cruiser (2 draw calls), the roadblock (4: the props, the left and right
-// halves of its light bars, the flares) and the spike strip with its trooper (3: the strip, the parked cruiser, its light bar), all
+// halves of its light bars, the flares) and the spike strip with its officer's car (3: the strip, the parked cruiser, its light bar), all
 // hidden until needed; the cars' material and basic materials with the first light bar's parameters (the same shader program:
 // nothing compiles). No allocation per frame.
 (function () {
@@ -5291,10 +5361,18 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     SPIKE: SPIKE, SPIKE_AHEAD: SPIKE_AHEAD, SPIKE_MIN: SPIKE_MIN, EXIT_FAR: EXIT_FAR, GAP0: GAP0, GAP1: GAP1, GAP_KMH: GAP_KMH, STOP_T: STOP_T,
     // the strip: st 0 none, 1 out ahead, 2 you ran over it, 3 you dodged it; s along the road, lane (0 passing, 1 right), d0..d1 across
     spike: { st: 0, s: 0, lane: 1, d0: 0, d1: 0, td: 0, at: 0, relaxed: false },
-    SPIKE_RELAX: SPIKE_RELAX, SPIKE_NEAR: SPIKE_NEAR, HOLD: HOLD, carry: null };
+    SPIKE_RELAX: SPIKE_RELAX, SPIKE_NEAR: SPIKE_NEAR, HOLD: HOLD, carry: null, crossed: false, livery: "" };
+  // the force where you are: "opp" (Ontario) or "sq" (Québec), and its names (C.po(key[, force]))
+  var PO = {
+    opp: { by: "the OPP", By: "The OPP", full: "the OPP", car: "OPP cruiser", cars: "OPP cruisers", a: "an OPP cruiser",
+      A: "An OPP cruiser", officer: "an OPP officer", short: "OPP", prov: "Ontario" },
+    sq: { by: "the SQ", By: "The SQ", full: "the Sûreté du Québec", car: "SQ patrol car", cars: "SQ patrol cars", a: "a Sûreté du Québec patrol car",
+      A: "A Sûreté du Québec patrol car", officer: "an SQ officer", short: "SQ", prov: "Québec" } };
+  C.force = function () { return RT.road && RT.road.leg && RT.road.leg.qc ? "sq" : "opp"; };
+  C.po = function (k, f) { return PO[f || C.force()][k]; };
   // state: 0 none, 1 caught (pull over now), 2 the chase, 3 giving up (pulling over), 4 stopped (the card is up), 5 in the clear
-  var cop2 = null, bar2 = null, barMat2 = null, block = null, blockBars = null, blockBars2 = null, flares = null, matA = null, matB = null, matF = null;
-  var _f = { x: 0, y: 0, z: 0, h: 0 }, flash = 0, strip = null, trooper = null, trooperBar = null, prevFront = 0, prevBlk = 0, stopT = 0, tryT = 0;
+  var cop2 = null, bar2 = null, barMat2 = null, block = null, blockGeo = {}, blockBars = null, blockBars2 = null, flares = null, matA = null, matB = null, matF = null;
+  var _f = { x: 0, y: 0, z: 0, h: 0 }, flash = 0, strip = null, spikeCar = null, spikeBar = null, prevFront = 0, prevBlk = 0, stopT = 0, tryT = 0, say = "";
 
   function turned(P0, cx, cz, rot, dy, k) {                          // a part list turned by rot, moved to (cx, cz) and dy down, scaled by k (the bars)
     var out = [], c = Math.cos(rot), s = Math.sin(rot);
@@ -5309,46 +5387,58 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     var G = RT.cars.geo, lm = RT.traffic.lightMat ? RT.traffic.lightMat() : null, k, j, x;
     barMat2 = new THREE.MeshBasicMaterial({ color: 0x30343a });      // (the same parameters as the first light bar: the same program)
     matA = new THREE.MeshBasicMaterial({ color: 0xd8202a }); matB = new THREE.MeshBasicMaterial({ color: 0x2a5ad8 }); matF = new THREE.MeshBasicMaterial({ color: 0xff5a1f });
-    cop2 = new THREE.Mesh(RT.merge(G.cruiser()), RT.mat.VC); bar2 = new THREE.Mesh(RT.merge(G.lightbar()), barMat2); cop2.add(bar2);
+    cop2 = new THREE.Mesh(RT.cars.cruiserGeo("opp"), RT.mat.VC); bar2 = new THREE.Mesh(RT.merge(G.lightbar()), barMat2); cop2.add(bar2);
     // the roadblock (local x across the road from d 16, -z ahead; z 0 is the cone line): cones from the median side across both
     // lanes to d 20.2, the gap on the right shoulder (to the guardrail's face at d 23.05), two cruisers nose-in across the lanes
     // 9 m on, a third on the median grass, a ROAD CLOSED sawhorse, and the flares down the lanes before it
-    var parts = [], cz = [[-2.4, -9, 0.5, 0], [1.4, -9, -0.45, 0], [-6.6, -6, 0.3, 0.1]], bars = [], bars2 = [];   // [x, z, turn, down]
+    var cz = [[-2.4, -9, 0.5, 0], [1.4, -9, -0.45, 0], [-6.6, -6, 0.3, 0.1]], bars = [], bars2 = [];   // [x, z, turn, down]
+    function blockParts(f) {                                        // (one set per force: the cruisers in its livery)
+    var parts = [];
     for (x = -5.4; x <= 4.21; x += 1.2) parts.push([RT.geo.CONE, x, 0.36, 0, 0.22, 0.72, 0.22, 0xf26b1d], [RT.geo.CYL6, x, 0.42, 0, 0.15, 0.1, 0.15, 0xf2f2f0]);
     parts.push([RT.geo.CONE, -6.4, 0.31, 0.4, 0.22, 0.72, 0.22, 0xf26b1d], [RT.geo.CONE, -7.4, 0.13, 0.8, 0.22, 0.72, 0.22, 0xf26b1d]);   // (down the median's slope)
     for (k = 0; k < cz.length; k++) {                               // the cruisers (the third on the median's edge)
-      parts.push.apply(parts, turned(G.cruiser(), cz[k][0], cz[k][1], cz[k][2], cz[k][3]));
-      var L = turned(G.lightbar(), cz[k][0], cz[k][1], cz[k][2], cz[k][3], 1.6); bars.push(L[0]); bars2.push(L[1]);   // (left halves red, right halves blue)
+      parts.push.apply(parts, turned(G.cruiser(f), cz[k][0], cz[k][1], cz[k][2], cz[k][3]));
     }
     parts.push([RT.geo.BOX, -0.4, 0.55, -3.2, 3.0, 0.14, 0.26, 0xf2f2f0], [RT.geo.BOX, -0.4, 0.8, -3.2, 3.0, 0.14, 0.26, 0xf26b1d],   // the sawhorse
       [RT.geo.BOX, -1.75, 0.35, -3.2, 0.08, 0.7, 0.6, 0x8a8f96], [RT.geo.BOX, 0.95, 0.35, -3.2, 0.08, 0.7, 0.6, 0x8a8f96]);
     parts.push([RT.geo.BOX, 7.15, 0.62, -10.5, 0.2, 0.32, 22, 0xb8bec4]);                                  // the guardrail: a W-beam, 0.5 m back
     for (x = 0.5; x >= -21.5; x -= 2) parts.push([RT.geo.BOX, 7.3, 0.38, x - 0.5, 0.15, 0.76, 0.15, 0x6d7278]);   // to 21.5 m on, its posts
     parts.push([RT.geo.BOX, 7.15, 0.35, 0.9, 0.2, 0.3, 1.4, 0xb8bec4, -0.35, 0, 0]);                        // (its turned-down end)
-    block = new THREE.Mesh(RT.merge(parts), RT.mat.VC);
+    return parts;
+    }
+    for (k = 0; k < cz.length; k++) { var L = turned(G.lightbar(), cz[k][0], cz[k][1], cz[k][2], cz[k][3], 1.6); bars.push(L[0]); bars2.push(L[1]); }   // (left halves red, right halves blue)
+    blockGeo.opp = RT.merge(blockParts("opp")); blockGeo.sq = RT.merge(blockParts("sq"));
+    block = new THREE.Mesh(blockGeo.opp, RT.mat.VC);
     blockBars = new THREE.Mesh(RT.merge(bars), matA); blockBars2 = new THREE.Mesh(RT.merge(bars2), matB);
     var fl = [], fz = [[8, -4.2], [8, -0.6], [8, 3.0], [22, -3.6], [22, 0.0], [22, 2.8], [40, -3.0], [40, 1.0], [60, -2.2], [60, 2.2]];   // flares: [z back, x]
     for (k = 0; k < fz.length; k++) fl.push([RT.geo.BOX, fz[k][1], 0.05, fz[k][0], 0.07, 0.07, 0.38, 0xffffff, 0, 0.6 * k, 0], [RT.geo.CYL6, fz[k][1], 0.012, fz[k][0], 0.95, 0.02, 0.95, 0xffffff], [RT.geo.CONE, fz[k][1], 0.16, fz[k][0], 0.08, 0.32, 0.08, 0xffffff]);
     flares = new THREE.Mesh(RT.merge(fl), matF);
     cop2.visible = block.visible = blockBars.visible = blockBars2.visible = flares.visible = false;
     // the spike strip (local x across the road, centred; built once): a yellow-and-black hinged bar, two rows of steel teeth on top,
-    // a cone at each end. Low, like the real thing, so the trooper's car and its lights beside it are the warning from far off.
+    // a cone at each end. Low, like the real thing, so the officer's car and its lights beside it are the warning from far off.
     var sp = [], n = 10, w = SPIKE_W / n;
     for (k = 0; k < n; k++) sp.push([RT.geo.BOX, -SPIKE_W / 2 + w * (k + 0.5), 0.05, 0, w * 0.96, 0.1, 0.5, k % 2 ? 0x1a1a1a : 0xf2c21a]);
     for (k = 0; k < 2 * n; k++) for (j = -1; j <= 1; j += 2)
       sp.push([RT.geo.CONE, -SPIKE_W / 2 + (k + 0.5) * SPIKE_W / (2 * n), 0.15, j * 0.13, 0.045, 0.12, 0.045, 0xd8dde2]);
     sp.push([RT.geo.CONE, -SPIKE_W / 2 - 0.45, 0.36, 0, 0.22, 0.72, 0.22, 0xf26b1d], [RT.geo.CONE, SPIKE_W / 2 + 0.45, 0.36, 0, 0.22, 0.72, 0.22, 0xf26b1d]);
     strip = new THREE.Mesh(RT.merge(sp), RT.mat.VC);
-    trooper = new THREE.Mesh(RT.merge(G.cruiser()), RT.mat.VC); trooperBar = new THREE.Mesh(RT.merge(G.lightbar()), lm || barMat2); trooper.add(trooperBar);
-    strip.visible = trooper.visible = false;
-    RT.driveScene.add(cop2, block, blockBars, blockBars2, flares, strip, trooper);
+    spikeCar = new THREE.Mesh(RT.cars.cruiserGeo("opp"), RT.mat.VC); spikeBar = new THREE.Mesh(RT.merge(G.lightbar()), lm || barMat2); spikeCar.add(spikeBar);
+    strip.visible = spikeCar.visible = false;
+    RT.driveScene.add(cop2, block, blockBars, blockBars2, flares, strip, spikeCar);
+    C.setLivery();
+  };
+  // every cruiser in the livery of the force where you are (a geometry swap: no new material, no new draw call)
+  C.setLivery = function (f) {
+    f = f || C.force(); var g = RT.cars.cruiserGeo(f), T = RT.traffic; C.livery = f;
+    if (cop2) { cop2.geometry = g; spikeCar.geometry = g; block.geometry = blockGeo[f]; }
+    if (T && T.cruiserMesh) T.cruiserMesh.geometry = g;
   };
   function hideBlock() { if (block) block.visible = blockBars.visible = blockBars2.visible = flares.visible = false; }
   C.reset = function () {
     C.state = 0; C.meter = 0; C.n = 0; C.dist = 0; C.t = 0; C.fled = false; C.rb = false; C.rbExit = -1; C.top = 0; C.graceT = 0; C.gaveUp = false; C.why = ""; C.spotted = false;
-    C.busted = ""; C.gapMiss = ""; C.gapKmh = 0; C.escaped = ""; stopT = 0;
+    C.busted = ""; C.gapMiss = ""; C.gapKmh = 0; C.escaped = ""; C.crossed = false; stopT = 0;
     if (cop2) cop2.visible = false; hideBlock();
-    var K = C.spike; K.st = 0; K.s = 0; K.at = 0; K.relaxed = false; tryT = 0; if (strip) strip.visible = trooper.visible = false;
+    var K = C.spike; K.st = 0; K.s = 0; K.at = 0; K.relaxed = false; tryT = 0; if (strip) strip.visible = spikeCar.visible = false;
     if (RT.traffic && RT.traffic.spike) RT.traffic.spike.on = false;
     if (RT.traffic && RT.traffic.block) { RT.traffic.block.keep = false; }
     if (RT.P) RT.P.flat = false;
@@ -5367,37 +5457,37 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     P.pullover = true; P.pulledOver = false; P.stopT = 0; P.exitArm = false;
     if (!P.assist) { P.assist = true; RT.emit("assist", true); }
     P.track = P.br >= 0 && !RT.road.branches[P.br].def.hidden ? P.br : -1;
-    RT.emit("toast", why === "block" ? (C.gapMiss === "fast" ? "Busted! Too fast for the gap: a trooper steps out and waves you down." :
-        "Busted! Straight into the roadblock: the cones go flying and you stop.") :
-      C.busted === "stop" ? "Busted: you stopped at the roadblock. The Autopilot holds you there." :
-      why === "spikes" ? "Spikes! Two flat tyres: busted. The Autopilot limps onto the shoulder." :
-      why === "ramp" ? "The cruiser follows you up the ramp: the Autopilot stops." : "The Autopilot stops on the shoulder.");
+    RT.emit("toast", why === "block" ? (C.gapMiss === "fast" ? "Busted! Too fast for the gap: " + C.po("officer") + " steps out and waves you down." :
+        "Busted! Straight into " + C.po("by") + "'s roadblock: the cones go flying and you stop.") :
+      C.busted === "stop" ? "Busted: you stopped at " + C.po("by") + "'s roadblock. The Autopilot holds you there." :
+      why === "spikes" ? "Spikes! Two flat tyres: busted by " + C.po("by") + ". The Autopilot limps onto the shoulder." :
+      why === "ramp" ? "The " + C.po("car") + " follows you up the ramp: the Autopilot stops." : "The Autopilot stops on the shoulder for " + C.po("by") + ".");
   };
   function startChase() {
     var P = RT.P; C.state = 2; C.fled = true; C.meter = 0; C.t = 0; C.dist = 0;
     P.pullover = false; RT.emit("siren", 1);
-    RT.emit("toast", "Siren on: you didn't stop. G pulls over.");
+    RT.emit("toast", "Siren on: you didn't stop for " + C.po("by") + ". G pulls over.");
   }
   function copGap() {                                               // how far back the nearest cruiser is (m)
     var T = RT.traffic, P = RT.P, g = 1e9; for (var k = 0; k < 2; k++) if (T.ex[k].on) g = Math.min(g, P.s - T.ex[k].s); return g;
   }
   function roadName() { var L = RT.road.leg; return ((L.road || L.name || "highway").split(" · ")[0]).replace(/ (East|Est|West|Ouest)$/, ""); }
   function lose(atEnd) {                                            // off at an exit with the cruisers held up in traffic: gone, for now
-    var P = RT.P; C.wanted = { exit: atEnd ? "the exit" : RT.road.nameAt(P.br, P.bu) || "an exit", leg: RT.road.leg.road || RT.road.leg.name, dist: Math.round(C.dist), n: C.n };
+    var P = RT.P; C.wanted = { exit: atEnd ? "the exit" : RT.road.nameAt(P.br, P.bu) || "an exit", leg: RT.road.leg.road || RT.road.leg.name, dist: Math.round(C.dist), n: C.n, by: C.force() };
     C.reset(); P.pullover = false; RT.traffic.endChase(); RT.emit("lostThem", C.wanted);
-    RT.emit("toast", "Lost them at " + C.wanted.exit + ". The plate is on the police radio now.");
+    RT.emit("toast", "Lost them at " + C.wanted.exit + ". The plate is on " + C.po("by") + "'s radio now.");
   }
   // past the roadblock: off at an exit before it, or through the gap on the shoulder. The cruisers stay at the cones.
   function escape(how) {
     var P = RT.P, T = RT.traffic, t = T.trap;
     C.state = 5; C.escaped = how; C.gapKmh = Math.round(P.kmh); P.pullover = false; C.wanted = null;
-    C.clear = { how: how, road: roadName(), exit: how === "exit" ? RT.road.nameAt(P.br, P.bu) || "an exit" : "", dist: Math.round(C.dist), n: C.n, kmh: C.gapKmh };
+    C.clear = { how: how, road: roadName(), exit: how === "exit" ? RT.road.nameAt(P.br, P.bu) || "an exit" : "", dist: Math.round(C.dist), n: C.n, kmh: C.gapKmh, by: C.force() };
     T.block.keep = true; T.endChase();
     if (t) { t.s = C.rbS - 14; t.d = 21.4; }                         // (the trap's cruiser stays parked at the roadblock)
-    RT.emit("toast", "You're in the clear… for now.");
+    RT.emit("toast", "You're in the clear… for now. " + C.po("By") + " stays at its cones.");
     RT.emit("escaped", C.clear);
   }
-  // the spike strip: across your lane SPIKE_AHEAD m out, a trooper's car on that side's shoulder (only where it makes sense)
+  // the spike strip: across your lane SPIKE_AHEAD m out, an officer's car on that side's shoulder (only where it makes sense)
   // where the strip may go. Strict (the first tries, SPIKE_AHEAD m out): a plain stretch (no lanes added or dropped on the way to it), no
   // ramp or fork within 300 m before it, no work or toll zone there or 250 m before, 520 m+ before the leg's end. Relaxed (the meter at
   // SPIKE_RELAX, or the strict spot would be past the leg's end): near a ramp but not on its taper or gore, no work or toll zone right there,
@@ -5431,9 +5521,9 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     if (l < 0) { K.d1 = 12.2 + 3.75 * l + 3.75 / 2 + SPIKE_W / 2; K.d0 = K.d1 - SPIKE_W; K.td = K.d0 - 0.9; }   // (an extra lane on the left: across it)
     else { K.d0 = K.lane ? 15.95 : 15.95 - SPIKE_W; K.d1 = K.d0 + SPIKE_W; K.td = K.lane ? 21.7 : 11.0; }
     RT.road.frame(s, (K.d0 + K.d1) / 2, _f); strip.position.set(_f.x, _f.y, _f.z); strip.rotation.set(0, -_f.h, 0); strip.visible = true;
-    RT.road.frame(s + 6, K.td, _f); trooper.position.set(_f.x, _f.y, _f.z); trooper.rotation.set(0, -_f.h + (K.lane ? 0.35 : -0.35), 0); trooper.visible = true;
+    RT.road.frame(s + 6, K.td, _f); spikeCar.position.set(_f.x, _f.y, _f.z); spikeCar.rotation.set(0, -_f.h + (K.lane ? 0.35 : -0.35), 0); spikeCar.visible = true;
     var TS = RT.traffic.spike; if (TS) { TS.on = l >= 0; TS.s = s; TS.lane = K.lane; }   // (traffic in the two right lanes holds back)
-    RT.emit("toast", "Spike strip " + Math.round(s - P.s) + " m ahead in the " + (K.lane ? "right" : "left") + " lane: change lanes!");
+    RT.emit("toast", "Spike strip " + Math.round(s - P.s) + " m ahead in the " + (K.lane ? "right" : "left") + " lane, " + C.po("officer") + " beside it: change lanes!");
     return true;
   }
   function spikeStep() {                                            // your front wheels crossing the strip: over it, or past it
@@ -5446,9 +5536,9 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
       K.st = 2; P.flat = true; RT.emit("squeal"); RT.emit("spikes", true);
       if (RT.drive && RT.drive.jolt) RT.drive.jolt(0.6, 0.4, 0, "The spike strip: two flat tyres", 1.1);
       C.giveUp("spikes");
-    } else {                                                        // missed it: the trooper pulls it back, they radio ahead
+    } else {                                                        // missed it: the officer pulls it back, they radio ahead
       K.st = 3; RT.emit("spikes", false); C.meter = 1;
-      RT.emit("toast", "Missed the spike strip! They radio ahead: a roadblock next.");
+      RT.emit("toast", "Missed the spike strip! " + C.po("By") + " radios ahead: a roadblock next.");
     }
     if (RT.traffic.spike) RT.traffic.spike.on = false;
   }
@@ -5470,7 +5560,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     RT.road.frame(s, 16.0, _f); block.position.set(_f.x, _f.y, _f.z); block.rotation.set(0, -_f.h, 0); block.visible = true;
     blockBars.position.copy(block.position); blockBars.rotation.copy(block.rotation); blockBars2.position.copy(block.position); blockBars2.rotation.copy(block.rotation);
     flares.position.copy(block.position); flares.rotation.copy(block.rotation); blockBars.visible = blockBars2.visible = flares.visible = true;
-    RT.emit("toast", "Roadblock " + Math.round(s - P.s) + " m ahead, across both lanes! " + (ex ? "Take " + R.nameAt(ex.idx, 1) + " before it, or s" : "S") +
+    RT.emit("toast", "Roadblock " + Math.round(s - P.s) + " m ahead: " + C.po("cars") + " across both lanes! " + (ex ? "Take " + R.nameAt(ex.idx, 1) + " before it, or s" : "S") +
       "queeze through the gap on the right shoulder under " + GAP_KMH + " km/h.");
   }
   function blockStep(dt) {                                          // at the cone line: the gap at a crawl, or busted; stopped short: busted
@@ -5494,21 +5584,25 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     var F = RT.flow, R = F && F.run, more = false, i;
     if (R && R.seq && !F.sim) for (i = R.si + 1; i < R.seq.length; i++) if (R.seq[i].kind === "drive") { more = true; break; }
     if (!more) { lose(true); return; }                              // (the last leg: they lose you at the exit)
-    C.carry = { si: R.si, leg: RT.road.leg.id, meter: C.meter, n: C.n, dist: C.dist, top: C.top, spotted: C.spotted, road: roadName() };
+    C.carry = { si: R.si, leg: RT.road.leg.id, meter: C.meter, n: C.n, dist: C.dist, top: C.top, spotted: C.spotted, road: roadName(), by: C.force() };
     C.reset(); RT.P.pullover = false; RT.traffic.endChase();
   }
   function resume() {
     var Q = C.carry, F = RT.flow, R = F && F.run, P = RT.P, T = RT.traffic, t = T.trap, c0 = T.ex[0], c1 = T.ex[1];
     C.carry = null; if (!Q || !R || R.si <= Q.si || RT.road.leg.id === Q.leg) return;   // (a retry of the same leg: no chase)
     C.state = 2; C.fled = true; C.meter = Math.min(Q.meter, HOLD); C.n = Q.n; C.dist = Q.dist; C.top = Q.top; C.spotted = Q.spotted; C.t = 0; P.pullover = false;
+    C.crossed = Q.by !== C.force();                 // (over the border: the OPP radioed ahead, the SQ has you now)
     c0.on = true; c0.s = P.s - 70; c0.d = RT.road.LANES[1]; c0.v = P.vs; c0.ts = c0.s; c0.td = c0.d;
     if (Q.n > 1) { c1.on = true; c1.s = P.s - 130; c1.d = RT.road.LANES[0]; c1.v = P.vs; }
     if (t) { t.passed = true; t.chase = 1; t.flash = 0; t.rest = false; t.s = c0.s; t.d = c0.d; }   // (this leg's radar cruiser is the one on your tail)
-    RT.emit("siren", 1); RT.emit("toast", "They followed you off the " + Q.road + ": the chase goes on. G pulls over.");
+    RT.emit("siren", 1);
+    say = C.crossed ? "The OPP radio ahead: the Sûreté du Québec picks up the chase at the border." :
+      "They followed you off the " + Q.road + ": " + C.po("by") + "'s chase goes on. G pulls over.";   // (said on the first frame: after the leg's own toast)
   }
-  RT.on("legStart", resume);
+  RT.on("legStart", function () { C.setLivery(); resume(); });   // (the livery first: the cruisers behind you are the new force's)
   C.update = function (dt) {
     var P = RT.P, T = RT.traffic, c0 = T.ex[0], c1 = T.ex[1];
+    if (say) { RT.emit("toast", say); say = ""; }
     if (RT.hit("KeyG") && (C.state === 1 || C.state === 2)) C.giveUp("key");
     if (!C.state || C.state === 5) { flash += dt; return; }
     if (P.pulledOver && C.state < 4) C.state = 4;
@@ -5529,7 +5623,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
       C.meter = Math.min(C.spike.st >= 2 || C.rb ? 1 : HOLD, C.meter + dt * (0.022 + 0.02 * clamp((P.kmh - 100) / 40, 0, 1)));
       if (C.meter >= JOIN && !c1.on) {                               // the second cruiser comes up from behind in the other lane
         c1.on = true; c1.s = P.s - 140; c1.d = P.d < 15.95 ? RT.road.LANES[1] : RT.road.LANES[0]; c1.v = P.vs + 8; C.n = 2;
-        RT.emit("toast", "A second cruiser, 140 m back.");
+        RT.emit("toast", "A second " + C.po("car") + ", 140 m back.");
       }
       if (!C.spike.st && !C.rb && C.t > 4 && C.meter >= SPIKE && P.br < 0 && (tryT -= dt) <= 0) { tryT = 0.2; placeSpike(); }   // (no room here: it tries
       // again further on, from SPIKE_RELAX with relaxed rules)
@@ -5566,8 +5660,8 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
       matF.color.setHex(Math.sin(flash * 23) * Math.sin(flash * 7.1) > 0.1 ? 0xff7a2a : 0xff3d14);
     }
     var K = C.spike;
-    if (strip.visible && (K.st === 0 || (K.st === 3 && RT.P.s > K.s + 60))) strip.visible = false;     // (dodged: the trooper pulls it back)
-    if (trooper.visible && (K.st === 0 || (K.st !== 1 && RT.P.s > K.s + 300))) trooper.visible = false;
+    if (strip.visible && (K.st === 0 || (K.st === 3 && RT.P.s > K.s + 60))) strip.visible = false;     // (dodged: the officer pulls it back)
+    if (spikeCar.visible && (K.st === 0 || (K.st !== 1 && RT.P.s > K.s + 300))) spikeCar.visible = false;
   };
   C.end = function () {                                              // the card was answered: everyone goes home
     C.reset(); RT.traffic.endChase();
@@ -5580,12 +5674,12 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     if (!C.fled) return base;
     return Math.min(50, base + 10 + Math.round(C.dist / 250) + (C.n > 1 ? 5 : 0) + (C.rb ? 5 : 0)) + (C.spike.st === 2 ? SPIKE_MIN : 0);   // (the tyres on top)
   };
-  var _ms = { strip: null, trooper: null, block: null, bars: null, bars2: null, flares: null };
+  var _ms = { strip: null, spikeCar: null, cop2: null, block: null, bars: null, bars2: null, flares: null, blockGeo: null };
   C.meshes = function () {                                           // (the HUD's markers, tests; no allocation)
-    _ms.strip = strip; _ms.trooper = trooper; _ms.block = block; _ms.bars = blockBars; _ms.bars2 = blockBars2; _ms.flares = flares; return _ms;
+    _ms.strip = strip; _ms.spikeCar = spikeCar; _ms.cop2 = cop2; _ms.blockGeo = blockGeo; _ms.block = block; _ms.bars = blockBars; _ms.bars2 = blockBars2; _ms.flares = flares; return _ms;
   };
   C.state0 = function () { return { state: C.state, meter: +C.meter.toFixed(2), n: C.n, dist: Math.round(C.dist), fled: C.fled, rb: C.rb, spike: C.spike.st,
-    busted: C.busted, escaped: C.escaped, clear: !!C.clear, rbAhead: C.rb ? Math.round(C.rbS - RT.P.s) : null }; };
+    busted: C.busted, escaped: C.escaped, clear: !!C.clear, livery: C.livery, crossed: C.crossed, rbAhead: C.rb ? Math.round(C.rbS - RT.P.s) : null }; };
 })();
 
 // ---------------------------------------------------------------- Road Trip 3D: mech.js (ROADTRIP-EXTRA)
@@ -7243,11 +7337,11 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
       var rbx = pullCls === "chase" && CH.rb && !spk, rbm = rbx ? Math.max(0, Math.round((CH.rbS - P.s) / 10) * 10) : 0;   // the roadblock ahead: the metres
       setText(E.pullb, pullCls === "ask" ? "PULL OVER" : spk ? "SPIKE STRIP · " + (spk.lane ? "RIGHT" : "LEFT") + " LANE · " + Math.max(0, Math.round((spk.s - P.s) / 10) * 10) + " m" : rbx ? "ROADBLOCK · " + rbm + " m ahead" :
         pullCls === "chase" ? "PULL OVER!" : CH.busted ? "BUSTED" : "PULLING OVER");
-      setText(E.pullt, pullCls === "ask" ? "brake to a stop on the shoulder · " + RT.kt("G", "PULL OVER") + ": the Autopilot does it" : spk ?
-        Math.max(0, Math.round(spk.s - P.s)) + " m ahead · change lanes to miss it, or " + RT.kt("G", "PULL OVER") + ": give up" : rbx ?
+      setText(E.pullt, pullCls === "ask" ? CH.po("by") + ": brake to a stop on the shoulder · " + RT.kt("G", "PULL OVER") + ": the Autopilot does it" : spk ?
+        Math.max(0, Math.round(spk.s - P.s)) + " m ahead · change lanes to miss it, or " + RT.kt("G", "PULL OVER") + ": give up" : rbx ? CH.po("by") + "'s roadblock: " +
         (CH.rbExit >= 0 && RT.road.branches[CH.rbExit] && P.s < RT.road.branches[CH.rbExit].def.start[0] ? "take " + RT.road.nameAt(CH.rbExit, 1) + " before it, or " : "") +
           "squeeze through the gap on the right shoulder under " + CH.GAP_KMH + " km/h · stop and you're busted" : pullCls === "chase" ?
-        (CH.n > 1 ? "two cruisers" : "a cruiser") + " behind you · " + (CH.dist / 1000).toFixed(1) + " km · " + RT.kt("G", "PULL OVER") + " or stop: give up" :
+        (CH.n > 1 ? "two " + CH.po("cars") : CH.po("a")) + " behind you · " + (CH.dist / 1000).toFixed(1) + " km · " + RT.kt("G", "PULL OVER") + " or stop: give up" :
         CH.busted ? (CH.busted === "spikes" ? "two flat tyres · the Autopilot limps onto the shoulder" : "stopped at the roadblock") : "the Autopilot eases onto the shoulder");
     }
     var en = F.run ? F.run.energy : 100, tired = RT.score && en < RT.score.T.en.tired;
@@ -8176,7 +8270,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     F.prevAssist = P.assist; P.pullover = true; P.pulledOver = false; P.stopT = 0; P.track = -1; P.exitArm = false;
     RT.chase.caught();
     if (R) { R.trapSeen = true; hazard(false, "ticket"); }
-    RT.emit("toast", "Lights behind you: " + (RT.chase.spotted ? "the plate was on the radio. " : kmh + " km/h past the cruiser. ") + (P.assist ? "The Autopilot pulls over." :
+    RT.emit("toast", "Lights behind you: " + (RT.chase.spotted ? "the plate was on " + RT.chase.po("by") + "'s radio. " : kmh + " km/h past " + RT.chase.po("a") + ". ") + (P.assist ? "The Autopilot pulls over." :
       "Pull over: brake to a stop on the shoulder (or G: the Autopilot does it)."));
   });
   // a speeding fine, about (Ontario's set fines per km/h over; Québec's are in the same range): the card's flavour, not the score
@@ -8187,38 +8281,40 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     var v = tr && RT.traffic.maxBefore ? Math.round(Math.max(RT.traffic.maxBefore, fled ? 0 : P.top)) : Math.round(P.top);
     var fr = null, k; for (k = 0; k < RT.cargo.J.length; k++) if (RT.cargo.J[k].it.F >= 2) { fr = RT.cargo.J[k].name; break; }
     var seat = R && R.pack.seat && R.pack.seat.length ? S.byName(R.items, R.pack.seat[0]) : null, mins = CH.minutes(T.speed.trapMin);
-    var wz = !!(tr && RT.road.zoneAt(tr.s, "work")), $ = fine(Math.max(0, v - lim)) * (wz ? 2 : 1), by = qc ? "the Sûreté du Québec" : "the OPP", h, title, kick;
+    var wz = !!(tr && RT.road.zoneAt(tr.s, "work")), $ = fine(Math.max(0, v - lim)) * (wz ? 2 : 1), by = CH.po("full"), h, title, kick;
+    // the ticket: an Ontario one, or in Québec a constat d'infraction
+    var tk = qc ? "Le constat d'infraction" : "The ticket", tkw = qc ? "a constat d'infraction" : "an Ontario ticket";
     var wzRow = wz ? row("Zone de travaux", "<b class='bad'>amendes doublées</b>: the fine doubles, and it counts twice") : "";
     var CH0 = CH.spotted && R && R.lost;
     if (CH0) {                                                       // you lost them at an exit earlier: the plate was on the radio
       title = "Pulled over: the plate was on the radio"; kick = "The chase on the " + R.lost.leg + ", earlier";
-      h = "<p>" + (qc ? "The Sûreté du Québec" : "The OPP") + " had your plate from the " + esc(R.lost.leg) + " chase on the screen before the window was down. " +
+      h = "<p>" + (qc ? "The Sûreté du Québec" : "The OPP") + " had your plate from the " + esc(R.lost.leg) + " chase" + (R.lost.by && R.lost.by !== CH.force() ?
+          " (" + CH.po("short", R.lost.by) + " put it on the radio)" : "") + " on the screen before the window was down. " +
         "The questions start with the " + esc(seat ? seat.s + " riding shotgun" : (fr || "load")) + ".</p>" + '<dl class="rows">' +
         row("Earlier", "a " + (R.lost.dist / 1000).toFixed(1) + " km chase, off at " + esc(R.lost.exit)) +
-        row("This stop", (v > lim ? v + " in a " + lim + " zone · about $" + $ + " · " : "") + "<b class='bad'>a court date for not stopping</b>") + wzRow +
+        row("This stop", (v > lim ? tkw + ", " + v + " in a " + lim + " zone · about $" + $ + " · " : "") + "<b class='bad'>a court date for not stopping</b>") + wzRow +
         row("On the shoulder", "<b class='bad'>" + mins + " minutes</b> (a prompt stop is " + T.speed.trapMin + ")") + "</dl>";
     } else if (!fled) {
-      var line = qc ? "« Bonjour. Vous savez à quelle vitesse vous rouliez? » In English, once she sees the " + (fr || "load") +
-          " through the window: \"Moving a museum?\" A ticket, and a reminder that the autoroutes are 100."
-        : "The officer reads the speed off the radar, then looks at the " + (fr || "load") + " through the back window. A ticket, and a word " +
+      var line = qc ? "The agente: « Bonjour. Vous savez à quelle vitesse vous rouliez? » In English, once she sees the " + (fr || "load") +
+          " through the window: \"Moving a museum?\" A constat d'infraction, and a reminder that the autoroutes are 100."
+        : "The OPP officer reads the speed off the radar, then looks at the " + (fr || "load") + " through the back window. A ticket, and a word " +
           "about stopping distances with a full car.";
       title = "Pulled over."; kick = v + " km/h in a " + lim;
-      h = "<p>Lights in the mirror: " + by + ". " + esc(line) + "</p>" + '<dl class="rows">' + row("The ticket", v + " in a " + lim + " zone, " +
-        (qc ? "Québec" : "Ontario") + " · about $" + $) + wzRow + row("On the shoulder", mins + " minutes") + row("Autopilot", "back to 100") + "</dl>";
+      h = "<p>Lights in the mirror: " + by + ". " + esc(line) + "</p>" + '<dl class="rows">' + row(tk, (qc ? "" : "Ontario: ") + v + " in a " + lim + " zone · about $" + $) + wzRow + row("On the shoulder", mins + " minutes") + row("Autopilot", "back to 100") + "</dl>";
     } else {
-      var who = seat ? "the " + seat.s + " riding shotgun" : "the " + (fr || "load") + " in the back", n = CH.n > 1 ? "two cruisers" : "a cruiser";
-      var talk = qc ? "« Permis, immatriculation. » Then, in English: \"I have questions about " + who + ".\""
+      var who = seat ? "the " + seat.s + " riding shotgun" : "the " + (fr || "load") + " in the back", n = CH.n > 1 ? "two " + CH.po("cars") : CH.po("a");
+      var talk = qc ? "The agent: « Permis, immatriculation. » Then, in English: \"I have questions about " + who + ".\""
         : "\"Licence and registration. And I have questions about " + who + ".\"";
       var spk = CH.spike.st;                                        // 2 ran over the spike strip, 3 dodged it
       title = spk === 2 ? "Busted. Two flat tyres." : "Pulled over. Eventually."; kick = (spk === 2 ? "A spike strip" : CH.rb ? "A roadblock" : n) + " · " + (CH.dist / 1000).toFixed(1) + " km later";
-      h = "<p>" + (spk === 2 ? "Two tyres flat on the rims after the spike strip. " : CH.rb ? "Cones and two more cruisers across both lanes. " : "") + "Behind you: " + n + " from " + by + ". " +
-        esc(talk) + "</p>" + '<dl class="rows">' + row("The ticket", v + " in a " + lim + " zone · about $" + $) + wzRow +
+      h = "<p>" + (spk === 2 ? "Two tyres flat on the rims after the spike strip. " : CH.rb ? "Cones and two more " + CH.po("cars") + " across both lanes. " : "") + (CH.crossed ? "The OPP radioed ahead at the border. " : "") + "Behind you: " + n + ". " +
+        esc(talk) + "</p>" + '<dl class="rows">' + row(tk, (qc ? "" : "Ontario: ") + v + " in a " + lim + " zone · about $" + $) + wzRow +
         row("Not stopping", "<b class='bad'>a second ticket and a court date</b>") +
-        row("The chase", (CH.dist / 1000).toFixed(1) + " km, " + n + (spk === 3 ? ", a spike strip dodged" : "") + (CH.rb ? ", a roadblock" : "") + (CH.gaveUp && CH.why === "key" ? " · you gave up" : "")) +
+        row("The chase", (CH.dist / 1000).toFixed(1) + " km, " + (CH.crossed ? "the OPP, then " : "") + n + (spk === 3 ? ", a spike strip dodged" : "") + (CH.rb ? ", a roadblock" : "") + (CH.gaveUp && CH.why === "key" ? " · you gave up" : "")) +
         (spk === 2 ? row("The tyres", "<b class='bad'>two flats</b>: the spare, and a tow for the other (" + CH.SPIKE_MIN + " of the minutes)") : "") +
         row("On the shoulder", "<b class='bad'>" + mins + " minutes</b> (a prompt stop is " + T.speed.trapMin + ")") + "</dl>";
     }
-    if (R) R.tickets.push({ v: v, lim: lim, by: qc ? "SQ" : "OPP", fled: fled, min: mins, rb: CH.rb, work: wz, spotted: !!CH0 });
+    if (R) R.tickets.push({ v: v, lim: lim, by: CH.po("short"), fled: fled, min: mins, rb: CH.rb, work: wz, spotted: !!CH0 });
     if (R) R.fines += $;
     var retry = fled && CH.busted === "spikes" && R && R.legSnap ? [["Try the leg again", function () { F.retryLeg(); }, false, "rtRetry"]] : [];
     card(title, h, retry.concat([
@@ -8233,13 +8329,13 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
   // busted at the roadblock (ran into it, or stopped with it up): the run is over. Try the leg again from its start, or go on to the game.
   function busted() {
     var CH = RT.chase, leg = RT.road.leg, qc = !!leg.qc, rn = ((leg.road || leg.name || "highway").split(" · ")[0]).replace(/ (East|Est)$/, "");
-    var n = CH.n > 1 ? "two cruisers" : "a cruiser", spk = CH.spike.st, why = CH.busted === "stop" ? "You stopped short of the cones and waited." :
+    var n = CH.n > 1 ? "two " + CH.po("cars") : CH.po("a"), spk = CH.spike.st, why = CH.busted === "stop" ? "You stopped short of the cones and waited." :
       CH.gapMiss === "fast" ? "You found the gap on the shoulder, at " + CH.gapKmh + " km/h: too fast to squeeze through (under " + CH.GAP_KMH + ")." :
       CH.gapMiss === "wide" ? "You aimed for the gap on the shoulder and clipped a cone." : "Straight into the cones at " + CH.gapKmh + " km/h.";
     var h = "<p>Pulled over at a roadblock on the " + esc(rn) + ". The LAN gear sits on the shoulder while they write it up.</p>" +
       "<p>" + esc(why) + " " + (qc ? "« Bonsoir. » The Sûreté du Québec" : "The OPP") + " would like a word about the " + (CH.dist / 1000).toFixed(1) + " km behind you, and the " +
         esc(firstFragile() || "load") + " is getting a careful look.</p>" + '<dl class="rows">' +
-      row("The chase", (CH.dist / 1000).toFixed(1) + " km, " + n + (spk === 3 ? ", a spike strip dodged" : "") + ", the roadblock") +
+      row("The chase", (CH.dist / 1000).toFixed(1) + " km, " + (CH.crossed ? "the OPP, then " : "") + n + (spk === 3 ? ", a spike strip dodged" : "") + ", the roadblock") +
       row("Not stopping", "<b class='bad'>a court date</b>, and a long talk on the shoulder") +
       row("This run", "<b class='bad'>busted: the run is over</b>") +
       row("Next time", "an exit before the roadblock, or the gap on the right shoulder under " + CH.GAP_KMH + " km/h (or just pull over: a ticket and " + T.speed.trapMin + " minutes)") + "</dl>";
@@ -8256,13 +8352,13 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
   // past the roadblock: in the clear. A toast (chase.js), then this card once nothing else is up; the chase counts as a hazard missed
   var escPending = null, escT = 0;
   RT.on("escaped", function (E) {
-    if (!R) return; hazard(false, "chase"); R.escaped = { how: E.how, road: E.road, exit: E.exit, kmh: E.kmh, dist: E.dist }; escPending = R.escaped; escT = 0;
+    if (!R) return; hazard(false, "chase"); R.escaped = { how: E.how, road: E.road, exit: E.exit, kmh: E.kmh, dist: E.dist, by: E.by }; escPending = R.escaped; escT = 0;
   });
   function escapedCard() {
     var E = escPending; escPending = null; if (!E || !R) return;
     var h = "<p>You're in the clear… for now. " + (E.how === "gap" ? "Through the gap on the shoulder at " + E.kmh + " km/h, a cone wobbling in the mirror." :
-        "Off at " + esc(E.exit) + " while they wait at their own cones.") + " The cruisers sit at the roadblock with their lights going.</p>" + '<dl class="rows">' +
-      row("The police", "<b>Outlaw</b>: escaped a roadblock on the " + esc(E.road) + ". Nobody chases you again this trip: they're busy with the paperwork.") +
+        "Off at " + esc(E.exit) + " while they wait at their own cones.") + " The " + RT.chase.po("cars", E.by) + " sit at the roadblock with their lights going.</p>" + '<dl class="rows">' +
+      row("The police", "<b>Outlaw</b>: escaped " + RT.chase.po("by", E.by) + "'s roadblock on the " + esc(E.road) + ". Nobody chases you again this trip: they're busy with the paperwork.") +
       row("Saved", "the stop on the shoulder (12 to 50 minutes)") +
       row("The risk", "<span class='bad'>the plate is on file now: a letter might follow you to Saint-Lambert</span>") +
       row("Not stopping", "counts as a hazard missed") + "</dl>";
@@ -8279,11 +8375,15 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
       row("The clock", "+" + m + " minutes") + "</dl><p class='note'>Herb's at exit 27 has gas. Gentler speeds burn less; so does drafting a rig.</p>",
       [["Back on the road", function () { RT.mech.jerry(); P.v = Math.min(P.v, 40 / 3.6); }, true]], { kick: hh(R.min) + " · the fuel light was on", esc: function () { F.pause(); } });
   });
-  RT.on("lostThem", function (w) { if (R) { R.lost = { exit: w.exit, leg: w.leg, dist: w.dist, later: false }; hazard(false, "chase"); } });
+  RT.on("lostThem", function (w) { if (R) { R.lost = { exit: w.exit, leg: w.leg, dist: w.dist, later: false, by: w.by }; hazard(false, "chase"); } });
   RT.on("deer", function (ok) { if (R) hazard(ok, "deer"); if (ok) RT.emit("toast", "The deer crossed. A hazard handled."); });
   RT.on("manners", function (ok, what) { if (R) { hazard(ok, ok ? "" : what); R.manners.push(what); } });
 
   // ================================================================ the end of a leg, the arrival, unloading, the final card
+  function nextQc() {                                              // the next driven leg is in Québec (a chase carried there crosses the border)
+    for (var i = R.si + 1; i < R.seq.length; i++) if (R.seq[i].kind === "drive") return !!R.seq[i].leg.qc;
+    return false;
+  }
   RT.on("end", function () {
     if (R && RT.landmarks.door && !P.parked && !F.sim) { P.ended = false; backIn(); return; }   // the college: back it in first
     if (F.sim || !R) { if (F.sim) return; legCardQuick(); return; }
@@ -8295,7 +8395,8 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     if (F.tickets) extra.push(F.tickets + (F.tickets > 1 ? " tickets" : " ticket"));
     if (F.tows) extra.push(F.tows + (F.tows > 1 ? " tows" : " tow") + " back to the road");
     if (P.offT > 2) extra.push(Math.round(P.offT) + " s off the pavement");
-    var h = "<p>" + esc(c.text || "") + "</p>" + (RT.chase.carry ? "<p class='bad'>Lights in the mirror: the cruisers are still behind you. The chase goes on.</p>" : "") +
+    var h = "<p>" + esc(c.text || "") + "</p>" + (RT.chase.carry ? "<p class='bad'>Lights in the mirror: " + RT.chase.po("by") + " is still behind you. The chase goes on" +
+      (!leg.qc && nextQc() ? ": the OPP radios ahead, and the Sûreté du Québec picks it up at the border.</p>" : ".</p>") : "") +
       '<dl class="rows">' +
       row("This leg", R.legOk + " of " + R.legHz + " hazards handled" + (R.legKn ? ", <b class='bad'>" + R.legKn + " knock" + (R.legKn > 1 ? "s" : "") +
           "</b>" : ", smooth") +
@@ -8403,7 +8504,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
           (R.fines ? " · about $" + R.fines + " in fines" : "")) : "") +
       (R.escaped ? row("Outlaw", "escaped a roadblock on the " + esc(R.escaped.road) + (R.escaped.how === "gap" ? " through the shoulder gap at " + R.escaped.kmh + " km/h" :
           " at " + esc(R.escaped.exit)) + " · in the clear, for now") : "") +
-      (R.lost ? row("The police", "lost them at " + esc(R.lost.exit) + (R.lost.later ? ", stopped later: the plate was on the radio" : "; nobody stopped you later")) : "") +
+      (R.lost ? row("The police", "lost " + RT.chase.po("by", R.lost.by || "opp") + " at " + esc(R.lost.exit) + (R.lost.later ? ", stopped later: the plate was on the radio" : "; nobody stopped you later")) : "") +
       row("Fuel", (RT.mech.dry ? "<span class='bad'>ran dry " + (RT.mech.dry > 1 ? RT.mech.dry + " times" : "once") + " (+15 minutes)</span>" :
           RT.mech.filled ? "filled up at Herb's" : "never filled up") + " · " + Math.round(RT.mech.pct() * 100) + " % left at the door") +
       (RT.mech.draftM > 50 ? row("Drafting", (RT.mech.draftM / 1000).toFixed(1) + " km of road behind rigs · " + RT.mech.saved.toFixed(1) + " L saved" +
@@ -8518,7 +8619,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
       kr("R", "tow back to the road (5 minutes)") + kr("M", "sound on or off") + kr("Esc|P", "pause") + kr("?", "this card") +
       kr("Enter", "a card's main button; skips a landmark view") + kr("Tab", "the next button on a card") + "</div>" +
       "<p class='note'>Limits: 110 on the 417 and Hwy 7, 100 through Ottawa (Kanata to past the Split) and on Québec's autoroutes, 90 on Route 132. More than 15 over at a " +
-      "radar trap means a ticket; not stopping means a chase and a much longer stop, unless traffic holds the cruisers 150 m back at an exit (the plate goes on the radio). " +
+      "radar trap means a ticket; not stopping means a chase (the OPP in Ontario, the Sûreté du Québec in Québec) and a much longer stop, unless traffic holds the cruisers 150 m back at an exit (the plate goes on the radio). " +
       "Keep going and they set up a roadblock: stop at it (or hit it) and you're busted; take an exit before it, or squeeze through the gap on the right shoulder under 60 km/h, and you're in the clear. Watch the fuel gauge: Herb's at exit 27 has gas " +
       "(take the exit, turn into the lot and stop). Deer come out at dusk. Québec: nids-de-poule, worn lines, and work zones where fines double.</p>";
     H().layer("Controls", h, [["Back", function () {
