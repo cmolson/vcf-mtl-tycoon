@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.134-6519958", "date": "2026-10-04"};</script>
+<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.156-18573c0", "date": "2026-10-05"};</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Road Trip 3D</title>
@@ -2114,15 +2114,17 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
   // The real interchange: the off-ramp up to Hwy 34, south on 34, east on the Service Road to Herb's (south of the 417,
   // east of 34). Back the way the locals go: west on the Service Road, north on 34, and the on-ramp down to the 417 east
   // (the south-east quadrant). Past the lot a small turnaround brings you back west if you didn't stop.
-  var S_OP = 2600, D2 = PI / 180, R25 = 25;
+  var S_OP = 2600, D2 = PI / 180, R25 = 25, R_N = 20.3;              // (R_N: the turn onto 34 north ends on 34's centre line, s 2600, so the
+  // car rides 34's northbound lane, 1.75 m right of it; with the old 22 m turn it drove up 34's yellow line)
   var EX = [[60, 0], [100, 12], [163.2, 0], [100, -12], [70.0, 0], [47.12, 90], [25, 0], [34.56, -90],   // the ramp, 34 south, the Service Road
     [414.83, 0],                                                    // east past Herb's lot to the turnaround
     [R25 * 60 * D2, -60], [R25 * 300 * D2, 300], [R25 * 60 * D2, -60],   // the turnaround (it closes on the Service Road, heading west)
-    [414.83, 0], [34.56, 90], [21.5, 0], [39.27, 90],               // west on the Service Road, north on 34, right onto the on-ramp
-    [60, 0], [100, -12], [202.6, 0], [100, 12], [200, 0], [80, 0]]; // down to the 417 and the acceleration lane
+    [414.83, 0], [R_N * PI / 2, 90], [21.5, 0], [39.27, 90],        // west on the Service Road, north on 34, right onto the on-ramp
+    [60, 0], [100, -12], [212.24, 0], [100, 12], [200, 0], [80, 0]]; // down to the 417 and the acceleration lane (212.24: it comes
+  // alongside at d 21.7, its left edge on lane 1's edge line, like exit 32's decel lane)
   var XM = marks(EX);                                               // u at each segment's start: XM[8] 599.9 the Service Road east,
-  var U_TURN0 = XM[9], U_W = XM[12], U_J = XM[13], U_34 = XM[15], U_ON = XM[16];   // the turnaround, back west, the right onto 34,
-  // 34 north (d 110), the on-ramp's start (d 85)
+  var U_TURN0 = XM[9], U_W = XM[12], U_J = XM[13], U_N = XM[14], U_34 = XM[15], U_ON = XM[16], U_ACC = XM[20];   // the turnaround, back west,
+  // the right onto 34, 34 north, the right onto the on-ramp, the on-ramp's start (d 86.7), the acceleration lane (alongside lane 1)
 
   RT.ROUTE = {
     SKY: SKY,
@@ -2173,16 +2175,19 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
         overpass: S_OP,
         branches: [
           { id: "exit27", kind: "ramp", start: [2080, 21.7, 0], segs: EX,
-            sec: [[0, 1, 2.0, 3.5, 2.0], [575, 2, 5.0, 5.0, 3.5], [U_34 + 12, 1, 2.0, 3.5, 2.0]],
-            taper: [60, 80],                                        // the decel lane opens over 60 m, the accel lane closes over 80 m
+            sec: [[0, 10, 2.0, 3.5, 2.0], [90, 1, 2.0, 3.5, 2.0], [575, 2, 5.0, 5.0, 3.5], [U_34 + 12, 1, 2.0, 3.5, 2.0], [U_ACC, 10, 2.0, 3.5, 2.0]],
+            taper: [60, 80], taperEdge: true,                       // the decel lane opens over 60 m, the accel lane closes over 80 m onto lane
+            // 1's edge (the outer edge moves, the dotted line stays on the edge line); reg 10 beside the 417, the ramp's yellow line once it parts
             elev: [[0, 0], [160, 0], [470, 5.9], [500, 6.5], [515, 6.95], [522, 6.82], [530, 6.46], [540.3, 6.02], [565.3, 4.88], [580, 4.27], [590, 3.99], [599.9, 3.89], [680, 0],   // (500-540: meets 34's grade)
-              [U_J - 80, 0], [U_J, 3.9], [U_J + 34.56, 4.9], [U_34, 5.88], [U_34 + 20, 6.65], [U_ON, 6.75], [U_ON + 300, 0], [9999, 0]],   // (back north
+              [U_J - 80, 0], [U_J, 3.9], [U_N, 4.9], [U_34, 5.88], [U_34 + 20, 6.65], [U_ON, 6.75], [U_ON + 300, 0], [9999, 0]],   // (back north
             // on 34: the heights are Hwy 34's own, so the car never steps between the two surfaces where they overlap)
             noDraw: [[528, 575], [U_W, U_34 + 18]], join: { s: "auto" }, lot: [605, 717],
             adv: [[0, 80], [160, 60], [440, 32], [545, 40], [560, 30], [605, 50], [U_TURN0 - 30, 30], [U_W + 30, 50], [U_J - 60, 25],
-              [U_34, 30], [U_ON + 20, 60], [U_ON + 300, 100]],
+              [U_34, 30], [U_ON + 20, 60], [U_ON + 70, 100]],         // (past the turn off 34, up to speed down the ramp: it merges at 100)
             names: [[0, "Exit 27 ramp"], [528, "Hwy 34"], [585, "Service Road"], [U_TURN0, "Service Road (turnaround)"], [U_J, "Hwy 34"],
-              [U_34 + 18, "the 417 on-ramp"]], rails: [[300, 480, 3.85]] },
+              [U_34 + 18, "the 417 on-ramp"]],
+            rails: [[300, 490, 3.85], [300, 490, -2.35], [U_ON + 8, U_ON + 235, 3.85], [U_ON + 8, U_ON + 235, -2.35]] },   // guardrails where the
+            // ramps stand 2-7 m up on their fills (the off-ramp to 34, the on-ramp down from it), both sides
           { id: "hwy34", kind: "road", start: [S_OP, -420, 90], segs: [[840, 0]], sec: [[0, 2, 5.0, 5.0, 3.5]],
             elev: [[0, 0], [220, 0], [380, 7.2], [500, 7.2], [660, 0], [840, 0]], bridge: [[380, 500]], ends: true,
             names: [[0, "Hwy 34"]], rails: [[376, 504, -5.6, 0], [376, 504, 5.6, 0]] },   // the parapets (the overpass kit draws them)
@@ -2289,17 +2294,36 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     var t = ((x - ax) * dx + (z - az) * dz) / (dx * dx + dz * dz || 1); t = t < 0 ? 0 : t > 1 ? 1 : t; this._t = t;
     var px = ax + dx * t - x, pz = az + dz * t - z; return px * px + pz * pz;
   };
-  Path.prototype.project = function (x, z, hint, out) {             // nearest point: out { u, e, i, dist2 }. hint: a sample index or -1
-    var n = this.n, i, best, k, d2;
-    if (hint === undefined || hint < 0 || hint > n - 2) {           // a coarse scan, then refine
-      best = 1e30; i = 0;
-      for (k = 0; k < n - 1; k += 8) { d2 = this.seg2(k, x, z); if (d2 < best) { best = d2; i = k; } }
-    } else i = hint;
-    for (k = 0; k < 400; k++) {
+  Path.prototype.walk = function (i, x, z) {                       // from sample i, downhill to the nearest segment's local minimum
+    var n = this.n;
+    for (var k = 0; k < 400; k++) {
       var d0 = this.seg2(i, x, z), dl = i > 0 ? this.seg2(i - 1, x, z) : 1e30, dr = i < n - 2 ? this.seg2(i + 1, x, z) : 1e30;
       if (dl < d0 && dl <= dr) i--; else if (dr < d0) i++; else break;
     }
-    d2 = this.seg2(i, x, z); var t = this._t;
+    return i;
+  };
+  Path.prototype.project = function (x, z, hint, out) {             // nearest point: out { u, e, i, dist2 }. hint: a sample index or -1
+    var n = this.n, i, best, k, d2, j, lim;
+    if (hint === undefined || hint < 0 || hint > n - 2) {           // a coarse scan, then refine from every coarse sample near the best: a
+      best = 1e30; i = 0;                                           // path that comes back near itself (exit 27's loop) has several local minima
+      for (k = 0; k < n - 1; k += 8) { d2 = this.seg2(k, x, z); if (d2 < best) { best = d2; i = k; } }
+      lim = Math.sqrt(best) + 18; lim *= lim; best = 1e30;
+      for (k = 0; k < n - 1; k += 8) if (this.seg2(k, x, z) <= lim) { j = this.walk(k, x, z); d2 = this.seg2(j, x, z); if (d2 < best) { best = d2; i = j; } }
+    } else i = this.walk(hint, x, z);
+    return this.fill(i, x, z, out);
+  };
+  Path.prototype.projectDir = function (x, z, h, out) {             // the nearest point whose heading is within 90 deg of h (a car joining a
+    var n = this.n, k, j, d2, best = 1e30, bi = -1, lim = 1e30;     // path that passes the same spot both ways: the Service Road east and west)
+    for (k = 0; k < n - 1; k += 8) { d2 = this.seg2(k, x, z); if (d2 < lim) lim = d2; }
+    lim = Math.sqrt(lim) + 18; lim *= lim;
+    for (k = 0; k < n - 1; k += 8) if (this.seg2(k, x, z) <= lim) {
+      j = this.walk(k, x, z); d2 = this.seg2(j, x, z);
+      if (d2 < best && Math.cos(this.H[j] - h) > 0) { best = d2; bi = j; }
+    }
+    return bi < 0 ? this.project(x, z, -1, out) : this.fill(bi, x, z, out);
+  };
+  Path.prototype.fill = function (i, x, z, out) {                   // out { u, e, i, dist2 } on segment i
+    var d2 = this.seg2(i, x, z), t = this._t;
     var fx = this.X[i + 1] - this.X[i], fz = this.Z[i + 1] - this.Z[i], l = Math.sqrt(fx * fx + fz * fz) || 1;
     var cx = this.X[i] + fx * t, cz = this.Z[i] + fz * t;
     out.i = i; out.u = (i + t) * DS; out.e = ((x - cx) * (-fz) + (z - cz) * fx) / l; out.dist2 = d2;
@@ -2489,7 +2513,10 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     if (k > 0 && u - a[0] < 30) { var b = S[k - 1], t = (u - a[0]) / 30; L = b[2] + (L - b[2]) * t; Rr = b[3] + (Rr - b[3]) * t; ln = b[4] + (ln - b[4]) * t; }
     var tp = br.def.taper, f = 1;
     if (tp) { if (u < tp[0]) f = 0.15 + 0.85 * u / tp[0]; if (u > br.len - tp[1]) f = Math.min(f, 0.15 + 0.85 * (br.len - u) / tp[1]); }
-    out.reg = a[1]; out.L = L * f; out.R = Rr * f; out.lane = ln * f; out.f = f; return out;
+    out.reg = a[1]; out.f = f;
+    if (br.def.taperEdge && f < 1) { out.L = L; out.R = -L + (L + Rr) * f; out.lane = ln; return out; }   // (the outer edge comes in: a decel
+    // lane opens from lane 1's edge line, an accel lane closes onto it; the left edge stays on the line)
+    out.L = L * f; out.R = Rr * f; out.lane = ln * f; return out;
   }
   function inRanges(list, u) { if (!list) return false; for (var k = 0; k < list.length; k++) if (u >= list[k][0] && u <= list[k][1]) return true; return false; }
   function clsAt(br, u) { return br.cls ? br.cls[clamp(Math.round(u / DS), 0, br.n - 1)] : 0; }
@@ -2506,10 +2533,12 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
   // surface(x, z, hint, carY, out): out { y, t (type), surf, grip, roll, rumble, s, d, br (-1 = main, -2 = a pad), bu, be, paved }
   // hint: { i, b: [] } kept by the caller between frames (one per wheel set / vehicle).
   var _p = { u: 0, e: 0, i: 0, dist2: 0 }, _pf = { y: 0, t: 0, w: 0 }, _sc = { reg: 0, L: 0, R: 0, lane: 0, f: 1 };
-  R.hint = function () { var h = { i: -1, b: [] }; for (var k = 0; k < 12; k++) h.b.push(-1); return h; };
+  // hint: { i (main), b [k] (branch k's sample), fx, fz, fd [k] (where branch k was last scanned in full, and how far its nearest point was) }
+  R.hint = function () { var h = { i: -1, b: [], fx: [], fz: [], fd: [] }; for (var k = 0; k < 12; k++) { h.b.push(-1); h.fx.push(0); h.fz.push(0); h.fd.push(-1); } return h; };
+  R.clearHint = function (h) { h.i = -1; for (var k = 0; k < h.b.length; k++) { h.b[k] = -1; h.fd[k] = -1; } return h; };
   R.surface = function (x, z, hint, carY, out) {
     main.project(x, z, hint.i, _p); hint.i = _p.i;
-    var s = _p.u, d = _p.e, ad = Math.abs(d), k, i;
+    var s = _p.u, d = _p.e, ad = Math.abs(d), k, i, wSum = 0, wBest = 0;
     prof(s, d, _pf); var y = _pf.y, t = _pf.t, br = -1, bu = 0, be = 0, paved = t <= T_SHOULDER;
     var pl = PLA[clamp(Math.round(s / DS), 0, PLA.length - 1)];
     var rumble = t === T_SHOULDER && ((ad > 19.85 && ad < 20.35) || (ad > pl - 0.55 && ad < pl - 0.1));
@@ -2518,13 +2547,36 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     }
     for (k = 0; k < branches.length; k++) {
       var b = branches[k]; if (s < b.s0 - 45 || s > b.s1 + 45 || d < b.d0 - 45 || d > b.d1 + 45) continue;
-      b.path.project(x, z, hint.b[k], _p); hint.b[k] = _p.i;
+      var hb = hint.b[k], full = hb < 0;
+      b.path.project(x, z, hb, _p);
+      if (!full) {                                                  // a hinted walk only finds a local minimum: on a path that comes back near
+        // itself (exit 27's loop: the off-ramp's end beside the on-ramp's start, 34 and the Service Road driven both ways) it can sit
+        // on the wrong part and miss the pavement under the wheel (the car fell through the on-ramp). Off the pavement: scan it all again,
+        // unless we're still too far from where the last full scan found it to have reached it since.
+        sec(b, _p.u, _sc);
+        if (_p.u <= 0.01 || _p.u >= b.len - 0.01 || _p.e < -_sc.L - 0.5 || _p.e > _sc.R + 0.5) {
+          var mx = x - hint.fx[k], mz = z - hint.fz[k];
+          if (hint.fd[k] < 0 || hint.fd[k] - Math.sqrt(mx * mx + mz * mz) < 9) {
+            var d2h = _p.dist2, ih = _p.i; b.path.project(x, z, -1, _p); full = true;
+            if (_p.dist2 > d2h) b.path.project(x, z, ih, _p);
+          }
+        }
+      }
+      if (full) { hint.fx[k] = x; hint.fz[k] = z; hint.fd[k] = Math.sqrt(_p.dist2); }
+      hint.b[k] = _p.i;
       if (_p.u <= 0.01 || _p.u >= b.len - 0.01) continue;           // past either end: not on it
       i = _p.i; var ty = b.path.Y[i] + (b.path.Y[i + 1] - b.path.Y[i]) * ((_p.u - i * DS) / DS);
       sec(b, _p.u, _sc); var e = _p.e, deck = isDeck(b, _p.u);
       var onDeck = e >= -_sc.L && e <= _sc.R && (!deck || carY > ty - 2.5) && (!b.cls || clsAt(b, _p.u) !== 1 || carY > ty - 2.5);
       if (onDeck && !b.def.hidden) {
-        if (!paved || ty >= y - 0.3 || br === -1 && ty > y) { y = ty; t = Math.abs(e) <= _sc.lane ? T_LANE : T_SHOULDER; paved = true; rumble = false; br = k; bu = _p.u; be = e; }
+        var win = Math.min(3, e + _sc.L, _sc.R - e) + 0.05;          // how far inside its pavement's edges (to 3 m)
+        if (br >= 0 && Math.abs(ty - y) < 0.5) {                    // two roads' pavements overlap at grade (exit 27 turning off Hwy 34): a
+          // blend by how far inside each edge, so stepping off one onto the other is never a step (a 3 cm step was a bump and a knock)
+          y = (y * wSum + ty * win) / (wSum + win); wSum += win;
+          if (win > wBest) { wBest = win; t = Math.abs(e) <= _sc.lane ? T_LANE : T_SHOULDER; br = k; bu = _p.u; be = e; }
+        } else if (!paved || ty >= y - 0.3 || br === -1 && ty > y) {
+          y = ty; t = Math.abs(e) <= _sc.lane ? T_LANE : T_SHOULDER; paved = true; rumble = false; br = k; bu = _p.u; be = e; wSum = wBest = win;
+        }
       } else if (!b.def.hidden) {
         var fill = fillAt(b, _p.u, ty), out0 = e < 0 ? -e - _sc.L : e - _sc.R, yE = fill - Math.max(0, out0 - 0.6) * 0.5;
         if (yE > y + (br >= 0 ? 0.6 : 0.02)) { y = yE; t = out0 < 0.6 ? T_GRAVEL : T_GRASS; paved = false; rumble = false; }   // (a road you're on
@@ -2829,6 +2881,8 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
         var reg = sc.reg, uL = regU(reg, 0), uR = regU(reg, REG[reg][2]), v0 = u / 12, v1 = u2 / 12, lift = br.def.kind === "ramp" ? 0.045 : 0.04;
         var uR2 = uR, uL2 = uL;
         if (br.def.fork || br.def.merge) { uR = regU(reg, Math.min(REG[reg][2], sc.L + sc.R)); uR2 = regU(reg, Math.min(REG[reg][2], sc2.L + sc2.R)); }   // cropped, 1:1
+        if (br.def.taperEdge) { uL = regU(reg, REG[reg][2] - sc.L - sc.R); uL2 = regU(reg, REG[reg][2] - sc2.L - sc2.R); }   // (a taper shows
+        // the lane's outer part, its edge line converging, 1:1)
         if (br.def.rev) { var t1 = uL; uL = uR; uR = t1; t1 = uL2; uL2 = uR2; uR2 = t1; }   // (its traffic drives toward u = 0: the lines mirrored)
         road.quad(P3(a, y + lift), P3(b, y2 + lift), P3(c, y2 + lift), P3(d, y + lift), _cc.setHex(0xffffff), [uL, v0], [uL2, v1], [uR2, v1], [uR, v0]);
       } else if (!cl) continue;
@@ -2990,6 +3044,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     R.S_OP = leg.overpass || 0;
     var BR = leg.branches || [];
     for (var k = 0; k < BR.length; k++) branches.push(buildBranch(BR[k]));
+    snapOverlaps();
     for (k = 0; k <= Math.ceil(main.len / BK); k++) buckets.push([]);
     if (!roadMat) roadMat = R.mat = new THREE.MeshLambertMaterial({ map: roadTexture() });
     var railSoup = new RT.Soup(); R.railSoup = railSoup;
@@ -3010,6 +3065,39 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     R.bounds = { s0: 3, s1: main.len - 3, dMax: 430 };
     return R;
   };
+  // where a branch's pavement lies on another road's (exit 27 on Hwy 34) or on its own earlier pavement (the loop driven back west on
+  // the Service Road, north on 34), it takes that surface's height, blended out over its own half-width + 2 m: one height for every
+  // part of the path that covers a spot, whichever part a wheel's query finds (else a 0.1-0.3 m step under one wheel, a jolt)
+  function snapOverlaps() {
+    var pr = { u: 0, e: 0, i: 0, dist2: 0 }, sA = { reg: 0, L: 0, R: 0, lane: 0, f: 1 }, sB = { reg: 0, L: 0, R: 0, lane: 0, f: 1 }, k, j, i, r;
+    function weight(e, sc, hw) { var out = e < 0 ? -e - sc.L : e - sc.R; return out <= 0 ? 1 : clamp(1 - out / (hw + 2), 0, 1); }
+    function yAt(p, u) { var f = clamp(u / DS, 0, p.n - 1.001), a = Math.floor(f); return p.Y[a] + (p.Y[a + 1] - p.Y[a]) * (f - a); }
+    for (k = 0; k < branches.length; k++) {
+      var b = branches[k], p = b.path; if (b.def.kind === "road" || b.def.hidden || b.cls) continue;
+      for (i = 0; i < b.n; i++) {
+        var x = p.X[i], z = p.Z[i], y = p.Y[i], bw = 0, by = y;
+        sec(b, i * DS, sA); var hw = Math.max(sA.L, sA.R);
+        for (j = 0; j < branches.length; j++) {                     // a road it runs on (at grade: not one it passes under or over)
+          r = branches[j]; if (r === b || r.def.kind !== "road" || r.def.hidden) continue;
+          r.path.project(x, z, -1, pr); if (pr.u <= 0.01 || pr.u >= r.len - 0.01) continue;
+          sec(r, pr.u, sB); var w = weight(pr.e, sB, hw), ry = yAt(r.path, pr.u);
+          if (w > bw && Math.abs(ry - y) < 1.5) { bw = w; by = ry; }
+        }
+        var jb = -1, db = (hw + 8) * (hw + 8), tb = 0;
+        if (bw < 1) for (j = 0; j < i - 30; j++) {                  // its own pavement, 60 m+ back along it: the nearest segment
+          var dx = p.X[j] - x, dz = p.Z[j] - z; if (dx * dx + dz * dz > 400) continue;
+          var d2 = p.seg2(j, x, z); if (d2 < db) { db = d2; jb = j; tb = p._t; }
+        }
+        if (jb >= 0) {
+          var fx = p.X[jb + 1] - p.X[jb], fz = p.Z[jb + 1] - p.Z[jb], l = Math.sqrt(fx * fx + fz * fz) || 1;
+          var e = ((x - p.X[jb] - fx * tb) * (-fz) + (z - p.Z[jb] - fz * tb) * fx) / l;
+          sec(b, (jb + tb) * DS, sB); var w2 = weight(e, sB, hw), y2 = p.Y[jb] + (p.Y[jb + 1] - p.Y[jb]) * tb;
+          if (w2 > bw && Math.abs(y2 - y) < 1.5) { bw = w2; by = y2; }
+        }
+        if (bw > 0) p.Y[i] = y + (by - y) * bw;
+      }
+    }
+  }
   function runs(test, fn) {                                         // call fn(s0, s1) for each run of main samples whose kind passes the test
     var n = KIND.length, i = 0;
     while (i < n) { if (!test(KIND[i])) { i++; continue; } var j = i; while (j < n && test(KIND[j])) j++; fn(i * DS, Math.min((j - 1) * DS, main.len)); i = j; }
@@ -4313,6 +4401,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     P.y = R.surface(P.x, P.z, hint, f.y + 1, sc).y; P.groundY = P.y; lastGY = P.y; vygF = 0; lastYF = P.yF; lastYR = P.yR; vFf = vRf = 0;
     P.heave = P.hv = P.bodyPitch = P.pv = P.bodyRoll = P.rv = 0; P.holeOff = 0; P.track = br; P.tu = br >= 0 ? u : 0; P.laneE = br >= 0 ? e : d; P.exitArm = false;
     if (br < 0) P.lane = d < 15.95 ? 0 : 1;
+    phSeed = br >= 0 ? Math.round(u / R.DS) : -1; lastTrack = -9;   // (the Autopilot follows on from u: exit 27's loop passes the same spot twice)
     readSurface(); lastYF = P.yF; lastYR = P.yR;
   };
   D.reset = function (s0) {                                         // a fresh leg
@@ -4373,6 +4462,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     try { localStorage.setItem("rt3d.autopilot", on ? "1" : "0"); } catch (e) { /* private mode: no memory */ }
     if (on) { P.cruise = clamp(Math.round(Math.max(P.v * 3.6, 60) / 10) * 10, 60, 160); P.laneE = P.br >= 0 ? 0 : clamp(P.d, RT.road.LANES[0], RT.road.LANES[1]);
       P.track = P.br >= 0 && !RT.road.branches[P.br].def.hidden ? P.br : -1; if (P.track < 0) P.lane = P.d < 15.95 ? 0 : 1;
+      phSeed = -1; lastTrack = -9;                                  // (it finds its place on the branch by the car's heading)
       if (P.park) P.park.auto = true; }
     else if (P.park) P.park.auto = false;
     RT.emit("assist", P.assist); RT.emit("toast", P.assist ? "AUTOPILOT ON: it keeps the lane and " + P.cruise + " km/h. ◀ ▶ lanes · " + RT.kt("▲ ▼", "−\u00a0+") + " speed · brake takes over." :
@@ -4419,7 +4509,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
   };
 
   // ---------------------------------------------------------------- the cruise controller: pure pursuit on a track, a gap keeper, speed
-  var _tp = { x: 0, y: 0, z: 0, h: 0 }, _pr = { u: 0, e: 0, i: 0, dist2: 0 }, phB = -1, lastTrack = -9, emerT = 0, emerCool = 0, exitBr = -1;
+  var _tp = { x: 0, y: 0, z: 0, h: 0 }, _pr = { u: 0, e: 0, i: 0, dist2: 0 }, phB = -1, phSeed = -1, lastTrack = -9, emerT = 0, emerCool = 0, exitBr = -1;
   var brakeT = 0, tbWas = false;
   function advAhead(track, u, v) {                                  // the advisory speed now, and what the next 160 m allows at a gentle 2.2 m/s² brake
     var R = RT.road, m = R.adv(track, u), x, a;
@@ -4441,9 +4531,12 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     if (P.exitArm && P.track < 0 && exitBr >= 0 && R.branches[exitBr] && P.s > R.branches[exitBr].s0 + (R.branches[exitBr].def.decel ? 70 : 4)) {
       var eb = R.branches[exitBr]; P.track = eb.idx; P.exitArm = false; P.laneE = P.d - eb.def.start[1]; exitBr = -1;
     }
-    if (P.track !== lastTrack) { phB = -1; lastTrack = P.track; }
+    if (P.track !== lastTrack) { phB = P.track >= 0 ? phSeed : -1; phSeed = -1; lastTrack = P.track; }   // (a placement says where on the branch;
+    // the nearest point alone could be the other way round the loop: the Service Road east and west are one line)
     if (br) {
-      path = br.path; path.project(P.x, P.z, phB, _pr); phB = _pr.i; u = _pr.u; P.tu = u;
+      path = br.path; if (phB < 0) path.projectDir(P.x, P.z, P.yaw, _pr); else path.project(P.x, P.z, phB, _pr);   // (no place yet: the nearest
+      // point that runs the way the car faces)
+      phB = _pr.i; u = _pr.u; P.tu = u;
       R.secAt(br, u, _sec); eT = br.def.kind === "road" || _sec.reg === 2 ? 1.75 : 0;
       vT = Math.min(vT, br.def.id === "herbs-lot" ? (u < 1 ? 40 / 3.6 : 22 / 3.6) : advAhead(P.track, u));
       if (br.def.join && u > br.len - 300) {                       // the accel lane: back on the 417, right lane, into a real gap
@@ -4650,12 +4743,12 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     var px = cx - c.x, pz = cz - c.z, r = CR + c.r, d2 = px * px + pz * pz; if (d2 >= r * r) return false;
     var d = Math.sqrt(d2) || 1e-4; _n.x = px / d; _n.z = pz / d; _n.p = r - d; return true;
   }
-  var hitCool = 0;
+  var hitCool = 0, pushed = false;
   function respond(cx, cz, kind, other) {                           // push out, kill the speed into it, a knock if it was hard
     var sh = Math.sin(P.yaw), ch = Math.cos(P.yaw);
     var vx = P.v * sh + P.vl * ch, vz = -P.v * ch + P.vl * sh, ovx = other ? other.vx : 0, ovz = other ? other.vz : 0;
     var rvx = vx - ovx, rvz = vz - ovz, vn = rvx * _n.x + rvz * _n.z;
-    P.x += _n.x * _n.p; P.z += _n.z * _n.p;
+    P.x += _n.x * _n.p; P.z += _n.z * _n.p; pushed = true;
     if (vn >= 0) return;
     var soft = kind === "fence" ? 0.35 : kind === "tree" || kind === "post" || kind === "pole" ? 0.6 : 1, e = kind === "rail" ? 0.2 : 0.1;
     vx -= (1 + e) * vn * _n.x; vz -= (1 + e) * vn * _n.z;
@@ -4779,6 +4872,32 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     if (!P.ended && !cops && eb && eb.def.endLeg && P.bu >= eb.def.endLeg) { P.ended = true; RT.emit("end"); }
   }
 
+  // ---------------------------------------------------------------- the safety net: never below the road or the land
+  // Once a frame one wheel (in turn) asks the surface afresh (no hint: a full scan of every path) and compares it with what its hinted
+  // query says at the same spot. If the fresh one is higher, a hint was stuck on the wrong part of a path (or a surface went missing): the
+  // hints start over, the car is put back on the ground, and it goes in RT.errors (the tests and the publish smoke test read it).
+  var netH = null, netS = { y: 0 }, netW = { y: 0 }, netK = 0, netT = -9;
+  D.snaps = 0;
+  function groundNet() {
+    var R = RT.road, k = netK = (netK + 1) & 3, ch = Math.cos(P.yaw), sh = Math.sin(P.yaw);
+    if (!netH) netH = R.hint();
+    if (pushed) { pushed = false; readSurface(); if (!P.air && P.y < P.groundY) P.y = P.groundY; }   // (a collision moved the car after its
+    // ground was read: up a fill's slope that's a few cm)
+    var wx = P.x + WX[k] * ch - WZ[k] * sh, wz = P.z + WX[k] * sh + WZ[k] * ch;
+    R.surface(wx, wz, wh[k], P.y, netW); R.surface(wx, wz, R.clearHint(netH), P.y, netS);
+    var low = P.y < P.groundY - 0.05 && !P.air;                     // (the physics never leaves it there: belt and braces)
+    if (netS.y <= netW.y + 0.05 && !low) return;
+    R.clearHint(hint); for (var j = 0; j < 4; j++) R.clearHint(wh[j]);
+    var y0 = P.y; readSurface();
+    if (P.y < P.groundY) {
+      D.snaps++; P.y = P.groundY; P.vy = Math.max(0, P.vy); P.air = false; lastGY = P.groundY; lastYF = P.yF; lastYR = P.yR; vygF = 0;
+      if (P.time - netT > 1 && RT.errors.length < 200) {
+        netT = P.time; RT.errors.push("ground: the car was " + (P.y - y0).toFixed(2) + " m below the surface at s " + P.s.toFixed(0) + ", d " + P.d.toFixed(1) +
+          " (" + (P.br >= 0 ? R.nameAt(P.br, P.bu) + " u " + P.bu.toFixed(0) : P.surf) + "): put back on it");
+      }
+    }
+  }
+
   // ---------------------------------------------------------------- the step (called by the drive mode once a frame)
   D.update = function (dt) {
     if (P.ended) { P.throttle = 0; P.brake = 1; }
@@ -4788,6 +4907,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
       if (P.assist && !P.ended) autopilot(h);
       physics(h); collide();
     }
+    groundNet();
     P.vs = P.v * Math.cos(P.yaw - RT.road.main.H[Math.min(RT.road.main.n - 1, Math.max(0, Math.round(P.s / RT.road.DS)))]);
     var lo = P.d - P.wid / 2, hi = P.d + P.wid / 2, X = RT.X, EL = RT.road.exitLane;   // which eastbound lanes the car covers (for traffic; 4: exit 32's
     var dec = EL && P.br === EL.idx && P.bu < EL.u1 + 40;           // decel lane, while it runs beside lane 1)
