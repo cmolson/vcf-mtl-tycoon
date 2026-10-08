@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.156-18573c0", "date": "2026-10-05"};</script>
+<script>window.VCF_GAME_URL = "index.html#pick"; window.VCF_BUILD = {"v": "v0.214-80f3886", "date": "2026-10-08"};</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Road Trip 3D</title>
@@ -2030,7 +2030,8 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
 //   cues (flow.js), kits [names] (landmarks), houses (suburbs), trees (density x), fences (explicit, else automatic),
 //   deer [s0, s1] (mech.js: a deer crosses somewhere in there, at dusk), worn [[s0, s1]] (patched asphalt, the lane lines worn away:
 //   road.js's worn texture, the Autopilot wobbles), camper s (mech.js: an Ontario left-lane camper ahead from there), tailgate s
-//   (mech.js: a Québec driver at 130 right behind you). A pothole's 4th number is its depth (1 default; Québec's deep ones 1.5-1.6,
+//   (mech.js: a Québec driver at 130 right behind you), animals [[species, s0, s1, side, dist, count]] (animals.js: the wildlife and farm
+//   animals beside the road; dist: m out from the paved edge at 22.7, the fence at 25.3; ["snow", s, side]: a snow-goose V crossing ahead near s). A pothole's 4th number is its depth (1 default; Québec's deep ones 1.5-1.6,
 //   a jolt that much harder; shallow 0.7). Québec's legs have twice the potholes, and a pair in the A-40's passing lane the Autopilot can't
 //   both straddle.
 // The posted limits (RT.road.limitAt: a zone { kind: "limit", s0, s1, kmh } wins over leg.limit), as of the trip (Nov 2026):
@@ -2139,7 +2140,8 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
         branches: [fly({ id: "the417", s: 1900, d: 8.45, dir: -1, lanes: 2, name: "the 417 from Arnprior" })],
         zones: [{ kind: "limit", s0: 1900, s1: 99999, kmh: 100 }],   // Hwy 7 is 110; from the 417 merge in Kanata on, 100
         potholes: [[620, 0, 0.6], [1350, 1, -0.55], [2900, 0, -0.5], [4300, 0, 0.75]], radar: [800, 1500], houses: [3800, 5600], trees: 0.8,
-        kits: ["hwy7", "ctc", "bayshore"] },
+        kits: ["hwy7", "ctc", "bayshore"],
+        animals: [["horse", 455, 500, 1, 32, 2], ["crow", 880, 960, 1, 0, 3], ["cow", 3135, 3210, -1, 30, 6], ["groundhog", 2950, 2990, 1, 2.3, 1]] },
       // ------------------------------------------------------------ 1: the Queensway through Ottawa to the Split (exit 113A)
       { id: "queensway-split", min: 13, name: "The Queensway to the Split", who: "both", covers: ["l1"], km0: 0, kmPost: 130, limit: 110, asph: true,
         road: "417 East · The Queensway", next: "the Split · 417 East, keep right", sky: ["nov", "nov"],
@@ -2155,7 +2157,8 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
         zones: [{ kind: "limit", s0: 0, s1: 4700, kmh: 100 }],      // 100 through Ottawa to just past the Split, then 110 (the sign at 4720)
         potholes: [[900, 0, 0.55], [2450, 1, 0.65], [3650, 0, -0.6]], radar: [700, 2600], houses: [0, 4900], trees: 0.55,
         noise: [[300, 1100, 31], [300, 1100, -31], [2450, 2950, 31], [2450, 2950, -31]],
-        kits: ["queensway", "split-gantry"] },
+        kits: ["queensway", "split-gantry"],
+        animals: [["goose", 1500, 1580, 1, 9, 12], ["snow", 2300, 1], ["crow", 3000, 3080, 1, 0, 4], ["groundhog", 4950, 5000, 1, 2.3, 1]] },
       // ------------------------------------------------------------ 2: the Split to Casselman: Vars, Limoges (Calypso), Casselman
       { id: "vars-casselman", min: 26, name: "Vars, Limoges and Casselman", who: "both", covers: ["l2"], km0: 17, kmPost: 112, limit: 110,
         road: "417 East", next: "Vars · Limoges · Casselman", sky: ["nov", "nov2"],
@@ -2165,7 +2168,10 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
         potholes: [[520, 0, 0.5], [1180, 1, -0.7], [1990, 0, 0.1], [2760, 0, -0.55], [3420, 0, 0.7], [4610, 1, 0.55], [5250, 0, -0.45]], radar: [1800, 3800],
         camper: 900,                                                // an Ontario driver camping in the left lane
         eagle: 2600,                                                // the AMC Eagle with the monitor in the back seat comes up from behind (traffic.js)
-        kits: ["vars", "calypso", "steeple"] },
+        kits: ["vars", "calypso", "steeple"],
+        animals: [["deer", 600, 1400, -1, 33, 2], ["cow", 1535, 1610, 1, 30, 8], ["snow", 2000, -1], ["heron", 2400, 2440, 1, 6.2, 1],
+          ["groundhog", 3000, 3040, 1, 2.3, 1], ["horse", 3235, 3275, 1, 31, 3], ["pond", 3720, 3730, -1, 46, 1], ["goose", 3690, 3760, -1, 30, 12],
+          ["crow", 4200, 4280, 1, 0, 3]] },
       // ------------------------------------------------------------ 3: Casselman to the border: the work zone, Herb's at exit 27, Hawkesbury
       { id: "417-herbs", min: 22, name: "The 417 east: exit 27, Herb's, the border", who: "both", covers: ["l3"], km0: 96, kmPost: 31, limit: 110, herbs: true,
         road: "417 East", next: "Hawkesbury · the border", sky: ["nov2", "nov2"],
@@ -2201,7 +2207,9 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
         fences: [[4, S_OP - 22, -48], [S_OP + 22, -4, -48], [4, 2050, 48], [3800, -4, 48], [2050, S_OP - 8, 236], [S_OP + 8, 3800, 236]],
         crossFences: [[2050, 48, 236], [3800, 48, 236]],
         rails: [[S_OP - 160, 3000, 23.25], [S_OP - 70, S_OP + 50, 3.6], [S_OP - 70, S_OP + 50, -3.6]],
-        kits: ["herbs", "farms", "herbs-signs", "work", "hawkesbury", "welcome"] },
+        kits: ["herbs", "farms", "herbs-signs", "work", "hawkesbury", "welcome"],
+        animals: [["deer", 705, 850, -1, 33, 2], ["groundhog", 1300, 1340, 1, 2.3, 1], ["crow", 1500, 1580, -1, 0, 3], ["cow", 3335, 3410, -1, 30, 7],
+          ["cow", 4385, 4450, 1, 31, 6], ["snow", 4700, 1], ["heron", 5200, 5240, -1, 6.2, 1], ["fox", 5850, 6000, 1, 34, 1]] },
       // ------------------------------------------------------------ 4: the border, the A-40, Mont Rigaud, Vaudreuil-Dorion exit 32 (keep right)
       { id: "a40-vaudreuil", min: 26, name: "The A-40 to Vaudreuil-Dorion", who: "both", covers: ["l4"], km0: 130, kmPost: 0, limit: 100, asph: true, qc: true,   // (an autoroute: 100 by law)
         road: "A-40 Est", next: "Rigaud · Vaudreuil-Dorion · sortie 32", sky: ["late", "late"],
@@ -2227,7 +2235,9 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
         // exit 32 approach forces everyone into lane 1, so a pair there would be a knock nobody chose)
         radar: [1650, 2100], houses: [3900, 6000], worn: [[3250, 4150]], tailgate: 500,
         work: [1500, 2200, 0], zones: [{ kind: "limit", s0: 1200, s1: 2260, kmh: 70 }, { kind: "work", s0: 1200, s1: 2240, kmh: 70 }],
-        kits: ["border-west", "rigaud", "sortie32", "work"] },
+        kits: ["border-west", "rigaud", "sortie32", "work"],
+        animals: [["turkey", 780, 860, 1, 30, 6], ["heron", 1000, 1040, -1, 6.2, 1], ["cow", 1335, 1400, -1, 30, 6], ["snow", 1900, -1],
+          ["pond", 2655, 2665, 1, 44, 1], ["goose", 2620, 2690, 1, 30, 10], ["crow", 3300, 3380, -1, 0, 3], ["horse", 3640, 3690, 1, 31, 2]] },
       // ------------------------------------------------------------ 5: the A-30: the Soulanges Canal tunnel, the toll, two long bridges
       { id: "a30-bridges", min: 19, name: "The A-30: tunnel, toll and bridges", who: "both", covers: ["l5"], km0: 166, kmPost: 6, limit: 100, asph: true, qc: true,   // (100 by law)
         road: "A-30 Est", next: "Salaberry-de-Valleyfield · Beauharnois · Châteauguay", sky: ["dusk1", "dusk2"],
@@ -2245,7 +2255,9 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
         potholes: [[400, 0, 0.6], [560, 1, -0.5], [1150, 0, -0.5, 1.6], [1600, 1, 0.55], [2200, 0, -0.6], [2600, 1, 0.5, 0.7], [3300, 1, 0.7], [3650, 0, 0.55],
           [4800, 1, -0.5, 1.6], [5000, 0, 0.45], [5200, 1, 0.6]], radar: [4700, 5300], worn: [[1450, 1800], [3020, 3680]],
         deer: [3150, 3550],                                         // dusk, the farmland of Grande-Île between the two bridges
-        kits: ["tunnel", "toll", "sergemarcil", "madeleine"] },
+        kits: ["tunnel", "toll", "sergemarcil", "madeleine", "farms5"],
+        animals: [["groundhog", 1100, 1140, 1, 2.3, 1], ["goose", 3080, 3160, 1, 26, 14], ["heron", 4560, 4600, -1, 6.2, 1], ["cow", 4720, 4800, 1, 30, 7],
+          ["snow", 4900, 1], ["crow", 5300, 5380, -1, 0, 3]] },
       // ------------------------------------------------------------ 6: Route 132 along the river at dusk to Champlain College Saint-Lambert
       { id: "r132-college", min: 17, name: "Route 132 to Saint-Lambert", who: "both", covers: ["l5"], km0: 217, kmPost: 55, limit: 90, asph: true, qc: true,
         road: "R-132 Est", next: "Saint-Lambert · Champlain College", sky: ["dusk2", "dusk3"],
@@ -2257,7 +2269,9 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
         zones: [{ kind: "limit", s0: 4500, s1: 5500, kmh: 50 }],
         potholes: [[600, 1, 0.5], [900, 0, -0.65], [1500, 1, -0.55, 1.6], [2100, 0, 0.6], [2600, 1, 0.55], [3200, 0, -0.5, 1.5], [3700, 1, 0.6], [4200, 0, 0.6]],
         radar: [1200, 2400], houses: [3800, 5500], trees: 0.6, worn: [[1000, 2000]],
-        kits: ["champlain", "skyline", "college"] }
+        kits: ["champlain", "skyline", "college"],
+        animals: [["goose", 900, 980, -1, 12, 12], ["snow", 1500, -1], ["crow", 2700, 2780, 1, 0, 3], ["heron", 3200, 3240, 1, 6.2, 1],
+          ["groundhog", 2600, 2640, 1, 2.3, 1]] }
     ]
   };
   RT.ROUTE.byId = function (id) { var L = RT.ROUTE.legs; for (var k = 0; k < L.length; k++) if (L[k].id === id) return L[k]; return null; };
@@ -2941,6 +2955,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     }
     return false;
   }
+  R.kept = kept; R.nearBranch = nearBranch;                         // (animals.js: where nothing stands, read at a leg's build)
   var geos = null;
   R.plant = function () {                                           // after the landmarks have said where nothing grows
     var rv = RT.vrnd, k, s, d, j, L = main.len, dens = leg.trees === undefined ? 1 : leg.trees;
@@ -4232,6 +4247,9 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     [s0, s1].forEach(function (s) { box(W, s, 0, -1.7 - 6, 48, 6, 6, PIER); });
     L.kit(name, W, null, beat);
   }
+  L.defs.farms5 = function () {                                     // Grande-Île and Beauharnois past the Madeleine-Parent bridge: two dairy farms
+    R = RT.road; L.kit("farms5", farmsAt([[4650, 115, 0.2], [5250, -100, -0.1]]));
+  };
   L.defs.sergemarcil = function (leg) { R = RT.road; var b = leg.bridges[0]; longBridge("sergemarcil", b[0], b[1], -10, 60, null, "sm"); };
   L.defs.madeleine = function (leg) { R = RT.road; var b = leg.bridges[1]; longBridge("madeleine", b[0], b[1], -18, 50, [3980, 4220], "mp"); };
 
@@ -6036,6 +6054,374 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
       saved: +M.saved.toFixed(2), checks: M.checks, manners: { camper: !!MN.camper, passed: MN.passed, tail: !!MN.tail, tSeen: MN.tSeen, tT: +MN.tT.toFixed(1),
         tDone: MN.tDone, honks: MN.honks, moved: MN.moved }, deer: M.deer ? { s: Math.round(M.deer.s), st: M.deer.st, brushed: M.deer.brushed } : null, deerOk: M.deerOk };
   };
+})();
+
+// ---------------------------------------------------------------- Road Trip 3D: animals.js (ROADTRIP-EXTRA)
+// Ambient wildlife and farm animals beside the road, early November in the Ottawa Valley and on the South Shore: Holstein herds
+// by the barns, horses in a paddock, Canada geese grazing (they scatter when you honk), a great blue heron in a wet ditch, a
+// groundhog on the shoulder grass (it stands up as you pass), crows on the fence posts (they fly off when you honk or pass
+// close), white-tailed deer at a forest edge, near the border a red fox trotting along a field edge and a wild turkey flock,
+// and now and then a V of snow geese migrating overhead. None of them ever walks onto the road (the hazard deer in mech.js
+// is the only animal that does): the fliers always fly outward, away from the pavement.
+// Data: each leg's `animals` (route-legs.js): [species, s0, s1, side (+1 right, -1 left), dist (m out from the paved edge, 22.7),
+// count]; seeded per leg, so the same every run. Placed on the terrain (RT.road.prof: the land, not the road surface), on the
+// field side of the fence (ditch and shoulder-grass species inside it), never on the pavement, a ramp, a pad, a kit's keep-out
+// or near a branch; crows on the fence's own posts. A "snow" entry [ "snow", s, side ] launches a flock as you near s.
+// Draw calls: every ground animal is boxes in ONE instanced mesh (a unit box, a colour per instance: the trees' program); the
+// flock is one merged mesh, shown only while it crosses. Only the animals within a window around the car (160 m behind,
+// 560 m ahead) are in the instanced mesh (a slice of the leg's baked matrices); only those within 150 m are posed per frame
+// (head bobs, pecking, the groundhog, hops, wings). Reduced motion: static poses, no flapping. No allocation per frame.
+(function () {
+  "use strict";
+  var RT = window.RT; if (!RT || !RT.ok || !RT.road) return;
+  var PI = Math.PI, P = RT.P, R = RT.road;
+  var EDGE = 22.7, FENCE = 48, POST = 1.25, CAP = 1024, NEAR = 150, BEHIND = 160, AHEAD = 560, FLY_T = 7;
+  var IDLE = 0, FLY = 1, GONE = 2;
+  var A = RT.animals = { n: 0, parts: 0, seen: {}, enabled: true, mesh: null, flock: null, win: { a0: 0, a1: 0, count: 0, p0: 0 }, posed: 0, flocks: 0 };
+
+  // ---------------------------------------------------------------- the models: boxes [x, y, z, sx, sy, sz, colour, rx, ry, rz, group]
+  // facing -z, origin on the ground at the centre. Groups: 0 the body, 1 the head (a nod about `head`; the groundhog's 1 rises
+  // instead), 2 / 3 the left / right wing (folded back along the body about `wing`, spread and flapping in flight). C: the coat.
+  var W = 0xf2f0ea, K = 0x1b1b1d, PINK = 0xd6a09c, C = -1;
+  function legs4(x, z, h, w, col) { return [[-x, h / 2, -z, w, h, w, col], [x, h / 2, -z, w, h, w, col], [-x, h / 2, z, w, h, w, col], [x, h / 2, z, w, h, w, col]]; }
+  var SP = {
+    cow: { head: [0, 1.12, -0.82], depth: 28, gap: 3.2, field: true, parts: [
+      [0, 1.0, 0, 0.72, 0.7, 1.75, W], [0, 1.04, -0.3, 0.74, 0.44, 0.5, K], [0, 0.96, 0.45, 0.74, 0.5, 0.42, K], [0.1, 1.355, 0.1, 0.42, 0.02, 0.6, K],
+      [0, 0.6, 0.55, 0.3, 0.18, 0.3, PINK], [0, 0.95, 0.9, 0.06, 0.62, 0.06, K],
+      [0, 1.2, -1.0, 0.36, 0.42, 0.4, W, 0, 0, 0, 1], [0, 1.15, -1.3, 0.34, 0.36, 0.42, K, 0, 0, 0, 1], [0, 1.05, -1.53, 0.3, 0.22, 0.12, PINK, 0, 0, 0, 1],
+      [-0.24, 1.3, -1.22, 0.14, 0.06, 0.1, K, 0, 0, 0, 1], [0.24, 1.3, -1.22, 0.14, 0.06, 0.1, K, 0, 0, 0, 1]].concat(legs4(0.24, 0.62, 0.68, 0.16, W)) },
+    horse: { head: [0, 1.5, -0.7], depth: 12, gap: 4, field: true, coats: [0x6b4226, 0x8a5a2e, 0x2a221e, 0x9a8c7a], parts: [
+      [0, 1.3, 0, 0.55, 0.62, 1.6, C], [0, 1.15, 0.86, 0.12, 0.7, 0.12, K, 0.3, 0, 0],
+      [0, 1.75, -0.92, 0.24, 0.7, 0.3, C, -0.6, 0, 0, 1], [0, 1.88, -0.84, 0.06, 0.62, 0.2, K, -0.6, 0, 0, 1], [0, 1.98, -1.25, 0.22, 0.24, 0.55, C, 0, 0, 0, 1],
+      [-0.07, 2.14, -1.08, 0.05, 0.12, 0.05, C, 0, 0, 0, 1], [0.07, 2.14, -1.08, 0.05, 0.12, 0.05, C, 0, 0, 0, 1]].concat(legs4(0.18, 0.6, 1.0, 0.13, 0x3a2a1e)) },
+    goose: { head: [0, 0.4, -0.25], wing: [0.15, 0.4, -0.15], depth: 10, gap: 1.0, flier: true, parts: [
+      [0, 0.32, 0, 0.3, 0.26, 0.6, 0x6e604f], [0, 0.3, -0.2, 0.28, 0.22, 0.22, 0xd8d0c0], [0, 0.36, 0.33, 0.16, 0.08, 0.12, K], [0, 0.27, 0.28, 0.2, 0.1, 0.12, 0xf2f2ee],
+      [-0.07, 0.1, 0, 0.04, 0.2, 0.04, K], [0.07, 0.1, 0, 0.04, 0.2, 0.04, K],
+      [0, 0.58, -0.3, 0.07, 0.36, 0.07, K, 0, 0, 0, 1], [0, 0.77, -0.36, 0.08, 0.09, 0.16, K, 0, 0, 0, 1], [0, 0.75, -0.34, 0.09, 0.05, 0.07, 0xf2f2ee, 0, 0, 0, 1],
+      [-0.425, 0.4, -0.02, 0.55, 0.03, 0.3, 0x5e5244, 0, 0, 0, 2], [0.425, 0.4, -0.02, 0.55, 0.03, 0.3, 0x5e5244, 0, 0, 0, 3]] },
+    heron: { head: [0, 0.82, -0.15], depth: 0.6, gap: 2, ditch: true, row: true, parts: [
+      [0, 0.025, 0, 1.4, 0.03, 4.5, 0x4c5a63],                                     // (the wet ditch's water under it)
+      [-0.05, 0.32, 0, 0.03, 0.64, 0.03, 0x8a7a5a], [0.05, 0.32, 0, 0.03, 0.64, 0.03, 0x8a7a5a], [0, 0.75, 0.05, 0.2, 0.24, 0.5, 0x7d8a99, -0.35, 0, 0],
+      [0, 0.98, -0.2, 0.06, 0.34, 0.06, 0xb5bcc4, 0.35, 0, 0, 1], [0, 1.2, -0.17, 0.06, 0.18, 0.06, 0xb5bcc4, -0.4, 0, 0, 1],
+      [0, 1.3, -0.22, 0.07, 0.08, 0.13, 0xb5bcc4, 0, 0, 0, 1], [0, 1.335, -0.17, 0.08, 0.03, 0.12, K, 0, 0, 0, 1], [0, 1.29, -0.36, 0.03, 0.03, 0.18, 0xc9a23a, 0, 0, 0, 1]] },
+    groundhog: { depth: 0.8, gap: 2, shoulder: true, row: true, parts: [
+      [0, 0.06, 0.05, 0.6, 0.12, 0.5, 0x5e4a36],                                   // (its burrow's mound)
+      [0, 0.24, 0, 0.2, 0.34, 0.18, 0x7a5c3e, 0, 0, 0, 1], [0, 0.22, -0.09, 0.14, 0.24, 0.02, 0xa88a68, 0, 0, 0, 1], [0, 0.47, -0.02, 0.15, 0.13, 0.15, 0x7a5c3e, 0, 0, 0, 1],
+      [0, 0.45, -0.11, 0.06, 0.05, 0.04, 0x3a2a1c, 0, 0, 0, 1], [-0.06, 0.54, 0, 0.035, 0.035, 0.03, 0x3a2a1c, 0, 0, 0, 1], [0.06, 0.54, 0, 0.035, 0.035, 0.03, 0x3a2a1c, 0, 0, 0, 1],
+      [-0.06, 0.3, -0.1, 0.04, 0.06, 0.04, 0x3a2a1c, 0, 0, 0, 1], [0.06, 0.3, -0.1, 0.04, 0.06, 0.04, 0x3a2a1c, 0, 0, 0, 1]] },
+    crow: { head: [0, 0.16, -0.08], wing: [0.05, 0.16, -0.08], gap: 0, flier: true, perch: true, parts: [
+      [0, 0.12, 0, 0.11, 0.11, 0.26, 0x121214], [0, 0.13, 0.17, 0.08, 0.02, 0.12, 0x121214], [0, 0.035, 0, 0.05, 0.07, 0.03, 0x202022],
+      [0, 0.2, -0.13, 0.08, 0.08, 0.09, 0x121214, 0, 0, 0, 1], [0, 0.19, -0.2, 0.025, 0.025, 0.06, 0x2c2c2e, 0, 0, 0, 1],
+      [-0.25, 0.16, -0.04, 0.4, 0.02, 0.14, 0x121214, 0, 0, 0, 2], [0.25, 0.16, -0.04, 0.4, 0.02, 0.14, 0x121214, 0, 0, 0, 3]] },
+    deer: { head: [0, 1.15, -0.5], depth: 4, gap: 3, field: true, edge: true, parts: [
+      [0, 1.0, 0, 0.42, 0.5, 1.15, 0x8a6a48], [0, 0.78, 0, 0.3, 0.06, 0.8, 0xe8e2d4], [0, 1.12, 0.6, 0.12, 0.2, 0.1, 0xe8e2d4],
+      [0, 1.35, -0.62, 0.2, 0.5, 0.22, 0x8a6a48, -0.5, 0, 0, 1], [0, 1.62, -0.78, 0.2, 0.2, 0.36, 0x8a6a48, 0, 0, 0, 1], [0, 1.55, -0.98, 0.12, 0.12, 0.14, 0x5e4630, 0, 0, 0, 1],
+      [-0.11, 1.78, -0.7, 0.05, 0.14, 0.08, 0x5e4630, 0, 0, 0, 1], [0.11, 1.78, -0.7, 0.05, 0.14, 0.08, 0x5e4630, 0, 0, 0, 1]].concat(legs4(0.13, 0.43, 0.84, 0.08, 0x5e4630)) },
+    fox: { head: [0, 0.42, -0.3], depth: 0, gap: 2, field: true, trot: 60, parts: [
+      [0, 0.36, 0, 0.2, 0.2, 0.6, 0xc0602a], [0, 0.32, -0.26, 0.16, 0.16, 0.1, 0xeee8dc], [0, 0.38, 0.5, 0.12, 0.12, 0.42, 0xc0602a, -0.25, 0, 0],
+      [0, 0.33, 0.72, 0.1, 0.1, 0.1, 0xeee8dc],
+      [0, 0.47, -0.38, 0.16, 0.14, 0.16, 0xc0602a, 0, 0, 0, 1], [0, 0.44, -0.5, 0.07, 0.07, 0.12, 0xeee8dc, 0, 0, 0, 1],
+      [-0.05, 0.57, -0.36, 0.04, 0.08, 0.03, 0x1e1a18, 0, 0, 0, 1], [0.05, 0.57, -0.36, 0.04, 0.08, 0.03, 0x1e1a18, 0, 0, 0, 1]].concat(legs4(0.07, 0.22, 0.28, 0.05, 0x1e1a18)) },
+    turkey: { head: [0, 0.65, -0.25], depth: 8, gap: 1.2, field: true, parts: [
+      [0, 0.55, 0, 0.4, 0.42, 0.6, 0x3b3226], [0, 0.55, 0.38, 0.3, 0.14, 0.3, 0x5b4a36, -0.3, 0, 0], [0, 0.6, 0.53, 0.3, 0.05, 0.06, 0xb09a76, -0.3, 0, 0],
+      [-0.08, 0.18, 0.05, 0.04, 0.36, 0.04, 0x7a6a5a], [0.08, 0.18, 0.05, 0.04, 0.36, 0.04, 0x7a6a5a],
+      [0, 0.8, -0.32, 0.07, 0.28, 0.07, 0x8aa0b4, 0, 0, 0, 1], [0, 0.95, -0.36, 0.08, 0.08, 0.11, 0x8aa0b4, 0, 0, 0, 1], [0, 0.88, -0.4, 0.04, 0.1, 0.04, 0xb0302a, 0, 0, 0, 1]] },
+    pond: { depth: 0, gap: 0, field: true, prop: true, parts: [[0, 0.03, 0, 9, 0.06, 6, 0x56636a]] }
+  };
+  var NAMES = ["cow", "horse", "goose", "heron", "groundhog", "crow", "deer", "fox", "turkey", "pond"];
+  A.SPECIES = ["cow", "horse", "goose", "heron", "groundhog", "crow", "deer", "fox", "turkey", "snow"];   // (the animals: the pond is a prop)
+  A.SP = SP;
+  // the template parts' local matrices and colours, once
+  var TL = [], TC = [], TG = [], T0 = [], TN = [];                  // per template part: matrix (16), colour, group; per species: first, count
+  (function () {
+    var m = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), v = new THREE.Vector3(), sc = new THREE.Vector3();
+    for (var k = 0; k < NAMES.length; k++) {
+      var sp = SP[NAMES[k]]; sp.id = k; T0.push(TL.length / 16); TN.push(sp.parts.length);
+      for (var i = 0; i < sp.parts.length; i++) {
+        var p = sp.parts[i]; e.set(p[7] || 0, p[8] || 0, p[9] || 0); q.setFromEuler(e);
+        m.compose(v.set(p[0], p[1], p[2]), q, sc.set(p[3], p[4], p[5])); for (var j = 0; j < 16; j++) TL.push(m.elements[j]);
+        TC.push(p[6]); TG.push(p[10] || 0);
+      }
+    }
+    TL = new Float32Array(TL);
+  })();
+  var SPI = {}; NAMES.forEach(function (n, k) { SPI[n] = k; });
+
+  // ---------------------------------------------------------------- the leg's animals (typed arrays, sorted by s), baked matrices
+  var N = 0, S0, D0, REL, Y0, AX, AZ, AYW, SPc, PH, P0, P1, ST, TT, DL, CS, CD, CY, VS, VD, VY, UP, TR, ZW, SEEN;   // per animal
+  var PM = null, PC = null, PT = null, NP = 0;                      // per part: baked world matrix, colour (rgb), template part index
+  var flocks = [], flock = null, winKey = -1, stamp = 0, t = 0;
+  var _f = { x: 0, y: 0, z: 0, h: 0 }, _pr = { s: 0, d: 0 }, _c = new THREE.Color();
+  var _B = new THREE.Matrix4(), _G = [new THREE.Matrix4(), new THREE.Matrix4(), new THREE.Matrix4(), new THREE.Matrix4()];
+  var _BG = [new THREE.Matrix4(), new THREE.Matrix4(), new THREE.Matrix4(), new THREE.Matrix4()], _L = new THREE.Matrix4(), _W = new THREE.Matrix4(), _r = new THREE.Matrix4();
+  var seed = 1; function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+
+  function blocked(s, d, r) {                                       // a kit's keep-out, a branch, a pad, a building, a tree trunk under it
+    if (R.kept(s, d) || R.nearBranch(s, d, 30)) return true;
+    for (var k = 0; k < 6; k++) if (R.inPad(s, d, k)) return true;
+    R.frame(s, d, _f);
+    for (var b = -1; b <= 1; b++) {
+      var L = R.near(s + b * 20);
+      for (var i = 0; i < L.length; i++) {
+        var c = L[i], dx, dz;
+        if (c.k === 1) { dx = c.x - _f.x; dz = c.z - _f.z; var rr = Math.sqrt(c.hx * c.hx + c.hz * c.hz) + r + 2; if (dx * dx + dz * dz < rr * rr) return true; }
+        else if (c.k === 2) { dx = c.x - _f.x; dz = c.z - _f.z; if (dx * dx + dz * dz < (c.r + r + 0.6) * (c.r + r + 0.6)) return true; }
+      }
+    }
+    return false;
+  }
+  function ok(sp, s, d) {                                           // can this species stand at (s, d)?
+    var L = R.len, ad = Math.abs(d);
+    if (s < 10 || s > L - 10) return false;
+    for (var k = -1; k <= 1; k++) { var K = R.kindAt(s + k * 6); if (K !== 0 && !(K === 1 && !sp.field)) return false; }   // (rural; lawns in town for
+    // the geese and the shoulder species: no bridge, tunnel or cut)
+    if (R.water(s, d)) return false;
+    var y = R.prof(d, s).y; if (y < -1.6 || y > 1.2) return false;
+    if (ad < EDGE + 1.0 || (ad > FENCE - 1.5 && ad < FENCE + 2.5)) return false;   // off the gravel, clear of the fence line
+    if (sp.field && ad < FENCE) return false;                       // beyond the right-of-way fence
+    if (sp.row && ad > FENCE) return false;                         // the ditch and shoulder species: inside it
+    if (sp.ditch && Math.abs(ad - 28.9) > 0.8) return false;
+    if (sp.edge && !nearTree(s, d)) return false;
+    return !blocked(s, d, sp.prop ? 5 : 1);
+  }
+  function nearTree(s, d) {                                         // a tree 3-9 m off, further out than the deer (the forest's edge)
+    R.frame(s, d, _f); var x = _f.x, z = _f.z;
+    for (var b = -1; b <= 1; b++) {
+      var L = R.near(s + b * 20);
+      for (var i = 0; i < L.length; i++) {
+        var c = L[i]; if (c.k !== 2 || c.kind !== "tree") continue;
+        var dx = c.x - x, dz = c.z - z, q = dx * dx + dz * dz; if (q < 9 || q > 81) continue;
+        R.project(c.x, c.z, null, _pr); if (Math.abs(_pr.d) > Math.abs(d) + 1) return true;
+      }
+    }
+    return false;
+  }
+  function posts(s0, s1, side) {                                   // the fence's posts on that side between s0 and s1 (each fence segment starts at one)
+    var out = [], seen = {};
+    for (var s = s0; s <= s1 + 20; s += 20) {
+      var L = R.near(s);
+      for (var i = 0; i < L.length; i++) {
+        var c = L[i]; if (c.k !== 0 || c.kind !== "fence") continue;
+        var key = Math.round(c.ax * 10) + ":" + Math.round(c.az * 10); if (seen[key]) continue; seen[key] = 1;
+        R.project(c.ax, c.az, null, _pr);
+        if (_pr.s < s0 || _pr.s > s1 || Math.abs(_pr.d - side * FENCE) > 1 || R.nearBranch(_pr.s, _pr.d, 20) || R.kept(_pr.s, _pr.d)) continue;
+        out.push({ s: _pr.s, d: _pr.d, x: c.ax, z: c.az, y: c.y });
+      }
+    }
+    out.sort(function (a, b) { return a.s - b.s; });
+    return out;
+  }
+  A.place = function () {                                           // the leg's animals (at its build: after the kits, the trees and the fences)
+    var leg = R.leg, list = (leg && leg.animals) || [], all = [], k, i, j;
+    flocks = []; flock = null;
+    for (k = 0; k < list.length; k++) {
+      var a = list[k], name = a[0], sp = SP[name];
+      seed = 7919 + R.legIndex() * 1013 + k * 131; rnd(); rnd();
+      if (name === "snow") { flocks.push({ s: a[1], side: a[2] || 1, done: false }); continue; }
+      if (!sp) continue;
+      var s0 = a[1], s1 = a[2], side = a[3] < 0 ? -1 : 1, dist = a[4], cnt = a[5] || 1, mine = [];
+      if (sp.perch) {                                              // crows: on posts, a post or two apart
+        var PS = posts(s0, s1, side), at = Math.floor(rnd() * 2);
+        for (i = 0; i < cnt && at < PS.length; i++, at += 1 + Math.floor(rnd() * 3)) {
+          var po = PS[at]; all.push({ sp: sp, s: po.s, d: po.d, x: po.x, z: po.z, y: po.y + POST, rel: side * PI / 2 + (rnd() - 0.5) * 1.2, ph: rnd() * 6.28 });
+        }
+        continue;
+      }
+      for (i = 0; i < cnt; i++) {
+        for (var tries = 0; tries < (sp.edge ? 400 : 60); tries++) {
+          var s = s0 + rnd() * (s1 - s0), d = side * (EDGE + dist + rnd() * (sp.depth || 0)), clash = false;
+          for (j = 0; j < mine.length; j++) { var ds = mine[j].s - s, dd = mine[j].d - d; if (ds * ds + dd * dd < sp.gap * sp.gap) clash = true; }
+          if (clash || !ok(sp, s, d)) continue;
+          R.frame(s, d, _f);
+          var rel = sp.ditch ? (rnd() < 0.5 ? 0 : PI) + (rnd() - 0.5) * 0.3 : sp.shoulder ? side * PI / 2 + (rnd() - 0.5) * 0.5 : sp.trot ? 0 : rnd() * 2 * PI;
+          var o = { sp: sp, s: s, d: d, x: _f.x, z: _f.z, y: R.prof(d, s).y, rel: rel, ph: rnd() * 6.28, coat: sp.coats ? sp.coats[Math.floor(rnd() * sp.coats.length)] : 0,
+            graze: rnd() < 0.7, trot: sp.trot ? Math.max(10, Math.min(sp.trot, s1 - s0)) : 0 };
+          mine.push(o); all.push(o); break;
+        }
+      }
+    }
+    all.sort(function (a, b) { return a.s - b.s; });
+    N = all.length; NP = 0; for (i = 0; i < N; i++) NP += TN[all[i].sp.id];
+    S0 = new Float32Array(N); D0 = new Float32Array(N); REL = new Float32Array(N); Y0 = new Float32Array(N); AX = new Float32Array(N); AZ = new Float32Array(N);
+    AYW = new Float32Array(N); SPc = new Uint8Array(N); PH = new Float32Array(N); P0 = new Uint16Array(N); P1 = new Uint16Array(N); ST = new Uint8Array(N);
+    TT = new Float32Array(N); DL = new Float32Array(N); CS = new Float32Array(N); CD = new Float32Array(N); CY = new Float32Array(N); VS = new Float32Array(N);
+    VD = new Float32Array(N); VY = new Float32Array(N); UP = new Float32Array(N); TR = new Float32Array(N); ZW = new Int32Array(N); SEEN = new Uint8Array(N);
+    var GR = A.graze = new Uint8Array(N), TRL = A.trotLen = new Float32Array(N);
+    PM = new Float32Array(Math.max(1, NP) * 16); PC = new Float32Array(Math.max(1, NP) * 3); PT = new Uint16Array(Math.max(1, NP));
+    var p = 0;
+    for (i = 0; i < N; i++) {
+      var q = all[i], id = q.sp.id; S0[i] = q.s; D0[i] = q.d; REL[i] = q.rel; Y0[i] = q.y; SPc[i] = id; PH[i] = q.ph; GR[i] = q.graze ? 1 : 0; TRL[i] = q.trot || 0;
+      R.frame(q.s, q.d, _f); AX[i] = _f.x; AZ[i] = _f.z; AYW[i] = -_f.h + q.rel;
+      P0[i] = p;
+      for (j = 0; j < TN[id]; j++, p++) {
+        var tp = T0[id] + j; PT[p] = tp; _c.setHex(TC[tp] === C ? q.coat : TC[tp]); PC[p * 3] = _c.r; PC[p * 3 + 1] = _c.g; PC[p * 3 + 2] = _c.b;
+      }
+      P1[i] = p;
+    }
+    reset();
+    for (i = 0; i < N; i++) pose(i, PM, 0, true);                   // the idle poses, baked (the window copies slices of these)
+    A.n = N; A.parts = NP; winKey = -1;
+  };
+  function reset() {                                                // a leg start: everyone back where they were, the flocks to come
+    for (var i = 0; i < N; i++) { ST[i] = IDLE; TT[i] = 0; DL[i] = 0; CS[i] = S0[i]; CD[i] = D0[i]; CY[i] = 0; UP[i] = 0; TR[i] = 0; ZW[i] = -1; SEEN[i] = 0; }
+    for (var k = 0; k < flocks.length; k++) flocks[k].done = false;
+    flock = null; if (A.flock) A.flock.visible = false; winKey = -1;
+  }
+  A.legStart = reset;
+
+  // ---------------------------------------------------------------- posing one animal into a matrix array (out, at part slot P0[i] - off)
+  function headAngle(i, id, tm, still) {                            // group 1's nod (rad, + raises the head); the groundhog's is a rise (m)
+    var ph = PH[i], g = A.graze[i];
+    switch (NAMES[id]) {
+      case "cow": return g ? -1.15 + (still ? 0 : 0.08 * Math.sin(tm * 1.6 + ph)) : 0.05 + (still ? 0 : 0.05 * Math.sin(tm * 0.8 + ph));
+      case "horse": return g ? -1.0 + (still ? 0 : 0.07 * Math.sin(tm * 1.2 + ph)) : 0;
+      case "goose": case "turkey": if (!g || still) return g ? -0.6 : 0;
+        var k = Math.sin(tm * (id === SPI.goose ? 2.6 : 1.9) + ph); return -1.1 * Math.max(0, k) * Math.max(0, k);   // a peck now and then
+      case "heron": return still ? 0 : 0.06 * Math.sin(tm * 0.5 + ph);
+      case "deer": return UP[i] > 0.5 ? 0.15 : g ? -1.0 + (still ? 0 : 0.05 * Math.sin(tm * 1.3 + ph)) : 0.1;
+      case "fox": return still ? 0 : 0.05 * Math.sin(tm * 9 + ph);
+      case "crow": return still ? 0 : -0.5 * Math.max(0, Math.sin(tm * 1.7 + ph * 3)) * Math.max(0, Math.sin(tm * 1.7 + ph * 3));
+      case "groundhog": return -0.3 * (1 - UP[i]);
+    }
+    return 0;
+  }
+  function pose(i, out, off, still) {
+    var id = SPc[i], sp = SP[NAMES[id]], st = ST[i], tm = t, x = AX[i], y = Y0[i], z = AZ[i], yaw = AYW[i], k;
+    if (st === FLY || TR[i] > 0) {                                  // moving: in the road frame (fliers outward and up, the fox along its edge)
+      R.frame(CS[i], CD[i], _f); x = _f.x; z = _f.z; y = Y0[i] + CY[i];
+      yaw = -_f.h + (st === FLY ? Math.atan2(-VD[i], VS[i]) : (VS[i] < 0 ? PI : 0));
+    }
+    if (!still && NAMES[id] === "crow" && st === IDLE) y += 0.09 * Math.pow(Math.max(0, Math.sin(t * 2.3 + PH[i] * 5)), 12);   // a hop
+    if (!still && TR[i] > 0) y += 0.03 * Math.abs(Math.sin(t * 9));
+    _B.makeRotationY(yaw); _B.setPosition(x, y, z);
+    var h = headAngle(i, id, tm, still), hp = sp.head;
+    if (NAMES[id] === "groundhog") _G[1].makeTranslation(0, h, 0);
+    else if (hp) { _G[1].makeTranslation(-hp[0], -hp[1], -hp[2]); _r.makeRotationX(st === FLY ? 0.1 : h); _G[1].premultiply(_r); _r.makeTranslation(hp[0], hp[1], hp[2]); _G[1].premultiply(_r); }
+    else _G[1].identity();
+    if (sp.wing) {                                                  // folded back along the body; spread and flapping in flight
+      var wp = sp.wing, fold = st === FLY && TT[i] > DL[i] ? 0 : 1.45, flap = st === FLY && TT[i] > DL[i] ? (still ? 0.25 : 0.8 * Math.sin(TT[i] * (id === SPI.crow ? 16 : 11))) : -0.05;
+      for (k = 2; k <= 3; k++) {
+        var sx = k === 2 ? -1 : 1; _G[k].makeTranslation(-sx * wp[0], -wp[1], -wp[2]); _r.makeRotationY(-sx * fold); _G[k].premultiply(_r);
+        _r.makeRotationZ(-sx * flap); _G[k].premultiply(_r); _r.makeTranslation(sx * wp[0], wp[1], wp[2]); _G[k].premultiply(_r);
+      }
+    }
+    _BG[0].copy(_B); _BG[1].multiplyMatrices(_B, _G[1]); if (sp.wing) { _BG[2].multiplyMatrices(_B, _G[2]); _BG[3].multiplyMatrices(_B, _G[3]); }
+    for (var p = P0[i]; p < P1[i]; p++) {
+      var tp = PT[p]; _L.fromArray(TL, tp * 16); _W.multiplyMatrices(_BG[TG[tp]], _L); _W.toArray(out, (p - off) * 16);
+    }
+  }
+  function zero(out, i, off) { for (var p = P0[i]; p < P1[i]; p++) { var o = (p - off) * 16; for (var j = 0; j < 16; j++) out[o + j] = 0; out[o + 15] = 1; } }
+
+  // ---------------------------------------------------------------- flight (geese scattering, crows leaving): outward, away from the road
+  function flee(i, delay) {
+    if (ST[i] !== IDLE) return;
+    var sd = D0[i] < 0 ? -1 : 1; ST[i] = FLY; TT[i] = 0; DL[i] = delay; CS[i] = S0[i]; CD[i] = D0[i]; CY[i] = 0;
+    VD[i] = sd * (4.5 + 3 * Math.abs(Math.sin(PH[i] * 7))); VS[i] = 3 * Math.sin(PH[i] * 13); VY[i] = 2.2 + Math.abs(Math.sin(PH[i] * 5));
+  }
+  A.honk = function () {                                            // the horn: geese and crows within 150 m take off
+    var a0 = A.win.a0, a1 = A.win.a1;
+    for (var i = a0; i < a1; i++) {
+      if (ST[i] !== IDLE || !SP[NAMES[SPc[i]]].flier) continue;
+      var dx = AX[i] - P.x, dz = AZ[i] - P.z; if (dx * dx + dz * dz < NEAR * NEAR) flee(i, 0.05 + 0.5 * Math.abs(Math.sin(PH[i] * 3)));
+    }
+  };
+  RT.on("honk", function () { A.honk(); });
+  RT.on("legStart", function () { reset(); });
+  RT.on("legBuilt", function () { A.place(); });
+
+  // ---------------------------------------------------------------- per frame (after the scenery's stream)
+  function lowerS(v) { var lo = 0, hi = N; while (lo < hi) { var m = (lo + hi) >> 1; if (S0[m] < v) lo = m + 1; else hi = m; } return lo; }
+  A.update = function (dt) {
+    var M = A.mesh; if (!M) return;
+    t += dt; A.posed = 0;
+    flockStep(dt);
+    if (!N || !A.enabled) { if (M.visible) { M.visible = false; M.count = 0; } A.win.a0 = A.win.a1 = 0; return; }
+    var a0 = lowerS(P.s - BEHIND), a1 = lowerS(P.s + AHEAD), arr = M.instanceMatrix.array, i, dirty = false, still = RT.reduced;
+    while (a1 > a0 && a0 < N && P1[a1 - 1] - P0[a0] > CAP) a1--;
+    var key = a0 * 65536 + a1;
+    if (key !== winKey) {                                           // the window moved: copy the baked slice
+      winKey = key; stamp++; A.win.a0 = a0; A.win.a1 = a1;
+      var p0 = a0 < N ? P0[a0] : 0, p1 = a1 > a0 ? P1[a1 - 1] : p0;
+      A.win.count = M.count = p1 - p0; M.visible = M.count > 0; A.win.p0 = p0;
+      if (M.count) { arr.set(PM.subarray(p0 * 16, p1 * 16)); M.instanceColor.array.set(PC.subarray(p0 * 3, p1 * 3)); M.instanceColor.needsUpdate = true; }
+      dirty = true;
+    }
+    var off = A.win.p0 || 0;
+    for (i = a0; i < a1; i++) {
+      var st = ST[i];
+      if (st === GONE) { if (ZW[i] !== stamp) { zero(arr, i, off); ZW[i] = stamp; dirty = true; } continue; }
+      var dx = AX[i] - P.x, dz = AZ[i] - P.z, q = dx * dx + dz * dz, id = SPc[i];
+      if (!SEEN[i] && q < 300 * 300) { SEEN[i] = 1; var nm = NAMES[id]; A.seen[nm] = (A.seen[nm] || 0) + 1; }
+      if (st === FLY) {
+        TT[i] += dt;
+        if (TT[i] > DL[i]) { CS[i] += VS[i] * dt; CD[i] += VD[i] * dt; CY[i] += VY[i] * dt; }
+        if (TT[i] > FLY_T + DL[i]) { ST[i] = GONE; zero(arr, i, off); ZW[i] = stamp; dirty = true; continue; }
+        R.frame(CS[i], CD[i], _f); AX[i] = _f.x; AZ[i] = _f.z;
+        pose(i, arr, off, still); A.posed++; dirty = true; continue;
+      }
+      if (q > NEAR * NEAR) continue;                                // (out there: the baked idle pose)
+      var nm2 = NAMES[id];
+      if (nm2 === "crow" && q < 40 * 40) { flee(i, 0.1 + 0.4 * Math.abs(Math.sin(PH[i] * 2))); }   // you pass close: off they go
+      else if (nm2 === "groundhog") { var want = q < 75 * 75 ? 1 : 0; UP[i] += (want - UP[i]) * Math.min(1, dt * (want ? 5 : 1.2)); if (still) UP[i] = want; }
+      else if (nm2 === "deer") UP[i] = q < 120 * 120 ? 1 : 0;      // heads up: a car
+      else if (nm2 === "fox" && !still) {                         // trots up and down its field edge
+        var L = A.trotLen[i]; TR[i] += dt; var u = (TR[i] * 1.6) % (2 * L); VS[i] = u < L ? 1 : -1; CS[i] = S0[i] + (u < L ? u : 2 * L - u); CD[i] = D0[i];
+      }
+      pose(i, arr, off, still); A.posed++; dirty = true;
+    }
+    if (dirty) M.instanceMatrix.needsUpdate = true;
+  };
+
+  // ---------------------------------------------------------------- the snow geese: a V crossing ahead of you, high up, now and then
+  function flockStep(dt) {
+    var F = A.flock; if (!F) return;
+    if (!flock) {
+      for (var k = 0; k < flocks.length; k++) {
+        var f = flocks[k]; if (f.done || P.s < f.s - 450 || P.s > f.s + 300) continue;
+        f.done = true; A.flocks++; A.seen.snow = (A.seen.snow || 0) + 1;
+        flock = { s: P.s + 450, d: -f.side * 140, y: 52, vs: -4, vd: f.side * 16, t: 0 }; break;
+      }
+      if (!flock) { if (F.visible) F.visible = false; return; }
+    }
+    flock.t += dt; flock.s += flock.vs * dt; flock.d += flock.vd * dt;
+    if (flock.t > 45 || flock.s < P.s - 200 || !A.enabled) { flock = null; F.visible = false; return; }
+    R.frame(flock.s, flock.d, _f);
+    F.position.set(_f.x, flock.y + (RT.reduced ? 0 : 1.2 * Math.sin(flock.t * 0.7)), _f.z);
+    F.rotation.set(0, -_f.h + Math.atan2(-flock.vd, flock.vs), RT.reduced ? 0 : 0.05 * Math.sin(flock.t * 0.9));
+    F.visible = true;
+  }
+  A.flockNow = function (side) {                                    // tests and screenshots: a flock starts crossing ahead now
+    flock = { s: P.s + 260, d: -(side || 1) * 60, y: 45, vs: -4, vd: (side || 1) * 12, t: 0 }; A.flocks++; A.seen.snow = (A.seen.snow || 0) + 1;
+  };
+  A.flockState = function () { return flock ? { s: flock.s, d: flock.d, y: flock.y, t: flock.t, visible: !!(A.flock && A.flock.visible) } : null; };
+
+  // ---------------------------------------------------------------- build (boot.js, after the leg's road, kits, trees and fences)
+  A.build = function () {
+    var G = RT.geo;
+    A.mesh = RT.inst(RT.merge([[G.BOX, 0, 0, 0, 1, 1, 1, 0xffffff]]), RT.mat.VC, CAP); A.mesh.visible = false; RT.driveScene.add(A.mesh);
+    var parts = [], k, WH = 0xf4f4f0, TIP = 0x1c1c1e;
+    for (k = 0; k < 17; k++) {                                      // a V of 17 (snow geese: white, black wingtips), the leader at the front
+      var row = Math.ceil(k / 2), sd = k === 0 ? 0 : k % 2 ? -1 : 1, x = sd * row * 3.2, z = row * 2.6 + (k % 3) * 0.3, yy = (k % 4) * 0.4;
+      parts.push([G.BOX, x, yy, z, 0.34, 0.28, 0.9, WH], [G.BOX, x, yy + 0.05, z - 0.6, 0.12, 0.12, 0.4, WH], [G.BOX, x, yy + 0.05, z - 0.82, 0.06, 0.06, 0.1, 0xd88a7a],
+        [G.BOX, x, yy + 0.1, z - 0.05, 1.7, 0.04, 0.42, WH], [G.BOX, x - 1.0, yy + 0.1, z, 0.36, 0.04, 0.34, TIP], [G.BOX, x + 1.0, yy + 0.1, z, 0.36, 0.04, 0.34, TIP]);
+    }
+    A.flock = new THREE.Mesh(RT.merge(parts), RT.mat.VC); A.flock.visible = false; A.flock.frustumCulled = false; RT.driveScene.add(A.flock);
+    A.place();
+  };
+  A.show = function (on) { A.enabled = !!on; winKey = -1; };       // tests: the scene without them (the draw-call delta)
+  A.resetSeen = function () { A.seen = {}; A.flocks = 0; };
+  // tests: every animal of this leg, where it stands now and what it's doing
+  A.list = function () {
+    var out = [];
+    for (var i = 0; i < N; i++) {
+      var y = Y0[i] + (ST[i] === FLY ? CY[i] : 0); if (ST[i] === FLY) { R.frame(CS[i], CD[i], _f); }
+      out.push({ i: i, sp: NAMES[SPc[i]], s: ST[i] === FLY ? CS[i] : S0[i], d: ST[i] === FLY ? CD[i] : D0[i], x: ST[i] === FLY ? _f.x : AX[i], z: ST[i] === FLY ? _f.z : AZ[i], y: y,
+        perch: !!SP[NAMES[SPc[i]]].perch, st: ST[i], up: UP[i] });
+    }
+    return out;
+  };
+  A.matrix = function (i) { var M = A.mesh, o = (P0[i] - (A.win.p0 || 0)) * 16; return Array.prototype.slice.call(M.instanceMatrix.array, o, o + (P1[i] - P0[i]) * 16); };
+  A.inWindow = function (i) { return i >= A.win.a0 && i < A.win.a1; };
 })();
 
 // ---------------------------------------------------------------- Road Trip 3D: cargo.js (ROADTRIP-EXTRA)
@@ -8044,6 +8430,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
     RT.cargo.update(dt);                                            // 4. the load's springs
     RT.cars.update(dt);                                             // 5. your car's mesh follows RT.P
     RT.road.stream(P.s);                                            // 6. chunks and the scenery window
+    if (RT.animals) RT.animals.update(dt);                          //    the animals beside the road (their window, poses, the flock)
     RT.landmarks.update(dt);                                        // 7. animated bits
     RT.cam.update(dt);                                              // 8. the camera rig
     camPost(dt);                                                    //    the portrait pull-back and the landmark beat
@@ -8880,7 +9267,7 @@ button.b-mode.ap-on { background: #1f9d63; color: #fff; border-color: #157549; }
   RT.landmarks.build();                                             // kits, signs, pads, keep-outs, their colliders
   RT.road.plant();                                                  // trees and poles (after the keep-outs)
   RT.road.buildMeshes();                                            // the chunks (after every branch and rail is known)
-  RT.traffic.build(); RT.chase.build(); RT.mech.build(); RT.cargo.build(); RT.pack.build(); RT.hud.build(); if (RT.sound) RT.sound.build();
+  RT.traffic.build(); RT.chase.build(); RT.mech.build(); if (RT.animals) RT.animals.build(); RT.cargo.build(); RT.pack.build(); RT.hud.build(); if (RT.sound) RT.sound.build();
   // the tabs: Drive is the pack view's "Drive →" (the packed card); Pack from the road asks first (the pause card's way out)
   RT.$("tabPack").onclick = function () { if (RT.mode() === "drive" && RT.flow.run) RT.flow.pause(); else RT.setMode("pack"); this.blur(); };
   RT.$("tabDrive").onclick = function () { if (RT.mode() === "pack") RT.emit("go", "drive"); this.blur(); };
