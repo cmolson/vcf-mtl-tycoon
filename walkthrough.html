@@ -179,6 +179,8 @@ button.tour.on { background: var(--accent); color: #fff; }
     <button id="m-full" data-i18n="full" data-i18n-title="fullT" title="Full screen (F): full screen with mouse look; Esc gives the pointer back, Esc again leaves full screen">Full screen</button>
     <button id="t-labels" class="on" data-i18n="names">Booth names</button>
     <button id="t-skirts" data-i18n="skirts">Skirts by type</button>
+    <button id="t-carpet" class="on" data-i18n="carpet">Carpet</button>
+    <button id="t-cloth" class="on" data-i18n="cloth">Tablecloths</button>
     <button id="t-ex" class="on" data-i18n="exhibitors">Exhibitors</button>
     <button id="t-vis" class="on">Visitors: some</button>
     <button id="t-build">Avatar: average</button>
@@ -213,7 +215,7 @@ button.tour.on { background: var(--accent); color: #fff; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>if (!window.THREE) (function () { var fr = /^fr/.test((new URLSearchParams(location.search).get("lang")) || localStorage.getItem("hall-lang") || navigator.language || ""), d = document.createElement("div"); d.setAttribute("role", "alert"); d.style.cssText = "position:fixed;inset:0;z-index:99;display:grid;place-items:center;padding:24px;background:#1b1a17;color:#f3ecda;font:600 17px/1.5 Archivo,system-ui,sans-serif;text-align:center"; d.innerHTML = fr ? "<p>Le moteur 3D (three.js) n'a pas pu être chargé. Un bloqueur de contenu ou un réseau qui bloque cdnjs.cloudflare.com et cdn.jsdelivr.net l'empêche peut-être.<br><br><button onclick=\"location.reload()\" style=\"font:inherit;padding:8px 18px\">Réessayer</button></p>" : "<p>Couldn't load the 3D engine (three.js). A content blocker, or a network that blocks cdnjs.cloudflare.com and cdn.jsdelivr.net, may be stopping it.<br><br><button onclick=\"location.reload()\" style=\"font:inherit;padding:8px 18px\">Try again</button></p>"; document.body.appendChild(d); })();</script>
-<script>window.VCF_BUILD = {"v": "v0.306-cd609af", "date": "2026-10-26"};</script>
+<script>window.VCF_BUILD = {"v": "v0.344-d3e90b6", "date": "2026-10-28"};</script>
 <script>window.SITE_BUILD = true;</script>
 <script>
 // ---------------------------------------------------------------- language (FR / EN)
@@ -234,7 +236,7 @@ var I18N = {
     modes: "Camera mode", walk: "Walk", third: "3rd person", fly: "Fly around", mouse: "Mouse look",
     mouseT: "Mouse look (M): the mouse turns you, a click uses what the crosshair is on; Esc gives the pointer back",
     full: "Full screen", fullT: "Full screen (F): full screen with mouse look; Esc gives the pointer back, Esc again leaves full screen",
-    names: "Booth names", skirts: "Skirts by type", exhibitors: "Exhibitors", vis: ["Visitors: off", "Visitors: some", "Visitors: busy"],
+    names: "Booth names", skirts: "Skirts by type", carpet: "Carpet", cloth: "Tablecloths", exhibitors: "Exhibitors", vis: ["Visitors: off", "Visitors: some", "Visitors: busy"],
     avatar: "Avatar: ", builds: ["slim", "average", "stocky", "heavy"], "goto": "Go to",
     tour: "Tour ▸", tourStop: "Stop tour", tourT: "A guided walk: booth 29, the LAN party, the speakers' corner, the arcade and the entrance",
     go_start: "Booths 10 + 29", go_entrance: "Entrance", go_ours: "Booth 29 (us)", go_lan: "LAN party (10)",
@@ -264,7 +266,7 @@ var I18N = {
     modes: "Mode de caméra", walk: "Marcher", third: "3e personne", fly: "Survol", mouse: "Vue souris",
     mouseT: "Vue à la souris (M)" + NB + ": la souris vous fait tourner, un clic utilise ce que vise le réticule; Échap rend le pointeur",
     full: "Plein écran", fullT: "Plein écran (F)" + NB + ": plein écran avec la vue à la souris; Échap rend le pointeur, Échap encore quitte le plein écran",
-    names: "Noms des kiosques", skirts: "Jupes par type", exhibitors: "Exposants",
+    names: "Noms des kiosques", skirts: "Jupes par type", carpet: "Tapis", cloth: "Nappes", exhibitors: "Exposants",
     vis: ["Visiteurs" + NB + ": aucun", "Visiteurs" + NB + ": quelques-uns", "Visiteurs" + NB + ": foule"],
     avatar: "Avatar" + NB + ": ", builds: ["mince", "moyen", "trapu", "fort"], "goto": "Aller à",
     tour: "Visite ▸", tourStop: "Arrêter la visite", tourT: "Une visite guidée" + NB + ": le kiosque 29, le LAN party, le coin des conférenciers, l'arcade et l'entrée",
@@ -562,7 +564,8 @@ function solid(x0, z0, x1, z1) { solids.push([Math.min(x0, x1), Math.min(z0, z1)
 // room: floor, carpet, walls with the openings
 var R = D.room, rx0 = X(R[0]), rz0 = Z(R[1]), rx1 = X(R[2]), rz1 = Z(R[3]);
 box(rx1 - rx0 + 400, 1, rz1 - rz0 + 400, M(0x9aa09a), (rx0 + rx1) / 2, -1, (rz0 + rz1) / 2);
-// The room as it is (the owner's photos, 2026-10: a college gym): a maple strip floor with court lines, split-face block walls
+// The room as it is (the owner's photos, 2026-10: a college gym), but carpeted for the show (the owner, 2026-10-26: charcoal
+// grey carpet over the gym floor, wall to wall; the maple and its court lines are under it, a button away): split-face block walls
 // over a blue painted wainscot, black double doors, an open black roof deck on steel joists. The textures are small crops of
 // those photos (layout/tools/hall-textures.py -> hall-data/tex/*.jpg, inlined by build-hall.py as TEXD); without them the
 // room falls back to flat colours. Draw calls: the floor, the walls and the deck are one each; everything else rides on the
@@ -574,11 +577,33 @@ function texImg(key, tex, then) {                    // a photo texture: decoded
   if (!TEXD[key]) return null;
   var im = new Image(); im.onload = function () { if (tex) { tex.image = im; tex.needsUpdate = true; } if (then) then(im); }; im.src = TEXD[key]; return im;
 }
-var floorTex = new THREE.Texture(); floorTex.wrapS = floorTex.wrapT = THREE.RepeatWrapping; floorTex.anisotropy = MAXANI;
-floorTex.repeat.set((rx1 - rx0) / 48, (rz1 - rz0) / 48);                // the tile is 48 x 48 in
-var floorM = TEXD.floor ? new THREE.MeshLambertMaterial({ map: floorTex, color: 0xc8cacf }) : M(0xd8c09a);   // (darker: the hall's lights are bright)
-texImg("floor", floorTex);
-box(rx1 - rx0, 0.3, rz1 - rz0, floorM, (rx0 + rx1) / 2, 0, (rz0 + rz1) / 2);   // the maple floor
+// The floor: the show carpets the gym (the owner, 2026-10-26), so the carpet is on by default; the "Carpet" button takes it up
+// and shows the gym's own maple, its court lines and the plan's zone tints. Each group merges on its own (they toggle, like the skirts).
+var floorCarpet = new THREE.Group(), floorMaple = new THREE.Group();
+var floorZones = new THREE.Group();                                     // the plan's zone tints: on the maple only (the carpet is one colour)
+scene.add(floorCarpet); scene.add(floorMaple); scene.add(floorZones); floorMaple.visible = floorZones.visible = false;
+function carpetOn(on) { floorCarpet.visible = !!on; floorMaple.visible = floorZones.visible = !on; }
+// the show's carpet: charcoal grey loop pile, drawn here (no photo). One tile is a 12 ft broadloom width, the seam running
+// north-south on its west edge; the pile a seeded speckle, so every build and every screenshot is the same.
+var carpetTex = new THREE.CanvasTexture((function () {
+  var N = 512, c = document.createElement("canvas"); c.width = c.height = N; var g = c.getContext("2d"), im = g.createImageData(N, N), d = im.data, s = 0xC4A7, i, v;
+  function r() { s = (Math.imul(s, 1103515245) + 12345) >>> 0; return (s >>> 8) / 16777216; }
+  for (i = 0; i < N * N; i++) {
+    var x = i % N, y = (i / N) | 0;
+    v = 62 + (r() - 0.5) * 22 + ((x + y * 3) % 4 === 0 ? -5 : 0) + (x === 0 ? -14 : x === 1 ? -6 : 0);   // speckle, the loop rows, the seam
+    d[i * 4] = v; d[i * 4 + 1] = v + 1; d[i * 4 + 2] = v + 4; d[i * 4 + 3] = 255;
+  }
+  g.putImageData(im, 0, 0); return c;
+})());
+carpetTex.wrapS = carpetTex.wrapT = THREE.RepeatWrapping; carpetTex.anisotropy = MAXANI;
+carpetTex.repeat.set((rx1 - rx0) / 144, (rz1 - rz0) / 144);              // the tile is 144 x 144 in
+var carpetM = new THREE.MeshLambertMaterial({ map: carpetTex });
+box(rx1 - rx0, 0.3, rz1 - rz0, carpetM, (rx0 + rx1) / 2, 0, (rz0 + rz1) / 2, floorCarpet);   // the carpet
+var mapleTex = new THREE.Texture(); mapleTex.wrapS = mapleTex.wrapT = THREE.RepeatWrapping; mapleTex.anisotropy = MAXANI;
+mapleTex.repeat.set((rx1 - rx0) / 48, (rz1 - rz0) / 48);                // the tile is 48 x 48 in
+var mapleM = TEXD.floor ? new THREE.MeshLambertMaterial({ map: mapleTex, color: 0xc8cacf }) : M(0xd8c09a);   // (darker: the hall's lights are bright)
+texImg("floor", mapleTex);
+box(rx1 - rx0, 0.3, rz1 - rz0, mapleM, (rx0 + rx1) / 2, 0, (rz0 + rz1) / 2, floorMaple);   // the maple floor
 // the plan's zones: tints over the maple, all in one vertex-coloured, see-through material (one draw call)
 var zoneM = new THREE.MeshLambertMaterial({ vertexColors: true, transparent: true, opacity: 0.5, depthWrite: false }), zoneG = {};
 function zoneGeo(hex) {
@@ -588,7 +613,7 @@ function zoneGeo(hex) {
   g.setAttribute("color", new THREE.BufferAttribute(a, 3)); return (zoneG[hex] = g);
 }
 function floorZone(r, color, lift) { var x0 = X(r[0]), z0 = Z(r[1]), x1 = X(r[2]), z1 = Z(r[3]);
-  var m = new THREE.Mesh(zoneGeo(color), zoneM); m.scale.set(x1 - x0, 0.2, z1 - z0); m.position.set((x0 + x1) / 2, (lift || 0.3) + 0.1, (z0 + z1) / 2); scene.add(m); }
+  var m = new THREE.Mesh(zoneGeo(color), zoneM); m.scale.set(x1 - x0, 0.2, z1 - z0); m.position.set((x0 + x1) / 2, (lift || 0.3) + 0.1, (z0 + z1) / 2); floorZones.add(m); }
 floorZone(D.cross, 0xb9d8c6, 0.35);                                                       // cross-aisle
 D.islands.forEach(function (r) { floorZone([r[0], r[1], r[0] + r[2], r[1] + r[3]], 0xe8d892, 0.35); });
 floorZone(D.corner, 0xd9cfee, 0.35); floorZone(D.storagezone, 0xf1d3b8, 0.35); floorZone(D.codezone, 0xc7e6e1, 0.35);   // speakers' corner, storage, Code Jam
@@ -658,12 +683,13 @@ texImg("deck", deckTex);
 // ---------------------------------------------------------------- furniture
 var tableTop = M(0xf2f1ec), skirt = M(0x2f4f7a), skirtCreator = M(0x26357a), skirtVendor = M(0x4a6fb8), legM = M(0x3b3f3c);
 var skirts = new THREE.Group(); scene.add(skirts);   // the table skirts: black cloth at the show (owner, 2026-10); "Skirts by type" shows the category colours
+var tops = new THREE.Group(); scene.add(tops);       // the table tops: black cloth too by default (the owner, 2026-10-26); "Tablecloths" shows the bare tops
 var edgeM = M(0x9aa09a);
 function table(cx, cz, along, opts) {              // along: "z" (long side north-south) or "x"
   // a real 60 x 30 in banquet table, 0.4 in short each way so neighbours show a seam
   var L = 59.2, W = 29.2, w = along === "z" ? W : L, d = along === "z" ? L : W;
-  box(w, 1.0, d, opts && opts.top || tableTop, cx, TH - 1.0, cz);
-  box(w + 0.1, 1.6, d + 0.1, edgeM, cx, TH - 2.6, cz);                     // edge band under the top
+  box(w, 1.0, d, opts && opts.top || tableTop, cx, TH - 1.0, cz, tops);
+  box(w + 0.1, 1.6, d + 0.1, edgeM, cx, TH - 2.6, cz, tops);               // edge band under the top (under the cloth too)
   // folding legs: one U-frame 5 in in from each end
   var ex = along === "z" ? 0 : 1, ez = along === "z" ? 1 : 0;
   [-1, 1].forEach(function (e) {
@@ -2540,7 +2566,7 @@ var ROOMW = {};
     else { var w = kind === "entrance" ? 56 : kind === "loadin" ? 44 : 28; pl(g, signCell(kind), w, w * 96 / 256, 0, (kind === "locked" ? 98 : 104) + up, 1.2 + dz, 0, false); }
   };
 
-  // ---- the floor's court lines (one vertex-coloured mesh): a main basketball court north-south with grey keys, two cross courts
+  // ---- the floor's court lines (one vertex-coloured mesh, with the maple: under the carpet by default): a main basketball court north-south with grey keys, two cross courts
   // east-west (green), badminton (white), volleyball (red, light blue). Approximate, from the photos; the centre-court logo
   // is plain rings. Layers 0.05 in apart, so the colours don't fight.
   var FP = [], FC = [];
@@ -2600,7 +2626,7 @@ var ROOMW = {};
     for (var i = 0; i < n; i++) nor[i * 3 + 1] = 1;
     g.setAttribute("position", new THREE.Float32BufferAttribute(FP, 3)); g.setAttribute("normal", new THREE.BufferAttribute(nor, 3));
     g.setAttribute("color", new THREE.Float32BufferAttribute(FC, 3)); g.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(n * 2), 2));
-    scene.add(new THREE.Mesh(g, W_.PV));
+    floorMaple.add(new THREE.Mesh(g, W_.PV));
   })();
 
   // ---- east wall: the retractable bleachers, folded (two banks either side of the stowed divider), and plain panels above them
@@ -2795,6 +2821,10 @@ scene.onBeforeRender = function (r, s, cam) { ceilG.visible = cam.position.y < W
 
 // ---------------------------------------------------------------- labels
 var skirtsBlack = null, skirtsByType = false;
+var clothM = new THREE.MeshLambertMaterial({ color: 0x1a1a1c }), clothed = false;
+function clothOn(on) {                                // true: black cloth on every table top (the default); false: the bare tops' colours
+  clothed = !!on; tops.children.forEach(function (m) { if (!m.userData.bare) m.userData.bare = m.material; m.material = clothed ? clothM : m.userData.bare; });
+}
 function skirtType(on) {                              // false: black cloth (the default); true: coloured by the booth's category
   skirtsByType = !!on; skirts.children.forEach(function (m) { m.visible = m === skirtsBlack ? !skirtsByType : skirtsByType; });
 }
@@ -3427,6 +3457,8 @@ document.getElementById("m-walk").addEventListener("click", function () { setMod
 document.getElementById("m-fly").addEventListener("click", function () { setMode("fly"); });
 document.getElementById("m-third").addEventListener("click", function () { setMode("third"); });
 document.getElementById("t-skirts").addEventListener("click", function () { skirtType(!skirtsByType); this.classList.toggle("on", skirtsByType); });
+document.getElementById("t-carpet").addEventListener("click", function () { carpetOn(!floorCarpet.visible); this.classList.toggle("on", floorCarpet.visible); });
+document.getElementById("t-cloth").addEventListener("click", function () { clothOn(!clothed); this.classList.toggle("on", clothed); });
 if (window.SITE_BUILD) {                                // the site build: no "our two booths" shortcut (like the organisers' page)
   ["start", "ours"].forEach(function (k) { var b = document.querySelector('[data-go="' + k + '"]'); if (b) b.remove(); });   // (private there too)
 }
@@ -4410,21 +4442,21 @@ cv.addEventListener("pointerdown", function () { stopTour(); }, true);
 // ---------------------------------------------------------------- one mesh per material
 // The hall is static: merge every plain mesh (walls, tables, props, booths 10 and 29) into one
 // mesh per material, as bake() does for the detailed booths. ~1200-2100 draw calls -> ~150.
-// Skirts merge into their own group (they toggle); labels, people and Doom's hit planes stay.
+// Skirts, table tops and the floors merge into their own groups (they toggle); labels, people and Doom's hit planes stay.
 (function () {
   scene.updateMatrixWorld(true);
-  var main = [], sk = [];
+  var main = [], TG = [skirts, tops, floorCarpet, floorMaple, floorZones], tl = TG.map(function () { return []; }), sk = tl[0];
   scene.traverse(function (o) {
     if (!o.isMesh || o.isInstancedMesh || Array.isArray(o.material) || !o.geometry.attributes.normal) return;
-    for (var a = o; a; a = a.parent) { if (a === labels || a.userData.keep) return; if (a === skirts) { sk.push(o); return; } }
+    for (var a = o; a; a = a.parent) { if (a === labels || a.userData.keep) return; var t = TG.indexOf(a); if (t >= 0) { tl[t].push(o); return; } }
     main.push(o);
   });
-  mergeMeshes(main, scene); mergeMeshes(sk, skirts);
-  [main, sk].forEach(function (l) { l.forEach(function (o) { if (o.parent) o.parent.remove(o); }); });
+  mergeMeshes(main, scene); TG.forEach(function (g, i) { mergeMeshes(tl[i], g); });
+  [main].concat(tl).forEach(function (l) { l.forEach(function (o) { if (o.parent) o.parent.remove(o); }); });
   // the black skirts: the same drapes once more, merged into one off-black mesh (one draw call); the type colours stay beside it, hidden
   var blk = new THREE.MeshLambertMaterial({ color: 0x1a1a1c }), copies = skirts.children.map(function (m) { var c = new THREE.Mesh(m.geometry, blk); c.updateMatrixWorld(true); return c; });
   skirtsBlack = new THREE.Group(); skirts.add(skirtsBlack); mergeMeshes(copies, skirtsBlack);
-  skirtType(false);
+  skirtType(false); clothOn(true);
 })();
 
 applyLang();                                          // the page's words in LANG (before the game: it renames the menu)
