@@ -795,17 +795,29 @@ var edgeM = M(0x9aa09a);
 function table(cx, cz, along, opts) {              // along: "z" (long side north-south) or "x"
   // a real 60 x 30 in banquet table, 0.4 in short each way so neighbours show a seam
   var L = 59.2, W = 29.2, w = along === "z" ? W : L, d = along === "z" ? L : W;
-  box(w, 1.0, d, opts && opts.top || tableTop, cx, TH - 1.0, cz);
-  box(w + 0.1, 1.6, d + 0.1, edgeM, cx, TH - 2.6, cz);                     // edge band under the top
+  // opts.a: degrees, turning the table about its own centre, the same way as the plan. The whole
+  // table is then built inside a turned group, and its skirt in a second one under the skirts
+  // toggle. Without it nothing changes: everything is built straight into the scene as before.
+  var a = (opts && opts.a) || 0, par, sk = skirts, wx = cx, wz = cz, ry = a * Math.PI / 180;
+  if (a) {
+    par = new THREE.Group(); par.position.set(cx, 0, cz); par.rotation.y = ry; scene.add(par);
+    sk = new THREE.Group(); sk.position.set(cx, 0, cz); sk.rotation.y = ry; skirts.add(sk);
+    cx = cz = 0;
+  }
+  box(w, 1.0, d, opts && opts.top || tableTop, cx, TH - 1.0, cz, par);
+  box(w + 0.1, 1.6, d + 0.1, edgeM, cx, TH - 2.6, cz, par);                // edge band under the top
   // folding legs: one U-frame 5 in in from each end
   var ex = along === "z" ? 0 : 1, ez = along === "z" ? 1 : 0;
   [-1, 1].forEach(function (e) {
     var lx = cx + ex * e * (L / 2 - 5), lz = cz + ez * e * (L / 2 - 5);
-    [-1, 1].forEach(function (s) { box(1, TH - 2.6, 1, legM, lx + ez * s * (W / 2 - 3), 0, lz + ex * s * (W / 2 - 3)); });
-    box(ez ? W - 6 : 1, 1, ex ? W - 6 : 1, legM, lx, 3, lz);
+    [-1, 1].forEach(function (s) { box(1, TH - 2.6, 1, legM, lx + ez * s * (W / 2 - 3), 0, lz + ex * s * (W / 2 - 3), par); });
+    box(ez ? W - 6 : 1, 1, ex ? W - 6 : 1, legM, lx, 3, lz, par);
   });
-  if (!(opts && opts.bare)) box(w - 0.4, TH - 3, d - 0.4, opts && opts.skirt || skirt, cx, 0.5, cz, skirts);
-  solid(cx - w / 2, cz - d / 2, cx + w / 2, cz + d / 2);
+  if (!(opts && opts.bare)) box(w - 0.4, TH - 3, d - 0.4, opts && opts.skirt || skirt, cx, 0.5, cz, sk);
+  var hw = w / 2, hd = d / 2;                                              // upright footprint, to walk into
+  if (a) { var ca = Math.abs(Math.cos(ry)), sa = Math.abs(Math.sin(ry));
+           hw = (w * ca + d * sa) / 2; hd = (w * sa + d * ca) / 2; }
+  solid(wx - hw, wz - hd, wx + hw, wz + hd);
 }
 var chairM = M(0x2a3a5c), SEATS = [];              // SEATS: every chair, for seating people
 function chair(cx, cz, fx, fz) {                    // facing (fx,fz)
@@ -824,12 +836,22 @@ var booths = {};
 // (added by the game: name, verb, its own action), id, hl }
 var PICKS = [];
 var skirtSpeaker = M(0x6b2a2a), SKIRT = { creator: skirtCreator, vendor: skirtVendor, speaker: skirtSpeaker };
+// a table's centre and half sizes in world units. A turned table (t.a) gives the half sizes of its
+// upright footprint, so a click, a look and the props it carries still bound it.
+function halves(t, cx, cz) {
+  var hx = Math.abs(X(t.x + t.w) - X(t.x)) / 2, hz = Math.abs(Z(t.y + t.h) - Z(t.y)) / 2;
+  if (t.a) {
+    var r = t.a * Math.PI / 180, c = Math.abs(Math.cos(r)), s = Math.abs(Math.sin(r)), w = hx * 2, d = hz * 2;
+    hx = (w * c + d * s) / 2; hz = (w * s + d * c) / 2;
+  }
+  return { cx: cx, cz: cz, hx: hx, hz: hz, a: t.a || 0 };
+}
 function boothInfo(n) { return D.booth && D.booth[n] || {}; }
 D.tables.forEach(function (t) {
   var cx = X(t.x + t.w / 2), cz = Z(t.y + t.h / 2), info = boothInfo(t.n);
-  table(cx, cz, t.h > t.w ? "z" : "x", { skirt: SKIRT[info.cat] || skirt, top: t.n === 29 ? M(0xf4e7cf) : tableTop });
+  table(cx, cz, t.h > t.w ? "z" : "x", { a: t.a, skirt: SKIRT[info.cat] || skirt, top: t.n === 29 ? M(0xf4e7cf) : tableTop });
   var b = booths[t.n] || (booths[t.n] = { n: t.n, tables: [], face: t.face, island: info.island || 0, cat: info.cat || "exhibitor" });
-  b.tables.push({ cx: cx, cz: cz, hx: Math.abs(X(t.x + t.w) - X(t.x)) / 2, hz: Math.abs(Z(t.y + t.h) - Z(t.y)) / 2 });   // (hx, hz: half sizes; booth 47's end table runs along x, since V42)
+  b.tables.push(halves(t, cx, cz));   // (hx, hz: half sizes; booth 47's end table runs along x, since V42)
 });
 // the speakers' corner (since V19, where the pinball machines were): the guests' tables (D.speakers:
 // S1 only since V35) (along the north wall since V53), a laptop and their books on each. Not booths: CORNER["S1"]
@@ -837,9 +859,9 @@ D.tables.forEach(function (t) {
 var CORNER = {};
 (D.speakers || []).forEach(function (t) {
   var cx = X(t.x + t.w / 2), cz = Z(t.y + t.h / 2);
-  table(cx, cz, t.h > t.w ? "z" : "x", { skirt: skirtSpeaker });
+  table(cx, cz, t.h > t.w ? "z" : "x", { a: t.a, skirt: skirtSpeaker });
   var c = CORNER[t.n] || (CORNER[t.n] = { n: t.n, name: t.name, tables: [], face: t.face });
-  c.tables.push({ cx: cx, cz: cz, hx: Math.abs(X(t.x + t.w) - X(t.x)) / 2, hz: Math.abs(Z(t.y + t.h) - Z(t.y)) / 2 });
+  c.tables.push(halves(t, cx, cz));
 });
 // "turned dividers": ordinary 60 x 30 in tables turned crosswise between two booths, shared by
 // both (or laid along the row where two would face each other across the corridor)
@@ -866,7 +888,8 @@ var PROPS = {
 };
 function propGroup(cx, cz, face, t) {                // face: aisle side of the table, "W" or "E"; local +z is that side, x along it
   var g = new THREE.Group(); g.position.set(cx, TH, cz);   // (t, a table running along x, like booth 47's end table since V42: faces south,
-  g.rotation.y = t && t.hx > t.hz ? 0 : face === "W" ? -Math.PI / 2 : Math.PI / 2; scene.add(g); return g;   // the cross-aisle)
+  g.rotation.y = t && t.a ? t.a * Math.PI / 180
+    : t && t.hx > t.hz ? 0 : face === "W" ? -Math.PI / 2 : Math.PI / 2; scene.add(g); return g;   // the cross-aisle)
 }
 
 // ---------------------------------------------------------------- booth wares
@@ -3839,14 +3862,24 @@ var mapBase = document.createElement("canvas"); mapBase.width = mapBase.height =
   var g = mapBase.getContext("2d"), s = 360 / (R[2] - R[0] + 20), ox = R[0] - 10, oy = R[1] - 10 + ((R[3] - R[1]) - (R[2] - R[0])) / 2;
   mapBase.px = function (px, py) { return [(px - ox) * s, (py - oy) * s]; };
   function rect(r, c) { var a = mapBase.px(r[0], r[1]), b = mapBase.px(r[0] + r[2], r[1] + r[3]); g.fillStyle = c; g.fillRect(a[0], a[1], b[0] - a[0], b[1] - a[1]); }
+  function tquad(r, a, c) {                        // a turned table: the same rectangle, about its centre
+    if (!a) return rect(r, c);
+    var cx = r[0] + r[2] / 2, cy = r[1] + r[3] / 2, t = a * Math.PI / 180, co = Math.cos(t), si = Math.sin(t);
+    g.fillStyle = c; g.beginPath();
+    [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(function (s, i) {
+      var lx = s[0] * r[2] / 2, ly = s[1] * r[3] / 2, p = mapBase.px(cx + lx * co - ly * si, cy - lx * si - ly * co);
+      if (i) g.lineTo(p[0], p[1]); else g.moveTo(p[0], p[1]);
+    });
+    g.closePath(); g.fill();
+  }
   g.fillStyle = "#f6f7f2"; g.fillRect(0, 0, 360, 360);
   rect([R[0], R[1], R[2] - R[0], R[3] - R[1]], "#e3e6df");
   function zone(r, c) { rect([r[0], r[1], r[2] - r[0], r[3] - r[1]], c); }
   zone(D.cross, "#c3e2cf");
   D.islands.forEach(function (r) { rect(r, "#ecdf9c"); });
   zone(D.corner, "#dcd2f0"); zone(D.storagezone, "#f3d6bc"); zone(D.codezone, "#cbe8e3");
-  D.tables.forEach(function (t) { rect([t.x, t.y, t.w, t.h], window.SITE_BUILD ? "#4a6b9a" : t.n === 29 ? "#b3342f" : t.n === 10 ? "#2f7a4f" : "#4a6b9a"); });
-  (D.speakers || []).forEach(function (t) { rect([t.x, t.y, t.w, t.h], "#6b2a2a"); });
+  D.tables.forEach(function (t) { tquad([t.x, t.y, t.w, t.h], t.a, window.SITE_BUILD ? "#4a6b9a" : t.n === 29 ? "#b3342f" : t.n === 10 ? "#2f7a4f" : "#4a6b9a"); });
+  (D.speakers || []).forEach(function (t) { tquad([t.x, t.y, t.w, t.h], t.a, "#6b2a2a"); });
   D.dividers.forEach(function (r) { rect(r, "#9aa3ad"); });
   D.codetables.forEach(function (r) { rect(r, "#3f8f86"); });
   D.storage.forEach(function (r) { rect(r, "#c9915e"); });
@@ -4555,7 +4588,7 @@ cv.addEventListener("pointerdown", function () { stopTour(); }, true);
   mergeMeshes(main, scene); mergeMeshes(sk, skirts);
   [main, sk].forEach(function (l) { l.forEach(function (o) { if (o.parent) o.parent.remove(o); }); });
   // the black skirts: the same drapes once more, merged into one off-black mesh (one draw call); the type colours stay beside it, hidden
-  var blk = new THREE.MeshLambertMaterial({ color: 0x1a1a1c }), copies = skirts.children.map(function (m) { var c = new THREE.Mesh(m.geometry, blk); c.updateMatrixWorld(true); return c; });
+  var blk = new THREE.MeshLambertMaterial({ color: 0x1a1a1c }), copies = skirts.children.filter(function (m) { return m.isMesh; }).map(function (m) { var c = new THREE.Mesh(m.geometry, blk); c.updateMatrixWorld(true); return c; });
   skirtsBlack = new THREE.Group(); skirts.add(skirtsBlack); mergeMeshes(copies, skirtsBlack);
   skirtType(false);
 })();
